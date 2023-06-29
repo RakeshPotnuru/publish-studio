@@ -1,0 +1,29 @@
+{
+    "name": "publish-studio",
+    "version": "0.0.0",
+    "description": "Publish Blogs to mutliple platforms from a single place",
+    "license": "ISC",
+    "author": "",
+    "scripts": {
+        "build": "turbo build",
+        "format": "prettier --write .",
+        "preinstall": "npx only-allow pnpm",
+        "lint": "turbo lint",
+        "prepare": "is-ci || husky install",
+        "test": "turbo test"
+    },
+    "devDependencies": {
+        "@bravo68web/eslint-config": "^1.1.0",
+        "@bravo68web/prettier-config": "^1.1.0",
+        "@bravo68web/tsconfig": "^1.1.0",
+        "husky": "^8.0.3",
+        "is-ci": "3.0.1",
+        "lint-staged": "^13.2.3",
+        "prettier": "2.8.8",
+        "rimraf": "^5.0.1",
+        "turbo": "1.10.3"
+    },
+    "keywords": [],
+    "packageManager": "pnpm@8.6.2",
+    "prettier": "@bravo68web/prettier-config"
+}

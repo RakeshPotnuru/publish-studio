@@ -1,0 +1,15 @@
+{
+    "$schema": "https://turbo.build/schema.json",
+    "pipeline": {
+        "build": {
+            "cache": true,
+            "outputs": ["**/dist", "**/.next"]
+        },
+        "lint": {
+            "cache": true,
+            "inputs": ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"],
+            "outputs": ["**/.eslintcache"]
+        },
+        "test": {}
+    }
+}
