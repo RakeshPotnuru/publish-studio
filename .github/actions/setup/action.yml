@@ -1,0 +1,32 @@
+name: Setup Node Environment
+description: Prepare and install everything for nodejs repo
+
+runs:
+    using: composite
+    steps:
+        - uses: pnpm/action-setup@v2
+
+        - name: Setup Node.js
+          uses: actions/setup-node@v3
+          with:
+              cache: pnpm
+              node-version: 18
+              registry-url: https://registry.npmjs.org/
+
+        - name: Install dependencies
+          shell: bash
+          run: pnpm i
+
+        - name: Restore Turborepo Cache
+          uses: actions/cache@v3
+          with:
+              path: |
+                  apps/**/.turbo
+                  node_modules/.cache/turbo
+              key: turbo-${{ runner.os }}-${{ github.job }}-${{ github.sha }}
+              restore-keys: |
+                  turbo-${{ runner.os }}-${{ github.job }}
+
+        - name: Build packages
+          shell: bash
+          run: pnpm build
