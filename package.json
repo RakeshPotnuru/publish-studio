@@ -16,6 +16,7 @@
         "@bravo68web/eslint-config": "^1.1.0",
         "@bravo68web/prettier-config": "^1.1.0",
         "@bravo68web/tsconfig": "^1.1.0",
+        "cross-env": "^7.0.3",
         "husky": "^8.0.3",
         "is-ci": "3.0.1",
         "lint-staged": "^13.2.3",

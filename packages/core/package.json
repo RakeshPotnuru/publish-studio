@@ -10,13 +10,13 @@
         "dist"
     ],
     "scripts": {
-        "build": "pnpm clear && NODE_ENV=production tsc",
+        "build": "pnpm clear && cross-env NODE_ENV=production tsc",
         "clear": "rimraf dist",
-        "dev": "NODE_ENV=development nodemon --watch '**/*.ts' --exec node --loader @esbuild-kit/esm-loader src/index.ts",
+        "dev": "cross-env NODE_ENV=development nodemon --watch '**/*.ts' --exec node --loader @esbuild-kit/esm-loader src/index.ts",
         "postinstall": "pnpm build",
         "lint": "eslint --ext .ts .",
         "lint:fix": "eslint --ext .ts . --fix",
-        "start": "NODE_ENV=production node --loader @esbuild-kit/esm-loader src/index.ts"
+        "start": "cross-env NODE_ENV=production node --loader @esbuild-kit/esm-loader src/index.ts"
     },
     "dependencies": {
         "@trpc/server": "^10.33.0",
