@@ -4,10 +4,12 @@ import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import cors from "cors";
 import type { Application } from "express";
 import express from "express";
+import { auth } from "express-openid-connect";
 
 import "./utils/db";
 import "./config/index";
 
+import { config as auth0Config } from "./config/auth0.config";
 import avaliableRoutes from "./routes";
 import { createContext, router } from "./trpc";
 
@@ -22,8 +24,10 @@ app.use(
     }),
 );
 
+app.use(auth(auth0Config));
+
 app.use(
-    "/",
+    "/api",
     createExpressMiddleware({
         router: appRouter,
         createContext,
