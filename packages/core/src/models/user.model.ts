@@ -1,7 +1,8 @@
 import mongoose, { Schema } from "mongoose";
 
 interface IUser {
-    name: string;
+    first_name: string;
+    last_name: string;
     email: string;
     password: string;
     profile_pic?: string;
@@ -10,7 +11,8 @@ interface IUser {
 
 const UserSchema = new Schema<IUser>(
     {
-        name: { type: String, required: true, minlength: 3, maxlength: 50 },
+        first_name: { type: String, required: true, minlength: 3, maxlength: 25 },
+        last_name: { type: String, required: true, minlength: 3, maxlength: 25 },
         email: { type: String, required: true, unique: true, lowercase: true },
         password: { type: String, required: true },
         profile_pic: String,
