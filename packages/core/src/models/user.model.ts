@@ -1,13 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-interface IUser {
-    first_name: string;
-    last_name: string;
-    email: string;
-    password: string;
-    profile_pic?: string;
-    user_type: "free" | "pro";
-}
+import type { IUser } from "../types/user.types";
 
 const UserSchema = new Schema<IUser>(
     {

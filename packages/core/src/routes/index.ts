@@ -1,8 +1,8 @@
-import HelloController from "../controllers/hello.controller";
+import { t } from "../trpc";
+import authRouter from "./auth.routes";
+import userRouter from "./user.routes";
 
-const trpcRouter = {
-    hello: new HelloController().get(),
-};
+const trpcRouter = t.mergeRouters(authRouter, userRouter);
 
 export type TRPCRouter = typeof trpcRouter;
 export default trpcRouter;
