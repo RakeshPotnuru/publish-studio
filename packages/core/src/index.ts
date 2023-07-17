@@ -8,10 +8,8 @@ import express from "express";
 import "./utils/db";
 import "./config/index";
 
-import avaliableRoutes from "./routes";
-import { createContext, router } from "./trpc";
-
-const appRouter = router(avaliableRoutes);
+import trpcRouter from "./routes";
+import { createContext } from "./trpc";
 
 const app: Application = express();
 
@@ -25,7 +23,7 @@ app.use(
 app.use(
     "/api",
     createExpressMiddleware({
-        router: appRouter,
+        router: trpcRouter,
         createContext,
     }),
 );
@@ -34,4 +32,4 @@ app.listen(process.env.PORT, () => {
     console.log(`✅ Server running on port ${process.env.PORT}`);
 });
 
-export type AppRouter = typeof appRouter;
+export type AppRouter = typeof trpcRouter;
