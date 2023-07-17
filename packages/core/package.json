@@ -13,7 +13,6 @@
         "build": "pnpm clear && cross-env NODE_ENV=production tsc",
         "clear": "rimraf dist",
         "dev": "cross-env NODE_ENV=development nodemon --watch '**/*.ts' --exec node --loader @esbuild-kit/esm-loader src/index.ts",
-        "postinstall": "pnpm build",
         "lint": "eslint --ext .ts .",
         "lint:fix": "eslint --ext .ts . --fix",
         "start": "cross-env NODE_ENV=production node --loader @esbuild-kit/esm-loader src/index.ts",

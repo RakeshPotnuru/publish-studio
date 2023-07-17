@@ -29,7 +29,6 @@ const refreshTokenCookieOptions: OptionsType = {
 export default class AuthController extends UserService {
     async registerHandler(input: IUser) {
         try {
-            console.log("We are here !");
             const user = await this.findUserByEmail(input.email);
 
             if (user) {

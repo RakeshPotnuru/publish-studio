@@ -1,5 +1,9 @@
-/** @type {import('ts-jest').JestConfigWithTsJest} */
-module.exports = {
-    preset: "ts-jest",
-    testEnvironment: "node",
+export default {
+    clearMocks: true,
+    coverageProvider: "v8",
+    preset: "ts-jest/presets/js-with-ts",
+    setupFiles: ["dotenv/config"],
+    transform: {
+        "^.+\\.mjs$": "ts-jest",
+    },
 };
