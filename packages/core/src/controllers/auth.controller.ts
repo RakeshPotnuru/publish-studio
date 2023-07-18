@@ -51,7 +51,7 @@ export default class AuthController extends UserService {
             return {
                 status: "success",
                 data: {
-                    newUser,
+                    user: newUser,
                 },
             };
         } catch (error: any) {
