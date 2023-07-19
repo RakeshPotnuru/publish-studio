@@ -29,7 +29,7 @@ const refreshTokenCookieOptions: OptionsType = {
 export default class AuthController extends UserService {
     async registerHandler(input: IUser) {
         try {
-            const user = await this.findUserByEmail(input.email);
+            const user = await this.getUserByEmail(input.email);
 
             if (user) {
                 throw new TRPCError({
@@ -64,7 +64,7 @@ export default class AuthController extends UserService {
 
     async loginHandler(input: { email: string; password: string }, ctx: Context) {
         try {
-            const user = await this.findUserByEmail(input.email);
+            const user = await this.getUserByEmail(input.email);
 
             if (!user || !(await bycrypt.compare(input.password, user.password))) {
                 throw new TRPCError({
@@ -133,7 +133,7 @@ export default class AuthController extends UserService {
             }
 
             // Check if the user exist
-            const user = await this.findUserById(JSON.parse(session)._id as string);
+            const user = await this.getUserById(JSON.parse(session)._id as string);
 
             if (!user) {
                 throw new TRPCError({

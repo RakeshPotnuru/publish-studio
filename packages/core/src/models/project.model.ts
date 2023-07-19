@@ -1,17 +1,6 @@
-import type { Types } from "mongoose";
 import mongoose, { Schema } from "mongoose";
 
-interface IProject {
-    user_id: Types.ObjectId;
-    folder_id?: Types.ObjectId;
-    title: string;
-    description?: string;
-    body?: string;
-    tags?: string[];
-    status: "draft" | "published";
-    cover_image?: string;
-    assets?: string[];
-}
+import type { IProject } from "../types/project.types";
 
 const ProjectSchema = new Schema<IProject>(
     {
@@ -23,7 +12,6 @@ const ProjectSchema = new Schema<IProject>(
         tags: [{ type: String, maxlength: 50 }],
         status: { type: String, enum: ["draft", "published"], required: true, default: "draft" },
         cover_image: String,
-        assets: [String],
     },
     {
         timestamps: {

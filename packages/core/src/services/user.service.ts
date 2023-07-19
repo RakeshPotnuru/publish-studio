@@ -9,11 +9,11 @@ export default class UserService {
         return (await User.create(user)) as IUser;
     }
 
-    async findUserByEmail(email: string) {
+    async getUserByEmail(email: string) {
         return (await User.findOne({ email }).exec()) as IUser;
     }
 
-    async findUserById(id: string) {
+    async getUserById(id: string) {
         return (await User.findById(id).exec()) as IUser;
     }
 
@@ -26,7 +26,9 @@ export default class UserService {
             throw new Error("User ID is required");
         }
 
-        await redisClient.set(`${user._id}`, JSON.stringify(user), {
+        const userId = user._id.toString();
+
+        await redisClient.set(userId, JSON.stringify(user), {
             EX: customConfig.redisCacheExpiresIn * 60,
         });
 

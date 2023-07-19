@@ -1,15 +1,11 @@
-import type { Types } from "mongoose";
 import mongoose, { Schema } from "mongoose";
 
-interface IFolder {
-    user_id: Types.ObjectId;
-    name: string;
-}
+import type { IFolder } from "../types/folder.types";
 
 const FolderSchema = new Schema<IFolder>(
     {
         user_id: { type: Schema.Types.ObjectId, required: true },
-        name: { type: String, required: true, unique: true, minlength: 3, maxlength: 120 },
+        name: { type: String, required: true, unique: true, minlength: 3, maxlength: 160 },
     },
     {
         timestamps: {

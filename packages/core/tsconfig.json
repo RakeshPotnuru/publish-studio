@@ -5,5 +5,5 @@
         "target": "es2017"
     },
     "extends": "@bravo68web/tsconfig/base.json",
-    "include": ["src/**/*"]
+    "include": ["src/**/*", "jest.config.ts"]
 }
