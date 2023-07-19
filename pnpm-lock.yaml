@@ -95,6 +95,9 @@ importers:
       dotenv:
         specifier: ^16.3.1
         version: 16.3.1
+      eslint:
+        specifier: 8.43.0
+        version: 8.43.0
       express:
         specifier: ^4.18.2
         version: 4.18.2
@@ -132,9 +135,6 @@ importers:
       '@types/node':
         specifier: 20.3.2
         version: 20.3.2
-      eslint:
-        specifier: 8.43.0
-        version: 8.43.0
       jest:
         specifier: ^29.6.1
         version: 29.6.1(@types/node@20.3.2)(ts-node@10.9.1)
