@@ -12,13 +12,15 @@
     "scripts": {
         "build": "pnpm clear && cross-env NODE_ENV=production tsc",
         "clear": "rimraf dist",
-        "dev": "cross-env NODE_ENV=development nodemon --watch '**/*.ts' --exec node --loader @esbuild-kit/esm-loader src/index.ts",
+        "dev": "doppler run -- cross-env NODE_ENV=development nodemon --watch '**/*.ts' --exec node --loader @esbuild-kit/esm-loader src/index.ts",
         "lint": "eslint --ext .ts .",
         "lint:fix": "eslint --ext .ts . --fix",
         "start": "cross-env NODE_ENV=production node --loader @esbuild-kit/esm-loader src/index.ts",
         "test": "jest"
     },
     "dependencies": {
+        "@aws-sdk/client-s3": "^3.374.0",
+        "@aws-sdk/s3-request-presigner": "^3.375.0",
         "@trpc/client": "^10.33.0",
         "@trpc/server": "^10.33.0",
         "bcryptjs": "^2.4.3",
