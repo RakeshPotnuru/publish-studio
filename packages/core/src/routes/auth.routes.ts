@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import AuthController from "../controllers/auth.controller";
-import { t } from "../trpc";
+import { protectedProcedure, t } from "../trpc";
 
 const authRouter = t.router({
     register: t.procedure
@@ -28,9 +28,11 @@ const authRouter = t.router({
         )
         .mutation(({ input, ctx }) => new AuthController().loginHandler(input, ctx)),
 
-    logout: t.procedure.mutation(({ ctx }) => new AuthController().logoutHandler(ctx)),
+    logout: protectedProcedure.mutation(({ ctx }) => new AuthController().logoutHandler(ctx)),
 
-    refresh: t.procedure.query(({ ctx }) => new AuthController().refreshAccessTokenHandler(ctx)),
+    refresh: protectedProcedure.query(({ ctx }) =>
+        new AuthController().refreshAccessTokenHandler(ctx),
+    ),
 });
 
 export default authRouter;

@@ -1,11 +1,11 @@
-import { Types } from "mongoose";
+import type { Types } from "mongoose";
 import { z } from "zod";
 
 import FolderController from "../controllers/folder.controller";
-import { t } from "../trpc";
+import { protectedProcedure, t } from "../trpc";
 
 const folderRouter = t.router({
-    createFolder: t.procedure
+    createFolder: protectedProcedure
         .input(
             z.object({
                 name: z.string().min(3).max(160),
@@ -13,10 +13,14 @@ const folderRouter = t.router({
         )
         .mutation(({ input, ctx }) => new FolderController().createFolderHandler(input, ctx)),
 
-    updateFolder: t.procedure
+    getAllFolders: protectedProcedure.query(({ ctx }) =>
+        new FolderController().getAllFoldersHandler(ctx),
+    ),
+
+    updateFolder: protectedProcedure
         .input(
             z.object({
-                id: z.instanceof(Types.ObjectId),
+                id: z.custom<Types.ObjectId>(),
                 folder: z.object({
                     name: z.string().min(3).max(160),
                 }),
@@ -24,10 +28,10 @@ const folderRouter = t.router({
         )
         .mutation(({ input }) => new FolderController().updateFolderHandler(input)),
 
-    deleteFolder: t.procedure
+    deleteFolder: protectedProcedure
         .input(
             z.object({
-                id: z.instanceof(Types.ObjectId),
+                id: z.custom<Types.ObjectId>(),
             }),
         )
         .mutation(({ input }) => new FolderController().deleteFolderHandler(input)),

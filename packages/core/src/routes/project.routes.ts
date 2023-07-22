@@ -1,14 +1,14 @@
-import { Types } from "mongoose";
+import type { Types } from "mongoose";
 import { z } from "zod";
 
 import ProjectController from "../controllers/project.controller";
-import { t } from "../trpc";
+import { protectedProcedure, t } from "../trpc";
 
 const projectRouter = t.router({
-    createProject: t.procedure
+    createProject: protectedProcedure
         .input(
             z.object({
-                folder_id: z.instanceof(Types.ObjectId).optional(),
+                folder_id: z.custom<Types.ObjectId>().optional(),
                 title: z.string().min(3).max(160),
                 description: z.string().max(500).optional(),
                 body: z.string().max(100_000).optional(),
@@ -19,12 +19,16 @@ const projectRouter = t.router({
         )
         .mutation(({ input, ctx }) => new ProjectController().createProjectHandler(input, ctx)),
 
-    updateProject: t.procedure
+    getAllProjects: protectedProcedure.query(({ ctx }) =>
+        new ProjectController().getAllProjectsHandler(ctx),
+    ),
+
+    updateProject: protectedProcedure
         .input(
             z.object({
-                id: z.instanceof(Types.ObjectId),
+                id: z.custom<Types.ObjectId>(),
                 project: z.object({
-                    folder_id: z.instanceof(Types.ObjectId).optional(),
+                    folder_id: z.custom<Types.ObjectId>().optional(),
                     title: z.string().min(3).max(160),
                     description: z.string().max(500).optional(),
                     body: z.string().max(100_000).optional(),
@@ -36,10 +40,10 @@ const projectRouter = t.router({
         )
         .mutation(({ input }) => new ProjectController().updateProjectHandler(input)),
 
-    deleteProject: t.procedure
+    deleteProject: protectedProcedure
         .input(
             z.object({
-                id: z.instanceof(Types.ObjectId),
+                id: z.custom<Types.ObjectId>(),
             }),
         )
         .mutation(({ input }) => new ProjectController().deleteProjectHandler(input)),

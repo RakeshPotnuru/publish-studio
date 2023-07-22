@@ -49,23 +49,14 @@ export default class FolderController extends FolderService {
         }
     }
 
-    async getFolderWithProjectsHandler(input: { id: Types.ObjectId }) {
+    async getAllFoldersHandler(ctx: Context) {
         try {
-            const folder = await this.getFolderById(input.id);
-            const projects = await this.getProjectsByFolderId(input.id);
-
-            if (!folder) {
-                throw new TRPCError({
-                    code: "NOT_FOUND",
-                    message: "Folder not found",
-                });
-            }
+            const folders = await this.getAllFolders(ctx.user?._id);
 
             return {
                 status: "success",
                 data: {
-                    folder: folder,
-                    projects: projects,
+                    folders: folders,
                 },
             };
         } catch (error: any) {

@@ -3,9 +3,8 @@ import type { Types } from "mongoose";
 import Folder from "../models/folder.model";
 import Project from "../models/project.model";
 import type { IFolder } from "../types/folder.types";
-import ProjectService from "./project.service";
 
-export default class FolderService extends ProjectService {
+export default class FolderService {
     async createFolder(folder: IFolder) {
         return (await Folder.create(folder)) as IFolder;
     }
@@ -16,6 +15,10 @@ export default class FolderService extends ProjectService {
 
     async getFolderById(id: Types.ObjectId) {
         return (await Folder.findById(id).exec()) as IFolder;
+    }
+
+    async getAllFolders(user_id: Types.ObjectId | undefined) {
+        return (await Folder.find({ user_id }).populate("projects").exec()) as IFolder[];
     }
 
     async updateFolder(id: Types.ObjectId, folder: IFolder) {
