@@ -7,6 +7,7 @@ import AssetService from "./asset.service";
 export default class AssetController extends AssetService {
     private validateFile(file: Express.Multer.File) {
         // only allow images of specific mime types
+
         const allowedMimeTypes = [
             "image/png",
             "image/jpg",
@@ -15,7 +16,8 @@ export default class AssetController extends AssetService {
             "image/gif",
         ];
 
-        if (!allowedMimeTypes.includes(file.mimetype as string)) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        if (!allowedMimeTypes.includes(file.mimetype)) {
             throw new TRPCError({
                 code: "BAD_REQUEST",
                 message: "Invalid file type",
