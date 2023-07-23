@@ -9,4 +9,5 @@ export interface IProject {
     tags?: string[];
     status: "draft" | "published";
     cover_image?: string;
+    assets?: Types.ObjectId[];
 }

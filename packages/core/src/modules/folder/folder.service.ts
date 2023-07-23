@@ -1,8 +1,8 @@
 import type { Types } from "mongoose";
 
-import Folder from "../models/folder.model";
-import Project from "../models/project.model";
-import type { IFolder } from "../types/folder.types";
+import Project from "../project/project.model";
+import Folder from "./folder.model";
+import type { IFolder } from "./folder.types";
 
 export default class FolderService {
     async createFolder(folder: IFolder) {

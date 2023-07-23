@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-import AuthController from "../controllers/auth.controller";
-import { protectedProcedure, t } from "../trpc";
+import { protectedProcedure, t } from "../../trpc";
+import AuthController from "./auth.controller";
 
 const authRouter = t.router({
     register: t.procedure

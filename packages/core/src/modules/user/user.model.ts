@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-import type { IUser } from "../types/user.types";
+import type { IUser } from "./user.types";
 
 const UserSchema = new Schema<IUser>(
     {
@@ -10,6 +10,7 @@ const UserSchema = new Schema<IUser>(
         password: { type: String, required: true },
         profile_pic: String,
         user_type: { type: String, enum: ["free", "pro"], required: true, default: "free" },
+        assets: [{ type: Schema.Types.ObjectId, ref: "Asset" }],
     },
     {
         timestamps: {

@@ -1,9 +1,9 @@
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
-import ProjectService from "../services/project.service";
-import type { Context } from "../trpc";
-import type { IProject } from "../types/project.types";
+import type { Context } from "../../trpc";
+import ProjectService from "./project.service";
+import type { IProject } from "./project.types";
 
 export default class ProjectController extends ProjectService {
     async createProjectHandler(input: IProject, ctx: Context) {

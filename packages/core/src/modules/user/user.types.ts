@@ -8,4 +8,5 @@ export interface IUser {
     password: string;
     profile_pic?: string;
     user_type: "free" | "pro";
+    assets?: Types.ObjectId[];
 }

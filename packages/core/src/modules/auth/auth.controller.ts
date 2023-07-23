@@ -3,12 +3,12 @@ import bycrypt from "bcryptjs";
 import { getCookie, setCookie } from "cookies-next";
 import type { OptionsType } from "cookies-next/lib/types";
 
-import customConfig from "../config/default";
-import UserService from "../services/user.service";
-import type { Context } from "../trpc";
-import type { IUser } from "../types/user.types";
-import { signJwt, verifyJwt } from "../utils/jwt";
-import redisClient from "../utils/redis";
+import customConfig from "../../config/default";
+import type { Context } from "../../trpc";
+import { signJwt, verifyJwt } from "../../utils/jwt";
+import redisClient from "../../utils/redis";
+import UserService from "../user/user.service";
+import type { IUser } from "../user/user.types";
 
 const cookieOptions: OptionsType = {
     httpOnly: true,

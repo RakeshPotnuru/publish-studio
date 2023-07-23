@@ -1,8 +1,8 @@
 import type { Types } from "mongoose";
 import { z } from "zod";
 
-import FolderController from "../controllers/folder.controller";
-import { protectedProcedure, t } from "../trpc";
+import { protectedProcedure, t } from "../../trpc";
+import FolderController from "./folder.controller";
 
 const folderRouter = t.router({
     createFolder: protectedProcedure

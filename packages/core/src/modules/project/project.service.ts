@@ -1,8 +1,8 @@
 import type { Types } from "mongoose";
 
-import Folder from "../models/folder.model";
-import Project from "../models/project.model";
-import type { IProject } from "../types/project.types";
+import Folder from "../folder/folder.model";
+import Project from "./project.model";
+import type { IProject } from "./project.types";
 
 export default class ProjectService {
     async createProject(project: IProject) {

@@ -1,14 +1,13 @@
 import mongoose, { Schema } from "mongoose";
 
-interface IAsset {
-    original_file_name: string;
-    imgur_link: string;
-}
+import type { IAsset } from "./asset.types";
 
 const AssetSchema = new Schema<IAsset>(
     {
         original_file_name: { type: String, required: true },
-        imgur_link: { type: String, required: true },
+        hosted_url: { type: String, required: true },
+        project_id: { type: Schema.Types.ObjectId },
+        user_id: { type: Schema.Types.ObjectId, required: true },
     },
     {
         timestamps: {

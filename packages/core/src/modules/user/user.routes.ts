@@ -1,5 +1,5 @@
-import UserController from "../controllers/user.controller";
-import { protectedProcedure, t } from "../trpc";
+import { protectedProcedure, t } from "../../trpc";
+import UserController from "./user.controller";
 
 const userRouter = t.router({
     me: protectedProcedure.query(({ ctx }) => new UserController().getMeHandler(ctx)),

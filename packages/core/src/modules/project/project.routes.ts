@@ -1,8 +1,8 @@
 import type { Types } from "mongoose";
 import { z } from "zod";
 
-import ProjectController from "../controllers/project.controller";
-import { protectedProcedure, t } from "../trpc";
+import { protectedProcedure, t } from "../../trpc";
+import ProjectController from "./project.controller";
 
 const projectRouter = t.router({
     createProject: protectedProcedure

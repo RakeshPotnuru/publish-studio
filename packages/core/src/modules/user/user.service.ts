@@ -1,8 +1,8 @@
-import customConfig from "../config/default";
-import User from "../models/user.model";
-import type { IUser } from "../types/user.types";
-import { signJwt } from "../utils/jwt";
-import redisClient from "../utils/redis";
+import customConfig from "../../config/default";
+import { signJwt } from "../../utils/jwt";
+import redisClient from "../../utils/redis";
+import User from "./user.model";
+import type { IUser } from "./user.types";
 
 export default class UserService {
     async createUser(user: IUser) {

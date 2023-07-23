@@ -23,6 +23,7 @@
         "@aws-sdk/s3-request-presigner": "^3.375.0",
         "@trpc/client": "^10.33.0",
         "@trpc/server": "^10.33.0",
+        "@types/multer": "^1.4.7",
         "bcryptjs": "^2.4.3",
         "cookies-next": "^2.1.2",
         "cors": "^2.8.5",
@@ -30,6 +31,7 @@
         "express": "^4.18.2",
         "jsonwebtoken": "^9.0.1",
         "mongoose": "^7.3.1",
+        "multer": "1.4.5-lts.1",
         "redis": "^4.6.7",
         "zod": "^3.21.4"
     },

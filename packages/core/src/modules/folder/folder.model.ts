@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-import type { IFolder } from "../types/folder.types";
+import type { IFolder } from "./folder.types";
 
 const FolderSchema = new Schema<IFolder>(
     {

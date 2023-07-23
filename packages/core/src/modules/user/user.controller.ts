@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
-import type { Context } from "../trpc";
+import type { Context } from "../../trpc";
 
 export default class UserController {
     getMeHandler(ctx: Context) {

@@ -1,8 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import type { CreateExpressContextOptions } from "@trpc/server/adapters/express";
 
-import s3 from "../config/aws/s3";
-import User from "../models/user.model";
+import User from "../modules/user/user.model";
+import s3 from "../utils/aws/s3";
 import { verifyJwt } from "../utils/jwt";
 import redisClient from "../utils/redis";
 
@@ -19,7 +19,7 @@ export const deserializeUser = async ({ req, res }: CreateExpressContextOptions)
             req,
             res,
             user: null,
-            s3: null,
+            s3: s3,
         };
 
         if (!access_token) {

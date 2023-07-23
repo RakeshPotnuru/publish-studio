@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-import type { IProject } from "../types/project.types";
+import type { IProject } from "./project.types";
 
 const ProjectSchema = new Schema<IProject>(
     {
@@ -12,6 +12,7 @@ const ProjectSchema = new Schema<IProject>(
         tags: [{ type: String, maxlength: 50 }],
         status: { type: String, enum: ["draft", "published"], required: true, default: "draft" },
         cover_image: String,
+        assets: [{ type: Schema.Types.ObjectId, ref: "Asset" }],
     },
     {
         timestamps: {
