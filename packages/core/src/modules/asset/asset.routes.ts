@@ -8,7 +8,11 @@ const assetRouter = t.router({
     uploadImage: protectedProcedure
         .input(
             z.object({
-                file: z.custom<Express.Multer.File>(),
+                file: z.object({
+                    originalname: z.string(),
+                    mimetype: z.string(),
+                    size: z.number(),
+                }),
                 project_id: z.custom<Types.ObjectId>().optional(),
             }),
         )

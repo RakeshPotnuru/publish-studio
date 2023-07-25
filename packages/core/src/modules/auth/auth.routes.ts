@@ -12,7 +12,9 @@ const authRouter = t.router({
                 email: z.string().email().toLowerCase(),
                 password: z
                     .string()
-                    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!$%&*?@])[\d!$%&*?@A-Za-z]{8,}$/),
+                    .regex(
+                        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!"#$%&'()*+,./:;<=>?@[\\\]^_{|}~-])(.{8,})$/,
+                    ),
                 profile_pic: z.string().optional(),
                 user_type: z.enum(["free", "pro"]).optional().default("free"),
             }),
