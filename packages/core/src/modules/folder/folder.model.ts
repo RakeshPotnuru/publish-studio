@@ -1,11 +1,18 @@
 import mongoose, { Schema } from "mongoose";
 
+import { folder } from "../../utils/constants";
 import type { IFolder } from "./folder.types";
 
 const FolderSchema = new Schema<IFolder>(
     {
         user_id: { type: Schema.Types.ObjectId, required: true },
-        name: { type: String, required: true, unique: true, minlength: 3, maxlength: 160 },
+        name: {
+            type: String,
+            required: true,
+            unique: true,
+            minlength: folder.name.MIN_LENGTH,
+            maxlength: folder.name.MAX_LENGTH,
+        },
         projects: [{ type: Schema.Types.ObjectId, ref: "Project" }],
     },
     {

@@ -1,8 +1,10 @@
 import mongoose from "mongoose";
 
+import defaultConfig from "../config/app.config";
+
 const connectDB = async () => {
     try {
-        await mongoose.connect(process.env.MONGO_URI);
+        await mongoose.connect(defaultConfig.mongoURI);
         if (mongoose.connection.readyState === mongoose.STATES.connected) {
             console.log("✅ Connected to MongoDB");
         } else {

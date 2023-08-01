@@ -2,13 +2,14 @@ import type { Types } from "mongoose";
 import { z } from "zod";
 
 import { protectedProcedure, t } from "../../trpc";
+import { folder } from "../../utils/constants";
 import FolderController from "./folder.controller";
 
 const folderRouter = t.router({
     createFolder: protectedProcedure
         .input(
             z.object({
-                name: z.string().min(3).max(160),
+                name: z.string().min(folder.name.MIN_LENGTH).max(folder.name.MAX_LENGTH),
             }),
         )
         .mutation(({ input, ctx }) => new FolderController().createFolderHandler(input, ctx)),
@@ -22,7 +23,7 @@ const folderRouter = t.router({
             z.object({
                 id: z.custom<Types.ObjectId>(),
                 folder: z.object({
-                    name: z.string().min(3).max(160),
+                    name: z.string().min(folder.name.MIN_LENGTH).max(folder.name.MAX_LENGTH),
                 }),
             }),
         )

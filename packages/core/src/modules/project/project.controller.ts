@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
+import defaultConfig from "../../config/app.config";
 import type { Context } from "../../trpc";
 import ProjectService from "./project.service";
 import type { IProject } from "./project.types";
@@ -25,10 +26,12 @@ export default class ProjectController extends ProjectService {
                     project: project,
                 },
             };
-        } catch (error: any) {
+        } catch (error) {
+            console.log(error);
+
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: error.message,
+                message: defaultConfig.defaultErrorMessage,
             });
         }
     }
@@ -50,10 +53,12 @@ export default class ProjectController extends ProjectService {
                     project: project,
                 },
             };
-        } catch (error: any) {
+        } catch (error) {
+            console.log(error);
+
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: error.message,
+                message: defaultConfig.defaultErrorMessage,
             });
         }
     }
@@ -68,10 +73,12 @@ export default class ProjectController extends ProjectService {
                     projects: projects,
                 },
             };
-        } catch (error: any) {
+        } catch (error) {
+            console.log(error);
+
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: error.message,
+                message: defaultConfig.defaultErrorMessage,
             });
         }
     }
@@ -93,10 +100,12 @@ export default class ProjectController extends ProjectService {
                     project: project,
                 },
             };
-        } catch (error: any) {
+        } catch (error) {
+            console.log(error);
+
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: error.message,
+                message: defaultConfig.defaultErrorMessage,
             });
         }
     }
@@ -118,10 +127,12 @@ export default class ProjectController extends ProjectService {
                     project: project,
                 },
             };
-        } catch (error: any) {
+        } catch (error) {
+            console.log(error);
+
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: error.message,
+                message: defaultConfig.defaultErrorMessage,
             });
         }
     }

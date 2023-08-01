@@ -1,12 +1,17 @@
 import type { Types } from "mongoose";
 
 import Folder from "../folder/folder.model";
+import User from "../user/user.model";
 import Project from "./project.model";
 import type { IProject } from "./project.types";
 
 export default class ProjectService {
     async createProject(project: IProject) {
         const newProject = await Project.create(project);
+
+        await User.findByIdAndUpdate(project.user_id, {
+            $push: { projects: newProject._id },
+        }).exec();
 
         if (project.folder_id) {
             await Folder.findByIdAndUpdate(project.folder_id, {

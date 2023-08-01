@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import type { CreateExpressContextOptions } from "@trpc/server/adapters/express";
 
+import defaultConfig from "../config/app.config";
 import User from "../modules/user/user.model";
 import s3 from "../utils/aws/s3";
 import { verifyJwt } from "../utils/jwt";
@@ -53,10 +54,12 @@ export const deserializeUser = async ({ req, res }: CreateExpressContextOptions)
             user: { ...user, _id: user._id },
             s3,
         };
-    } catch (error: any) {
+    } catch (error) {
+        console.log(error);
+
         throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
-            message: error.message,
+            message: defaultConfig.defaultErrorMessage,
         });
     }
 };

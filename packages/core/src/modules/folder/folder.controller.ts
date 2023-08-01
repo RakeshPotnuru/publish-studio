@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
+import defaultConfig from "../../config/app.config";
 import type { Context } from "../../trpc";
 import FolderService from "./folder.service";
 import type { IFolder } from "./folder.types";
@@ -41,10 +42,12 @@ export default class FolderController extends FolderService {
                     folder: newFolder,
                 },
             };
-        } catch (error: any) {
+        } catch (error) {
+            console.log(error);
+
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: error.message,
+                message: defaultConfig.defaultErrorMessage,
             });
         }
     }
@@ -59,10 +62,12 @@ export default class FolderController extends FolderService {
                     folders: folders,
                 },
             };
-        } catch (error: any) {
+        } catch (error) {
+            console.log(error);
+
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: error.message,
+                message: defaultConfig.defaultErrorMessage,
             });
         }
     }
@@ -86,10 +91,12 @@ export default class FolderController extends FolderService {
                     folder: updatedFolder,
                 },
             };
-        } catch (error: any) {
+        } catch (error) {
+            console.log(error);
+
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: error.message,
+                message: defaultConfig.defaultErrorMessage,
             });
         }
     }
@@ -113,10 +120,12 @@ export default class FolderController extends FolderService {
                     folder: deletedFolder,
                 },
             };
-        } catch (error: any) {
+        } catch (error) {
+            console.log(error);
+
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: error.message,
+                message: defaultConfig.defaultErrorMessage,
             });
         }
     }

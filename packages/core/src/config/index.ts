@@ -12,8 +12,8 @@ const ZodEnvironmentVariables = z.object({
     NODE_ENV: z.string(),
     PORT: z.string(),
     MONGO_URI: z.string(),
-    BASE_URL: z.string(),
-    REDIS_URL: z.string(),
+    BASE_URL: z.string().url(),
+    REDIS_URL: z.string().url(),
     ACCESS_TOKEN_PRIVATE_KEY: z.string(),
     ACCESS_TOKEN_PUBLIC_KEY: z.string(),
     REFRESH_TOKEN_PRIVATE_KEY: z.string(),
@@ -22,6 +22,8 @@ const ZodEnvironmentVariables = z.object({
     AWS_ACCESS_KEY: z.string(),
     AWS_SECRET_ACCESS_KEY: z.string(),
     AWS_REGION: z.string(),
+    KICKBOX_URL: z.string().url(),
+    ORIGIN_URL: z.string().url(),
 });
 
 ZodEnvironmentVariables.parse(process.env);

@@ -1,4 +1,4 @@
-import customConfig from "../../config/default";
+import defaultConfig from "../../config/app.config";
 import { signJwt } from "../../utils/jwt";
 import redisClient from "../../utils/redis";
 import User from "./user.model";
@@ -29,15 +29,15 @@ export default class UserService {
         const userId = user._id.toString();
 
         await redisClient.set(userId, JSON.stringify(user), {
-            EX: customConfig.redisCacheExpiresIn * 60,
+            EX: defaultConfig.redisCacheExpiresIn * 60,
         });
 
         const access_token = signJwt({ sub: user._id }, "accessTokenPrivateKey", {
-            expiresIn: `${customConfig.accessTokenExpiresIn}m`,
+            expiresIn: `${defaultConfig.accessTokenExpiresIn}m`,
         });
 
         const refresh_token = signJwt({ sub: user._id }, "refreshTokenPrivateKey", {
-            expiresIn: `${customConfig.refreshTokenExpiresIn}m`,
+            expiresIn: `${defaultConfig.refreshTokenExpiresIn}m`,
         });
 
         return { access_token, refresh_token };

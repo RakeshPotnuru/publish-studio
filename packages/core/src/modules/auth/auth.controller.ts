@@ -1,9 +1,10 @@
 import { TRPCError } from "@trpc/server";
+import axios from "axios";
 import bycrypt from "bcryptjs";
 import { getCookie, setCookie } from "cookies-next";
 import type { OptionsType } from "cookies-next/lib/types";
 
-import customConfig from "../../config/default";
+import defaultConfig from "../../config/app.config";
 import type { Context } from "../../trpc";
 import { signJwt, verifyJwt } from "../../utils/jwt";
 import redisClient from "../../utils/redis";
@@ -18,17 +19,33 @@ const cookieOptions: OptionsType = {
 
 const accessTokenCookieOptions: OptionsType = {
     ...cookieOptions,
-    expires: new Date(Date.now() + customConfig.accessTokenExpiresIn * 60 * 1000),
+    expires: new Date(Date.now() + defaultConfig.accessTokenExpiresIn * 60 * 1000), // milliseconds
 };
 
 const refreshTokenCookieOptions: OptionsType = {
     ...cookieOptions,
-    expires: new Date(Date.now() + customConfig.refreshTokenExpiresIn * 60 * 1000),
+    expires: new Date(Date.now() + defaultConfig.refreshTokenExpiresIn * 60 * 1000),
 };
 
 export default class AuthController extends UserService {
+    private async isDisposableEmail(email: string) {
+        try {
+            const response = await axios.get(`${process.env.KICKBOX_URL}/${email}`);
+            return response.data.disposable as boolean;
+        } catch {
+            return false;
+        }
+    }
+
     async registerHandler(input: IUser) {
         try {
+            if (await this.isDisposableEmail(input.email)) {
+                throw new TRPCError({
+                    code: "BAD_REQUEST",
+                    message: "Disposable email is not allowed",
+                });
+            }
+
             const user = await this.getUserByEmail(input.email);
 
             if (user) {
@@ -54,10 +71,12 @@ export default class AuthController extends UserService {
                     user: newUser,
                 },
             };
-        } catch (error: any) {
+        } catch (error) {
+            console.log(error);
+
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: error.message,
+                message: defaultConfig.defaultErrorMessage,
             });
         }
     }
@@ -89,10 +108,12 @@ export default class AuthController extends UserService {
                 status: "success",
                 access_token,
             };
-        } catch (error: any) {
+        } catch (error) {
+            console.log(error);
+
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: error.message,
+                message: defaultConfig.defaultErrorMessage,
             });
         }
     }
@@ -144,7 +165,7 @@ export default class AuthController extends UserService {
 
             // Sign new access token
             const access_token = signJwt({ sub: user._id }, "accessTokenPrivateKey", {
-                expiresIn: `${customConfig.accessTokenExpiresIn}m`,
+                expiresIn: `${defaultConfig.accessTokenExpiresIn}m`,
             });
 
             // Send the access token as cookie
@@ -160,29 +181,35 @@ export default class AuthController extends UserService {
                 status: "success",
                 access_token,
             };
-        } catch (error: any) {
+        } catch (error) {
+            console.log(error);
+
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: error.message,
+                message: defaultConfig.defaultErrorMessage,
             });
         }
     }
 
     async logoutHandler(ctx: Context) {
         try {
-            const { req, res } = ctx;
-            const user = ctx.user;
+            const { req, res, user } = ctx;
+
             await redisClient.del(String(user?._id));
+
             setCookie("access_token", "", { req, res, maxAge: -1 });
             setCookie("refresh_token", "", { req, res, maxAge: -1 });
             setCookie("logged_in", "", { req, res, maxAge: -1 });
+
             return {
                 status: "success",
             };
-        } catch (error: any) {
+        } catch (error) {
+            console.log(error);
+
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: error.message,
+                message: defaultConfig.defaultErrorMessage,
             });
         }
     }

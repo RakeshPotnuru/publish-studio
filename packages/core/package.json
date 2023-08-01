@@ -21,9 +21,9 @@
     "dependencies": {
         "@aws-sdk/client-s3": "^3.374.0",
         "@aws-sdk/s3-presigned-post": "^3.374.0",
-        "@aws-sdk/s3-request-presigner": "^3.375.0",
         "@trpc/client": "^10.33.0",
         "@trpc/server": "^10.33.0",
+        "axios": "^1.4.0",
         "bcryptjs": "^2.4.3",
         "cookies-next": "^2.1.2",
         "cors": "^2.8.5",

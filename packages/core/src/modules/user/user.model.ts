@@ -1,16 +1,34 @@
 import mongoose, { Schema } from "mongoose";
 
+import { user } from "../../utils/constants";
 import type { IUser } from "./user.types";
 
 const UserSchema = new Schema<IUser>(
     {
-        first_name: { type: String, required: true, minlength: 3, maxlength: 25 },
-        last_name: { type: String, required: true, minlength: 3, maxlength: 25 },
+        first_name: {
+            type: String,
+            required: true,
+            minlength: user.firstName.MIN_LENGTH,
+            maxlength: user.firstName.MAX_LENGTH,
+        },
+        last_name: {
+            type: String,
+            required: true,
+            minlength: user.lastName.MIN_LENGTH,
+            maxlength: user.lastName.MAX_LENGTH,
+        },
         email: { type: String, required: true, unique: true, lowercase: true },
-        password: { type: String, required: true },
+        password: { type: String, required: true, minlength: user.password.MIN_LENGTH },
         profile_pic: String,
-        user_type: { type: String, enum: ["free", "pro"], required: true, default: "free" },
+        user_type: {
+            type: String,
+            enum: user.userTypes,
+            required: true,
+            default: user.userTypes.FREE,
+        },
+        projects: [{ type: Schema.Types.ObjectId, ref: "Project" }],
         assets: [{ type: Schema.Types.ObjectId, ref: "Asset" }],
+        platforms: [{ type: Schema.Types.ObjectId, ref: "Platform" }],
     },
     {
         timestamps: {

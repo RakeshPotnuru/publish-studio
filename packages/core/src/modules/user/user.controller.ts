@@ -1,5 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
+import defaultConfig from "../../config/app.config";
 import type { Context } from "../../trpc";
 
 export default class UserController {
@@ -13,10 +14,12 @@ export default class UserController {
                     user,
                 },
             };
-        } catch (error: any) {
+        } catch (error) {
+            console.log(error);
+
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: error.message,
+                message: defaultConfig.defaultErrorMessage,
             });
         }
     }

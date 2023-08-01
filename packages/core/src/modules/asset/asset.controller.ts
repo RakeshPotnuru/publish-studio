@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
+import defaultConfig from "../../config/app.config";
 import type { Context } from "../../trpc";
 import type { IFile } from "../../types/file.types";
 import AssetService from "./asset.service";
@@ -61,10 +62,12 @@ export default class AssetController extends AssetService {
                     submitTo: post,
                 },
             };
-        } catch (error: any) {
+        } catch (error) {
+            console.log(error);
+
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: error.message,
+                message: defaultConfig.defaultErrorMessage,
             });
         }
     }

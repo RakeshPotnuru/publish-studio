@@ -9,6 +9,7 @@ import { renderTrpcPanel } from "trpc-panel";
 import "./utils/db";
 import "./config/index";
 
+import defaultConfig from "./config/app.config";
 import trpcRouter from "./routes";
 import { createContext } from "./trpc";
 
@@ -30,11 +31,11 @@ app.use(
 );
 
 app.use("/panel", (_, res) => {
-    return res.send(renderTrpcPanel(trpcRouter, { url: process.env.BASE_URL }));
+    return res.send(renderTrpcPanel(trpcRouter, { url: defaultConfig.baseUrl }));
 });
 
-app.listen(process.env.PORT, () => {
-    console.log(`✅ Server running on port ${process.env.PORT}`);
+app.listen(defaultConfig.port, () => {
+    console.log(`✅ Server running on port ${defaultConfig.port}`);
 });
 
 export type AppRouter = typeof trpcRouter;
