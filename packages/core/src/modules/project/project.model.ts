@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-import { project } from "../../utils/constants";
+import { project, user } from "../../utils/constants";
 import type { IProject } from "./project.types";
 
 const ProjectSchema = new Schema<IProject>(
@@ -15,7 +15,7 @@ const ProjectSchema = new Schema<IProject>(
         },
         description: { type: String, maxlength: project.description.MAX_LENGTH },
         body: { type: String, maxlength: project.body.MAX_LENGTH },
-        tags: [{ type: String, maxlength: project.tags.MAX_LENGTH }],
+        tags: [{ type: String, maxlength: project.tags.tag.MAX_LENGTH }],
         status: {
             type: String,
             enum: project.status,
@@ -26,9 +26,9 @@ const ProjectSchema = new Schema<IProject>(
         assets: [{ type: Schema.Types.ObjectId, ref: "Asset" }],
         platform: {
             type: String,
-            enum: project.platforms,
+            enum: user.platforms,
             required: true,
-            default: project.platforms.DEFAULT,
+            default: user.platforms.DEFAULT,
         },
     },
     {

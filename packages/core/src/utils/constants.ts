@@ -22,10 +22,9 @@ export const project = {
         MAX_LENGTH: 100_000,
     },
     tags: {
-        MAX_LENGTH: 50,
+        tag: { MAX_LENGTH: 25 },
     },
     status: projectStatus,
-    platforms: platforms,
 } as const;
 
 export const folder = {
@@ -53,4 +52,5 @@ export const user = {
         MIN_LENGTH: 8,
     },
     userTypes: userTypes,
+    platforms: platforms,
 } as const;

@@ -1,5 +1,16 @@
 import type { Types } from "mongoose";
 
+export interface IHashnode {
+    user_id: Types.ObjectId;
+    api_key: string;
+    username?: string;
+    profile_pic?: string;
+    publication: {
+        publication_id: string;
+        publication_logo?: string;
+    };
+}
+
 export interface IHashnodeCreateStoryInput {
     project_id: Types.ObjectId;
     title: string;
@@ -29,18 +40,16 @@ export interface IHashnodeCreatePostOutput {
         slug: string;
         coverImage: string;
         brief: string;
-        publication: {
-            domain: string;
-        };
+        blogHandle: string;
     };
 }
 
-export interface IHashnodeProfile {
+export interface IHashnodeUser {
     username: string;
     photo: string;
+    blogHandle: string;
     publication: {
         _id: string;
-        logo: string;
-        domain: string;
+        favicon: string;
     };
 }
