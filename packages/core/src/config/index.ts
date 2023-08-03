@@ -24,6 +24,9 @@ const ZodEnvironmentVariables = z.object({
     AWS_REGION: z.string(),
     KICKBOX_URL: z.string().url(),
     ORIGIN_URL: z.string().url(),
+    HAHSNODE_API_URL: z.string().url(),
+    DEVTO_API_URL: z.string().url(),
+    MEDIUM_API_URL: z.string().url(),
 });
 
 ZodEnvironmentVariables.parse(process.env);

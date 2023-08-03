@@ -1,13 +1,24 @@
 import type { Types } from "mongoose";
 
 export interface IHashnode {
-    user_id: Types.ObjectId;
+    _id?: Types.ObjectId;
+    user_id?: Types.ObjectId;
     api_key: string;
-    username?: string;
+    username: string;
     profile_pic?: string;
+    blog_handle?: string;
     publication: {
         publication_id: string;
         publication_logo?: string;
+    };
+}
+
+export interface IHashnodeUser {
+    photo: string;
+    blogHandle: string;
+    publication: {
+        _id: string;
+        favicon: string;
     };
 }
 
@@ -30,6 +41,16 @@ export interface IHashnodeCreateStoryInput {
 }
 
 export interface IHashnodeCreatePostOutput {
+    errors: {
+        message: string;
+        locations: {
+            line: number;
+            column: number;
+        }[];
+        extensions: {
+            code: "UNAUTHENTICATED" | "INTERNAL_SERVER_ERROR";
+        };
+    };
     code: number;
     success: boolean;
     message: string;
@@ -41,15 +62,5 @@ export interface IHashnodeCreatePostOutput {
         coverImage: string;
         brief: string;
         blogHandle: string;
-    };
-}
-
-export interface IHashnodeUser {
-    username: string;
-    photo: string;
-    blogHandle: string;
-    publication: {
-        _id: string;
-        favicon: string;
     };
 }

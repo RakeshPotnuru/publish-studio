@@ -23,6 +23,7 @@ export const project = {
     },
     tags: {
         tag: { MAX_LENGTH: 25 },
+        MAX_LENGTH: 5,
     },
     status: projectStatus,
 } as const;
