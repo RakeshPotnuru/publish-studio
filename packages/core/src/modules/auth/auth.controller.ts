@@ -30,7 +30,7 @@ const refreshTokenCookieOptions: OptionsType = {
 export default class AuthController extends UserService {
     private async isDisposableEmail(email: string) {
         try {
-            const response = await axios.get(`${process.env.KICKBOX_URL}/${email}`);
+            const response = await axios.get(`${defaultConfig.kickbox_api_url}/${email}`);
             return response.data.disposable as boolean;
         } catch {
             return false;
@@ -46,7 +46,7 @@ export default class AuthController extends UserService {
                 });
             }
 
-            const user = await this.getUserByEmail(input.email);
+            const user = await super.getUserByEmail(input.email);
 
             if (user) {
                 throw new TRPCError({
@@ -56,7 +56,7 @@ export default class AuthController extends UserService {
             }
 
             const hashedPassword = await bycrypt.hash(input.password, 12);
-            const newUser = await this.createUser({
+            const newUser = await super.createUser({
                 first_name: input.first_name,
                 last_name: input.last_name,
                 email: input.email,
@@ -83,7 +83,7 @@ export default class AuthController extends UserService {
 
     async loginHandler(input: { email: string; password: string }, ctx: Context) {
         try {
-            const user = await this.getUserByEmail(input.email);
+            const user = await super.getUserByEmail(input.email);
 
             if (!user || !(await bycrypt.compare(input.password, user.password))) {
                 throw new TRPCError({
@@ -92,7 +92,7 @@ export default class AuthController extends UserService {
                 });
             }
 
-            const { access_token, refresh_token } = await this.signTokens(user);
+            const { access_token, refresh_token } = await super.signTokens(user);
             const { req, res } = ctx;
 
             setCookie("access_token", access_token, { req, res, ...accessTokenCookieOptions });

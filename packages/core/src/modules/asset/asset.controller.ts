@@ -9,7 +9,6 @@ import AssetService from "./asset.service";
 export default class AssetController extends AssetService {
     private validateFile(file: IFile) {
         // only allow images of specific mime types
-
         const allowedMimeTypes = [
             "image/png",
             "image/jpg",
@@ -42,7 +41,7 @@ export default class AssetController extends AssetService {
             const { file, project_id } = input;
 
             if (project_id) {
-                const project = await this.getProjectById(project_id);
+                const project = await super.getProjectById(project_id);
 
                 if (!project) {
                     throw new TRPCError({
@@ -54,7 +53,7 @@ export default class AssetController extends AssetService {
 
             this.validateFile(file);
 
-            const post = await this.uploadImage(file, project_id, ctx);
+            const post = await super.uploadImage(file, project_id, ctx);
 
             return {
                 status: "success",

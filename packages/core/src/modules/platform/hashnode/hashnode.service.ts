@@ -2,12 +2,13 @@ import axios from "axios";
 import type { Types } from "mongoose";
 
 import defaultConfig from "../../../config/app.config";
+import { decryptField } from "../../../utils/aws/kms";
 import Hashnode from "./hashnode.model";
 import type {
     IHashnode,
     IHashnodeCreatePostOutput,
     IHashnodeCreateStoryInput,
-    IHashnodeUser,
+    IHashnodeUserOutput,
 } from "./hashnode.types";
 
 export default class HashnodeService {
@@ -28,8 +29,8 @@ export default class HashnodeService {
      * a user in the Hashnode system.
      * @returns a Promise that resolves to an updated user object of type IHashnode.
      */
-    async updateUser(user: IHashnode) {
-        return (await Hashnode.findByIdAndUpdate(user._id, user, {
+    async updateUser(user: IHashnode, user_id: Types.ObjectId | undefined) {
+        return (await Hashnode.findByIdAndUpdate(user_id, user, {
             new: true,
         }).exec()) as IHashnode;
     }
@@ -40,7 +41,7 @@ export default class HashnodeService {
      * identifier for a user in the database.
      * @returns the deleted user object as an instance of the IHashnode interface.
      */
-    async deleteUser(user_id: Types.ObjectId) {
+    async deleteUser(user_id: Types.ObjectId | undefined) {
         return (await Hashnode.findByIdAndDelete(user_id).exec()) as IHashnode;
     }
 
@@ -50,19 +51,16 @@ export default class HashnodeService {
      * identifier for a user in the database.
      * @returns a Promise that resolves to an object of type IHashnode.
      */
-    async getUserById(user_id: Types.ObjectId) {
+    async getUserById(user_id: Types.ObjectId | undefined) {
         return (await Hashnode.findById(user_id).exec()) as IHashnode;
     }
 
     /**
      * The function `getUserDetails` makes an API call to retrieve details about a user from the
-     * Hashnode API using the provided API key and username.
-     * @param {string} api_key - The `api_key` parameter is a string that represents the authentication
-     * token or key required to access the Hashnode API. This key is used to authorize the request and
-     * ensure that only authorized users can access the API resources.
+     * Hashnode API using the provided username.
      * @param {string} username - The `username` parameter is a string that represents the username of
      * the user whose details you want to retrieve.
-     * @returns a response object of type `IHashnodeUser`.
+     * @returns a response object of type `IHashnodeUserOutput`.
      */
     async getUserDetails(username: string) {
         const response = await axios.post(
@@ -89,7 +87,7 @@ export default class HashnodeService {
             },
         );
 
-        return response.data.user as unknown as IHashnodeUser;
+        return response.data.data.user as unknown as IHashnodeUserOutput;
     }
 
     /**
@@ -106,6 +104,8 @@ export default class HashnodeService {
      * @returns a response object of type `IHashnodeCreatePostOutput`.
      */
     async publishPost(post: IHashnodeCreateStoryInput, user: IHashnode) {
+        const decryptedApiKey = await decryptField(user.api_key);
+
         const response = await axios.post(
             defaultConfig.hashnode_api_url,
             {
@@ -128,13 +128,20 @@ export default class HashnodeService {
                 }
             }`,
                 variables: {
-                    input: post,
+                    input: {
+                        title: post.title,
+                        contentMarkdown: post.contentMarkdown,
+                        tags: post.tags,
+                        coverImageURL: post.coverImageURL,
+                        isRepublished: post.isRepublished?.originalArticleURL,
+                        isPartOfPublication: user.publication.publication_id,
+                    },
                 },
             },
             {
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: user.api_key,
+                    Authorization: decryptedApiKey,
                 },
             },
         );

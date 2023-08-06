@@ -24,12 +24,13 @@ const ProjectSchema = new Schema<IProject>(
         },
         cover_image: String,
         assets: [{ type: Schema.Types.ObjectId, ref: "Asset" }],
-        platform: {
-            type: String,
-            enum: user.platforms,
-            required: true,
-            default: user.platforms.DEFAULT,
-        },
+        platforms: [
+            {
+                type: String,
+                enum: user.platforms,
+                required: true,
+            },
+        ],
     },
     {
         timestamps: {

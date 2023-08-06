@@ -9,7 +9,7 @@ import type { IProject } from "./project.types";
 export default class ProjectController extends ProjectService {
     async createProjectHandler(input: IProject, ctx: Context) {
         try {
-            const project = await this.createProject({
+            const project = await super.createProject({
                 user_id: ctx.user?._id,
                 folder_id: input.folder_id,
                 title: input.title,
@@ -18,6 +18,7 @@ export default class ProjectController extends ProjectService {
                 tags: input.tags,
                 status: input.status,
                 cover_image: input.cover_image,
+                platform: input.platform,
             });
 
             return {
@@ -38,7 +39,7 @@ export default class ProjectController extends ProjectService {
 
     async getProjectHandler(input: { id: Types.ObjectId }) {
         try {
-            const project = await this.getProjectById(input.id);
+            const project = await super.getProjectById(input.id);
 
             if (!project) {
                 throw new TRPCError({
@@ -65,7 +66,7 @@ export default class ProjectController extends ProjectService {
 
     async getAllProjectsHandler(ctx: Context) {
         try {
-            const projects = await this.getProjectsByUserId(ctx.user?._id);
+            const projects = await super.getProjectsByUserId(ctx.user?._id);
 
             return {
                 status: "success",
@@ -85,7 +86,7 @@ export default class ProjectController extends ProjectService {
 
     async updateProjectHandler(input: { id: Types.ObjectId; project: IProject }) {
         try {
-            const project = await this.updateProjectById(input.id, input.project);
+            const project = await super.updateProjectById(input.id, input.project);
 
             if (!project) {
                 throw new TRPCError({
@@ -112,7 +113,7 @@ export default class ProjectController extends ProjectService {
 
     async deleteProjectHandler(input: { id: Types.ObjectId }) {
         try {
-            const project = await this.deleteProjectById(input.id);
+            const project = await super.deleteProjectById(input.id);
 
             if (!project) {
                 throw new TRPCError({

@@ -15,6 +15,7 @@ interface ICustomConfig {
     hashnode_api_url: string;
     devto_api_url: string;
     medium_api_url: string;
+    kickbox_api_url: string;
 }
 
 const defaultConfig: ICustomConfig = {
@@ -31,9 +32,10 @@ const defaultConfig: ICustomConfig = {
     refreshTokenPrivateKey: process.env.REFRESH_TOKEN_PRIVATE_KEY,
     refreshTokenPublicKey: process.env.REFRESH_TOKEN_PUBLIC_KEY,
     defaultErrorMessage: "Something went wrong. Please try again later.",
-    hashnode_api_url: process.env.HAHSNODE_API_URL,
-    devto_api_url: process.env.DEVTO_API_URL,
-    medium_api_url: process.env.MEDIUM_API_URL,
+    hashnode_api_url: "https://api.hashnode.com",
+    devto_api_url: "https://dev.to/api",
+    medium_api_url: "https://api.medium.com/v1",
+    kickbox_api_url: "https://open.kickbox.com/v1/disposable",
 };
 
 export default defaultConfig;

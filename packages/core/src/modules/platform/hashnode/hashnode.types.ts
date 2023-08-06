@@ -13,7 +13,7 @@ export interface IHashnode {
     };
 }
 
-export interface IHashnodeUser {
+export interface IHashnodeUserOutput {
     photo: string;
     blogHandle: string;
     publication: {
@@ -23,7 +23,6 @@ export interface IHashnodeUser {
 }
 
 export interface IHashnodeCreateStoryInput {
-    project_id: Types.ObjectId;
     title: string;
     isPartOfPublication: {
         publicationId: string;
@@ -50,7 +49,7 @@ export interface IHashnodeCreatePostOutput {
         extensions: {
             code: "UNAUTHENTICATED" | "INTERNAL_SERVER_ERROR";
         };
-    };
+    }[];
     code: number;
     success: boolean;
     message: string;
