@@ -27,10 +27,10 @@ export interface IHashnodeCreateStoryInput {
     isPartOfPublication: {
         publicationId: string;
     };
-    contentMarkdown: string;
+    contentMarkdown?: string;
     coverImageURL?: string;
     isRepublished?: {
-        originalArticleURL: string;
+        originalArticleURL?: string;
     };
     tags?: {
         _id: string;

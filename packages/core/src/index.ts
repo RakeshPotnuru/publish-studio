@@ -1,6 +1,7 @@
 import "dotenv/config";
 
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
+import type { CorsOptions } from "cors";
 import cors from "cors";
 import type { Application } from "express";
 import express from "express";
@@ -16,11 +17,25 @@ import { createContext } from "./trpc";
 const app: Application = express();
 
 app.use(express.json());
-app.use(
-    cors({
-        origin: "*",
-    }),
-);
+
+const corsOptions: CorsOptions = {
+    origin:
+        process.env.NODE_ENV === "production"
+            ? (
+                  origin: string | undefined,
+                  callback: (error: Error | null, allow?: boolean) => void,
+              ) => {
+                  if (origin && defaultConfig.whitelist_origins?.includes(origin)) {
+                      callback(null, true);
+                  } else {
+                      callback(new Error("Not allowed by CORS"));
+                  }
+              }
+            : "*",
+    optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 
 app.use(
     "/api",

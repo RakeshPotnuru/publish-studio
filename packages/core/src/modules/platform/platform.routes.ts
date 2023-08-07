@@ -12,7 +12,9 @@ const platformRouter = t.router({
                 api_key: z.string(),
             }),
         )
-        .mutation(({ input, ctx }) => new HashnodeController().createUserHandler(input, ctx)),
+        .mutation(({ input, ctx }) =>
+            new HashnodeController(ctx.user?._id).createUserHandler(input, ctx),
+        ),
 
     connectDevTo: protectedProcedure
         .input(
@@ -20,7 +22,9 @@ const platformRouter = t.router({
                 api_key: z.string(),
             }),
         )
-        .mutation(({ input, ctx }) => new DevToController().createUserHandler(input, ctx)),
+        .mutation(({ input, ctx }) =>
+            new DevToController(ctx.user?._id).createUserHandler(input, ctx),
+        ),
 });
 
 export default platformRouter;

@@ -1,11 +1,11 @@
 interface ICustomConfig {
     port: number;
     baseUrl: string;
-    accessTokenExpiresIn: number;
-    refreshTokenExpiresIn: number;
-    origin: string;
+    whitelist_origins?: string[];
     redisUrl: string;
     mongoURI: string;
+    accessTokenExpiresIn: number;
+    refreshTokenExpiresIn: number;
     accessTokenPrivateKey: string;
     refreshTokenPrivateKey: string;
     accessTokenPublicKey: string;
@@ -23,7 +23,7 @@ const defaultConfig: ICustomConfig = {
     baseUrl: process.env.BASE_URL || "http://localhost:5000",
     accessTokenExpiresIn: 1440,
     refreshTokenExpiresIn: 1485,
-    origin: process.env.ORIGIN_URL || "http://localhost:3000",
+    whitelist_origins: process.env.WHITELIST_ORIGINS?.split(","),
     redisCacheExpiresIn: 1440,
     redisUrl: process.env.REDIS_URL || "redis://localhost:6379",
     mongoURI: process.env.MONGO_URI || "mongodb://localhost:27017/psDB",

@@ -29,7 +29,14 @@ export const encryptField = async (value: string) => {
         const command = new EncryptCommand(params);
         const response = await kms.send(command);
 
-        return Buffer.from(response.CiphertextBlob!).toString("base64");
+        if (!response.CiphertextBlob) {
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: defaultConfig.defaultErrorMessage,
+            });
+        }
+
+        return Buffer.from(response.CiphertextBlob).toString("base64");
     } catch (error) {
         console.log(error);
 
@@ -49,14 +56,41 @@ export const encryptField = async (value: string) => {
  */
 export const decryptField = async (value: string) => {
     try {
+        const base64Value = atob(value);
+
+        if (!base64Value) {
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: defaultConfig.defaultErrorMessage,
+            });
+        }
+
         const params: DecryptCommandInput = {
-            CiphertextBlob: Uint8Array.from(atob(value), v => v.codePointAt(0)!),
+            CiphertextBlob: Uint8Array.from(base64Value, v => {
+                const codePoint = v.codePointAt(0);
+                if (!codePoint) {
+                    console.log("Invalid code point");
+
+                    throw new TRPCError({
+                        code: "INTERNAL_SERVER_ERROR",
+                        message: defaultConfig.defaultErrorMessage,
+                    });
+                }
+                return codePoint;
+            }),
         };
 
         const command = new DecryptCommand(params);
         const response = await kms.send(command);
 
-        return Buffer.from(response.Plaintext!).toString();
+        if (!response.Plaintext) {
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: defaultConfig.defaultErrorMessage,
+            });
+        }
+
+        return Buffer.from(response.Plaintext).toString();
     } catch (error) {
         console.log(error);
 

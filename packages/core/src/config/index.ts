@@ -23,7 +23,7 @@ const ZodEnvironmentVariables = z.object({
     AWS_SECRET_ACCESS_KEY: z.string(),
     AWS_REGION: z.string(),
     AWS_KMS_KEY_ID: z.string(),
-    ORIGIN_URL: z.string().url(),
+    WHITELIST_ORIGINS: z.string().optional(),
 });
 
 ZodEnvironmentVariables.parse(process.env);

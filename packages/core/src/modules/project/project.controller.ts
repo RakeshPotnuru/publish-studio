@@ -1,7 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
-import defaultConfig from "../../config/app.config";
 import type { Context } from "../../trpc";
 import ProjectService from "./project.service";
 import type { IProject } from "./project.types";
@@ -18,7 +17,7 @@ export default class ProjectController extends ProjectService {
                 tags: input.tags,
                 status: input.status,
                 cover_image: input.cover_image,
-                platform: input.platform,
+                platforms: input.platforms,
             });
 
             return {
@@ -32,7 +31,7 @@ export default class ProjectController extends ProjectService {
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: defaultConfig.defaultErrorMessage,
+                message: "An error occurred while creating the project.",
             });
         }
     }
@@ -59,7 +58,7 @@ export default class ProjectController extends ProjectService {
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: defaultConfig.defaultErrorMessage,
+                message: "An error occurred while fetching the project.",
             });
         }
     }
@@ -79,14 +78,23 @@ export default class ProjectController extends ProjectService {
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: defaultConfig.defaultErrorMessage,
+                message: "An error occurred while fetching the projects.",
             });
         }
     }
 
     async updateProjectHandler(input: { id: Types.ObjectId; project: IProject }) {
         try {
-            const project = await super.updateProjectById(input.id, input.project);
+            const project = await super.getProjectById(input.id);
+
+            if (!project) {
+                throw new TRPCError({
+                    code: "NOT_FOUND",
+                    message: "Project not found",
+                });
+            }
+
+            const updatedProject = await super.updateProjectById(input.id, input.project);
 
             if (!project) {
                 throw new TRPCError({
@@ -98,7 +106,7 @@ export default class ProjectController extends ProjectService {
             return {
                 status: "success",
                 data: {
-                    project: project,
+                    project: updatedProject,
                 },
             };
         } catch (error) {
@@ -106,7 +114,7 @@ export default class ProjectController extends ProjectService {
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: defaultConfig.defaultErrorMessage,
+                message: "An error occurred while updating the project.",
             });
         }
     }
@@ -133,7 +141,7 @@ export default class ProjectController extends ProjectService {
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: defaultConfig.defaultErrorMessage,
+                message: "An error occurred while deleting the project.",
             });
         }
     }
