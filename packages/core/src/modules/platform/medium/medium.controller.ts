@@ -2,16 +2,16 @@ import { TRPCError } from "@trpc/server";
 
 import defaultConfig from "../../../config/app.config";
 import type { Context } from "../../../trpc";
-import DevToService from "./devto.service";
-import type { IDevToCreatePostInput } from "./devto.types";
+import MediumService from "./medium.service";
+import type { IMediumCreatePostInput } from "./medium.types";
 
-export default class DevToController extends DevToService {
+export default class MediumController extends MediumService {
     async createUserHandler(input: { api_key: string }, ctx: Context) {
         try {
-            const user = await super.getDevUser(input.api_key);
+            const user = await super.getMediumUser(input.api_key);
 
-            if (user.error) {
-                if (user.status === 401) {
+            if (user.errors) {
+                if (user.errors[0].code === 6000 || user.errors[0].code === 6003) {
                     throw new TRPCError({
                         code: "UNAUTHORIZED",
                         message: "Invalid API key",
@@ -27,8 +27,9 @@ export default class DevToController extends DevToService {
             const newUser = await super.createUser({
                 user_id: ctx.user?._id,
                 api_key: input.api_key,
-                username: user.data.username,
-                profile_pic: user.data.profile_image,
+                username: user.username,
+                profile_pic: user.image_url,
+                author_id: user.id,
             });
 
             return {
@@ -49,7 +50,7 @@ export default class DevToController extends DevToService {
 
     async updateUserHandler(input: { api_key: string }, ctx: Context) {
         try {
-            const user = await super.getDevUser(input.api_key);
+            const user = await super.getMediumUser(input.api_key);
             if (!user) {
                 throw new TRPCError({
                     code: "UNAUTHORIZED",
@@ -60,8 +61,9 @@ export default class DevToController extends DevToService {
             const updatedUser = await super.updateUser(
                 {
                     api_key: input.api_key,
-                    username: user.data.username,
-                    profile_pic: user.data.profile_image,
+                    username: user.username,
+                    profile_pic: user.image_url,
+                    author_id: user.id,
                 },
                 ctx.user?._id,
             );
@@ -111,31 +113,31 @@ export default class DevToController extends DevToService {
         }
     }
 
-    async createPostHandler(input: { post: IDevToCreatePostInput }, ctx: Context) {
+    async createPostHandler(input: { post: IMediumCreatePostInput }, ctx: Context) {
         try {
             const user = await super.getUserById(ctx.user?._id);
 
             if (!user) {
                 throw new TRPCError({
                     code: "NOT_FOUND",
-                    message: "Account not found. Please connect your Dev.to account to continue.",
+                    message: "Account not found. Please connect your Medium account to continue.",
                 });
             }
 
-            const newPost = await super.publishPost(input.post);
+            const newPost = await super.publishPost(input.post, user.author_id);
 
-            if (newPost.error) {
-                if (newPost.status === 422) {
-                    throw new TRPCError({
-                        code: "BAD_REQUEST",
-                        message: "Invalid fields",
-                    });
-                }
-
-                if (newPost.status === 401) {
+            if (newPost.errors) {
+                if (newPost.errors[0].code === 6000 || newPost.errors[0].code === 6003) {
                     throw new TRPCError({
                         code: "UNAUTHORIZED",
                         message: "Invalid API key",
+                    });
+                }
+
+                if (newPost.errors[0].code === 2002) {
+                    throw new TRPCError({
+                        code: "BAD_REQUEST",
+                        message: "Invalid fields",
                     });
                 }
 
@@ -156,7 +158,7 @@ export default class DevToController extends DevToService {
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while publishing the post to Dev.to.",
+                message: "An error occurred while publishing the post.",
             });
         }
     }

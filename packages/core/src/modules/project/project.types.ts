@@ -12,7 +12,7 @@ export interface IProject {
     status: "draft" | "published";
     cover_image?: string;
     assets?: Types.ObjectId[];
-    platforms: (typeof user.platforms)[keyof typeof user.platforms][];
+    platforms?: (typeof user.platforms)[keyof typeof user.platforms][];
     published_url?: string;
     canonical_url?: string;
 }

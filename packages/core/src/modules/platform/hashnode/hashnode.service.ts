@@ -31,7 +31,7 @@ export default class HashnodeService {
     private async initialize(user_id: Types.ObjectId | undefined) {
         const user = await this.getUserById(user_id);
 
-        if (!user) {
+        if (!user.api_key) {
             return;
         }
 

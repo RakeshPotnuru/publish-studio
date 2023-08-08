@@ -19,7 +19,7 @@ const projectRouter = t.router({
                     .optional(),
                 status: z.nativeEnum(project.status).optional().default(project.status.DRAFT),
                 cover_image: z.string().optional(),
-                platform: z.nativeEnum(user.platforms).optional().default(user.platforms.DEFAULT),
+                platforms: z.array(z.nativeEnum(user.platforms)),
             }),
         )
         .mutation(({ input, ctx }) => new ProjectController().createProjectHandler(input, ctx)),
@@ -43,10 +43,7 @@ const projectRouter = t.router({
                         .optional(),
                     status: z.nativeEnum(project.status).optional().default(project.status.DRAFT),
                     cover_image: z.string().optional(),
-                    platform: z
-                        .nativeEnum(user.platforms)
-                        .optional()
-                        .default(user.platforms.DEFAULT),
+                    platforms: z.array(z.nativeEnum(user.platforms)).optional(),
                 }),
             }),
         )

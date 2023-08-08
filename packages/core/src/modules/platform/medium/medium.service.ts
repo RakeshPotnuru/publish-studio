@@ -6,7 +6,12 @@ import type { Types } from "mongoose";
 import defaultConfig from "../../../config/app.config";
 import { decryptField } from "../../../utils/aws/kms";
 import Medium from "./medium.model";
-import type { IMedium, IMediumCreatePostInput, IMediumUser } from "./medium.types";
+import type {
+    IMedium,
+    IMediumCreatePostInput,
+    IMediumCreatePostOutput,
+    IMediumUserOutput,
+} from "./medium.types";
 
 export default class MediumService {
     private medium!: AxiosInstance;
@@ -70,12 +75,12 @@ export default class MediumService {
             },
         });
 
-        return response.data as IMediumUser;
+        return response.data.data as IMediumUserOutput;
     }
 
     async publishPost(post: IMediumCreatePostInput, author_id: string) {
         const response = await this.medium.post("/users/" + author_id + "/posts", post);
 
-        return response.data as IMediumCreatePostInput;
+        return response.data as IMediumCreatePostOutput;
     }
 }

@@ -3,7 +3,7 @@ import type { Types } from "mongoose";
 export interface IHashnode {
     _id?: Types.ObjectId;
     user_id?: Types.ObjectId;
-    api_key: string;
+    api_key?: string;
     username: string;
     profile_pic?: string;
     blog_handle?: string;

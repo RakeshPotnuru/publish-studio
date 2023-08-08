@@ -4,7 +4,6 @@ import defaultConfig from "../../../config/app.config";
 import type { Context } from "../../../trpc";
 import type { IProject } from "../../project/project.types";
 import HashnodeService from "./hashnode.service";
-import type { IHashnode } from "./hashnode.types";
 
 export default class HashnodeController extends HashnodeService {
     async getUserHandler(input: { username: string }) {
@@ -75,18 +74,52 @@ export default class HashnodeController extends HashnodeService {
         }
     }
 
-    async updateUserHandler(input: { user: IHashnode }, ctx: Context) {
+    async updateUserHandler(input: { username: string; api_key?: string }, ctx: Context) {
         try {
-            const user = await super.getUserById(ctx.user?._id);
+            const user = await super.getHashnodeUser(input.username);
 
             if (!user) {
                 throw new TRPCError({
                     code: "NOT_FOUND",
-                    message: "Account not found. Please connect your Hashnode account to continue.",
+                    message: "User not found. Correct your username and try again.",
                 });
             }
 
-            const updatedUser = await super.updateUser(input.user, ctx.user?._id);
+            if (input.api_key) {
+                const updatedUser = await super.updateUser(
+                    {
+                        api_key: input.api_key,
+                        username: input.username,
+                        profile_pic: user.photo,
+                        blog_handle: user.blogHandle,
+                        publication: {
+                            publication_id: user.publication._id,
+                            publication_logo: user.publication.favicon,
+                        },
+                    },
+                    ctx.user?._id,
+                );
+
+                return {
+                    status: "success",
+                    data: {
+                        user: updatedUser,
+                    },
+                };
+            }
+
+            const updatedUser = await super.updateUser(
+                {
+                    username: input.username,
+                    profile_pic: user.photo,
+                    blog_handle: user.blogHandle,
+                    publication: {
+                        publication_id: user.publication._id,
+                        publication_logo: user.publication.favicon,
+                    },
+                },
+                ctx.user?._id,
+            );
 
             return {
                 status: "success",
