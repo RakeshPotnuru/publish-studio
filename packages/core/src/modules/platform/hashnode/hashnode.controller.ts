@@ -222,7 +222,7 @@ export default class HashnodeController extends HashnodeService {
             return {
                 status: "success",
                 data: {
-                    post: newPost.post,
+                    post: newPost,
                 },
             };
         } catch (error) {

@@ -2,11 +2,14 @@ import { TRPCError } from "@trpc/server";
 
 import defaultConfig from "../../../config/app.config";
 import type { Context } from "../../../trpc";
+import type { IProject } from "../../project/project.types";
 import DevToService from "./devto.service";
-import type { IDevToCreatePostInput } from "./devto.types";
 
 export default class DevToController extends DevToService {
-    async createUserHandler(input: { api_key: string }, ctx: Context) {
+    async createUserHandler(
+        input: { api_key: string; default_publish_status: boolean },
+        ctx: Context,
+    ) {
         try {
             const user = await super.getDevUser(input.api_key);
 
@@ -29,6 +32,7 @@ export default class DevToController extends DevToService {
                 api_key: input.api_key,
                 username: user.data.username,
                 profile_pic: user.data.profile_image,
+                default_publish_status: input.default_publish_status,
             });
 
             return {
@@ -47,21 +51,41 @@ export default class DevToController extends DevToService {
         }
     }
 
-    async updateUserHandler(input: { api_key: string }, ctx: Context) {
+    async updateUserHandler(
+        input: { api_key?: string; default_publish_status?: boolean },
+        ctx: Context,
+    ) {
         try {
-            const user = await super.getDevUser(input.api_key);
-            if (!user) {
-                throw new TRPCError({
-                    code: "UNAUTHORIZED",
-                    message: "Invalid API key",
-                });
+            if (input.api_key) {
+                const user = await super.getDevUser(input.api_key);
+                if (!user) {
+                    throw new TRPCError({
+                        code: "UNAUTHORIZED",
+                        message: "Invalid API key",
+                    });
+                }
+
+                const updatedUser = await super.updateUser(
+                    {
+                        api_key: input.api_key,
+                        username: user.data.username,
+                        profile_pic: user.data.profile_image,
+                        default_publish_status: input.default_publish_status,
+                    },
+                    ctx.user?._id,
+                );
+
+                return {
+                    status: "success",
+                    data: {
+                        user: updatedUser,
+                    },
+                };
             }
 
             const updatedUser = await super.updateUser(
                 {
-                    api_key: input.api_key,
-                    username: user.data.username,
-                    profile_pic: user.data.profile_image,
+                    default_publish_status: input.default_publish_status,
                 },
                 ctx.user?._id,
             );
@@ -111,7 +135,7 @@ export default class DevToController extends DevToService {
         }
     }
 
-    async createPostHandler(input: { post: IDevToCreatePostInput }, ctx: Context) {
+    async createPostHandler(input: { post: IProject }, ctx: Context) {
         try {
             const user = await super.getUserById(ctx.user?._id);
 
@@ -122,7 +146,15 @@ export default class DevToController extends DevToService {
                 });
             }
 
-            const newPost = await super.publishPost(input.post);
+            const newPost = await super.publishPost({
+                title: input.post.title,
+                body_markdown: input.post.body,
+                description: input.post.description,
+                published: user.default_publish_status,
+                canonical_url: input.post.canonical_url,
+                tags: input.post.tags,
+                main_image: input.post.cover_image,
+            });
 
             if (newPost.error) {
                 if (newPost.status === 422) {

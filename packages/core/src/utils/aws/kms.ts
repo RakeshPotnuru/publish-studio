@@ -3,6 +3,7 @@ import { DecryptCommand, EncryptCommand, KMSClient } from "@aws-sdk/client-kms";
 import { TRPCError } from "@trpc/server";
 
 import defaultConfig from "../../config/app.config";
+import type { IKMS } from "../../types/aws.types";
 
 const kms = new KMSClient({
     region: process.env.AWS_REGION,
@@ -10,7 +11,7 @@ const kms = new KMSClient({
         accessKeyId: process.env.AWS_ACCESS_KEY,
         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     },
-});
+} as IKMS);
 
 /**
  * The `encryptField` function encrypts a given string value using AWS Key Management Service (KMS) and

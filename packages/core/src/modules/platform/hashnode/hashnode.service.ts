@@ -10,6 +10,7 @@ import type {
     IHashnode,
     IHashnodeCreatePostOutput,
     IHashnodeCreateStoryInput,
+    IHashnodeUpdate,
     IHashnodeUserOutput,
 } from "./hashnode.types";
 
@@ -51,7 +52,7 @@ export default class HashnodeService {
         return (await Hashnode.create(user)) as IHashnode;
     }
 
-    async updateUser(user: IHashnode, user_id: Types.ObjectId | undefined) {
+    async updateUser(user: IHashnodeUpdate, user_id: Types.ObjectId | undefined) {
         return (await Hashnode.findOneAndUpdate({ user_id }, user, {
             new: true,
         }).exec()) as IHashnode;
@@ -118,6 +119,6 @@ export default class HashnodeService {
             },
         });
 
-        return response.data.data.createStory as IHashnodeCreatePostOutput;
+        return response.data as IHashnodeCreatePostOutput;
     }
 }

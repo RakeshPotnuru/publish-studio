@@ -2,11 +2,19 @@ import { TRPCError } from "@trpc/server";
 
 import defaultConfig from "../../../config/app.config";
 import type { Context } from "../../../trpc";
+import type { IProject } from "../../project/project.types";
 import MediumService from "./medium.service";
-import type { IMediumCreatePostInput } from "./medium.types";
+import type { default_publish_status } from "./medium.types";
 
 export default class MediumController extends MediumService {
-    async createUserHandler(input: { api_key: string }, ctx: Context) {
+    async createUserHandler(
+        input: {
+            api_key: string;
+            default_publish_status: default_publish_status;
+            notify_followers: boolean;
+        },
+        ctx: Context,
+    ) {
         try {
             const user = await super.getMediumUser(input.api_key);
 
@@ -30,6 +38,8 @@ export default class MediumController extends MediumService {
                 username: user.username,
                 profile_pic: user.image_url,
                 author_id: user.id,
+                default_publish_status: input.default_publish_status,
+                notify_followers: input.notify_followers,
             });
 
             return {
@@ -48,22 +58,48 @@ export default class MediumController extends MediumService {
         }
     }
 
-    async updateUserHandler(input: { api_key: string }, ctx: Context) {
+    async updateUserHandler(
+        input: {
+            api_key?: string;
+            default_publish_status?: default_publish_status;
+            notify_followers?: boolean;
+        },
+        ctx: Context,
+    ) {
         try {
-            const user = await super.getMediumUser(input.api_key);
-            if (!user) {
-                throw new TRPCError({
-                    code: "UNAUTHORIZED",
-                    message: "Invalid API key",
-                });
+            if (input.api_key) {
+                const user = await super.getMediumUser(input.api_key);
+                if (!user) {
+                    throw new TRPCError({
+                        code: "UNAUTHORIZED",
+                        message: "Invalid API key",
+                    });
+                }
+
+                const updatedUser = await super.updateUser(
+                    {
+                        api_key: input.api_key,
+                        username: user.username,
+                        profile_pic: user.image_url,
+                        author_id: user.id,
+                        default_publish_status: input.default_publish_status,
+                        notify_followers: input.notify_followers,
+                    },
+                    ctx.user?._id,
+                );
+
+                return {
+                    status: "success",
+                    data: {
+                        user: updatedUser,
+                    },
+                };
             }
 
             const updatedUser = await super.updateUser(
                 {
-                    api_key: input.api_key,
-                    username: user.username,
-                    profile_pic: user.image_url,
-                    author_id: user.id,
+                    default_publish_status: input.default_publish_status,
+                    notify_followers: input.notify_followers,
                 },
                 ctx.user?._id,
             );
@@ -113,7 +149,7 @@ export default class MediumController extends MediumService {
         }
     }
 
-    async createPostHandler(input: { post: IMediumCreatePostInput }, ctx: Context) {
+    async createPostHandler(input: { post: IProject }, ctx: Context) {
         try {
             const user = await super.getUserById(ctx.user?._id);
 
@@ -124,7 +160,17 @@ export default class MediumController extends MediumService {
                 });
             }
 
-            const newPost = await super.publishPost(input.post, user.author_id);
+            const newPost = await super.publishPost(
+                {
+                    title: input.post.title,
+                    contentFormat: "markdown",
+                    content: input.post.body,
+                    tags: input.post.tags,
+                    publishStatus: user.default_publish_status,
+                    canonicalUrl: input.post.canonical_url,
+                },
+                user.author_id,
+            );
 
             if (newPost.errors) {
                 if (newPost.errors[0].code === 6000 || newPost.errors[0].code === 6003) {

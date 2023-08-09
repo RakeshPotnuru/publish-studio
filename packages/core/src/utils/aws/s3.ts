@@ -1,6 +1,6 @@
 import { S3 } from "@aws-sdk/client-s3";
 
-import type { IS3 } from "../../types/s3.types";
+import type { IS3 } from "../../types/aws.types";
 
 const s3 = new S3({
     region: process.env.AWS_REGION,

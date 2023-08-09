@@ -11,6 +11,7 @@ import type {
     IMediumCreatePostInput,
     IMediumCreatePostOutput,
     IMediumUserOutput,
+    IMediumUserUpdate,
 } from "./medium.types";
 
 export default class MediumService {
@@ -51,7 +52,7 @@ export default class MediumService {
         return (await Medium.create(user)) as IMedium;
     }
 
-    async updateUser(user: IMedium, user_id: Types.ObjectId | undefined) {
+    async updateUser(user: IMediumUserUpdate, user_id: Types.ObjectId | undefined) {
         return (await Medium.findOneAndUpdate({ user_id }, user, {
             new: true,
         }).exec()) as IMedium;
@@ -66,7 +67,7 @@ export default class MediumService {
     }
 
     /* This method is used exactly once before creating user in `MediumController().createUserHandler(...)` method
-    to fetch user Medium details and store them in database. That's why api key is used directly. */
+    to fetch user Medium details and store them in database. That's why api key is being used directly. */
     async getMediumUser(api_key: string) {
         const response = await axios.get(`${defaultConfig.medium_api_url}/me`, {
             headers: {

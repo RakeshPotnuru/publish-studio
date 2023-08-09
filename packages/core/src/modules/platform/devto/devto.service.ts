@@ -11,6 +11,7 @@ import type {
     IDevToCreatePostInput,
     IDevToCreatePostOutput,
     IDevToUserOutput,
+    IDevToUserUpdate,
 } from "./devto.types";
 
 export default class DevToService {
@@ -51,7 +52,7 @@ export default class DevToService {
         return (await DevTo.create(user)) as IDevTo;
     }
 
-    async updateUser(user: IDevTo, user_id: Types.ObjectId | undefined) {
+    async updateUser(user: IDevToUserUpdate, user_id: Types.ObjectId | undefined) {
         return (await DevTo.findOneAndUpdate({ user_id }, user, {
             new: true,
         }).exec()) as IDevTo;

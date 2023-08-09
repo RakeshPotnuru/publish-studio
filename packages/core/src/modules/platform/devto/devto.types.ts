@@ -5,6 +5,14 @@ export interface IDevTo {
     api_key: string;
     username?: string;
     profile_pic?: string;
+    default_publish_status: boolean;
+}
+
+export interface IDevToUserUpdate {
+    api_key?: string;
+    username?: string;
+    profile_pic?: string;
+    default_publish_status?: boolean;
 }
 
 export interface IDevToUserOutput {
@@ -17,13 +25,12 @@ export interface IDevToUserOutput {
 }
 
 export interface IDevToCreatePostInput {
-    project_id: Types.ObjectId;
     title: string;
-    body_markdown: string;
-    published?: boolean;
+    body_markdown?: string;
+    published: boolean;
     main_image?: string;
     canonical_url?: string;
-    description: string;
+    description?: string;
     tags?: string[];
 }
 

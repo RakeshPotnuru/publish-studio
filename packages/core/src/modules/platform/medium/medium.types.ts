@@ -1,11 +1,24 @@
 import type { Types } from "mongoose";
 
+export type default_publish_status = "public" | "draft" | "unlisted";
+
 export interface IMedium {
     user_id?: Types.ObjectId;
     api_key: string;
     username: string;
     profile_pic: string;
     author_id: string;
+    default_publish_status: default_publish_status;
+    notify_followers: boolean;
+}
+
+export interface IMediumUserUpdate {
+    api_key?: string;
+    username?: string;
+    profile_pic?: string;
+    author_id?: string;
+    default_publish_status?: default_publish_status;
+    notify_followers?: boolean;
 }
 
 export interface IMediumUserOutput {
@@ -22,7 +35,7 @@ export interface IMediumUserOutput {
 export interface IMediumCreatePostInput {
     title: string;
     contentFormat: "html" | "markdown";
-    content: string;
+    content?: string;
     tags?: string[];
     canonicalUrl?: string;
     publishStatus?: "public" | "draft" | "unlisted";

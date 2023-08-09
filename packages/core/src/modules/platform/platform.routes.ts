@@ -4,6 +4,7 @@ import { protectedProcedure, t } from "../../trpc";
 import DevToController from "./devto/devto.controller";
 import HashnodeController from "./hashnode/hashnode.controller";
 import MediumController from "./medium/medium.controller";
+import type { default_publish_status } from "./medium/medium.types";
 
 const platformRouter = t.router({
     connectHashnode: protectedProcedure
@@ -36,6 +37,7 @@ const platformRouter = t.router({
         .input(
             z.object({
                 api_key: z.string(),
+                default_publish_status: z.boolean(),
             }),
         )
         .mutation(({ input, ctx }) =>
@@ -45,7 +47,8 @@ const platformRouter = t.router({
     updateDevTo: protectedProcedure
         .input(
             z.object({
-                api_key: z.string(),
+                api_key: z.string().optional(),
+                default_publish_status: z.boolean().optional(),
             }),
         )
         .mutation(({ input, ctx }) =>
@@ -60,6 +63,8 @@ const platformRouter = t.router({
         .input(
             z.object({
                 api_key: z.string(),
+                default_publish_status: z.custom<default_publish_status>(),
+                notify_followers: z.boolean(),
             }),
         )
         .mutation(({ input, ctx }) =>
@@ -69,7 +74,9 @@ const platformRouter = t.router({
     updateMedium: protectedProcedure
         .input(
             z.object({
-                api_key: z.string(),
+                api_key: z.string().optional(),
+                default_publish_status: z.custom<default_publish_status>().optional(),
+                notify_followers: z.boolean().optional(),
             }),
         )
         .mutation(({ input, ctx }) =>
