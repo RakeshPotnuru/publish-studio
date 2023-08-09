@@ -1,10 +1,12 @@
 import { TRPCError } from "@trpc/server";
-import type { AxiosInstance } from "axios";
 import axios from "axios";
 import type { Types } from "mongoose";
 
 import defaultConfig from "../../../config/app.config";
 import { decryptField } from "../../../utils/aws/kms";
+import { user as userConsts } from "../../../utils/constants";
+import User from "../../user/user.model";
+import Platform from "../platform.model";
 import DevTo from "./devto.model";
 import type {
     IDevTo,
@@ -15,72 +17,149 @@ import type {
 } from "./devto.types";
 
 export default class DevToService {
-    private devTo!: AxiosInstance;
-    private apiKey: string | null = null;
+    private readonly PLATFORM = userConsts.platforms.DEVTO;
 
-    constructor(user_id: Types.ObjectId | undefined) {
-        this.initialize(user_id).catch(error => {
-            console.error("Error initializing DevToService:", error);
+    private async devTo(user_id: Types.ObjectId | undefined) {
+        try {
+            const user = await this.getPlatformById(user_id);
+
+            if (!user) {
+                return;
+            }
+
+            const decryptedAPIKey = await decryptField(user.api_key);
+
+            return axios.create({
+                baseURL: defaultConfig.devto_api_url,
+                timeout: 10_000,
+                headers: {
+                    "Content-Type": "application/json",
+                    "api-key": decryptedAPIKey,
+                },
+            });
+        } catch (error) {
+            console.error(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
                 message: defaultConfig.defaultErrorMessage,
             });
-        });
-    }
-
-    private async initialize(user_id: Types.ObjectId | undefined) {
-        const user = await this.getUserById(user_id);
-
-        if (!user) {
-            return;
         }
-
-        this.apiKey = await decryptField(user.api_key);
-
-        this.devTo = axios.create({
-            baseURL: defaultConfig.devto_api_url,
-            timeout: 10_000,
-            headers: {
-                "Content-Type": "application/json",
-                "api-key": this.apiKey,
-            },
-        });
     }
 
-    async createUser(user: IDevTo) {
-        return (await DevTo.create(user)) as IDevTo;
+    async createPlatform(user: IDevTo) {
+        try {
+            const newPlatform = await DevTo.create(user);
+
+            await User.findByIdAndUpdate(user.user_id, {
+                $push: {
+                    platforms: this.PLATFORM,
+                },
+            }).exec();
+
+            await Platform.create({
+                user_id: user.user_id,
+                name: this.PLATFORM,
+                data: newPlatform._id,
+            });
+
+            return newPlatform as IDevTo;
+        } catch (error) {
+            console.error(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "An error occurred while connecting the account. Please try again later.",
+            });
+        }
     }
 
-    async updateUser(user: IDevToUserUpdate, user_id: Types.ObjectId | undefined) {
-        return (await DevTo.findOneAndUpdate({ user_id }, user, {
-            new: true,
-        }).exec()) as IDevTo;
+    async updatePlatform(user: IDevToUserUpdate, user_id: Types.ObjectId | undefined) {
+        try {
+            return (await DevTo.findOneAndUpdate({ user_id }, user, {
+                new: true,
+            }).exec()) as IDevTo;
+        } catch (error) {
+            console.error(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "An error occurred while updating the account. Please try again later.",
+            });
+        }
     }
 
-    async deleteUser(user_id: Types.ObjectId | undefined) {
-        return (await DevTo.findOneAndDelete({ user_id }).exec()) as IDevTo;
+    async deletePlatform(user_id: Types.ObjectId | undefined) {
+        try {
+            await Platform.findOneAndDelete({ user_id }).exec();
+
+            await User.findByIdAndUpdate(user_id, {
+                $pull: {
+                    platforms: this.PLATFORM,
+                },
+            }).exec();
+
+            return (await DevTo.findOneAndDelete({ user_id }).exec()) as IDevTo;
+        } catch (error) {
+            console.error(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message:
+                    "An error occurred while disconnecting the account. Please try again later.",
+            });
+        }
     }
 
-    async getUserById(user_id: Types.ObjectId | undefined) {
-        return (await DevTo.findOne({ user_id }).exec()) as IDevTo;
+    async getPlatformById(user_id: Types.ObjectId | undefined) {
+        try {
+            return (await DevTo.findOne({ user_id }).exec()) as IDevTo;
+        } catch (error) {
+            console.error(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "An error occurred while fetching the account. Please try again later.",
+            });
+        }
     }
 
-    /* This method is used exactly once before creating user in `DevController().createUserHandler(...)` method
-    to fetch user Dev.to details and store them in database. That's why api key is used directly. */
+    /* This method is used exactly twice before creating or updating user user in `DevController()` class
+    to fetch user Dev.to details and update them in database. That's why api key is being used directly. */
     async getDevUser(api_key: string) {
-        const response = await axios.get(`${defaultConfig.devto_api_url}/users/me`, {
-            headers: {
-                "api-key": api_key,
-            },
-        });
+        try {
+            const response = await axios.get(`${defaultConfig.devto_api_url}/users/me`, {
+                headers: {
+                    "api-key": api_key,
+                },
+            });
 
-        return response.data as IDevToUserOutput;
+            return response.data as IDevToUserOutput;
+        } catch (error) {
+            console.error(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: defaultConfig.defaultErrorMessage,
+            });
+        }
     }
 
-    async publishPost(post: IDevToCreatePostInput) {
-        const response = await this.devTo.post("/articles", post);
+    async publishPost(post: IDevToCreatePostInput, user_id: Types.ObjectId | undefined) {
+        try {
+            const devTo = await this.devTo(user_id);
 
-        return response.data as IDevToCreatePostOutput;
+            const response = await devTo?.post("/articles", post);
+
+            return response?.data as IDevToCreatePostOutput;
+        } catch (error) {
+            console.error(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message:
+                    "An error occurred while publishing the post to Dev.to. Please try again later.",
+            });
+        }
     }
 }

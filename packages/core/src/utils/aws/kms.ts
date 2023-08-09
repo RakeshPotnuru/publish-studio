@@ -21,31 +21,22 @@ const kms = new KMSClient({
  * @returns a Promise that resolves to a string.
  */
 export const encryptField = async (value: string) => {
-    try {
-        const params = {
-            KeyId: process.env.AWS_KMS_KEY_ID,
-            Plaintext: Buffer.from(value),
-        };
+    const params = {
+        KeyId: process.env.AWS_KMS_KEY_ID,
+        Plaintext: Buffer.from(value),
+    };
 
-        const command = new EncryptCommand(params);
-        const response = await kms.send(command);
+    const command = new EncryptCommand(params);
+    const response = await kms.send(command);
 
-        if (!response.CiphertextBlob) {
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: defaultConfig.defaultErrorMessage,
-            });
-        }
-
-        return Buffer.from(response.CiphertextBlob).toString("base64");
-    } catch (error) {
-        console.log(error);
-
+    if (!response.CiphertextBlob) {
         throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: defaultConfig.defaultErrorMessage,
         });
     }
+
+    return Buffer.from(response.CiphertextBlob).toString("base64");
 };
 
 /**
@@ -56,48 +47,39 @@ export const encryptField = async (value: string) => {
  * @returns the decrypted value as a string.
  */
 export const decryptField = async (value: string) => {
-    try {
-        const base64Value = atob(value);
+    const base64Value = atob(value);
 
-        if (!base64Value) {
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: defaultConfig.defaultErrorMessage,
-            });
-        }
-
-        const params: DecryptCommandInput = {
-            CiphertextBlob: Uint8Array.from(base64Value, v => {
-                const codePoint = v.codePointAt(0);
-                if (!codePoint) {
-                    console.log("Invalid code point");
-
-                    throw new TRPCError({
-                        code: "INTERNAL_SERVER_ERROR",
-                        message: defaultConfig.defaultErrorMessage,
-                    });
-                }
-                return codePoint;
-            }),
-        };
-
-        const command = new DecryptCommand(params);
-        const response = await kms.send(command);
-
-        if (!response.Plaintext) {
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: defaultConfig.defaultErrorMessage,
-            });
-        }
-
-        return Buffer.from(response.Plaintext).toString();
-    } catch (error) {
-        console.log(error);
-
+    if (!base64Value) {
         throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: defaultConfig.defaultErrorMessage,
         });
     }
+
+    const params: DecryptCommandInput = {
+        CiphertextBlob: Uint8Array.from(base64Value, v => {
+            const codePoint = v.codePointAt(0);
+            if (!codePoint) {
+                console.log("Invalid code point");
+
+                throw new TRPCError({
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: defaultConfig.defaultErrorMessage,
+                });
+            }
+            return codePoint;
+        }),
+    };
+
+    const command = new DecryptCommand(params);
+    const response = await kms.send(command);
+
+    if (!response.Plaintext) {
+        throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: defaultConfig.defaultErrorMessage,
+        });
+    }
+
+    return Buffer.from(response.Plaintext).toString();
 };

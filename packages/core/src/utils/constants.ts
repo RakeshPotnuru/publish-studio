@@ -1,8 +1,8 @@
+/* Platform name must match model name. */
 enum platforms {
-    HASHNODE = "hashnode",
-    DEVTO = "devto",
-    MEDIUM = "medium",
-    DEFAULT = "default",
+    HASHNODE = "Hashnode",
+    DEVTO = "DevTo",
+    MEDIUM = "Medium",
 }
 
 enum projectStatus {

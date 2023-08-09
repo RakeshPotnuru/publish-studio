@@ -1,10 +1,12 @@
 import { TRPCError } from "@trpc/server";
-import type { AxiosInstance } from "axios";
 import axios from "axios";
 import type { Types } from "mongoose";
 
 import defaultConfig from "../../../config/app.config";
 import { decryptField } from "../../../utils/aws/kms";
+import { user as userConsts } from "../../../utils/constants";
+import User from "../../user/user.model";
+import Platform from "../platform.model";
 import Medium from "./medium.model";
 import type {
     IMedium,
@@ -15,73 +17,153 @@ import type {
 } from "./medium.types";
 
 export default class MediumService {
-    private medium!: AxiosInstance;
-    private apiKey: string | null = null;
+    private readonly PLATFORM = userConsts.platforms.MEDIUM;
 
-    constructor(user_id: Types.ObjectId | undefined) {
-        this.initialize(user_id).catch(error => {
-            console.error("Error initializing MediumService:", error);
+    private async medium(user_id: Types.ObjectId | undefined) {
+        try {
+            const user = await this.getUserById(user_id);
+
+            if (!user) {
+                return;
+            }
+
+            const decryptedAPIKey = await decryptField(user.api_key);
+
+            return axios.create({
+                baseURL: defaultConfig.medium_api_url,
+                timeout: 10_000,
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${decryptedAPIKey}`,
+                },
+            });
+        } catch (error) {
+            console.error(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
                 message: defaultConfig.defaultErrorMessage,
             });
-        });
-    }
-
-    private async initialize(user_id: Types.ObjectId | undefined) {
-        const user = await this.getUserById(user_id);
-
-        if (!user) {
-            return;
         }
-
-        this.apiKey = await decryptField(user.api_key);
-
-        this.medium = axios.create({
-            baseURL: defaultConfig.medium_api_url,
-            timeout: 10_000,
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${this.apiKey}`,
-            },
-        });
     }
 
-    async createUser(user: IMedium) {
-        return (await Medium.create(user)) as IMedium;
+    async createPlatform(user: IMedium) {
+        try {
+            const newPlatform = await Medium.create(user);
+
+            await User.findByIdAndUpdate(user.user_id, {
+                $push: {
+                    platforms: this.PLATFORM,
+                },
+            }).exec();
+
+            await Platform.create({
+                user_id: user.user_id,
+                name: this.PLATFORM,
+                data: newPlatform._id,
+            });
+
+            return newPlatform as IMedium;
+        } catch (error) {
+            console.error(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "An error occurred while connecting the account. Please try again later.",
+            });
+        }
     }
 
-    async updateUser(user: IMediumUserUpdate, user_id: Types.ObjectId | undefined) {
-        return (await Medium.findOneAndUpdate({ user_id }, user, {
-            new: true,
-        }).exec()) as IMedium;
+    async updatePlatform(user: IMediumUserUpdate, user_id: Types.ObjectId | undefined) {
+        try {
+            return (await Medium.findOneAndUpdate({ user_id }, user, {
+                new: true,
+            }).exec()) as IMedium;
+        } catch (error) {
+            console.error(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "An error occurred while updating the account. Please try again later.",
+            });
+        }
     }
 
-    async deleteUser(user_id: Types.ObjectId | undefined) {
-        return (await Medium.findOneAndDelete({ user_id }).exec()) as IMedium;
+    async deletePlatform(user_id: Types.ObjectId | undefined) {
+        try {
+            await Platform.findOneAndDelete({ user_id }).exec();
+
+            await User.findByIdAndUpdate(user_id, {
+                $pull: {
+                    platforms: this.PLATFORM,
+                },
+            }).exec();
+
+            return (await Medium.findOneAndDelete({ user_id }).exec()) as IMedium;
+        } catch (error) {
+            console.error(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message:
+                    "An error occurred while disconnecting the account. Please try again later.",
+            });
+        }
     }
 
     async getUserById(user_id: Types.ObjectId | undefined) {
-        return (await Medium.findOne({ user_id }).exec()) as IMedium;
+        try {
+            return (await Medium.findOne({ user_id }).exec()) as IMedium;
+        } catch (error) {
+            console.error(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "An error occurred while fetching the account. Please try again later.",
+            });
+        }
     }
 
-    /* This method is used exactly once before creating user in `MediumController().createUserHandler(...)` method
-    to fetch user Medium details and store them in database. That's why api key is being used directly. */
+    /* This method is used exactly twice before creating or updating user in `MediumController()` method
+    to fetch user Medium details and update them in database. That's why api key is being used directly. */
     async getMediumUser(api_key: string) {
-        const response = await axios.get(`${defaultConfig.medium_api_url}/me`, {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${api_key}`,
-            },
-        });
+        try {
+            const response = await axios.get(`${defaultConfig.medium_api_url}/me`, {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${api_key}`,
+                },
+            });
 
-        return response.data.data as IMediumUserOutput;
+            return response.data.data as IMediumUserOutput;
+        } catch (error) {
+            console.error(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: defaultConfig.defaultErrorMessage,
+            });
+        }
     }
 
-    async publishPost(post: IMediumCreatePostInput, author_id: string) {
-        const response = await this.medium.post("/users/" + author_id + "/posts", post);
+    async publishPost(
+        post: IMediumCreatePostInput,
+        author_id: string,
+        user_id: Types.ObjectId | undefined,
+    ) {
+        try {
+            const medium = await this.medium(user_id);
 
-        return response.data as IMediumCreatePostOutput;
+            const response = await medium?.post("/users/" + author_id + "/posts", post);
+
+            return response?.data as IMediumCreatePostOutput;
+        } catch (error) {
+            console.error(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: defaultConfig.defaultErrorMessage,
+            });
+        }
     }
 }

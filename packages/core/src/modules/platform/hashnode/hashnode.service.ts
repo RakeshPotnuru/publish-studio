@@ -1,10 +1,12 @@
 import { TRPCError } from "@trpc/server";
-import type { AxiosInstance } from "axios";
 import axios from "axios";
 import type { Types } from "mongoose";
 
 import defaultConfig from "../../../config/app.config";
 import { decryptField } from "../../../utils/aws/kms";
+import { user as userConsts } from "../../../utils/constants";
+import User from "../../user/user.model";
+import Platform from "../platform.model";
 import Hashnode from "./hashnode.model";
 import type {
     IHashnode,
@@ -15,62 +17,119 @@ import type {
 } from "./hashnode.types";
 
 export default class HashnodeService {
-    private hashnode!: AxiosInstance;
-    private apiKey: string | null = null;
+    private readonly PLATFORM = userConsts.platforms.HASHNODE;
 
-    constructor(user_id: Types.ObjectId | undefined) {
-        this.initialize(user_id).catch(error => {
-            console.error("Error initializing HashnodeService:", error);
+    private async hashnode(user_id: Types.ObjectId | undefined) {
+        try {
+            const user = await this.getPlatformById(user_id);
+
+            if (!user.api_key) {
+                return;
+            }
+
+            const decryptedAPIKey = await decryptField(user.api_key);
+
+            return axios.create({
+                baseURL: defaultConfig.hashnode_api_url,
+                timeout: 10_000,
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: decryptedAPIKey,
+                },
+            });
+        } catch (error) {
+            console.error(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
                 message: defaultConfig.defaultErrorMessage,
             });
-        });
-    }
-
-    private async initialize(user_id: Types.ObjectId | undefined) {
-        const user = await this.getUserById(user_id);
-
-        if (!user.api_key) {
-            return;
         }
-
-        this.apiKey = await decryptField(user.api_key);
-
-        this.hashnode = axios.create({
-            baseURL: defaultConfig.hashnode_api_url,
-            timeout: 10_000,
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: this.apiKey,
-            },
-        });
     }
 
-    async createUser(user: IHashnode) {
-        return (await Hashnode.create(user)) as IHashnode;
+    async createPlatform(user: IHashnode) {
+        try {
+            const newPlatform = await Hashnode.create(user);
+
+            await User.findByIdAndUpdate(user.user_id, {
+                $push: {
+                    platforms: this.PLATFORM,
+                },
+            }).exec();
+
+            await Platform.create({
+                user_id: user.user_id,
+                name: this.PLATFORM,
+                data: newPlatform._id,
+            });
+
+            return newPlatform as IHashnode;
+        } catch (error) {
+            console.error(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "An error occurred while connecting the account. Please try again later.",
+            });
+        }
     }
 
-    async updateUser(user: IHashnodeUpdate, user_id: Types.ObjectId | undefined) {
-        return (await Hashnode.findOneAndUpdate({ user_id }, user, {
-            new: true,
-        }).exec()) as IHashnode;
+    async updatePlatform(user: IHashnodeUpdate, user_id: Types.ObjectId | undefined) {
+        try {
+            return (await Hashnode.findOneAndUpdate({ user_id }, user, {
+                new: true,
+            }).exec()) as IHashnode;
+        } catch (error) {
+            console.error(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "An error occurred while updating the account. Please try again later.",
+            });
+        }
     }
 
-    async deleteUser(user_id: Types.ObjectId | undefined) {
-        return (await Hashnode.findOneAndDelete({ user_id }).exec()) as IHashnode;
+    async deletePlatform(user_id: Types.ObjectId | undefined) {
+        try {
+            await Platform.findOneAndDelete({ user_id }).exec();
+
+            await User.findByIdAndUpdate(user_id, {
+                $pull: {
+                    platforms: this.PLATFORM,
+                },
+            }).exec();
+
+            return (await Hashnode.findOneAndDelete({ user_id }).exec()) as IHashnode;
+        } catch (error) {
+            console.error(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message:
+                    "An error occurred while disconnecting the account. Please try again later.",
+            });
+        }
     }
 
-    async getUserById(user_id: Types.ObjectId | undefined) {
-        return (await Hashnode.findOne({ user_id }).exec()) as IHashnode;
+    async getPlatformById(user_id: Types.ObjectId | undefined) {
+        try {
+            return (await Hashnode.findOne({ user_id }).exec()) as IHashnode;
+        } catch (error) {
+            console.error(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "An error occurred while fetching the account. Please try again later.",
+            });
+        }
     }
 
     async getHashnodeUser(username: string) {
-        const response = await axios.post(
-            defaultConfig.hashnode_api_url,
-            {
-                query: `query user($username: String!) {
+        try {
+            const response = await axios.post(
+                defaultConfig.hashnode_api_url,
+                {
+                    query: `query user($username: String!) {
                 user(username: $username) {
                     photo
                     blogHandle
@@ -80,23 +139,34 @@ export default class HashnodeService {
                     }
                 }
             }`,
-                variables: {
-                    username,
+                    variables: {
+                        username,
+                    },
                 },
-            },
-            {
-                headers: {
-                    "Content-Type": "application/json",
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
                 },
-            },
-        );
+            );
 
-        return response.data.data.user as IHashnodeUserOutput;
+            return response.data.data.user as IHashnodeUserOutput;
+        } catch (error) {
+            console.error(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: defaultConfig.defaultErrorMessage,
+            });
+        }
     }
 
-    async publishPost(post: IHashnodeCreateStoryInput) {
-        const response = await this.hashnode.post("", {
-            query: `mutation createStory($input: CreateStoryInput!) {
+    async publishPost(post: IHashnodeCreateStoryInput, user_id: Types.ObjectId | undefined) {
+        try {
+            const hashnode = await this.hashnode(user_id);
+
+            const response = await hashnode?.post("", {
+                query: `mutation createStory($input: CreateStoryInput!) {
                     createStory(input: $input) {
                         code
                         success
@@ -114,11 +184,19 @@ export default class HashnodeService {
                         }
                     }
                 }`,
-            variables: {
-                input: post,
-            },
-        });
+                variables: {
+                    input: post,
+                },
+            });
 
-        return response.data as IHashnodeCreatePostOutput;
+            return response?.data as IHashnodeCreatePostOutput;
+        } catch (error) {
+            console.error(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "An error occurred while publishing the post to Hashnode.",
+            });
+        }
     }
 }

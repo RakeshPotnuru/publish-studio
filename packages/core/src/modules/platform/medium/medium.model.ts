@@ -5,15 +5,23 @@ import mongoose, { Schema } from "mongoose";
 import { encryptField } from "../../../utils/aws/kms";
 import type { IMedium } from "./medium.types";
 
-const MediumSchema = new Schema<IMedium>({
-    user_id: { type: Schema.Types.ObjectId, required: true, unique: true },
-    api_key: { type: String, required: true, unique: true },
-    username: { type: String, unique: true },
-    profile_pic: { type: String },
-    author_id: { type: String, required: true },
-    default_publish_status: { type: String, required: true, default: "draft" },
-    notify_followers: { type: Boolean, required: true, default: false },
-});
+const MediumSchema = new Schema<IMedium>(
+    {
+        user_id: { type: Schema.Types.ObjectId, required: true, unique: true },
+        api_key: { type: String, required: true, unique: true },
+        username: { type: String, unique: true },
+        profile_pic: { type: String },
+        author_id: { type: String, required: true },
+        default_publish_status: { type: String, required: true, default: "draft" },
+        notify_followers: { type: Boolean, required: true, default: false },
+    },
+    {
+        timestamps: {
+            createdAt: "created_at",
+            updatedAt: "updated_at",
+        },
+    },
+);
 
 type TMediumDocument = IMedium & Document;
 

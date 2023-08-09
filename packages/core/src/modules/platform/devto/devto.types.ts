@@ -18,10 +18,8 @@ export interface IDevToUserUpdate {
 export interface IDevToUserOutput {
     error: string;
     status: 401 | 422;
-    data: {
-        username: string;
-        profile_image: string;
-    };
+    username: string;
+    profile_image: string;
 }
 
 export interface IDevToCreatePostInput {

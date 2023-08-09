@@ -3,5 +3,8 @@
     "extends": "@bravo68web/eslint-config/typescript-strict",
     "parserOptions": {
         "project": "./tsconfig.json"
+    },
+    "rules": {
+        "@typescript-eslint/no-unnecessary-condition": "off"
     }
 }

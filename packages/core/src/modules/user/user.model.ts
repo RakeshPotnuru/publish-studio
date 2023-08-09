@@ -28,12 +28,7 @@ const UserSchema = new Schema<IUser>(
         },
         projects: [{ type: Schema.Types.ObjectId, ref: "Project" }],
         assets: [{ type: Schema.Types.ObjectId, ref: "Asset" }],
-        platforms: [
-            {
-                platform: { type: String, enum: user.platforms, required: true },
-                data: { type: Schema.Types.Mixed, required: true },
-            },
-        ],
+        platforms: [{ type: String, enum: user.platforms }],
     },
     {
         timestamps: {

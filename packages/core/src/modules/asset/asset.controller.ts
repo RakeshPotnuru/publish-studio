@@ -1,7 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
-import defaultConfig from "../../config/app.config";
 import type { Context } from "../../trpc";
 import type { IFile } from "../../types/file.types";
 import AssetService from "./asset.service";
@@ -37,37 +36,17 @@ export default class AssetController extends AssetService {
     }
 
     async uploadImageHandler(input: { file: IFile; project_id?: Types.ObjectId }, ctx: Context) {
-        try {
-            const { file, project_id } = input;
+        const { file, project_id } = input;
 
-            if (project_id) {
-                const project = await super.getProjectById(project_id);
+        this.validateFile(file);
 
-                if (!project) {
-                    throw new TRPCError({
-                        code: "BAD_REQUEST",
-                        message: "Project not found",
-                    });
-                }
-            }
+        const post = await super.uploadImage(file, project_id, ctx);
 
-            this.validateFile(file);
-
-            const post = await super.uploadImage(file, project_id, ctx);
-
-            return {
-                status: "success",
-                data: {
-                    submitTo: post,
-                },
-            };
-        } catch (error) {
-            console.log(error);
-
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: defaultConfig.defaultErrorMessage,
-            });
-        }
+        return {
+            status: "success",
+            data: {
+                submitTo: post,
+            },
+        };
     }
 }

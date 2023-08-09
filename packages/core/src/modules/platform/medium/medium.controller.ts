@@ -15,47 +15,38 @@ export default class MediumController extends MediumService {
         },
         ctx: Context,
     ) {
-        try {
-            const user = await super.getMediumUser(input.api_key);
+        const user = await super.getMediumUser(input.api_key);
 
-            if (user.errors) {
-                if (user.errors[0].code === 6000 || user.errors[0].code === 6003) {
-                    throw new TRPCError({
-                        code: "UNAUTHORIZED",
-                        message: "Invalid API key",
-                    });
-                }
-
+        if (user.errors) {
+            if (user.errors[0].code === 6000 || user.errors[0].code === 6003) {
                 throw new TRPCError({
-                    code: "INTERNAL_SERVER_ERROR",
-                    message: defaultConfig.defaultErrorMessage,
+                    code: "UNAUTHORIZED",
+                    message: "Invalid API key",
                 });
             }
 
-            const newUser = await super.createUser({
-                user_id: ctx.user?._id,
-                api_key: input.api_key,
-                username: user.username,
-                profile_pic: user.image_url,
-                author_id: user.id,
-                default_publish_status: input.default_publish_status,
-                notify_followers: input.notify_followers,
-            });
-
-            return {
-                status: "success",
-                data: {
-                    user: newUser,
-                },
-            };
-        } catch (error) {
-            console.log(error);
-
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while connecting the account.",
+                message: defaultConfig.defaultErrorMessage,
             });
         }
+
+        const newUser = await super.createPlatform({
+            user_id: ctx.user?._id,
+            api_key: input.api_key,
+            username: user.username,
+            profile_pic: user.image_url,
+            author_id: user.id,
+            default_publish_status: input.default_publish_status,
+            notify_followers: input.notify_followers,
+        });
+
+        return {
+            status: "success",
+            data: {
+                user: newUser,
+            },
+        };
     }
 
     async updateUserHandler(
@@ -66,38 +57,21 @@ export default class MediumController extends MediumService {
         },
         ctx: Context,
     ) {
-        try {
-            if (input.api_key) {
-                const user = await super.getMediumUser(input.api_key);
-                if (!user) {
-                    throw new TRPCError({
-                        code: "UNAUTHORIZED",
-                        message: "Invalid API key",
-                    });
-                }
-
-                const updatedUser = await super.updateUser(
-                    {
-                        api_key: input.api_key,
-                        username: user.username,
-                        profile_pic: user.image_url,
-                        author_id: user.id,
-                        default_publish_status: input.default_publish_status,
-                        notify_followers: input.notify_followers,
-                    },
-                    ctx.user?._id,
-                );
-
-                return {
-                    status: "success",
-                    data: {
-                        user: updatedUser,
-                    },
-                };
+        if (input.api_key) {
+            const user = await super.getMediumUser(input.api_key);
+            if (!user) {
+                throw new TRPCError({
+                    code: "UNAUTHORIZED",
+                    message: "Invalid API key",
+                });
             }
 
-            const updatedUser = await super.updateUser(
+            const updatedUser = await super.updatePlatform(
                 {
+                    api_key: input.api_key,
+                    username: user.username,
+                    profile_pic: user.image_url,
+                    author_id: user.id,
                     default_publish_status: input.default_publish_status,
                     notify_followers: input.notify_followers,
                 },
@@ -110,102 +84,93 @@ export default class MediumController extends MediumService {
                     user: updatedUser,
                 },
             };
-        } catch (error) {
-            console.log(error);
-
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while updating the account.",
-            });
         }
+
+        const updatedUser = await super.updatePlatform(
+            {
+                default_publish_status: input.default_publish_status,
+                notify_followers: input.notify_followers,
+            },
+            ctx.user?._id,
+        );
+
+        return {
+            status: "success",
+            data: {
+                user: updatedUser,
+            },
+        };
     }
 
     async deleteUserHandler(ctx: Context) {
-        try {
-            const user = await super.getUserById(ctx.user?._id);
+        const user = await super.getUserById(ctx.user?._id);
 
-            if (!user) {
-                throw new TRPCError({
-                    code: "NOT_FOUND",
-                    message: "Account not found. Please connect your Dev.to account to continue.",
-                });
-            }
-
-            const deletedUser = await super.deleteUser(ctx.user?._id);
-
-            return {
-                status: "success",
-                data: {
-                    user: deletedUser,
-                },
-            };
-        } catch (error) {
-            console.log(error);
-
+        if (!user) {
             throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while deleting the account.",
+                code: "NOT_FOUND",
+                message: "Account not found. Please connect your Medium account to continue.",
             });
         }
+
+        const deletedUser = await super.deletePlatform(ctx.user?._id);
+
+        return {
+            status: "success",
+            data: {
+                user: deletedUser,
+            },
+        };
     }
 
     async createPostHandler(input: { post: IProject }, ctx: Context) {
-        try {
-            const user = await super.getUserById(ctx.user?._id);
+        const user = await super.getUserById(ctx.user?._id);
 
-            if (!user) {
+        if (!user) {
+            throw new TRPCError({
+                code: "NOT_FOUND",
+                message: "Account not found. Please connect your Medium account to continue.",
+            });
+        }
+
+        const newPost = await super.publishPost(
+            {
+                title: input.post.title,
+                contentFormat: "markdown",
+                content: input.post.body,
+                tags: input.post.tags,
+                publishStatus: user.default_publish_status,
+                canonicalUrl: input.post.canonical_url,
+            },
+            user.author_id,
+            ctx.user?._id,
+        );
+
+        if (newPost.errors) {
+            if (newPost.errors[0].code === 6000 || newPost.errors[0].code === 6003) {
                 throw new TRPCError({
-                    code: "NOT_FOUND",
-                    message: "Account not found. Please connect your Medium account to continue.",
+                    code: "UNAUTHORIZED",
+                    message: "Invalid API key",
                 });
             }
 
-            const newPost = await super.publishPost(
-                {
-                    title: input.post.title,
-                    contentFormat: "markdown",
-                    content: input.post.body,
-                    tags: input.post.tags,
-                    publishStatus: user.default_publish_status,
-                    canonicalUrl: input.post.canonical_url,
-                },
-                user.author_id,
-            );
-
-            if (newPost.errors) {
-                if (newPost.errors[0].code === 6000 || newPost.errors[0].code === 6003) {
-                    throw new TRPCError({
-                        code: "UNAUTHORIZED",
-                        message: "Invalid API key",
-                    });
-                }
-
-                if (newPost.errors[0].code === 2002) {
-                    throw new TRPCError({
-                        code: "BAD_REQUEST",
-                        message: "Invalid fields",
-                    });
-                }
-
+            if (newPost.errors[0].code === 2002) {
                 throw new TRPCError({
-                    code: "INTERNAL_SERVER_ERROR",
-                    message: defaultConfig.defaultErrorMessage,
+                    code: "BAD_REQUEST",
+                    message: "Invalid fields",
                 });
             }
-
-            return {
-                status: "success",
-                data: {
-                    post: newPost,
-                },
-            };
-        } catch (error) {
-            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while publishing the post.",
+                message: defaultConfig.defaultErrorMessage,
             });
         }
+
+        return {
+            status: "success",
+            data: {
+                post: newPost,
+            },
+        };
     }
 }
