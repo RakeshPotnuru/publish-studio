@@ -73,6 +73,5 @@ export interface IHashnodeCreatePostOutput {
         slug: string;
         coverImage: string;
         brief: string;
-        blogHandle: string;
     };
 }

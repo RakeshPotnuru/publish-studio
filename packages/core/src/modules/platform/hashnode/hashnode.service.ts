@@ -180,7 +180,6 @@ export default class HashnodeService {
                             slug
                             coverImage
                             brief
-                            blogHandle
                         }
                     }
                 }`,

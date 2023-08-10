@@ -57,18 +57,8 @@ export const decryptField = async (value: string) => {
     }
 
     const params: DecryptCommandInput = {
-        CiphertextBlob: Uint8Array.from(base64Value, v => {
-            const codePoint = v.codePointAt(0);
-            if (!codePoint) {
-                console.log("Invalid code point");
-
-                throw new TRPCError({
-                    code: "INTERNAL_SERVER_ERROR",
-                    message: defaultConfig.defaultErrorMessage,
-                });
-            }
-            return codePoint;
-        }),
+        // eslint-disable-next-line unicorn/prefer-code-point
+        CiphertextBlob: Uint8Array.from(base64Value, v => v.charCodeAt(0)),
     };
 
     const command = new DecryptCommand(params);

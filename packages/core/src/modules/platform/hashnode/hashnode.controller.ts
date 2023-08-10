@@ -147,22 +147,32 @@ export default class HashnodeController extends HashnodeService {
 
         const { post } = input;
 
-        const newPost = await super.publishPost(
-            {
-                title: post.title,
-                contentMarkdown: post.body,
-                // TODO: Fetch tags info from hashnode
-                // tags: post.tags,
-                coverImageURL: post.cover_image,
-                isRepublished: {
-                    originalArticleURL: post.canonical_url,
-                },
-                isPartOfPublication: {
-                    publicationId: user.publication.publication_id,
-                },
-            },
-            ctx.user?._id,
-        );
+        const postBody = post.canonical_url
+            ? {
+                  title: post.title,
+                  contentMarkdown: post.body,
+                  // TODO: Fetch tags info from hashnode
+                  // tags: post.tags,
+                  coverImageURL: post.cover_image,
+                  isRepublished: {
+                      originalArticleURL: post.canonical_url,
+                  },
+                  isPartOfPublication: {
+                      publicationId: user.publication.publication_id,
+                  },
+              }
+            : {
+                  title: post.title,
+                  contentMarkdown: post.body,
+                  // TODO: Fetch tags info from hashnode
+                  // tags: post.tags,
+                  coverImageURL: post.cover_image,
+                  isPartOfPublication: {
+                      publicationId: user.publication.publication_id,
+                  },
+              };
+
+        const newPost = await super.publishPost(postBody, ctx.user?._id);
 
         if (newPost.errors) {
             if (newPost.errors[0].extensions.code === "INTERNAL_SERVER_ERROR") {

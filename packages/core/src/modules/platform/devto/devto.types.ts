@@ -35,12 +35,10 @@ export interface IDevToCreatePostInput {
 export interface IDevToCreatePostOutput {
     error: string;
     status: 401 | 422;
-    article: {
-        title: string;
-        description: string;
-        body_markdown: string;
-        url: string;
-        cover_image: string;
-        tags: string[];
-    };
+    title: string;
+    description: string;
+    body_markdown: string;
+    url: string;
+    cover_image: string;
+    tags: string[];
 }

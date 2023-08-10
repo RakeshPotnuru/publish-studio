@@ -47,7 +47,9 @@ export interface IMediumCreatePostOutput {
         message: string;
         code: 6003 | 6000 | 2004 | 6026 | 2002;
     }[];
-    title: string;
-    tags: string[];
-    url: string;
+    data: {
+        title: string;
+        tags: string[];
+        url: string;
+    };
 }

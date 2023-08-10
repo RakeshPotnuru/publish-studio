@@ -25,7 +25,8 @@ export default class ProjectController extends ProjectService {
             platforms: project.platforms,
         });
 
-        const publishResponse = [{}] as {
+        const publishResponse = [] as {
+            platform: (typeof user.platforms)[keyof typeof user.platforms];
             status: "success" | "error";
             url: string;
         }[];
@@ -39,12 +40,14 @@ export default class ProjectController extends ProjectService {
             );
 
             publishResponse.push({
+                platform: user.platforms.DEVTO,
                 status: response.data.post.error ? "error" : "success",
-                url: response.data.post.article.url,
+                url: response.data.post.url,
             });
         }
 
         if (project.platforms?.includes(user.platforms.HASHNODE)) {
+            const hashnodeUser = await new HashnodeController().getPlatformById(ctx.user?._id);
             const response = await new HashnodeController().createPostHandler(
                 {
                     post: project,
@@ -52,9 +55,13 @@ export default class ProjectController extends ProjectService {
                 ctx,
             );
 
+            const blogHandle = hashnodeUser?.blog_handle ?? "unknown";
+            const postSlug = response.data.post?.post?.slug ?? "unknown";
+
             publishResponse.push({
-                status: response.data.post.errors ? "error" : "success",
-                url: `https://${response.data.post.post.blogHandle}.hashnode.dev/${response.data.post.post.slug}`,
+                platform: user.platforms.HASHNODE,
+                status: response.data.post?.errors ? "error" : "success",
+                url: `https://${blogHandle}.hashnode.dev/${postSlug}`,
             });
         }
 
@@ -67,8 +74,9 @@ export default class ProjectController extends ProjectService {
             );
 
             publishResponse.push({
+                platform: user.platforms.MEDIUM,
                 status: response.data.post.errors ? "error" : "success",
-                url: response.data.post.url,
+                url: response.data.post.data.url,
             });
         }
 

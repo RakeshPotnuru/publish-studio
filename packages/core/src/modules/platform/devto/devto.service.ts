@@ -149,7 +149,9 @@ export default class DevToService {
         try {
             const devTo = await this.devTo(user_id);
 
-            const response = await devTo?.post("/articles", post);
+            const response = await devTo?.post("/articles", {
+                article: post,
+            });
 
             return response?.data as IDevToCreatePostOutput;
         } catch (error) {
