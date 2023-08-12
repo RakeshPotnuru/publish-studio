@@ -91,7 +91,10 @@ export default class MediumService {
 
     async deletePlatform(user_id: Types.ObjectId | undefined) {
         try {
-            await Platform.findOneAndDelete({ user_id }).exec();
+            await Platform.findOneAndDelete({
+                user_id,
+                name: this.PLATFORM,
+            }).exec();
 
             await User.findByIdAndUpdate(user_id, {
                 $pull: {

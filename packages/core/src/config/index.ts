@@ -18,12 +18,16 @@ const ZodEnvironmentVariables = z.object({
     ACCESS_TOKEN_PUBLIC_KEY: z.string(),
     REFRESH_TOKEN_PRIVATE_KEY: z.string(),
     REFRESH_TOKEN_PUBLIC_KEY: z.string(),
+    VERIFICATION_TOKEN_PRIVATE_KEY: z.string(),
+    VERIFICATION_TOKEN_PUBLIC_KEY: z.string(),
     AWS_BUCKET_NAME: z.string(),
     AWS_ACCESS_KEY: z.string(),
     AWS_SECRET_ACCESS_KEY: z.string(),
     AWS_REGION: z.string(),
     AWS_KMS_KEY_ID: z.string(),
+    AWS_SES_AUTO_FROM_EMAIL: z.string().email(),
     WHITELIST_ORIGINS: z.string().optional(),
+    CLIENT_URL: z.string().url(),
 });
 
 ZodEnvironmentVariables.parse(process.env);

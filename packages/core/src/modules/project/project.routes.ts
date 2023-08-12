@@ -4,6 +4,7 @@ import { z } from "zod";
 import { protectedProcedure, t } from "../../trpc";
 import { project, user } from "../../utils/constants";
 import ProjectController from "./project.controller";
+import type { hashnode_tags } from "./project.types";
 
 const projectRouter = t.router({
     createProject: protectedProcedure
@@ -20,11 +21,20 @@ const projectRouter = t.router({
                         .optional(),
                     status: z.nativeEnum(project.status).optional().default(project.status.DRAFT),
                     cover_image: z.string().optional(),
-                    platforms: z.array(z.nativeEnum(user.platforms)),
                 }),
             }),
         )
         .mutation(({ input, ctx }) => new ProjectController().createProjectHandler(input, ctx)),
+
+    publishPost: protectedProcedure
+        .input(
+            z.object({
+                project_id: z.custom<Types.ObjectId>(),
+                platforms: z.array(z.nativeEnum(user.platforms)),
+                hashnode_tags: z.custom<hashnode_tags>().optional(),
+            }),
+        )
+        .mutation(({ input, ctx }) => new ProjectController().publishPostHandler(input, ctx)),
 
     getAllProjects: protectedProcedure.query(({ ctx }) =>
         new ProjectController().getAllProjectsHandler(ctx),

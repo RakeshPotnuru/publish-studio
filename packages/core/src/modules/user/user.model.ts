@@ -29,6 +29,7 @@ const UserSchema = new Schema<IUser>(
         projects: [{ type: Schema.Types.ObjectId, ref: "Project" }],
         assets: [{ type: Schema.Types.ObjectId, ref: "Asset" }],
         platforms: [{ type: String, enum: user.platforms }],
+        is_verified: { type: Boolean, required: true, default: false },
     },
     {
         timestamps: {

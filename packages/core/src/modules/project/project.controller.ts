@@ -7,13 +7,13 @@ import DevToController from "../platform/devto/devto.controller";
 import HashnodeController from "../platform/hashnode/hashnode.controller";
 import MediumController from "../platform/medium/medium.controller";
 import ProjectService from "./project.service";
-import type { IProject } from "./project.types";
+import type { hashnode_tags, IProject } from "./project.types";
 
 export default class ProjectController extends ProjectService {
     async createProjectHandler(input: { project: IProject }, ctx: Context) {
         const { project } = input;
 
-        await super.createProject({
+        const newProject = await super.createProject({
             user_id: ctx.user?._id,
             folder_id: project.folder_id,
             title: project.title,
@@ -22,7 +22,28 @@ export default class ProjectController extends ProjectService {
             tags: project.tags,
             status: project.status,
             cover_image: project.cover_image,
-            platforms: project.platforms,
+        });
+
+        return {
+            success: true,
+            data: {
+                project: newProject,
+            },
+        };
+    }
+
+    async publishPostHandler(
+        input: {
+            project_id: Types.ObjectId;
+            platforms: (typeof user.platforms)[keyof typeof user.platforms][];
+            hashnode_tags?: hashnode_tags;
+        },
+        ctx: Context,
+    ) {
+        const { project_id, platforms, hashnode_tags } = input;
+
+        const project = await super.updateProjectById(project_id, {
+            platforms: platforms,
         });
 
         const publishResponse = [] as {
@@ -51,12 +72,13 @@ export default class ProjectController extends ProjectService {
             const response = await new HashnodeController().createPostHandler(
                 {
                     post: project,
+                    hashnode_tags: hashnode_tags,
                 },
                 ctx,
             );
 
             const blogHandle = hashnodeUser?.blog_handle ?? "unknown";
-            const postSlug = response.data.post?.post?.slug ?? "unknown";
+            const postSlug = response.data.post.data.createStory.post.slug ?? "unknown";
 
             publishResponse.push({
                 platform: user.platforms.HASHNODE,

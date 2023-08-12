@@ -4,7 +4,7 @@ import type { Types } from "mongoose";
 import Folder from "../folder/folder.model";
 import User from "../user/user.model";
 import Project from "./project.model";
-import type { IProject } from "./project.types";
+import type { IProject, IProjectUpdate } from "./project.types";
 
 export default class ProjectService {
     async createProject(project: IProject) {
@@ -71,7 +71,7 @@ export default class ProjectService {
         }
     }
 
-    async updateProjectById(id: Types.ObjectId, project: IProject) {
+    async updateProjectById(id: Types.ObjectId, project: IProjectUpdate) {
         try {
             return (await Project.findByIdAndUpdate(id, project, { new: true }).exec()) as IProject;
         } catch (error) {

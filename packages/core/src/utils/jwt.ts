@@ -5,10 +5,11 @@ import defaultConfig from "../config/app.config";
 
 export const signJwt = (
     payload: object,
-    key: "accessTokenPrivateKey" | "refreshTokenPrivateKey",
+    key: "accessTokenPrivateKey" | "refreshTokenPrivateKey" | "verificationTokenPrivateKey",
     options: SignOptions = {},
 ) => {
     try {
+        // eslint-disable-next-line security/detect-object-injection
         const privateKey = Buffer.from(defaultConfig[key], "base64").toString("ascii");
         return jwt.sign(payload, privateKey, {
             ...options,
@@ -22,9 +23,10 @@ export const signJwt = (
 
 export const verifyJwt = <T>(
     token: string,
-    key: "accessTokenPublicKey" | "refreshTokenPublicKey",
+    key: "accessTokenPublicKey" | "refreshTokenPublicKey" | "verificationTokenPublicKey",
 ): T | null => {
     try {
+        // eslint-disable-next-line security/detect-object-injection
         const publicKey = Buffer.from(defaultConfig[key], "base64").toString("ascii");
         return jwt.verify(token, publicKey) as T;
     } catch (error) {

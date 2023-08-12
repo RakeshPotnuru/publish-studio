@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import defaultConfig from "../../../config/app.config";
 import type { Context } from "../../../trpc";
-import type { IProject } from "../../project/project.types";
+import type { hashnode_tags, IProject } from "../../project/project.types";
 import HashnodeService from "./hashnode.service";
 
 export default class HashnodeController extends HashnodeService {
@@ -133,6 +133,7 @@ export default class HashnodeController extends HashnodeService {
     async createPostHandler(
         input: {
             post: IProject;
+            hashnode_tags?: hashnode_tags;
         },
         ctx: Context,
     ) {
@@ -145,14 +146,13 @@ export default class HashnodeController extends HashnodeService {
             });
         }
 
-        const { post } = input;
+        const { post, hashnode_tags } = input;
 
         const postBody = post.canonical_url
             ? {
                   title: post.title,
                   contentMarkdown: post.body,
-                  // TODO: Fetch tags info from hashnode
-                  // tags: post.tags,
+                  tags: hashnode_tags,
                   coverImageURL: post.cover_image,
                   isRepublished: {
                       originalArticleURL: post.canonical_url,
@@ -164,8 +164,7 @@ export default class HashnodeController extends HashnodeService {
             : {
                   title: post.title,
                   contentMarkdown: post.body,
-                  // TODO: Fetch tags info from hashnode
-                  // tags: post.tags,
+                  tags: hashnode_tags,
                   coverImageURL: post.cover_image,
                   isPartOfPublication: {
                       publicationId: user.publication.publication_id,

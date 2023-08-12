@@ -39,6 +39,22 @@ const authRouter = t.router({
     refresh: protectedProcedure.query(({ ctx }) =>
         new AuthController().refreshAccessTokenHandler(ctx),
     ),
+
+    verifyEmail: t.procedure
+        .input(
+            z.object({
+                token: z.string(),
+            }),
+        )
+        .mutation(({ input }) => new AuthController().verifyEmailHandler(input)),
+
+    resendVerificationEmail: t.procedure
+        .input(
+            z.object({
+                email: z.string().email(),
+            }),
+        )
+        .mutation(({ input }) => new AuthController().resendVerificationEmailHandler(input)),
 });
 
 export default authRouter;

@@ -13,7 +13,10 @@ export interface IUser {
     projects?: Types.ObjectId[];
     assets?: Types.ObjectId[];
     platforms?: (typeof user.platforms)[keyof typeof user.platforms][];
+    is_verified: boolean;
 }
+
+export type IUserUpdate = Partial<IUser>;
 
 export interface ILoginInput {
     email: string;

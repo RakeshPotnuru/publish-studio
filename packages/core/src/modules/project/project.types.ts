@@ -16,3 +16,11 @@ export interface IProject {
     published_url?: string;
     canonical_url?: string;
 }
+
+export type IProjectUpdate = Partial<IProject>;
+
+export type hashnode_tags = {
+    name: string;
+    slug: string;
+    _id: string;
+}[];

@@ -5,7 +5,7 @@ import defaultConfig from "../../config/app.config";
 import { signJwt } from "../../utils/jwt";
 import redisClient from "../../utils/redis";
 import User from "./user.model";
-import type { IRegisterInput, IUser } from "./user.types";
+import type { IRegisterInput, IUser, IUserUpdate } from "./user.types";
 
 export default class UserService {
     async createUser(user: IRegisterInput) {
@@ -47,7 +47,7 @@ export default class UserService {
         }
     }
 
-    async updateUser(id: string, user: IUser) {
+    async updateUser(id: Types.ObjectId, user: IUserUpdate) {
         try {
             return (await User.findByIdAndUpdate(id, user, { new: true }).exec()) as IUser;
         } catch (error) {

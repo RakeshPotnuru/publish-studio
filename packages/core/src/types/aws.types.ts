@@ -13,3 +13,11 @@ export interface IKMS {
         secretAccessKey: string;
     };
 }
+
+export interface ISES {
+    region: string;
+    credentials: {
+        accessKeyId: string;
+        secretAccessKey: string;
+    };
+}

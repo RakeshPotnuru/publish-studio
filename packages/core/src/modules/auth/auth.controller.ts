@@ -1,3 +1,5 @@
+import type { SendEmailCommandInput } from "@aws-sdk/client-sesv2";
+import { SendEmailCommand } from "@aws-sdk/client-sesv2";
 import { TRPCError } from "@trpc/server";
 import axios from "axios";
 import bycrypt from "bcryptjs";
@@ -7,6 +9,7 @@ import type { Types } from "mongoose";
 
 import defaultConfig from "../../config/app.config";
 import type { Context } from "../../trpc";
+import ses from "../../utils/aws/ses";
 import { signJwt, verifyJwt } from "../../utils/jwt";
 import redisClient from "../../utils/redis";
 import UserService from "../user/user.service";
@@ -38,6 +41,111 @@ export default class AuthController extends UserService {
         }
     }
 
+    private async sendVerificationEmail(email: string, token: string) {
+        try {
+            const verification_url = `${defaultConfig.client_url}/verify?token=${token}`;
+
+            const input: SendEmailCommandInput = {
+                Content: {
+                    Template: {
+                        TemplateName: "ps-verify-email",
+                        TemplateData: JSON.stringify({
+                            verificationUrl: verification_url,
+                        }),
+                    },
+                },
+                Destination: {
+                    ToAddresses: [email],
+                },
+                FromEmailAddress: process.env.AWS_SES_AUTO_FROM_EMAIL,
+            };
+
+            const command = new SendEmailCommand(input);
+            await ses.send(command);
+
+            return {
+                status: "success",
+                data: {
+                    message: "Verification email sent successfully",
+                },
+            };
+        } catch (error) {
+            console.log(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: defaultConfig.defaultErrorMessage,
+            });
+        }
+    }
+
+    async resendVerificationEmailHandler(input: { email: string }) {
+        const user = await super.getUserByEmail(input.email);
+
+        if (!user) {
+            throw new TRPCError({
+                code: "NOT_FOUND",
+                message: "User not found",
+            });
+        }
+
+        if (user.is_verified) {
+            throw new TRPCError({
+                code: "BAD_REQUEST",
+                message: "User is already verified",
+            });
+        }
+
+        const token = signJwt({ email: user.email }, "verificationTokenPrivateKey", {
+            expiresIn: `${defaultConfig.verificationTokenExpiresIn}m`,
+        });
+
+        if (!token) {
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: defaultConfig.defaultErrorMessage,
+            });
+        }
+
+        return await this.sendVerificationEmail(user.email, token);
+    }
+
+    async verifyEmailHandler(input: { token: string }) {
+        const payload = verifyJwt<{ email: string }>(input.token, "verificationTokenPublicKey");
+
+        if (!payload) {
+            throw new TRPCError({
+                code: "BAD_REQUEST",
+                message: "Invalid token",
+            });
+        }
+
+        const user = await super.getUserByEmail(payload.email);
+
+        if (!user) {
+            throw new TRPCError({
+                code: "NOT_FOUND",
+                message: "User not found",
+            });
+        }
+
+        if (user.is_verified) {
+            throw new TRPCError({
+                code: "BAD_REQUEST",
+                message: "User is already verified",
+            });
+        }
+
+        await super.updateUser(user._id, { is_verified: true });
+
+        return {
+            status: "success",
+            data: {
+                message: "User verified successfully",
+            },
+        };
+    }
+
     async registerHandler(input: IRegisterInput) {
         if (await this.isDisposableEmail(input.email)) {
             throw new TRPCError({
@@ -51,16 +159,29 @@ export default class AuthController extends UserService {
         if (user) {
             throw new TRPCError({
                 code: "CONFLICT",
-                message: "Email already exists",
+                message: "This email is associated with an existing account. Please login instead.",
             });
         }
 
-        const hashedPassword = await bycrypt.hash(input.password, 12);
+        const verification_token = signJwt({ email: input.email }, "verificationTokenPrivateKey", {
+            expiresIn: `${defaultConfig.verificationTokenExpiresIn}m`,
+        });
+
+        if (!verification_token) {
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: defaultConfig.defaultErrorMessage,
+            });
+        }
+
+        await this.sendVerificationEmail(input.email, verification_token);
+
+        const hashed_password = await bycrypt.hash(input.password, 12);
         const newUser = await super.createUser({
             first_name: input.first_name,
             last_name: input.last_name,
             email: input.email,
-            password: hashedPassword,
+            password: hashed_password,
             profile_pic: input.profile_pic,
             user_type: input.user_type,
         });

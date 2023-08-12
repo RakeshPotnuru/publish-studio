@@ -63,15 +63,19 @@ export interface IHashnodeCreatePostOutput {
             code: "UNAUTHENTICATED" | "INTERNAL_SERVER_ERROR";
         };
     }[];
-    code: number;
-    success: boolean;
-    message: string;
-    post: {
-        title: string;
-        contentMarkdown: string;
-        tags: { name: string }[];
-        slug: string;
-        coverImage: string;
-        brief: string;
+    data: {
+        createStory: {
+            code: number;
+            success: boolean;
+            message: string;
+            post: {
+                title: string;
+                contentMarkdown: string;
+                tags: { name: string }[];
+                slug: string;
+                coverImage: string;
+                brief: string;
+            };
+        };
     };
 }
