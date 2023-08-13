@@ -31,3 +31,8 @@ export interface IRegisterInput {
     profile_pic?: string;
     user_type: "free" | "pro";
 }
+
+export interface IResetPasswordInput {
+    token: string;
+    password: string;
+}

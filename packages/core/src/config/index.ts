@@ -20,6 +20,8 @@ const ZodEnvironmentVariables = z.object({
     REFRESH_TOKEN_PUBLIC_KEY: z.string(),
     VERIFICATION_TOKEN_PRIVATE_KEY: z.string(),
     VERIFICATION_TOKEN_PUBLIC_KEY: z.string(),
+    RESET_PASSWORD_TOKEN_PRIVATE_KEY: z.string(),
+    RESET_PASSWORD_TOKEN_PUBLIC_KEY: z.string(),
     AWS_BUCKET_NAME: z.string(),
     AWS_ACCESS_KEY: z.string(),
     AWS_SECRET_ACCESS_KEY: z.string(),

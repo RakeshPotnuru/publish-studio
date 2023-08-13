@@ -5,7 +5,11 @@ import defaultConfig from "../config/app.config";
 
 export const signJwt = (
     payload: object,
-    key: "accessTokenPrivateKey" | "refreshTokenPrivateKey" | "verificationTokenPrivateKey",
+    key:
+        | "accessTokenPrivateKey"
+        | "refreshTokenPrivateKey"
+        | "verificationTokenPrivateKey"
+        | "resetPasswordTokenPrivateKey",
     options: SignOptions = {},
 ) => {
     try {
@@ -23,7 +27,11 @@ export const signJwt = (
 
 export const verifyJwt = <T>(
     token: string,
-    key: "accessTokenPublicKey" | "refreshTokenPublicKey" | "verificationTokenPublicKey",
+    key:
+        | "accessTokenPublicKey"
+        | "refreshTokenPublicKey"
+        | "verificationTokenPublicKey"
+        | "resetPasswordTokenPublicKey",
 ): T | null => {
     try {
         // eslint-disable-next-line security/detect-object-injection

@@ -55,6 +55,27 @@ const authRouter = t.router({
             }),
         )
         .mutation(({ input }) => new AuthController().resendVerificationEmailHandler(input)),
+
+    sendResetPasswordEmail: t.procedure
+        .input(
+            z.object({
+                email: z.string().email(),
+            }),
+        )
+        .mutation(({ input }) => new AuthController().sendResetPasswordEmailHandler(input)),
+
+    resetPassword: t.procedure
+        .input(
+            z.object({
+                token: z.string(),
+                password: z
+                    .string()
+                    .regex(
+                        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!"#$%&'()*+,./:;<=>?@[\\\]^_{|}~-])(.{8,})$/,
+                    ),
+            }),
+        )
+        .mutation(({ input }) => new AuthController().resetPasswordHandler(input)),
 });
 
 export default authRouter;

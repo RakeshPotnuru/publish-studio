@@ -7,6 +7,7 @@ interface ICustomConfig {
     accessTokenExpiresIn: number;
     refreshTokenExpiresIn: number;
     verificationTokenExpiresIn: number;
+    resetPasswordTokenExpiresIn: number;
     accessTokenPrivateKey: string;
     refreshTokenPrivateKey: string;
     accessTokenPublicKey: string;
@@ -21,6 +22,8 @@ interface ICustomConfig {
     kickbox_api_url: string;
     client_url: string;
     app_name: string;
+    resetPasswordTokenPrivateKey: string;
+    resetPasswordTokenPublicKey: string;
 }
 
 const defaultConfig: ICustomConfig = {
@@ -29,6 +32,7 @@ const defaultConfig: ICustomConfig = {
     accessTokenExpiresIn: 1440, // 24 hours
     refreshTokenExpiresIn: 1485,
     verificationTokenExpiresIn: 60, // 1 hour
+    resetPasswordTokenExpiresIn: 60, // 1 hour
     redisCacheExpiresIn: 1440, // 24 hours
     whitelist_origins: process.env.WHITELIST_ORIGINS?.split(","),
     redisUrl: process.env.REDIS_URL || "redis://localhost:6379",
@@ -39,6 +43,8 @@ const defaultConfig: ICustomConfig = {
     refreshTokenPublicKey: process.env.REFRESH_TOKEN_PUBLIC_KEY,
     verificationTokenPrivateKey: process.env.VERIFICATION_TOKEN_PRIVATE_KEY,
     verificationTokenPublicKey: process.env.VERIFICATION_TOKEN_PUBLIC_KEY,
+    resetPasswordTokenPrivateKey: process.env.RESET_PASSWORD_TOKEN_PRIVATE_KEY,
+    resetPasswordTokenPublicKey: process.env.RESET_PASSWORD_TOKEN_PUBLIC_KEY,
     defaultErrorMessage: "Something went wrong. Please try again later.",
     hashnode_api_url: "https://api.hashnode.com",
     devto_api_url: "https://dev.to/api",

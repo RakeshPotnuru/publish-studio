@@ -13,7 +13,7 @@ import ses from "../../utils/aws/ses";
 import { signJwt, verifyJwt } from "../../utils/jwt";
 import redisClient from "../../utils/redis";
 import UserService from "../user/user.service";
-import type { ILoginInput, IRegisterInput } from "../user/user.types";
+import type { ILoginInput, IRegisterInput, IResetPasswordInput } from "../user/user.types";
 
 const cookieOptions: OptionsType = {
     httpOnly: true,
@@ -43,7 +43,7 @@ export default class AuthController extends UserService {
 
     private async sendVerificationEmail(email: string, token: string) {
         try {
-            const verification_url = `${defaultConfig.client_url}/verify?token=${token}`;
+            const verification_url = `${defaultConfig.client_url}/verify-email?token=${token}`;
 
             const input: SendEmailCommandInput = {
                 Content: {
@@ -67,6 +67,44 @@ export default class AuthController extends UserService {
                 status: "success",
                 data: {
                     message: "Verification email sent successfully",
+                },
+            };
+        } catch (error) {
+            console.log(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: defaultConfig.defaultErrorMessage,
+            });
+        }
+    }
+
+    private async sendResetPasswordEmail(email: string, token: string) {
+        try {
+            const reset_password_url = `${defaultConfig.client_url}/reset-password?token=${token}`;
+
+            const input: SendEmailCommandInput = {
+                Content: {
+                    Template: {
+                        TemplateName: "ps-reset-password",
+                        TemplateData: JSON.stringify({
+                            resetPasswordUrl: reset_password_url,
+                        }),
+                    },
+                },
+                Destination: {
+                    ToAddresses: [email],
+                },
+                FromEmailAddress: process.env.AWS_SES_AUTO_FROM_EMAIL,
+            };
+
+            const command = new SendEmailCommand(input);
+            await ses.send(command);
+
+            return {
+                status: "success",
+                data: {
+                    message: "Reset password email sent successfully",
                 },
             };
         } catch (error) {
@@ -220,6 +258,58 @@ export default class AuthController extends UserService {
             status: "success",
             data: {
                 access_token,
+            },
+        };
+    }
+
+    async sendResetPasswordEmailHandler(input: { email: string }) {
+        const reset_email_token = signJwt({ email: input.email }, "resetPasswordTokenPrivateKey", {
+            expiresIn: `${defaultConfig.resetPasswordTokenExpiresIn}m`,
+        });
+
+        if (!reset_email_token) {
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: defaultConfig.defaultErrorMessage,
+            });
+        }
+
+        await this.sendResetPasswordEmail(input.email, reset_email_token);
+
+        return {
+            status: "success",
+            data: {
+                message: "Reset password email sent successfully",
+            },
+        };
+    }
+
+    async resetPasswordHandler(input: IResetPasswordInput) {
+        const payload = verifyJwt<{ email: string }>(input.token, "resetPasswordTokenPublicKey");
+
+        if (!payload) {
+            throw new TRPCError({
+                code: "BAD_REQUEST",
+                message: "Invalid token",
+            });
+        }
+
+        const user = await super.getUserByEmail(payload.email);
+
+        if (!user) {
+            throw new TRPCError({
+                code: "NOT_FOUND",
+                message: "User not found",
+            });
+        }
+
+        const hashed_password = await bycrypt.hash(input.password, 12);
+        await super.updateUser(user._id, { password: hashed_password });
+
+        return {
+            status: "success",
+            data: {
+                message: "Password reset successfully",
             },
         };
     }
