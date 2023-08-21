@@ -55,3 +55,15 @@ export const user = {
     userTypes: userTypes,
     platforms: platforms,
 } as const;
+
+export const rabbitmq = {
+    queues: {
+        JOBS: "jobs",
+        POSTS: "posts",
+    },
+};
+
+export enum emailTemplates {
+    VERIFY_EMAIL = "ps_verify_email",
+    RESET_PASSWORD = "ps_reset_password",
+}

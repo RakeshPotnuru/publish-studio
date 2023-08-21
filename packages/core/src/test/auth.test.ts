@@ -1,7 +1,7 @@
 import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
 
 import type { AppRouter } from "../";
-import { user } from "../utils/constants";
+import { user } from "../constants";
 
 jest.setTimeout(120_000);
 

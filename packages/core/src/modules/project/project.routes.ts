@@ -1,8 +1,8 @@
 import type { Types } from "mongoose";
 import { z } from "zod";
 
+import { project, user } from "../../constants";
 import { protectedProcedure, t } from "../../trpc";
-import { project, user } from "../../utils/constants";
 import ProjectController from "./project.controller";
 import type { hashnode_tags } from "./project.types";
 
@@ -21,6 +21,7 @@ const projectRouter = t.router({
                         .optional(),
                     status: z.nativeEnum(project.status).optional().default(project.status.DRAFT),
                     cover_image: z.string().optional(),
+                    scheduled_at: z.date(),
                 }),
             }),
         )
@@ -30,11 +31,18 @@ const projectRouter = t.router({
         .input(
             z.object({
                 project_id: z.custom<Types.ObjectId>(),
-                platforms: z.array(z.nativeEnum(user.platforms)),
+                platforms: z
+                    .array(
+                        z.object({
+                            name: z.nativeEnum(user.platforms),
+                        }),
+                    )
+                    .min(1),
                 hashnode_tags: z.custom<hashnode_tags>().optional(),
+                scheduled_at: z.date(),
             }),
         )
-        .mutation(({ input, ctx }) => new ProjectController().publishPostHandler(input, ctx)),
+        .mutation(({ input, ctx }) => new ProjectController().schedulePostHandler(input, ctx)),
 
     getAllProjects: protectedProcedure.query(({ ctx }) =>
         new ProjectController().getAllProjectsHandler(ctx),
@@ -55,7 +63,15 @@ const projectRouter = t.router({
                         .optional(),
                     status: z.nativeEnum(project.status).optional().default(project.status.DRAFT),
                     cover_image: z.string().optional(),
-                    platforms: z.array(z.nativeEnum(user.platforms)).optional(),
+                    platforms: z
+                        .array(
+                            z.object({
+                                name: z.nativeEnum(user.platforms),
+                                published_url: z.string().optional(),
+                            }),
+                        )
+                        .optional(),
+                    scheduled_at: z.date().optional(),
                 }),
             }),
         )

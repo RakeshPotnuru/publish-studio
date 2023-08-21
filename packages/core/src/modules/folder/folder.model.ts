@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-import { folder } from "../../utils/constants";
+import { folder } from "../../constants";
 import type { IFolder } from "./folder.types";
 
 const FolderSchema = new Schema<IFolder>(

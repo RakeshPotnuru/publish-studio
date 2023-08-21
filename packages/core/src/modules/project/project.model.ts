@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-import { project, user } from "../../utils/constants";
+import { project, user } from "../../constants";
 import type { IProject } from "./project.types";
 
 const ProjectSchema = new Schema<IProject>(
@@ -26,11 +26,12 @@ const ProjectSchema = new Schema<IProject>(
         assets: [{ type: Schema.Types.ObjectId, ref: "Asset" }],
         platforms: [
             {
-                type: String,
-                enum: user.platforms,
-                required: true,
+                name: { type: String, enum: user.platforms, required: true },
+                status: { type: String, enum: ["success", "error"] },
+                published_url: String,
             },
         ],
+        scheduled_at: { type: Date, required: true, default: Date.now },
     },
     {
         timestamps: {

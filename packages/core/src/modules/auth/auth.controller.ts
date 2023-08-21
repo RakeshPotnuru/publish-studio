@@ -1,5 +1,3 @@
-import type { SendEmailCommandInput } from "@aws-sdk/client-sesv2";
-import { SendEmailCommand } from "@aws-sdk/client-sesv2";
 import { TRPCError } from "@trpc/server";
 import axios from "axios";
 import bycrypt from "bcryptjs";
@@ -8,8 +6,9 @@ import type { OptionsType } from "cookies-next/lib/types";
 import type { Types } from "mongoose";
 
 import defaultConfig from "../../config/app.config";
+import { emailTemplates } from "../../constants";
 import type { Context } from "../../trpc";
-import ses from "../../utils/aws/ses";
+import { sendEmail } from "../../utils/aws/ses";
 import { signJwt, verifyJwt } from "../../utils/jwt";
 import redisClient from "../../utils/redis";
 import UserService from "../user/user.service";
@@ -45,23 +44,14 @@ export default class AuthController extends UserService {
         try {
             const verification_url = `${defaultConfig.client_url}/verify-email?token=${token}`;
 
-            const input: SendEmailCommandInput = {
-                Content: {
-                    Template: {
-                        TemplateName: "ps-verify-email",
-                        TemplateData: JSON.stringify({
-                            verificationUrl: verification_url,
-                        }),
-                    },
+            await sendEmail(
+                [email],
+                emailTemplates.VERIFY_EMAIL,
+                {
+                    verificationUrl: verification_url,
                 },
-                Destination: {
-                    ToAddresses: [email],
-                },
-                FromEmailAddress: process.env.AWS_SES_AUTO_FROM_EMAIL,
-            };
-
-            const command = new SendEmailCommand(input);
-            await ses.send(command);
+                process.env.AWS_SES_AUTO_FROM_EMAIL,
+            );
 
             return {
                 status: "success",
@@ -83,23 +73,14 @@ export default class AuthController extends UserService {
         try {
             const reset_password_url = `${defaultConfig.client_url}/reset-password?token=${token}`;
 
-            const input: SendEmailCommandInput = {
-                Content: {
-                    Template: {
-                        TemplateName: "ps-reset-password",
-                        TemplateData: JSON.stringify({
-                            resetPasswordUrl: reset_password_url,
-                        }),
-                    },
+            await sendEmail(
+                [email],
+                emailTemplates.RESET_PASSWORD,
+                {
+                    resetPasswordUrl: reset_password_url,
                 },
-                Destination: {
-                    ToAddresses: [email],
-                },
-                FromEmailAddress: process.env.AWS_SES_AUTO_FROM_EMAIL,
-            };
-
-            const command = new SendEmailCommand(input);
-            await ses.send(command);
+                process.env.AWS_SES_AUTO_FROM_EMAIL,
+            );
 
             return {
                 status: "success",

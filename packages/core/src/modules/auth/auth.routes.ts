@@ -1,7 +1,7 @@
 import { z } from "zod";
 
+import { user } from "../../constants";
 import { protectedProcedure, t } from "../../trpc";
-import { user } from "../../utils/constants";
 import AuthController from "./auth.controller";
 
 const authRouter = t.router({

@@ -1,6 +1,6 @@
 import type { Types } from "mongoose";
 
-import type { user } from "../../utils/constants";
+import type { user } from "../../constants";
 
 export interface IProject {
     user_id?: Types.ObjectId;
@@ -12,9 +12,13 @@ export interface IProject {
     status: "draft" | "published";
     cover_image?: string;
     assets?: Types.ObjectId[];
-    platforms?: (typeof user.platforms)[keyof typeof user.platforms][];
-    published_url?: string;
+    platforms?: {
+        name: (typeof user.platforms)[keyof typeof user.platforms];
+        status?: "success" | "error";
+        published_url?: string;
+    }[];
     canonical_url?: string;
+    scheduled_at: Date;
 }
 
 export type IProjectUpdate = Partial<IProject>;

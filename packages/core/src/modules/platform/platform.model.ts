@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-import { user } from "../../utils/constants";
+import { user } from "../../constants";
 import type { IPlatform } from "./platform.types";
 
 const PlatformModel = new Schema<IPlatform>(

@@ -1,13 +1,16 @@
 import { TRPCError } from "@trpc/server";
+import type { Message } from "amqplib";
 import type { Types } from "mongoose";
 
+import defaultConfig from "../../config/app.config";
+import { rabbitmq, user } from "../../constants";
 import type { Context } from "../../trpc";
-import { user } from "../../utils/constants";
+import { rabbitMQConnection } from "../../utils/rabbitmq";
 import DevToController from "../platform/devto/devto.controller";
 import HashnodeController from "../platform/hashnode/hashnode.controller";
 import MediumController from "../platform/medium/medium.controller";
 import ProjectService from "./project.service";
-import type { hashnode_tags, IProject } from "./project.types";
+import type { hashnode_tags, IProject, IProjectUpdate } from "./project.types";
 
 export default class ProjectController extends ProjectService {
     async createProjectHandler(input: { project: IProject }, ctx: Context) {
@@ -22,6 +25,7 @@ export default class ProjectController extends ProjectService {
             tags: project.tags,
             status: project.status,
             cover_image: project.cover_image,
+            scheduled_at: project.scheduled_at,
         });
 
         return {
@@ -32,27 +36,22 @@ export default class ProjectController extends ProjectService {
         };
     }
 
-    async publishPostHandler(
-        input: {
-            project_id: Types.ObjectId;
-            platforms: (typeof user.platforms)[keyof typeof user.platforms][];
-            hashnode_tags?: hashnode_tags;
-        },
+    private async publishPost(
+        project_id: Types.ObjectId,
         ctx: Context,
+        hashnode_tags?: hashnode_tags,
     ) {
-        const { project_id, platforms, hashnode_tags } = input;
-
-        const project = await super.updateProjectById(project_id, {
-            platforms: platforms,
-        });
+        const project = await super.getProjectById(project_id);
 
         const publishResponse = [] as {
-            platform: (typeof user.platforms)[keyof typeof user.platforms];
+            name: (typeof user.platforms)[keyof typeof user.platforms];
             status: "success" | "error";
             url: string;
         }[];
 
-        if (project.platforms?.includes(user.platforms.DEVTO)) {
+        const platforms = project.platforms?.map(platform => platform.name) ?? [];
+
+        if (platforms.includes(user.platforms.DEVTO)) {
             const response = await new DevToController().createPostHandler(
                 {
                     post: project,
@@ -61,13 +60,13 @@ export default class ProjectController extends ProjectService {
             );
 
             publishResponse.push({
-                platform: user.platforms.DEVTO,
+                name: user.platforms.DEVTO,
                 status: response.data.post.error ? "error" : "success",
                 url: response.data.post.url,
             });
         }
 
-        if (project.platforms?.includes(user.platforms.HASHNODE)) {
+        if (platforms.includes(user.platforms.HASHNODE)) {
             const hashnodeUser = await new HashnodeController().getPlatformById(ctx.user?._id);
             const response = await new HashnodeController().createPostHandler(
                 {
@@ -81,13 +80,13 @@ export default class ProjectController extends ProjectService {
             const postSlug = response.data.post.data.createStory.post.slug ?? "unknown";
 
             publishResponse.push({
-                platform: user.platforms.HASHNODE,
+                name: user.platforms.HASHNODE,
                 status: response.data.post?.errors ? "error" : "success",
                 url: `https://${blogHandle}.hashnode.dev/${postSlug}`,
             });
         }
 
-        if (project.platforms?.includes(user.platforms.MEDIUM)) {
+        if (platforms.includes(user.platforms.MEDIUM)) {
             const response = await new MediumController().createPostHandler(
                 {
                     post: project,
@@ -96,11 +95,15 @@ export default class ProjectController extends ProjectService {
             );
 
             publishResponse.push({
-                platform: user.platforms.MEDIUM,
+                name: user.platforms.MEDIUM,
                 status: response.data.post.errors ? "error" : "success",
                 url: response.data.post.data.url,
             });
         }
+
+        await super.updateProjectById(project_id, {
+            platforms: publishResponse,
+        });
 
         return {
             status: "success",
@@ -108,6 +111,124 @@ export default class ProjectController extends ProjectService {
                 publishResponse: publishResponse,
             },
         };
+    }
+
+    async postReceiver() {
+        try {
+            const connection = await rabbitMQConnection();
+
+            if (connection) {
+                const channel = await connection.createChannel();
+
+                const queue = rabbitmq.queues.POSTS;
+
+                await channel.assertQueue(queue, {
+                    durable: false,
+                });
+                await channel.prefetch(1);
+
+                console.log(`🐇 Waiting for requests in ${queue} queue.`);
+
+                await channel.consume(queue, message => {
+                    if (!message) {
+                        return;
+                    }
+
+                    const data = JSON.parse(message?.content.toString());
+
+                    const result = this.publishPost(
+                        data.project_id as Types.ObjectId,
+                        data.ctx as Context,
+                        data.hashnode_tags as hashnode_tags,
+                    );
+
+                    channel.sendToQueue(
+                        message?.properties.replyTo as string,
+                        Buffer.from(JSON.stringify(result)),
+                        {
+                            correlationId: message?.properties.correlationId as string,
+                        },
+                    );
+
+                    channel.ack(message as Message);
+                });
+            } else {
+                console.log("❌ Failed to connect to RabbitMQ 🐇");
+            }
+        } catch (error) {
+            console.log(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: defaultConfig.defaultErrorMessage,
+            });
+        }
+    }
+
+    async schedulePostHandler(
+        input: {
+            project_id: Types.ObjectId;
+            platforms: {
+                name: (typeof user.platforms)[keyof typeof user.platforms];
+                published_url?: string;
+            }[];
+            hashnode_tags?: hashnode_tags;
+            scheduled_at: Date;
+        },
+        ctx: Context,
+    ) {
+        try {
+            const { project_id, platforms, hashnode_tags, scheduled_at } = input;
+
+            await super.updateProjectById(project_id, {
+                platforms: platforms,
+                scheduled_at: scheduled_at,
+            });
+
+            const connection = await rabbitMQConnection();
+
+            if (connection) {
+                const channel = await connection.createChannel();
+
+                const queue = rabbitmq.queues.JOBS;
+
+                await channel.assertQueue(queue, {
+                    durable: true,
+                });
+
+                channel.sendToQueue(
+                    queue,
+                    Buffer.from(
+                        JSON.stringify({
+                            project_id: project_id,
+                            hashnode_tags: hashnode_tags,
+                            scheduled_at: scheduled_at,
+                            ctx: ctx,
+                        }),
+                    ),
+                );
+
+                return {
+                    status: "success",
+                    data: {
+                        message: "Post scheduled successfully",
+                    },
+                };
+            } else {
+                console.log("❌ Failed to connect to RabbitMQ 🐇");
+
+                return {
+                    status: "error",
+                };
+            }
+        } catch (error) {
+            console.log(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "Failed to schedule post. Please try again later.",
+            });
+        }
     }
 
     async getProjectHandler(input: { id: Types.ObjectId }) {
@@ -139,7 +260,7 @@ export default class ProjectController extends ProjectService {
         };
     }
 
-    async updateProjectHandler(input: { id: Types.ObjectId; project: IProject }) {
+    async updateProjectHandler(input: { id: Types.ObjectId; project: IProjectUpdate }) {
         const project = await super.getProjectById(input.id);
 
         if (!project) {

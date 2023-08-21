@@ -3,8 +3,8 @@ import axios from "axios";
 import type { Types } from "mongoose";
 
 import defaultConfig from "../../../config/app.config";
+import { user as userConsts } from "../../../constants";
 import { decryptField } from "../../../utils/aws/kms";
-import { user as userConsts } from "../../../utils/constants";
 import User from "../../user/user.model";
 import Platform from "../platform.model";
 import DevTo from "./devto.model";

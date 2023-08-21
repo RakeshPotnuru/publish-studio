@@ -1,6 +1,6 @@
 import type { Types } from "mongoose";
 
-import type { user } from "../../utils/constants";
+import type { user } from "../../constants";
 
 export interface IUser {
     _id: Types.ObjectId;

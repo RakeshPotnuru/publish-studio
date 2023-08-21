@@ -11,6 +11,7 @@ import "./utils/db";
 import "./config/index";
 
 import defaultConfig from "./config/app.config";
+import ProjectController from "./modules/project/project.controller";
 import trpcRouter from "./routes";
 import { createContext } from "./trpc";
 
@@ -48,6 +49,9 @@ app.use(
 app.use("/panel", (_, res) => {
     return res.send(renderTrpcPanel(trpcRouter, { url: defaultConfig.baseUrl }));
 });
+
+const project = new ProjectController();
+await project.postReceiver();
 
 app.listen(defaultConfig.port, () => {
     console.log(`✅ Server running on port ${defaultConfig.port}`);

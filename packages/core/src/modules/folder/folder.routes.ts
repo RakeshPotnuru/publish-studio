@@ -1,8 +1,8 @@
 import type { Types } from "mongoose";
 import { z } from "zod";
 
+import { folder } from "../../constants";
 import { protectedProcedure, t } from "../../trpc";
-import { folder } from "../../utils/constants";
 import FolderController from "./folder.controller";
 
 const folderRouter = t.router({
