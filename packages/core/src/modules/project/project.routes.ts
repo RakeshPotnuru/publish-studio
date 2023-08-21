@@ -21,7 +21,7 @@ const projectRouter = t.router({
                         .optional(),
                     status: z.nativeEnum(project.status).optional().default(project.status.DRAFT),
                     cover_image: z.string().optional(),
-                    scheduled_at: z.date(),
+                    scheduled_at: z.string().pipe(z.coerce.date()).optional(),
                 }),
             }),
         )
@@ -39,7 +39,7 @@ const projectRouter = t.router({
                     )
                     .min(1),
                 hashnode_tags: z.custom<hashnode_tags>().optional(),
-                scheduled_at: z.date(),
+                scheduled_at: z.string().pipe(z.coerce.date()),
             }),
         )
         .mutation(({ input, ctx }) => new ProjectController().schedulePostHandler(input, ctx)),
@@ -71,7 +71,7 @@ const projectRouter = t.router({
                             }),
                         )
                         .optional(),
-                    scheduled_at: z.date().optional(),
+                    scheduled_at: z.string().pipe(z.coerce.date()).optional(),
                 }),
             }),
         )

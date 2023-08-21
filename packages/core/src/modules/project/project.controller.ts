@@ -16,6 +16,17 @@ export default class ProjectController extends ProjectService {
     async createProjectHandler(input: { project: IProject }, ctx: Context) {
         const { project } = input;
 
+        if (project.folder_id) {
+            const folder = await super.getFolderById(project.folder_id);
+
+            if (!folder) {
+                throw new TRPCError({
+                    code: "NOT_FOUND",
+                    message: "Folder not found.",
+                });
+            }
+        }
+
         const newProject = await super.createProject({
             user_id: ctx.user?._id,
             folder_id: project.folder_id,
@@ -38,7 +49,7 @@ export default class ProjectController extends ProjectService {
 
     private async publishPost(
         project_id: Types.ObjectId,
-        ctx: Context,
+        user_id: Types.ObjectId,
         hashnode_tags?: hashnode_tags,
     ) {
         const project = await super.getProjectById(project_id);
@@ -46,7 +57,7 @@ export default class ProjectController extends ProjectService {
         const publishResponse = [] as {
             name: (typeof user.platforms)[keyof typeof user.platforms];
             status: "success" | "error";
-            url: string;
+            published_url: string;
         }[];
 
         const platforms = project.platforms?.map(platform => platform.name) ?? [];
@@ -56,24 +67,24 @@ export default class ProjectController extends ProjectService {
                 {
                     post: project,
                 },
-                ctx,
+                user_id,
             );
 
             publishResponse.push({
                 name: user.platforms.DEVTO,
                 status: response.data.post.error ? "error" : "success",
-                url: response.data.post.url,
+                published_url: response.data.post.url,
             });
         }
 
         if (platforms.includes(user.platforms.HASHNODE)) {
-            const hashnodeUser = await new HashnodeController().getPlatformById(ctx.user?._id);
+            const hashnodeUser = await new HashnodeController().getPlatformById(user_id);
             const response = await new HashnodeController().createPostHandler(
                 {
                     post: project,
                     hashnode_tags: hashnode_tags,
                 },
-                ctx,
+                user_id,
             );
 
             const blogHandle = hashnodeUser?.blog_handle ?? "unknown";
@@ -82,7 +93,7 @@ export default class ProjectController extends ProjectService {
             publishResponse.push({
                 name: user.platforms.HASHNODE,
                 status: response.data.post?.errors ? "error" : "success",
-                url: `https://${blogHandle}.hashnode.dev/${postSlug}`,
+                published_url: `https://${blogHandle}.hashnode.dev/${postSlug}`,
             });
         }
 
@@ -91,13 +102,13 @@ export default class ProjectController extends ProjectService {
                 {
                     post: project,
                 },
-                ctx,
+                user_id,
             );
 
             publishResponse.push({
                 name: user.platforms.MEDIUM,
                 status: response.data.post.errors ? "error" : "success",
-                url: response.data.post.data.url,
+                published_url: response.data.post.data.url,
             });
         }
 
@@ -123,28 +134,33 @@ export default class ProjectController extends ProjectService {
                 const queue = rabbitmq.queues.POSTS;
 
                 await channel.assertQueue(queue, {
-                    durable: false,
+                    durable: true,
                 });
                 await channel.prefetch(1);
 
                 console.log(`🐇 Waiting for requests in ${queue} queue.`);
 
-                await channel.consume(queue, message => {
+                await channel.consume(queue, async message => {
                     if (!message) {
                         return;
                     }
 
                     const data = JSON.parse(message?.content.toString());
 
-                    const result = this.publishPost(
+                    await this.publishPost(
                         data.project_id as Types.ObjectId,
-                        data.ctx as Context,
+                        data.user_id as Types.ObjectId,
                         data.hashnode_tags as hashnode_tags,
                     );
 
                     channel.sendToQueue(
                         message?.properties.replyTo as string,
-                        Buffer.from(JSON.stringify(result)),
+                        Buffer.from(
+                            JSON.stringify({
+                                status: "success",
+                                job: "post",
+                            }),
+                        ),
                         {
                             correlationId: message?.properties.correlationId as string,
                         },
@@ -170,7 +186,6 @@ export default class ProjectController extends ProjectService {
             project_id: Types.ObjectId;
             platforms: {
                 name: (typeof user.platforms)[keyof typeof user.platforms];
-                published_url?: string;
             }[];
             hashnode_tags?: hashnode_tags;
             scheduled_at: Date;
@@ -190,7 +205,7 @@ export default class ProjectController extends ProjectService {
             if (connection) {
                 const channel = await connection.createChannel();
 
-                const queue = rabbitmq.queues.JOBS;
+                const queue = rabbitmq.queues.POSTS;
 
                 await channel.assertQueue(queue, {
                     durable: true,
@@ -203,7 +218,7 @@ export default class ProjectController extends ProjectService {
                             project_id: project_id,
                             hashnode_tags: hashnode_tags,
                             scheduled_at: scheduled_at,
-                            ctx: ctx,
+                            user_id: ctx.user?._id,
                         }),
                     ),
                 );

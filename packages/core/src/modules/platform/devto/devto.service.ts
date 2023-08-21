@@ -38,7 +38,7 @@ export default class DevToService {
                 },
             });
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -65,7 +65,7 @@ export default class DevToService {
 
             return newPlatform as IDevTo;
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -80,7 +80,7 @@ export default class DevToService {
                 new: true,
             }).exec()) as IDevTo;
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -104,7 +104,7 @@ export default class DevToService {
 
             return (await DevTo.findOneAndDelete({ user_id }).exec()) as IDevTo;
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -118,7 +118,7 @@ export default class DevToService {
         try {
             return (await DevTo.findOne({ user_id }).exec()) as IDevTo;
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -139,7 +139,7 @@ export default class DevToService {
 
             return response.data as IDevToUserOutput;
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -158,7 +158,7 @@ export default class DevToService {
 
             return response?.data as IDevToCreatePostOutput;
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",

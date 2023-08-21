@@ -9,7 +9,7 @@ export default class PlatformService {
         try {
             return (await Platform.find({ user_id }).populate("data").exec()) as IPlatform[];
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",

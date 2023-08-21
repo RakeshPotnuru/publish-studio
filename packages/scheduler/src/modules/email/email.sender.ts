@@ -3,9 +3,9 @@ import { v4 as uuidv4 } from "uuid";
 
 import defaultConfig from "../../config/app.config";
 import { rabbitmq } from "../../constants";
-import type { IPost } from "./post.types";
+import type { IEmail } from "./email.types";
 
-export const invokePublishPostRPC = async (data: IPost) => {
+export const invokeSendEmailRPC = async (data: IEmail) => {
     const connection = await amqp.connect(defaultConfig.rabbitmqUrl);
 
     if (connection) {
@@ -30,7 +30,7 @@ export const invokePublishPostRPC = async (data: IPost) => {
             },
         );
 
-        const queue = rabbitmq.queues.POSTS;
+        const queue = rabbitmq.queues.EMAILS;
 
         channel.sendToQueue(queue, Buffer.from(JSON.stringify(data)), {
             correlationId,

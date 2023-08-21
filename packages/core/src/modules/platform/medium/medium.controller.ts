@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import type { Types } from "mongoose";
 
 import defaultConfig from "../../../config/app.config";
 import type { Context } from "../../../trpc";
@@ -122,8 +123,8 @@ export default class MediumController extends MediumService {
         };
     }
 
-    async createPostHandler(input: { post: IProject }, ctx: Context) {
-        const user = await super.getUserById(ctx.user?._id);
+    async createPostHandler(input: { post: IProject }, user_id: Types.ObjectId) {
+        const user = await super.getUserById(user_id);
 
         if (!user) {
             throw new TRPCError({
@@ -142,7 +143,7 @@ export default class MediumController extends MediumService {
                 canonicalUrl: input.post.canonical_url,
             },
             user.author_id,
-            ctx.user?._id,
+            user_id,
         );
 
         if (newPost.errors) {

@@ -10,7 +10,7 @@ export default class FolderService {
         try {
             return (await Folder.create(folder)) as IFolder;
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -23,7 +23,7 @@ export default class FolderService {
         try {
             return (await Folder.findOne({ name }).exec()) as IFolder;
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -36,7 +36,7 @@ export default class FolderService {
         try {
             return (await Folder.findById(id).exec()) as IFolder;
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -49,7 +49,7 @@ export default class FolderService {
         try {
             return (await Folder.find({ user_id }).populate("projects").exec()) as IFolder[];
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -62,7 +62,7 @@ export default class FolderService {
         try {
             return (await Folder.findByIdAndUpdate(id, folder, { new: true }).exec()) as IFolder;
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -82,7 +82,7 @@ export default class FolderService {
             await Project.find({ folder_id: id }).deleteMany().exec();
             return (await Folder.findByIdAndDelete(id).exec()) as IFolder;
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",

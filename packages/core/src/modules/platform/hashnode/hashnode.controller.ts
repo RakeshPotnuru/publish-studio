@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import type { Types } from "mongoose";
 
 import defaultConfig from "../../../config/app.config";
 import type { Context } from "../../../trpc";
@@ -135,9 +136,9 @@ export default class HashnodeController extends HashnodeService {
             post: IProject;
             hashnode_tags?: hashnode_tags;
         },
-        ctx: Context,
+        user_id: Types.ObjectId,
     ) {
-        const user = await super.getPlatformById(ctx.user?._id);
+        const user = await super.getPlatformById(user_id);
 
         if (!user) {
             throw new TRPCError({
@@ -171,7 +172,7 @@ export default class HashnodeController extends HashnodeService {
                   },
               };
 
-        const newPost = await super.publishPost(postBody, ctx.user?._id);
+        const newPost = await super.publishPost(postBody, user_id);
 
         if (newPost.errors) {
             if (newPost.errors[0].extensions.code === "INTERNAL_SERVER_ERROR") {

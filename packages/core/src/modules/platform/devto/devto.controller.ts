@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import type { Types } from "mongoose";
 
 import defaultConfig from "../../../config/app.config";
 import type { Context } from "../../../trpc";
@@ -108,8 +109,8 @@ export default class DevToController extends DevToService {
         };
     }
 
-    async createPostHandler(input: { post: IProject }, ctx: Context) {
-        const user = await super.getPlatformById(ctx.user?._id);
+    async createPostHandler(input: { post: IProject }, user_id: Types.ObjectId) {
+        const user = await super.getPlatformById(user_id);
 
         if (!user) {
             throw new TRPCError({
@@ -128,7 +129,7 @@ export default class DevToController extends DevToService {
                 tags: input.post.tags,
                 main_image: input.post.cover_image,
             },
-            ctx.user?._id,
+            user_id,
         );
 
         if (newPost.error) {

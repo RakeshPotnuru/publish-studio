@@ -12,7 +12,7 @@ export default class UserService {
         try {
             return (await User.create(user)) as IUser;
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -25,7 +25,7 @@ export default class UserService {
         try {
             return (await User.findOne({ email }).exec()) as IUser;
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -38,7 +38,7 @@ export default class UserService {
         try {
             return (await User.findById(id).populate("platforms").exec()) as IUser;
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -51,7 +51,7 @@ export default class UserService {
         try {
             return (await User.findByIdAndUpdate(id, user, { new: true }).exec()) as IUser;
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",

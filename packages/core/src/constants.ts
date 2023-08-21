@@ -58,8 +58,8 @@ export const user = {
 
 export const rabbitmq = {
     queues: {
-        JOBS: "jobs",
         POSTS: "posts",
+        EMAILS: "emails",
     },
 };
 

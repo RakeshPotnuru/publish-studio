@@ -2,11 +2,12 @@ import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
 import Folder from "../folder/folder.model";
+import FolderService from "../folder/folder.service";
 import User from "../user/user.model";
 import Project from "./project.model";
 import type { IProject, IProjectUpdate } from "./project.types";
 
-export default class ProjectService {
+export default class ProjectService extends FolderService {
     async createProject(project: IProject) {
         try {
             const newProject = await Project.create(project);
@@ -23,7 +24,7 @@ export default class ProjectService {
 
             return newProject as IProject;
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -36,7 +37,7 @@ export default class ProjectService {
         try {
             return (await Project.findById(id).exec()) as IProject;
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -49,7 +50,7 @@ export default class ProjectService {
         try {
             return (await Project.find({ user_id }).exec()) as IProject[];
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -62,7 +63,7 @@ export default class ProjectService {
         try {
             return (await Project.find({ folder_id }).exec()) as IProject[];
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -75,7 +76,7 @@ export default class ProjectService {
         try {
             return (await Project.findByIdAndUpdate(id, project, { new: true }).exec()) as IProject;
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -88,7 +89,7 @@ export default class ProjectService {
         try {
             return (await Project.findByIdAndDelete(id).exec()) as IProject;
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",

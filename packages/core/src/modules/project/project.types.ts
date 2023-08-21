@@ -18,7 +18,7 @@ export interface IProject {
         published_url?: string;
     }[];
     canonical_url?: string;
-    scheduled_at: Date;
+    scheduled_at?: Date;
 }
 
 export type IProjectUpdate = Partial<IProject>;

@@ -1,12 +1,13 @@
 export const rabbitmq = {
     queues: {
-        JOBS: "jobs",
         POSTS: "posts",
+        EMAILS: "emails",
     },
 };
 
 export const bullmq = {
     queues: {
         POST: "post",
+        EMAIL: "email",
     },
 };

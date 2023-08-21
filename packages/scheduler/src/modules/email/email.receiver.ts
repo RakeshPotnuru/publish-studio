@@ -5,31 +5,31 @@ import { Queue, Worker } from "bullmq";
 import { connectionOptions } from "../../config/app.config";
 import { bullmq, rabbitmq } from "../../constants";
 import { rabbitMQConnection } from "../../utils/rabbitmq";
-import { invokePublishPostRPC } from "./post.sender";
-import type { IPost } from "./post.types";
+import { invokeSendEmailRPC } from "./email.sender";
+import type { IEmail } from "./email.types";
 
-const postQueue = new Queue(bullmq.queues.POST, { connection: connectionOptions });
+const emailQueue = new Queue(bullmq.queues.EMAIL, { connection: connectionOptions });
 
-const schedulePost = async (data: IPost) => {
+const scheduleEmail = async (data: IEmail) => {
     try {
         const delay = Number(new Date(data.scheduled_at)) - Date.now();
 
-        await postQueue.add(`${bullmq.queues.POST}-job-${data.project_id}`, data, { delay });
+        await emailQueue.add(`${bullmq.queues.EMAIL}-job`, data, { delay });
     } catch (error) {
-        console.log("❌ Failed to schedule post");
+        console.log("❌ Failed to schedule email");
 
         console.log(error);
     }
 };
 
-export const postJobsReceiver = async () => {
+export const emailJobsReceiver = async () => {
     try {
         const connection = await rabbitMQConnection();
 
         if (connection) {
             const channel = await connection.createChannel();
 
-            const queue = rabbitmq.queues.POSTS;
+            const queue = rabbitmq.queues.EMAILS;
 
             await channel.assertQueue(queue, {
                 durable: true,
@@ -45,22 +45,22 @@ export const postJobsReceiver = async () => {
 
                 const data = JSON.parse(message?.content.toString());
 
-                schedulePost(data as IPost).catch(error => {
+                scheduleEmail(data as IEmail).catch(error => {
                     console.log(error);
                 });
 
                 const worker = new Worker(
-                    bullmq.queues.POST,
+                    bullmq.queues.EMAIL,
                     async (job: Job) => {
                         console.log(
-                            `✅ Scheduled post ${job.id ?? ""} at ${
+                            `✅ Scheduled email ${job.id ?? ""} at ${
                                 job.data.scheduled_at as string
                             }`,
                         );
 
-                        await invokePublishPostRPC(data as IPost);
+                        await invokeSendEmailRPC(data as IEmail);
 
-                        return job.data as IPost;
+                        return job.data as IEmail;
                     },
                     { connection: connectionOptions },
                 );
@@ -68,11 +68,7 @@ export const postJobsReceiver = async () => {
                 worker.on("completed", async (job: Job) => {
                     await job.remove();
 
-                    console.log(
-                        `✅ Completed post job ${job.id ?? ""} at ${
-                            job.data.scheduled_at as string
-                        }`,
-                    );
+                    console.log(`✅ Completed email job ${job.id ?? ""}`);
                 });
 
                 worker.on("failed", async job => {
@@ -83,8 +79,6 @@ export const postJobsReceiver = async () => {
 
                 channel.ack(message as Message);
             });
-        } else {
-            console.log("❌ Failed to connect to RabbitMQ");
         }
     } catch (error) {
         console.log(error);

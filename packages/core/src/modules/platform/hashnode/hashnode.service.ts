@@ -38,7 +38,7 @@ export default class HashnodeService {
                 },
             });
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -65,7 +65,7 @@ export default class HashnodeService {
 
             return newPlatform as IHashnode;
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -80,7 +80,7 @@ export default class HashnodeService {
                 new: true,
             }).exec()) as IHashnode;
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -104,7 +104,7 @@ export default class HashnodeService {
 
             return (await Hashnode.findOneAndDelete({ user_id }).exec()) as IHashnode;
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -118,7 +118,7 @@ export default class HashnodeService {
         try {
             return (await Hashnode.findOne({ user_id }).exec()) as IHashnode;
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -155,7 +155,7 @@ export default class HashnodeService {
 
             return response.data.data.user as IHashnodeUserOutput;
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -193,7 +193,7 @@ export default class HashnodeService {
 
             return response?.data as IHashnodeCreatePostOutput;
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",

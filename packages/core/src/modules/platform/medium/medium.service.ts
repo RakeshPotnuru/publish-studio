@@ -38,7 +38,7 @@ export default class MediumService {
                 },
             });
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -65,7 +65,7 @@ export default class MediumService {
 
             return newPlatform as IMedium;
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -80,7 +80,7 @@ export default class MediumService {
                 new: true,
             }).exec()) as IMedium;
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -104,7 +104,7 @@ export default class MediumService {
 
             return (await Medium.findOneAndDelete({ user_id }).exec()) as IMedium;
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -118,7 +118,7 @@ export default class MediumService {
         try {
             return (await Medium.findOne({ user_id }).exec()) as IMedium;
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -140,7 +140,7 @@ export default class MediumService {
 
             return response.data.data as IMediumUserOutput;
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -161,7 +161,7 @@ export default class MediumService {
 
             return response?.data as IMediumCreatePostOutput;
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
