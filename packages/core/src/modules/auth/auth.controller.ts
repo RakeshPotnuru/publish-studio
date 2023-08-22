@@ -8,7 +8,7 @@ import type { Types } from "mongoose";
 import defaultConfig from "../../config/app.config";
 import { emailTemplates } from "../../constants";
 import type { Context } from "../../trpc";
-import { sendEmail } from "../../utils/aws/ses";
+import { scheduleEmail, sendEmail } from "../../utils/aws/ses";
 import { signJwt, verifyJwt } from "../../utils/jwt";
 import redisClient from "../../utils/redis";
 import UserService from "../user/user.service";
@@ -156,6 +156,17 @@ export default class AuthController extends UserService {
         }
 
         await super.updateUser(user._id, { is_verified: true });
+
+        await scheduleEmail({
+            emails: [user.email],
+            template: emailTemplates.WELCOME_EMAIL,
+            variables: {
+                first_name: user.first_name,
+                last_name: user.last_name,
+            },
+            from_address: process.env.AWS_SES_PERSONAL_FROM_EMAIL,
+            scheduled_at: new Date(Date.now() + 60 * 60 * 1000), // one hour from now
+        });
 
         return {
             status: "success",

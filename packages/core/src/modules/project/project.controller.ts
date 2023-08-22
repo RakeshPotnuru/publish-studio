@@ -3,12 +3,11 @@ import type { Message } from "amqplib";
 import type { Types } from "mongoose";
 
 import defaultConfig from "../../config/app.config";
-import { rabbitmq, user } from "../../constants";
+import type { user } from "../../constants";
+import { project as projectConsts, rabbitmq } from "../../constants";
 import type { Context } from "../../trpc";
 import { rabbitMQConnection } from "../../utils/rabbitmq";
-import DevToController from "../platform/devto/devto.controller";
-import HashnodeController from "../platform/hashnode/hashnode.controller";
-import MediumController from "../platform/medium/medium.controller";
+import ProjectHelpers from "./project.helpers";
 import ProjectService from "./project.service";
 import type { hashnode_tags, IProject, IProjectUpdate } from "./project.types";
 
@@ -54,66 +53,19 @@ export default class ProjectController extends ProjectService {
     ) {
         const project = await super.getProjectById(project_id);
 
-        const publishResponse = [] as {
-            name: (typeof user.platforms)[keyof typeof user.platforms];
-            status: "success" | "error";
-            published_url: string;
-        }[];
-
-        const platforms = project.platforms?.map(platform => platform.name) ?? [];
-
-        if (platforms.includes(user.platforms.DEVTO)) {
-            const response = await new DevToController().createPostHandler(
-                {
-                    post: project,
-                },
-                user_id,
-            );
-
-            publishResponse.push({
-                name: user.platforms.DEVTO,
-                status: response.data.post.error ? "error" : "success",
-                published_url: response.data.post.url,
-            });
-        }
-
-        if (platforms.includes(user.platforms.HASHNODE)) {
-            const hashnodeUser = await new HashnodeController().getPlatformById(user_id);
-            const response = await new HashnodeController().createPostHandler(
-                {
-                    post: project,
-                    hashnode_tags: hashnode_tags,
-                },
-                user_id,
-            );
-
-            const blogHandle = hashnodeUser?.blog_handle ?? "unknown";
-            const postSlug = response.data.post.data.createStory.post.slug ?? "unknown";
-
-            publishResponse.push({
-                name: user.platforms.HASHNODE,
-                status: response.data.post?.errors ? "error" : "success",
-                published_url: `https://${blogHandle}.hashnode.dev/${postSlug}`,
-            });
-        }
-
-        if (platforms.includes(user.platforms.MEDIUM)) {
-            const response = await new MediumController().createPostHandler(
-                {
-                    post: project,
-                },
-                user_id,
-            );
-
-            publishResponse.push({
-                name: user.platforms.MEDIUM,
-                status: response.data.post.errors ? "error" : "success",
-                published_url: response.data.post.data.url,
-            });
-        }
+        const publishResponse = await new ProjectHelpers().publishOnPlatforms(
+            project,
+            user_id,
+            hashnode_tags,
+        );
 
         await super.updateProjectById(project_id, {
             platforms: publishResponse,
+            status:
+                publishResponse.length > 0 &&
+                publishResponse.every(platform => platform.status === "success")
+                    ? projectConsts.status.PUBLISHED
+                    : projectConsts.status.DRAFT,
         });
 
         return {
@@ -140,18 +92,20 @@ export default class ProjectController extends ProjectService {
 
                 console.log(`🐇 Waiting for requests in ${queue} queue.`);
 
-                await channel.consume(queue, async message => {
+                await channel.consume(queue, message => {
                     if (!message) {
                         return;
                     }
 
                     const data = JSON.parse(message?.content.toString());
 
-                    await this.publishPost(
+                    this.publishPost(
                         data.project_id as Types.ObjectId,
                         data.user_id as Types.ObjectId,
                         data.hashnode_tags as hashnode_tags,
-                    );
+                    ).catch(error => {
+                        console.log(error);
+                    });
 
                     channel.sendToQueue(
                         message?.properties.replyTo as string,
@@ -195,6 +149,15 @@ export default class ProjectController extends ProjectService {
         try {
             const { project_id, platforms, hashnode_tags, scheduled_at } = input;
 
+            const project = await super.getProjectById(project_id);
+
+            if (project.status === projectConsts.status.PUBLISHED) {
+                throw new TRPCError({
+                    code: "BAD_REQUEST",
+                    message: "Project is already published.",
+                });
+            }
+
             await super.updateProjectById(project_id, {
                 platforms: platforms,
                 scheduled_at: scheduled_at,
@@ -205,7 +168,7 @@ export default class ProjectController extends ProjectService {
             if (connection) {
                 const channel = await connection.createChannel();
 
-                const queue = rabbitmq.queues.POSTS;
+                const queue = rabbitmq.queues.POST_JOBS;
 
                 await channel.assertQueue(queue, {
                     durable: true,

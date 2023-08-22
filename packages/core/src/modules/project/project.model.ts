@@ -31,7 +31,28 @@ const ProjectSchema = new Schema<IProject>(
                 published_url: String,
             },
         ],
-        scheduled_at: { type: Date, required: true, default: Date.now },
+        scheduled_at: {
+            type: Date,
+            required: true,
+            default: Date.now,
+            validate: [
+                {
+                    validator: function (value: Date) {
+                        const currentDate = new Date();
+                        return value >= currentDate;
+                    },
+                    message: "Scheduled date must be in the future.",
+                },
+                {
+                    validator: function (value: Date) {
+                        const maxDate = new Date();
+                        maxDate.setDate(maxDate.getDate() + 30);
+                        return value <= maxDate;
+                    },
+                    message: "Scheduled date must be within 30 days from now.",
+                },
+            ],
+        },
     },
     {
         timestamps: {

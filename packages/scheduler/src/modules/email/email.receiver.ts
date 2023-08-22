@@ -29,7 +29,7 @@ export const emailJobsReceiver = async () => {
         if (connection) {
             const channel = await connection.createChannel();
 
-            const queue = rabbitmq.queues.EMAILS;
+            const queue = rabbitmq.queues.EMAIL_JOBS;
 
             await channel.assertQueue(queue, {
                 durable: true,
@@ -71,9 +71,7 @@ export const emailJobsReceiver = async () => {
                     console.log(`✅ Completed email job ${job.id ?? ""}`);
                 });
 
-                worker.on("failed", async job => {
-                    await job?.remove();
-
+                worker.on("failed", () => {
                     console.log("❌ Job Failed");
                 });
 

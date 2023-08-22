@@ -13,6 +13,7 @@ const postQueue = new Queue(bullmq.queues.POST, { connection: connectionOptions 
 const schedulePost = async (data: IPost) => {
     try {
         const delay = Number(new Date(data.scheduled_at)) - Date.now();
+        console.log(`⏰ Scheduling post in ${delay}ms`);
 
         await postQueue.add(`${bullmq.queues.POST}-job-${data.project_id}`, data, { delay });
     } catch (error) {
@@ -29,7 +30,7 @@ export const postJobsReceiver = async () => {
         if (connection) {
             const channel = await connection.createChannel();
 
-            const queue = rabbitmq.queues.POSTS;
+            const queue = rabbitmq.queues.POST_JOBS;
 
             await channel.assertQueue(queue, {
                 durable: true,
@@ -75,9 +76,7 @@ export const postJobsReceiver = async () => {
                     );
                 });
 
-                worker.on("failed", async job => {
-                    await job?.remove();
-
+                worker.on("failed", () => {
                     console.log("❌ Job Failed");
                 });
 

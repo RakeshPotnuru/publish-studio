@@ -28,6 +28,7 @@ const ZodEnvironmentVariables = z.object({
     AWS_REGION: z.string(),
     AWS_KMS_KEY_ID: z.string(),
     AWS_SES_AUTO_FROM_EMAIL: z.string().email(),
+    AWS_SES_PERSONAL_FROM_EMAIL: z.string().email(),
     WHITELIST_ORIGINS: z.string().optional(),
     CLIENT_URL: z.string().url(),
     RABBITMQ_URL: z.string(),

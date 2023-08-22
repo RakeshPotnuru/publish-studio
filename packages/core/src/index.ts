@@ -14,6 +14,7 @@ import defaultConfig from "./config/app.config";
 import ProjectController from "./modules/project/project.controller";
 import trpcRouter from "./routes";
 import { createContext } from "./trpc";
+import { emailReceiver } from "./utils/aws/ses";
 
 const app: Application = express();
 
@@ -52,6 +53,7 @@ app.use("/panel", (_, res) => {
 
 const project = new ProjectController();
 await project.postReceiver();
+await emailReceiver();
 
 app.listen(defaultConfig.port, () => {
     console.log(`✅ Server running on port ${defaultConfig.port}`);
