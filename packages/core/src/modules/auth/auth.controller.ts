@@ -7,8 +7,10 @@ import type { Types } from "mongoose";
 
 import defaultConfig from "../../config/app.config";
 import { emailTemplates } from "../../constants";
+import { user as userConsts } from "../../constants";
 import type { Context } from "../../trpc";
 import { scheduleEmail, sendEmail } from "../../utils/aws/ses";
+import { verifyGoogleToken } from "../../utils/google";
 import { signJwt, verifyJwt } from "../../utils/jwt";
 import redisClient from "../../utils/redis";
 import UserService from "../user/user.service";
@@ -41,32 +43,23 @@ export default class AuthController extends UserService {
     }
 
     private async sendVerificationEmail(email: string, token: string) {
-        try {
-            const verification_url = `${defaultConfig.client_url}/verify-email?token=${token}`;
+        const verification_url = `${defaultConfig.client_url}/verify-email?token=${token}`;
 
-            await sendEmail(
-                [email],
-                emailTemplates.VERIFY_EMAIL,
-                {
-                    verificationUrl: verification_url,
-                },
-                process.env.AWS_SES_AUTO_FROM_EMAIL,
-            );
+        await sendEmail(
+            [email],
+            emailTemplates.VERIFY_EMAIL,
+            {
+                verification_url: verification_url,
+            },
+            process.env.AWS_SES_AUTO_FROM_EMAIL,
+        );
 
-            return {
-                status: "success",
-                data: {
-                    message: "Verification email sent successfully",
-                },
-            };
-        } catch (error) {
-            console.log(error);
-
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: defaultConfig.defaultErrorMessage,
-            });
-        }
+        return {
+            status: "success",
+            data: {
+                message: "Verification email sent successfully",
+            },
+        };
     }
 
     private async sendResetPasswordEmail(email: string, token: string) {
@@ -77,7 +70,7 @@ export default class AuthController extends UserService {
                 [email],
                 emailTemplates.RESET_PASSWORD,
                 {
-                    resetPasswordUrl: reset_password_url,
+                    reset_password_url: reset_password_url,
                 },
                 process.env.AWS_SES_AUTO_FROM_EMAIL,
             );
@@ -206,6 +199,13 @@ export default class AuthController extends UserService {
 
         await this.sendVerificationEmail(input.email, verification_token);
 
+        if (!input.password) {
+            throw new TRPCError({
+                code: "BAD_REQUEST",
+                message: "Password is required",
+            });
+        }
+
         const hashed_password = await bycrypt.hash(input.password, 12);
         const newUser = await super.createUser({
             first_name: input.first_name,
@@ -224,8 +224,89 @@ export default class AuthController extends UserService {
         };
     }
 
+    async connectGoogleHandler(input: { token: string }, ctx: Context) {
+        const payload = await verifyGoogleToken(input.token);
+
+        if (!payload) {
+            throw new TRPCError({
+                code: "UNAUTHORIZED",
+                message: "Invalid Google token",
+            });
+        }
+
+        const user = await super.getUserByEmail(payload.email);
+
+        if (!user) {
+            const newUser = await super.createUser({
+                first_name: payload.given_name,
+                last_name: payload.family_name,
+                email: payload.email,
+                profile_pic: payload.picture,
+                user_type: userConsts.userTypes.FREE,
+                auth_modes: [userConsts.authModes.GOOGLE],
+                google_sub: payload.sub,
+            });
+
+            const { access_token, refresh_token } = await super.signTokens(newUser);
+
+            const { req, res } = ctx;
+
+            setCookie("access_token", access_token, { req, res, ...accessTokenCookieOptions });
+            setCookie("refresh_token", refresh_token, { req, res, ...refreshTokenCookieOptions });
+            setCookie("logged_in", "true", {
+                req,
+                res,
+                ...accessTokenCookieOptions,
+                httpOnly: false,
+            });
+
+            return {
+                status: "success",
+                data: {
+                    user: newUser,
+                    access_token,
+                },
+            };
+        }
+
+        if (!user.auth_modes.includes(userConsts.authModes.GOOGLE)) {
+            await super.updateUser(user._id, {
+                auth_modes: [...user.auth_modes, userConsts.authModes.GOOGLE],
+                google_sub: payload.sub,
+            });
+        }
+
+        const { access_token, refresh_token } = await super.signTokens(user);
+
+        const { req, res } = ctx;
+
+        setCookie("access_token", access_token, { req, res, ...accessTokenCookieOptions });
+        setCookie("refresh_token", refresh_token, { req, res, ...refreshTokenCookieOptions });
+        setCookie("logged_in", "true", {
+            req,
+            res,
+            ...accessTokenCookieOptions,
+            httpOnly: false,
+        });
+
+        return {
+            status: "success",
+            data: {
+                user,
+                access_token,
+            },
+        };
+    }
+
     async loginHandler(input: ILoginInput, ctx: Context) {
         const user = await super.getUserByEmail(input.email);
+
+        if (!user.password) {
+            throw new TRPCError({
+                code: "BAD_REQUEST",
+                message: "Password is required",
+            });
+        }
 
         if (!user || !(await bycrypt.compare(input.password, user.password))) {
             throw new TRPCError({
@@ -245,6 +326,8 @@ export default class AuthController extends UserService {
             ...accessTokenCookieOptions,
             httpOnly: false,
         });
+
+        await super.updateUser(user._id, { last_login: new Date() });
 
         return {
             status: "success",

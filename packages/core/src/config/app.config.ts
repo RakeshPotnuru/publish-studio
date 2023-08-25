@@ -28,7 +28,7 @@ interface ICustomConfig {
 }
 
 const defaultConfig: ICustomConfig = {
-    port: process.env.PORT ? Number.parseInt(process.env.PORT) : 5000,
+    port: process.env.PORT ? Number.parseInt(process.env.PORT) : 4000,
     baseUrl: process.env.BASE_URL || "http://localhost:5000",
     accessTokenExpiresIn: 1440, // 24 hours
     refreshTokenExpiresIn: 1485,

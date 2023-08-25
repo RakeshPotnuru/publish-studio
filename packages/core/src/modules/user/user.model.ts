@@ -18,7 +18,7 @@ const UserSchema = new Schema<IUser>(
             maxlength: user.lastName.MAX_LENGTH,
         },
         email: { type: String, required: true, unique: true, lowercase: true },
-        password: { type: String, required: true, minlength: user.password.MIN_LENGTH },
+        password: { type: String, minlength: user.password.MIN_LENGTH },
         profile_pic: String,
         user_type: {
             type: String,
@@ -30,6 +30,14 @@ const UserSchema = new Schema<IUser>(
         assets: [{ type: Schema.Types.ObjectId, ref: "Asset" }],
         platforms: [{ type: String, enum: user.platforms }],
         is_verified: { type: Boolean, required: true, default: false },
+        last_login: { type: Date, required: true, default: Date.now },
+        auth_modes: {
+            type: [String],
+            enum: user.authModes,
+            required: true,
+            default: [user.authModes.CLASSIC],
+        },
+        google_sub: String,
     },
     {
         timestamps: {

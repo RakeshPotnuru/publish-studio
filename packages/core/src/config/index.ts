@@ -32,6 +32,7 @@ const ZodEnvironmentVariables = z.object({
     WHITELIST_ORIGINS: z.string().optional(),
     CLIENT_URL: z.string().url(),
     RABBITMQ_URL: z.string(),
+    GOOGLE_OAUTH_CLIENT_ID: z.string(),
 });
 
 ZodEnvironmentVariables.parse(process.env);

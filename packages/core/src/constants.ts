@@ -40,6 +40,11 @@ enum userTypes {
     PRO = "pro",
 }
 
+enum authModes {
+    CLASSIC = "classic",
+    GOOGLE = "google",
+}
+
 export const user = {
     firstName: {
         MIN_LENGTH: 3,
@@ -54,6 +59,7 @@ export const user = {
     },
     userTypes: userTypes,
     platforms: platforms,
+    authModes: authModes,
 } as const;
 
 export const rabbitmq = {

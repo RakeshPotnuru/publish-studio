@@ -24,21 +24,30 @@ export const sendEmail = async (
     variables: Record<string, string>,
     from_address: string,
 ) => {
-    const input: SendEmailCommandInput = {
-        Content: {
-            Template: {
-                TemplateName: template,
-                TemplateData: JSON.stringify(variables),
+    try {
+        const input: SendEmailCommandInput = {
+            Content: {
+                Template: {
+                    TemplateName: template,
+                    TemplateData: JSON.stringify(variables),
+                },
             },
-        },
-        Destination: {
-            ToAddresses: emails,
-        },
-        FromEmailAddress: from_address,
-    };
+            Destination: {
+                ToAddresses: emails,
+            },
+            FromEmailAddress: from_address,
+        };
 
-    const command = new SendEmailCommand(input);
-    await ses.send(command);
+        const command = new SendEmailCommand(input);
+        await ses.send(command);
+    } catch (error) {
+        console.log(error);
+
+        throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: defaultConfig.defaultErrorMessage,
+        });
+    }
 };
 
 export interface IEmail {
