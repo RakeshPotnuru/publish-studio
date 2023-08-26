@@ -25,6 +25,14 @@ const authRouter = t.router({
         )
         .mutation(({ input }) => new AuthController().registerHandler(input)),
 
+    connectGoogle: t.procedure
+        .input(
+            z.object({
+                id_token: z.string(),
+            }),
+        )
+        .mutation(({ input, ctx }) => new AuthController().connectGoogleHandler(input, ctx)),
+
     login: t.procedure
         .input(
             z.object({

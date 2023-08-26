@@ -224,8 +224,8 @@ export default class AuthController extends UserService {
         };
     }
 
-    async connectGoogleHandler(input: { token: string }, ctx: Context) {
-        const payload = await verifyGoogleToken(input.token);
+    async connectGoogleHandler(input: { id_token: string }, ctx: Context) {
+        const payload = await verifyGoogleToken(input.id_token);
 
         if (!payload) {
             throw new TRPCError({
