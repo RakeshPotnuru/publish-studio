@@ -38,6 +38,7 @@ const UserSchema = new Schema<IUser>(
             default: [user.authModes.CLASSIC],
         },
         google_sub: String,
+        stripe_customer_id: String,
     },
     {
         timestamps: {

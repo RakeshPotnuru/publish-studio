@@ -76,3 +76,14 @@ export enum emailTemplates {
     RESET_PASSWORD = "ps_reset_password",
     WELCOME_EMAIL = "ps_welcome_email",
 }
+
+export const payment = {
+    plans: {
+        proMonthly: {
+            PRICE_IN_CENTS: 799,
+            PRICE_IN_DOLLARS: 7.99,
+            PRICE_ID: "price_1NjGYWSEoLcIwk4mKMkjgvoZ",
+        },
+    },
+    CURRENCY: "usd",
+};

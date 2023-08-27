@@ -128,6 +128,9 @@ importers:
       redis:
         specifier: ^4.6.7
         version: 4.6.7
+      stripe:
+        specifier: ^13.3.0
+        version: 13.3.0
       uuid:
         specifier: ^9.0.0
         version: 9.0.0
@@ -9020,6 +9023,14 @@ packages:
     dependencies:
       acorn: 8.9.0
     dev: true
+
+  /stripe@13.3.0:
+    resolution: {integrity: sha512-saDZBvk8fCBz9GigKpVXAaAo0K+TQe+DwVmucAzpJq503Y44P2ehMqulfaRoK8a+etuwIUlgsXD+am6YSMxepg==}
+    engines: {node: '>=12.*'}
+    dependencies:
+      '@types/node': 20.3.2
+      qs: 6.11.0
+    dev: false
 
   /strnum@1.0.5:
     resolution: {integrity: sha512-J8bbNyKKXl5qYcR36TIO8W3mVGVHrmmxsd5PAItGkmyzwJvybiw2IVq5nqd0i4LSNSkB/sx9VHllbfFdr9k1JA==}

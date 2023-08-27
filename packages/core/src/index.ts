@@ -18,7 +18,13 @@ import { emailReceiver } from "./utils/aws/ses";
 
 const app: Application = express();
 
-app.use(express.json());
+app.use((req, res, next) => {
+    if (req.originalUrl === "/api/stripeWebhook") {
+        express.raw({ type: "application/json" })(req, res, next);
+    } else {
+        express.json()(req, res, next);
+    }
+});
 
 const corsOptions: CorsOptions = {
     origin:

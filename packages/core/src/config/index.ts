@@ -33,6 +33,8 @@ const ZodEnvironmentVariables = z.object({
     CLIENT_URL: z.string().url(),
     RABBITMQ_URL: z.string(),
     GOOGLE_OAUTH_CLIENT_ID: z.string(),
+    STRIPE_SECRET_KEY: z.string(),
+    STRIPE_WEBHOOK_SECRET: z.string(),
 });
 
 ZodEnvironmentVariables.parse(process.env);
