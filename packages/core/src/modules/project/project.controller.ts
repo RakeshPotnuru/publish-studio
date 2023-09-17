@@ -76,6 +76,48 @@ export default class ProjectController extends ProjectService {
         };
     }
 
+    async updatePostHandler(
+        input: {
+            project_id: Types.ObjectId;
+            platforms: {
+                name: (typeof user.platforms)[keyof typeof user.platforms];
+            }[];
+            hashnode_tags?: hashnode_tags;
+        },
+        ctx: Context,
+    ) {
+        const project = await super.getProjectById(input.project_id);
+
+        const updateResponse = await new ProjectHelpers().updateOnPlatforms(
+            project,
+            ctx.user?._id,
+            input.hashnode_tags,
+        );
+
+        if (!updateResponse) {
+            throw new TRPCError({
+                code: "BAD_REQUEST",
+                message: "Project is not published.",
+            });
+        }
+
+        await super.updateProjectById(input.project_id, {
+            platforms: updateResponse,
+            status:
+                updateResponse.length > 0 &&
+                updateResponse.every(platform => platform.status === "success")
+                    ? projectConsts.status.PUBLISHED
+                    : projectConsts.status.DRAFT,
+        });
+
+        return {
+            status: "success",
+            data: {
+                updateResponse: updateResponse,
+            },
+        };
+    }
+
     async postReceiver() {
         try {
             const connection = await rabbitMQConnection();

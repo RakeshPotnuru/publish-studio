@@ -16,6 +16,7 @@ export interface IProject {
         name: (typeof user.platforms)[keyof typeof user.platforms];
         status?: "success" | "error";
         published_url?: string;
+        id?: string;
     }[];
     canonical_url?: string;
     scheduled_at?: Date;

@@ -51,5 +51,6 @@ export interface IMediumCreatePostOutput {
         title: string;
         tags: string[];
         url: string;
+        id: string;
     };
 }

@@ -202,4 +202,77 @@ export default class HashnodeController extends HashnodeService {
             },
         };
     }
+
+    async updatePostHandler(
+        input: {
+            post: IProject;
+            hashnode_tags?: hashnode_tags;
+            post_id: string;
+        },
+        user_id: Types.ObjectId | undefined,
+    ) {
+        const user = await super.getPlatformById(user_id);
+
+        if (!user) {
+            throw new TRPCError({
+                code: "NOT_FOUND",
+                message: "Account not found. Please connect your Hashnode account to continue.",
+            });
+        }
+
+        const { post, hashnode_tags, post_id } = input;
+
+        const postBody = post.canonical_url
+            ? {
+                  title: post.title,
+                  contentMarkdown: post.body,
+                  tags: hashnode_tags,
+                  coverImageURL: post.cover_image,
+                  isRepublished: {
+                      originalArticleURL: post.canonical_url,
+                  },
+                  isPartOfPublication: {
+                      publicationId: user.publication.publication_id,
+                  },
+              }
+            : {
+                  title: post.title,
+                  contentMarkdown: post.body,
+                  tags: hashnode_tags,
+                  coverImageURL: post.cover_image,
+                  isPartOfPublication: {
+                      publicationId: user.publication.publication_id,
+                  },
+              };
+
+        const updatedPost = await super.updatePost(postBody, post_id, user_id);
+
+        if (updatedPost.errors) {
+            if (updatedPost.errors[0].extensions.code === "INTERNAL_SERVER_ERROR") {
+                throw new TRPCError({
+                    code: "BAD_REQUEST",
+                    message: "Invalid fields",
+                });
+            }
+
+            if (updatedPost.errors[0].extensions.code === "UNAUTHENTICATED") {
+                throw new TRPCError({
+                    code: "UNAUTHORIZED",
+                    message: updatedPost.errors[0].message,
+                });
+            }
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: defaultConfig.defaultErrorMessage,
+            });
+        }
+
+        return {
+            status: "success",
+            data: {
+                post: updatedPost,
+            },
+        };
+    }
 }

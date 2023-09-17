@@ -66,8 +66,10 @@ export const postJobsReceiver = async () => {
                     { connection: connectionOptions },
                 );
 
-                worker.on("completed", async (job: Job) => {
-                    await job.remove();
+                worker.on("completed", (job: Job) => {
+                    job.remove().catch(error => {
+                        console.log(error);
+                    });
 
                     console.log(
                         `✅ Completed post job ${job.id ?? ""} at ${

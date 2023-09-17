@@ -301,7 +301,7 @@ packages:
       '@aws-crypto/sha256-js': 3.0.0
       '@aws-crypto/supports-web-crypto': 3.0.0
       '@aws-crypto/util': 3.0.0
-      '@aws-sdk/types': 3.387.0
+      '@aws-sdk/types': 3.398.0
       '@aws-sdk/util-locate-window': 3.310.0
       '@aws-sdk/util-utf8-browser': 3.259.0
       tslib: 1.14.1
@@ -311,7 +311,7 @@ packages:
     resolution: {integrity: sha512-PnNN7os0+yd1XvXAy23CFOmTbMaDxgxXtTKHybrJ39Y8kGzBATgBFibWJKH6BhytLI/Zyszs87xCOBNyBig6vQ==}
     dependencies:
       '@aws-crypto/util': 3.0.0
-      '@aws-sdk/types': 3.387.0
+      '@aws-sdk/types': 3.398.0
       tslib: 1.14.1
     dev: false
 
@@ -1415,6 +1415,14 @@ packages:
     dependencies:
       '@smithy/types': 2.2.0
       tslib: 2.6.1
+    dev: false
+
+  /@aws-sdk/types@3.398.0:
+    resolution: {integrity: sha512-r44fkS+vsEgKCuEuTV+TIk0t0m5ZlXHNjSDYEUvzLStbbfUFiNus/YG4UCa0wOk9R7VuQI67badsvvPeVPCGDQ==}
+    engines: {node: '>=14.0.0'}
+    dependencies:
+      '@smithy/types': 2.2.2
+      tslib: 2.6.2
     dev: false
 
   /@aws-sdk/util-arn-parser@3.310.0:
@@ -3459,6 +3467,13 @@ packages:
       tslib: 2.6.1
     dev: false
 
+  /@smithy/types@2.2.2:
+    resolution: {integrity: sha512-4PS0y1VxDnELGHGgBWlDksB2LJK8TG8lcvlWxIsgR+8vROI7Ms8h1P4FQUx+ftAX2QZv5g1CJCdhdRmQKyonyw==}
+    engines: {node: '>=14.0.0'}
+    dependencies:
+      tslib: 2.6.2
+    dev: false
+
   /@smithy/url-parser@1.0.2:
     resolution: {integrity: sha512-0JRsDMQe53F6EHRWksdcavKDRjyqp8vrjakg8EcCUOa7PaFRRB1SO/xGZdzSlW1RSTWQDEksFMTCEcVEKmAoqA==}
     dependencies:
@@ -3749,7 +3764,7 @@ packages:
   /@swc/helpers@0.5.1:
     resolution: {integrity: sha512-sJ902EfIzn1Fa+qYmjdQqh8tPsoxyBz+8yBKC2HKUxyezKJFwPGOn7pv4WY6QuQW//ySQi5lJjA/ZT9sNWWNTg==}
     dependencies:
-      tslib: 2.6.1
+      tslib: 2.6.2
     dev: false
 
   /@trpc/client@10.33.0(@trpc/server@10.33.0):

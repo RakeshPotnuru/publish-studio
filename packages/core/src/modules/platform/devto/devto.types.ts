@@ -32,9 +32,24 @@ export interface IDevToCreatePostInput {
     tags?: string[];
 }
 
+export type IDevToUpdatePost = Partial<IDevToCreatePostInput>;
+
 export interface IDevToCreatePostOutput {
     error: string;
     status: 401 | 422;
+    id: number;
+    title: string;
+    description: string;
+    body_markdown: string;
+    url: string;
+    cover_image: string;
+    tags: string[];
+}
+
+export interface IDevToUpdatePostOutput {
+    error: string;
+    status: 401 | 422 | 404;
+    id: number;
     title: string;
     description: string;
     body_markdown: string;

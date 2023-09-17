@@ -12,6 +12,7 @@ import type {
     IDevTo,
     IDevToCreatePostInput,
     IDevToCreatePostOutput,
+    IDevToUpdatePost,
     IDevToUserOutput,
     IDevToUserUpdate,
 } from "./devto.types";
@@ -127,7 +128,7 @@ export default class DevToService {
         }
     }
 
-    /* This method is used exactly twice before creating or updating user user in `DevController()` class
+    /* This method is used exactly twice before creating or updating user in `DevController()` class
     to fetch user Dev.to details and update them in database. That's why api key is being used directly. */
     async getDevUser(api_key: string) {
         try {
@@ -164,6 +165,26 @@ export default class DevToService {
                 code: "INTERNAL_SERVER_ERROR",
                 message:
                     "An error occurred while publishing the post to Dev.to. Please try again later.",
+            });
+        }
+    }
+
+    async updatePost(post: IDevToUpdatePost, post_id: number, user_id: Types.ObjectId | undefined) {
+        try {
+            const devTo = await this.devTo(user_id);
+
+            const response = await devTo?.put(`/articles/${post_id}`, {
+                article: post,
+            });
+
+            return response?.data as IDevToCreatePostOutput;
+        } catch (error) {
+            console.log(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message:
+                    "An error occurred while updating the post on Dev.to. Please try again later.",
             });
         }
     }

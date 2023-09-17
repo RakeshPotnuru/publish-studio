@@ -160,4 +160,67 @@ export default class DevToController extends DevToService {
             },
         };
     }
+
+    async updatePostHandler(
+        input: { post: IProject; post_id: number },
+        user_id: Types.ObjectId | undefined,
+    ) {
+        const user = await super.getPlatformById(user_id);
+
+        if (!user) {
+            throw new TRPCError({
+                code: "NOT_FOUND",
+                message: "Account not found. Please connect your Dev.to account to continue.",
+            });
+        }
+
+        const updatedPost = await super.updatePost(
+            {
+                title: input.post.title,
+                body_markdown: input.post.body,
+                description: input.post.description,
+                published: user.default_publish_status,
+                canonical_url: input.post.canonical_url,
+                tags: input.post.tags,
+                main_image: input.post.cover_image,
+            },
+            input.post_id,
+            user_id,
+        );
+
+        if (updatedPost.error) {
+            if (updatedPost.status === 422) {
+                throw new TRPCError({
+                    code: "BAD_REQUEST",
+                    message: "Invalid fields",
+                });
+            }
+
+            if (updatedPost.status === 401) {
+                throw new TRPCError({
+                    code: "UNAUTHORIZED",
+                    message: "Invalid API key",
+                });
+            }
+
+            if (updatedPost.status === 404) {
+                throw new TRPCError({
+                    code: "NOT_FOUND",
+                    message: "Post not found",
+                });
+            }
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: defaultConfig.defaultErrorMessage,
+            });
+        }
+
+        return {
+            status: "success",
+            data: {
+                post: updatedPost,
+            },
+        };
+    }
 }

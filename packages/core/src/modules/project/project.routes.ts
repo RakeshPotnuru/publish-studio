@@ -2,7 +2,7 @@ import type { Types } from "mongoose";
 import { z } from "zod";
 
 import { project, user } from "../../constants";
-import { protectedProcedure, t } from "../../trpc";
+import { proProtectedProcedure, protectedProcedure, t } from "../../trpc";
 import ProjectController from "./project.controller";
 import type { hashnode_tags } from "./project.types";
 
@@ -43,6 +43,22 @@ const projectRouter = t.router({
             }),
         )
         .mutation(({ input, ctx }) => new ProjectController().schedulePostHandler(input, ctx)),
+
+    updatePost: proProtectedProcedure
+        .input(
+            z.object({
+                project_id: z.custom<Types.ObjectId>(),
+                platforms: z
+                    .array(
+                        z.object({
+                            name: z.nativeEnum(user.platforms),
+                        }),
+                    )
+                    .min(1),
+                hashnode_tags: z.custom<hashnode_tags>().optional(),
+            }),
+        )
+        .mutation(({ input, ctx }) => new ProjectController().updatePostHandler(input, ctx)),
 
     getAllProjects: protectedProcedure.query(({ ctx }) =>
         new ProjectController().getAllProjectsHandler(ctx),

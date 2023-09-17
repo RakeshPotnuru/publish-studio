@@ -69,6 +69,7 @@ export interface IHashnodeCreatePostOutput {
             success: boolean;
             message: string;
             post: {
+                _id: string;
                 title: string;
                 contentMarkdown: string;
                 tags: { name: string }[];

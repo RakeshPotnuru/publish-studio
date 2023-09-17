@@ -29,6 +29,7 @@ const ProjectSchema = new Schema<IProject>(
                 name: { type: String, enum: user.platforms, required: true },
                 status: { type: String, enum: ["success", "error"] },
                 published_url: String,
+                id: String,
             },
         ],
         scheduled_at: {

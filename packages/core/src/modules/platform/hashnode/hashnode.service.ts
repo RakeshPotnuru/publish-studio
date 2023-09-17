@@ -201,4 +201,47 @@ export default class HashnodeService {
             });
         }
     }
+
+    async updatePost(
+        post: IHashnodeCreateStoryInput,
+        post_id: string,
+        user_id: Types.ObjectId | undefined,
+    ) {
+        try {
+            const hashnode = await this.hashnode(user_id);
+
+            const response = await hashnode?.post("", {
+                query: `mutation updateStory($postId: String!, $input: UpdateStoryInput!) {
+                    updateStory(postId: $postId, input: $input) {
+                        code
+                        success
+                        message
+                        post {
+                            title
+                            contentMarkdown
+                            tags {
+                                name
+                            }
+                            slug
+                            coverImage
+                            brief
+                        }
+                    }
+                }`,
+                variables: {
+                    postId: post_id,
+                    input: post,
+                },
+            });
+
+            return response?.data as IHashnodeCreatePostOutput;
+        } catch (error) {
+            console.log(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "An error occurred while updating the post on Hashnode.",
+            });
+        }
+    }
 }
