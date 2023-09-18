@@ -8,7 +8,7 @@ import express from "express";
 import { renderTrpcPanel } from "trpc-panel";
 
 import "./utils/db";
-import "./config/index";
+import "./config/env";
 
 import defaultConfig from "./config/app.config";
 import ProjectController from "./modules/project/project.controller";

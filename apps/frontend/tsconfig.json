@@ -11,7 +11,7 @@
         "moduleResolution": "node",
         "noEmit": true,
         "paths": {
-            "@/*": ["./*"]
+            "@/*": ["./src/*"]
         },
         "plugins": [
             {
@@ -21,7 +21,7 @@
         "resolveJsonModule": true,
         "skipLibCheck": true,
         "strict": true,
-        "target": "ES2017"
+        "target": "ES5"
     },
     "exclude": ["node_modules"],
     "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"]
