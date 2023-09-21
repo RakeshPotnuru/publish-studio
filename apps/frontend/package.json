@@ -9,6 +9,8 @@
         "start": "doppler run -- next start"
     },
     "dependencies": {
+        "@itsrakesh/ui": "^0.4.1",
+        "@itsrakesh/utils": "^1.2.1",
         "@publish-studio/core": "*",
         "@trpc/client": "^10.33.0",
         "next": "13.4.7",
@@ -20,8 +22,12 @@
         "@types/node": "20.3.2",
         "@types/react": "18.2.14",
         "@types/react-dom": "18.2.6",
+        "autoprefixer": "^10.4.15",
         "eslint": "8.43.0",
         "eslint-config-next": "13.4.7",
+        "postcss": "^8.4.30",
+        "tailwindcss": "^3.3.3",
+        "tailwindcss-animate": "^1.0.7",
         "typescript": "5.1.5"
     }
 }

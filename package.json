@@ -1,9 +1,10 @@
 {
+    "private": true,
     "name": "publish-studio",
     "version": "0.0.0",
     "description": "Publish Blogs to mutliple platforms from a single place",
-    "license": "ISC",
-    "author": "",
+    "license": "MIT",
+    "author": "Rakesh Potnuru",
     "scripts": {
         "build": "turbo build",
         "format": "prettier --write .",
@@ -24,7 +25,6 @@
         "rimraf": "^5.0.1",
         "turbo": "1.10.3"
     },
-    "keywords": [],
     "packageManager": "pnpm@8.6.2",
     "prettier": "@bravo68web/prettier-config"
 }

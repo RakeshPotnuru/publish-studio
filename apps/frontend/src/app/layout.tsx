@@ -1,7 +1,8 @@
-import { siteConfig } from "@/config/site";
 import "@/styles/globals.css";
 
 import type { Metadata } from "next";
+
+import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
     title: {
@@ -43,7 +44,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en" suppressHydrationWarning>
-            <body>{children}</body>
+            <body className="dark:text-foreground-dark min-h-screen">{children}</body>
         </html>
     );
 }
