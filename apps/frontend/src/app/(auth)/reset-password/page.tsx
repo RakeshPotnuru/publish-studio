@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
 
-import { RegisterForm } from "@/components/modules/auth/register-form";
 import { AuthShell } from "@/components/ui/shell";
+import { ResetPasswordForm } from "@/components/modules/auth/reset-password-form";
 
 export const metadata: Metadata = {
-    title: "Register",
+    title: "Reset Password",
 };
 
-export default function RegisterPage() {
+export default function ResetPage() {
     return (
         <AuthShell>
-            <RegisterForm />
+            <ResetPasswordForm />
         </AuthShell>
     );
 }

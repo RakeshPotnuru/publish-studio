@@ -7,6 +7,8 @@
     "author": "Rakesh Potnuru",
     "scripts": {
         "build": "turbo build",
+        "dev": "turbo dev",
+        "dev:frontend": "turbo dev --filter=@publish-studio/frontend",
         "format": "prettier --write .",
         "preinstall": "npx only-allow pnpm",
         "lint": "turbo lint",

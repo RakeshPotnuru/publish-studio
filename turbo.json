@@ -5,6 +5,10 @@
             "cache": true,
             "outputs": ["**/dist", "**/.next"]
         },
+        "dev": {
+            "cache": true,
+            "outputs": ["**/.next"]
+        },
         "lint": {
             "cache": true,
             "inputs": ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"],

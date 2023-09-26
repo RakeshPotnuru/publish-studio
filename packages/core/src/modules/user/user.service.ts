@@ -4,8 +4,9 @@ import type { Types } from "mongoose";
 import defaultConfig from "../../config/app.config";
 import { signJwt } from "../../utils/jwt";
 import redisClient from "../../utils/redis";
+import type { IRegisterInput } from "../auth/auth.types";
 import User from "./user.model";
-import type { IRegisterInput, IUser, IUserUpdate } from "./user.types";
+import type { IUser, IUserUpdate } from "./user.types";
 
 export default class UserService {
     async createUser(user: IRegisterInput) {

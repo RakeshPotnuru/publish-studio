@@ -1,8 +1,6 @@
 {
     "name": "@publish-studio/core",
     "version": "0.0.1",
-    "description": "",
-    "license": "ISC",
     "author": "Rakesh Potnuru",
     "homepage": "https://github.com/RakeshPotnuru/publish-studio#readme",
     "repository": {

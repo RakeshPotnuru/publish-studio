@@ -6,15 +6,14 @@ import type { OptionsType } from "cookies-next/lib/types";
 import type { Types } from "mongoose";
 
 import defaultConfig from "../../config/app.config";
-import { emailTemplates } from "../../constants";
-import { user as userConsts } from "../../constants";
+import { emailTemplates, user as userConsts } from "../../constants";
 import type { Context } from "../../trpc";
 import { scheduleEmail, sendEmail } from "../../utils/aws/ses";
 import { verifyGoogleToken } from "../../utils/google";
 import { signJwt, verifyJwt } from "../../utils/jwt";
 import redisClient from "../../utils/redis";
+import type { ILoginInput, IRegisterInput, IResetPasswordInput } from "../auth/auth.types";
 import UserService from "../user/user.service";
-import type { ILoginInput, IRegisterInput, IResetPasswordInput } from "../user/user.types";
 
 const cookieOptions: OptionsType = {
     httpOnly: true,
