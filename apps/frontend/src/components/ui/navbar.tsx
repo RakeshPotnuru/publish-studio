@@ -3,8 +3,32 @@
 import { cn } from "@itsrakesh/utils";
 import Image from "next/image";
 import { AiFillBell, AiFillQuestionCircle } from "react-icons/ai";
-import { Avatar, AvatarFallback, AvatarImage, Button } from "@itsrakesh/ui";
+import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage,
+    Button,
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@itsrakesh/ui";
 import Link from "next/link";
+
+const NavItem = ({ icon, tooltip }: { icon: React.ReactNode; tooltip: string }) => (
+    <TooltipProvider>
+        <Tooltip>
+            <TooltipTrigger asChild>
+                <Button size="icon" variant="ghost" className="rounded-full">
+                    {icon}
+                </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+                <p>{tooltip}</p>
+            </TooltipContent>
+        </Tooltip>
+    </TooltipProvider>
+);
 
 interface NavbarProps extends React.HTMLAttributes<HTMLElement> {}
 
@@ -26,13 +50,9 @@ export function Navbar({ className, ...props }: NavbarProps) {
                     className="rounded-md drop-shadow-md"
                 />
             </Link>
-            <div className="flex flex-row items-center space-x-1 text-gray-700">
-                <Button size="icon" variant="ghost" className="rounded-full">
-                    <AiFillQuestionCircle className="h-5 w-5" />
-                </Button>
-                <Button size="icon" variant="ghost" className="rounded-full">
-                    <AiFillBell className="h-5 w-5" />
-                </Button>
+            <div className="flex flex-row items-center space-x-1 text-gray-700 dark:text-gray-300">
+                <NavItem icon={<AiFillQuestionCircle className="h-5 w-5" />} tooltip="Help" />
+                <NavItem icon={<AiFillBell className="h-5 w-5" />} tooltip="Notifications" />
                 <Avatar>
                     <AvatarImage src="https://github.com/rakeshpotnuru.png" alt="@rakeshpotnuru" />
                     <AvatarFallback>RP</AvatarFallback>

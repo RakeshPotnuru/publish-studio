@@ -7,6 +7,10 @@ import {
     SelectTrigger,
     SelectValue,
     Separator,
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import type { Editor } from "@tiptap/react";
@@ -14,6 +18,7 @@ import { GrRedo, GrUndo } from "react-icons/gr";
 import { GoBold } from "react-icons/go";
 import { FiItalic, FiUnderline } from "react-icons/fi";
 import {
+    AiOutlineLink,
     AiOutlineOrderedList,
     AiOutlineStrikethrough,
     AiOutlineUnorderedList,
@@ -32,18 +37,28 @@ const MenuItem = ({
     item,
     command,
     icon,
-}: MenuProps & { item: string; command: () => void; icon: React.ReactNode }) => {
+    tooltip,
+}: MenuProps & { item: string; command: () => void; icon: React.ReactNode; tooltip: string }) => {
     return (
-        <Button
-            onClick={command}
-            variant="ghost"
-            size="icon"
-            className={cn("rounded-lg text-lg", {
-                "bg-secondary": editor.isActive(item),
-            })}
-        >
-            {icon}
-        </Button>
+        <TooltipProvider>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <Button
+                        onClick={command}
+                        variant="ghost"
+                        size="icon"
+                        className={cn("rounded-lg text-lg", {
+                            "bg-accent": editor.isActive(item),
+                        })}
+                    >
+                        {icon}
+                    </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">
+                    <p>{tooltip}</p>
+                </TooltipContent>
+            </Tooltip>
+        </TooltipProvider>
     );
 };
 
@@ -52,7 +67,7 @@ const MenuShell = ({ children }: { children: React.ReactNode }) => {
 };
 
 const MenuSeparator = () => {
-    return <Separator orientation="vertical" className="h-6" />;
+    return <Separator orientation="vertical" className="h-6 bg-gray-500" />;
 };
 
 interface FixedMenuProps extends MenuProps {}
@@ -69,12 +84,14 @@ export function FixedMenu({ editor, ...props }: FixedMenuProps) {
                     item="undo"
                     icon={<GrUndo />}
                     command={() => editor.chain().focus().undo().run()}
+                    tooltip="Undo"
                 />
                 <MenuItem
                     editor={editor}
                     item="redo"
                     icon={<GrRedo />}
                     command={() => editor.chain().focus().redo().run()}
+                    tooltip="Redo"
                 />
             </MenuShell>
             <MenuSeparator />
@@ -95,9 +112,18 @@ export function FixedMenu({ editor, ...props }: FixedMenuProps) {
                         }
                     }}
                 >
-                    <SelectTrigger>
-                        <SelectValue />
-                    </SelectTrigger>
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <SelectTrigger>
+                                    <SelectValue />
+                                </SelectTrigger>
+                            </TooltipTrigger>
+                            <TooltipContent side="bottom">
+                                <p>Styles</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
                     <SelectContent>
                         <SelectGroup>
                             <SelectItem value="normal">Normal Text</SelectItem>
@@ -116,30 +142,35 @@ export function FixedMenu({ editor, ...props }: FixedMenuProps) {
                     item="bold"
                     icon={<GoBold />}
                     command={() => editor.chain().focus().toggleBold().run()}
+                    tooltip="Bold"
                 />
                 <MenuItem
                     editor={editor}
                     item="italic"
                     icon={<FiItalic />}
                     command={() => editor.chain().focus().toggleItalic().run()}
+                    tooltip="Italic"
                 />
                 <MenuItem
                     editor={editor}
                     item="underline"
                     icon={<FiUnderline />}
                     command={() => editor.chain().focus().toggleUnderline().run()}
+                    tooltip="Underline"
                 />
                 <MenuItem
                     editor={editor}
                     item="strike"
                     icon={<AiOutlineStrikethrough />}
                     command={() => editor.chain().focus().toggleStrike().run()}
+                    tooltip="Strike"
                 />
                 <MenuItem
                     editor={editor}
                     item="code"
                     icon={<BiCode />}
                     command={() => editor.chain().focus().toggleCode().run()}
+                    tooltip="Code"
                 />
             </MenuShell>
             <MenuSeparator />
@@ -149,24 +180,28 @@ export function FixedMenu({ editor, ...props }: FixedMenuProps) {
                     item="blockquote"
                     icon={<TbBlockquote />}
                     command={() => editor.chain().focus().toggleBlockquote().run()}
+                    tooltip="Blockquote"
                 />
                 <MenuItem
                     editor={editor}
                     item="codeblock"
                     icon={<PiCodeBlockBold />}
                     command={() => editor.chain().focus().toggleCodeBlock().run()}
+                    tooltip="Code Block"
                 />
                 <MenuItem
                     editor={editor}
                     item="bulletlist"
                     icon={<AiOutlineUnorderedList />}
                     command={() => editor.chain().focus().toggleBulletList().run()}
+                    tooltip="Bullet List"
                 />
                 <MenuItem
                     editor={editor}
                     item="orderedlist"
                     icon={<AiOutlineOrderedList />}
                     command={() => editor.chain().focus().toggleBulletList().run()}
+                    tooltip="Ordered List"
                 />
             </MenuShell>
             <MenuSeparator />
@@ -182,6 +217,16 @@ export function FixedMenu({ editor, ...props }: FixedMenuProps) {
                             .setImage({ src: "https://picsum.photos/300/200" })
                             .run()
                     }
+                    tooltip="Insert Image"
+                />
+                <MenuItem
+                    editor={editor}
+                    item="link"
+                    icon={<AiOutlineLink />}
+                    command={() =>
+                        editor.chain().focus().toggleLink({ href: "https://example.com" }).run()
+                    }
+                    tooltip="Insert Link"
                 />
             </MenuShell>
         </div>

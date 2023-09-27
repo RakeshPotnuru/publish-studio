@@ -3,6 +3,7 @@ import "@/styles/globals.css";
 import type { Metadata } from "next";
 
 import { siteConfig } from "@/config/site";
+import { ThemeToggleButton } from "@/components/ui/dev-theme-toggle";
 
 export const metadata: Metadata = {
     title: {
@@ -43,8 +44,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
-        <html lang="en" suppressHydrationWarning>
-            <body className="dark:text-foreground-dark min-h-screen bg-slate-100">{children}</body>
+        <html lang="en" className="dark" suppressHydrationWarning>
+            <body className="min-h-screen bg-slate-100 dark:bg-slate-700">
+                {children}
+                {process.env.NODE_ENV === "development" && <ThemeToggleButton />}
+            </body>
         </html>
     );
 }

@@ -19,20 +19,11 @@ module.exports = {
                 "pattern-dark": "url('/images/pattern-dark.webp')",
             },
             colors: {
-                border: {
-                    DEFAULT: "hsl(var(--border))",
-                    dark: "hsl(var(--border-dark))",
-                },
-                input: { DEFAULT: "hsl(var(--input))", dark: "hsl(var(--input-dark))" },
+                border: "hsl(var(--border))",
+                input: "hsl(var(--input))",
                 ring: "hsl(var(--ring))",
-                background: {
-                    DEFAULT: "hsl(var(--background))",
-                    dark: "hsl(var(--background-dark))",
-                },
-                foreground: {
-                    DEFAULT: "hsl(var(--foreground))",
-                    dark: "hsl(var(--foreground-dark))",
-                },
+                background: "hsl(var(--background))",
+                foreground: "hsl(var(--foreground))",
                 primary: {
                     DEFAULT: "hsl(var(--primary))",
                     foreground: "hsl(var(--primary-foreground))",
