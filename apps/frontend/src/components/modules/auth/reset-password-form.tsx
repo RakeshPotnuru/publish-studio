@@ -60,13 +60,13 @@ export function ResetPasswordForm({ ...props }: ResetPasswordFormProps) {
         },
     });
 
-    function onEmailSubmit(data: z.infer<typeof emailFormSchema>) {
+    const onEmailSubmit = (data: z.infer<typeof emailFormSchema>) => {
         console.log(data);
-    }
+    };
 
-    function onPasswordSubmit(data: z.infer<typeof passwordFormSchema>) {
+    const onPasswordSubmit = (data: z.infer<typeof passwordFormSchema>) => {
         console.log(data);
-    }
+    };
 
     return (
         <div {...props}>

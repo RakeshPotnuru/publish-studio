@@ -33,9 +33,9 @@ export function LoginForm({ ...props }: LoginFormProps) {
         },
     });
 
-    function onSubmit(data: z.infer<typeof formSchema>) {
+    const onSubmit = (data: z.infer<typeof formSchema>) => {
         console.log(data);
-    }
+    };
 
     return (
         <div {...props}>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Editor } from "@/components/editor/editor";
+import { Editor } from "@/components/editor";
 
 interface ProjectProps extends React.HTMLAttributes<HTMLDivElement> {}
 

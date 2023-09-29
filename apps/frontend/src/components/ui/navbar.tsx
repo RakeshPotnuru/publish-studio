@@ -3,11 +3,19 @@
 import { cn } from "@itsrakesh/utils";
 import Image from "next/image";
 import { AiFillBell, AiFillQuestionCircle } from "react-icons/ai";
+import { CgProfile } from "react-icons/cg";
+import { MdSettings } from "react-icons/md";
+import { IoMdLogOut } from "react-icons/io";
 import {
     Avatar,
     AvatarFallback,
     AvatarImage,
     Button,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
     Tooltip,
     TooltipContent,
     TooltipProvider,
@@ -53,10 +61,32 @@ export function Navbar({ className, ...props }: NavbarProps) {
             <div className="flex flex-row items-center space-x-1 text-gray-700 dark:text-gray-300">
                 <NavItem icon={<AiFillQuestionCircle className="h-5 w-5" />} tooltip="Help" />
                 <NavItem icon={<AiFillBell className="h-5 w-5" />} tooltip="Notifications" />
-                <Avatar>
-                    <AvatarImage src="https://github.com/rakeshpotnuru.png" alt="@rakeshpotnuru" />
-                    <AvatarFallback>RP</AvatarFallback>
-                </Avatar>
+                <DropdownMenu>
+                    <DropdownMenuTrigger>
+                        <Avatar className="hover:opacity-80">
+                            <AvatarImage
+                                src="https://github.com/rakeshpotnuru.png"
+                                alt="@rakeshpotnuru"
+                            />
+                            <AvatarFallback>RP</AvatarFallback>
+                        </Avatar>
+                        <DropdownMenuContent side="bottom">
+                            <DropdownMenuItem>
+                                <CgProfile className="mr-2 h-4 w-4" />
+                                <Link href="/profile">Profile</Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                                <MdSettings className="mr-2 h-4 w-4" />
+                                <span>Settings</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem>
+                                <IoMdLogOut className="mr-2 h-4 w-4" />
+                                <span>Logout</span>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenuTrigger>
+                </DropdownMenu>
             </div>
         </nav>
     );

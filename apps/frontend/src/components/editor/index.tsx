@@ -12,17 +12,16 @@ import CharacterCount from "@tiptap/extension-character-count";
 import Link from "@tiptap/extension-link";
 import { createLowlight, all } from "lowlight";
 
-import { FixedMenu } from "./menu";
+import { FixedMenu } from "./fixed-menu";
 import { EditorBody } from "./editor-body";
-import { Separator } from "@itsrakesh/ui";
+import { EditorFooter } from "./editor-footer";
 
-type Levels = 1 | 2 | 3 | 4;
+type Levels = 1 | 2 | 3;
 
 const classes: Record<Levels, string> = {
     1: "text-4xl",
     2: "text-3xl",
     3: "text-2xl",
-    4: "text-xl",
 };
 
 interface EditorProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -59,7 +58,7 @@ export function Editor({ className, ...props }: EditorProps) {
                 placeholder: "Once upon a time...",
             }),
             Heading.configure({
-                levels: [1, 2, 3, 4],
+                levels: [1, 2, 3],
             }).extend({
                 renderHTML({ node, HTMLAttributes }) {
                     const hasLevel = this.options.levels.includes(node.attrs.level);
@@ -96,14 +95,7 @@ export function Editor({ className, ...props }: EditorProps) {
                 class: "bg-background min-h-screen max-h-screen overflow-auto rounded-3xl shadow-sm p-8 outline-none space-y-4",
             },
         },
-        content: `
-        <p>
-          Wow, this editor has support for links to the whole <a href="https://en.wikipedia.org/wiki/World_Wide_Web">world wide web</a>. We tested a lot of URLs and I think you can add *every URL* you want. Isn’t that cool? Let’s try <a href="mailto:rakesh@itsrakesh.com">another one!</a> Yep, seems to work.
-        </p>
-        <p>
-          By default every link will get a <code>rel="noopener noreferrer nofollow"</code> attribute. It’s configurable though.
-        </p>
-      `,
+        autofocus: true,
     });
 
     if (!editor) return null;
@@ -112,11 +104,7 @@ export function Editor({ className, ...props }: EditorProps) {
         <div className={cn("space-y-4", className)} {...props}>
             <FixedMenu editor={editor} />
             <EditorBody editor={editor} />
-            <div className="bg-background sticky bottom-0 flex flex-row items-center space-x-2 rounded-xl p-2 py-1 text-xs text-gray-500 dark:text-gray-300">
-                <p>{editor.storage.characterCount.characters()} characters</p>
-                <Separator orientation="vertical" className="h-3 bg-gray-500" />
-                <p>{editor.storage.characterCount.words()} words</p>
-            </div>
+            <EditorFooter editor={editor} />
         </div>
     );
 }
