@@ -103,6 +103,7 @@ export function ResetPasswordForm({ ...props }: ResetPasswordFormProps) {
                         </>
                     )}
                 </p>
+                {/* Email form */}
                 {step === "email" && (
                     <Form {...emailForm}>
                         <form
@@ -120,6 +121,8 @@ export function ResetPasswordForm({ ...props }: ResetPasswordFormProps) {
                                                 type="email"
                                                 placeholder="me@example.com"
                                                 autoComplete="email"
+                                                disabled={emailForm.formState.isSubmitting}
+                                                autoFocus
                                                 {...field}
                                             />
                                         </FormControl>
@@ -127,12 +130,19 @@ export function ResetPasswordForm({ ...props }: ResetPasswordFormProps) {
                                     </FormItem>
                                 )}
                             />
-                            <Button type="submit" className="w-full">
+                            <Button
+                                type="submit"
+                                className="w-full"
+                                disabled={
+                                    emailForm.formState.isSubmitting || !emailForm.formState.isDirty
+                                }
+                            >
                                 Continue
                             </Button>
                         </form>
                     </Form>
                 )}
+                {/* Password form */}
                 {step === "password" && (
                     <Form {...passwordForm}>
                         <form
@@ -150,6 +160,8 @@ export function ResetPasswordForm({ ...props }: ResetPasswordFormProps) {
                                                 type="password"
                                                 placeholder="********"
                                                 autoComplete="new-password"
+                                                disabled={passwordForm.formState.isSubmitting}
+                                                autoFocus
                                                 {...field}
                                             />
                                         </FormControl>
@@ -168,6 +180,7 @@ export function ResetPasswordForm({ ...props }: ResetPasswordFormProps) {
                                                 type="password"
                                                 placeholder="********"
                                                 autoComplete="new-password"
+                                                disabled={passwordForm.formState.isSubmitting}
                                                 {...field}
                                             />
                                         </FormControl>
@@ -175,7 +188,14 @@ export function ResetPasswordForm({ ...props }: ResetPasswordFormProps) {
                                     </FormItem>
                                 )}
                             />
-                            <Button type="submit" className="w-full">
+                            <Button
+                                type="submit"
+                                className="w-full"
+                                disabled={
+                                    passwordForm.formState.isSubmitting ||
+                                    !passwordForm.formState.isDirty
+                                }
+                            >
                                 Continue
                             </Button>
                         </form>

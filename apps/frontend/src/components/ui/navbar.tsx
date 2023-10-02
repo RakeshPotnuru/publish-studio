@@ -14,28 +14,19 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
+    DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
 } from "@itsrakesh/ui";
 import Link from "next/link";
+import { Tooltip } from "./tooltip";
 
 const NavItem = ({ icon, tooltip }: { icon: React.ReactNode; tooltip: string }) => (
-    <TooltipProvider>
-        <Tooltip>
-            <TooltipTrigger asChild>
-                <Button size="icon" variant="ghost" className="rounded-full">
-                    {icon}
-                </Button>
-            </TooltipTrigger>
-            <TooltipContent side="bottom">
-                <p>{tooltip}</p>
-            </TooltipContent>
-        </Tooltip>
-    </TooltipProvider>
+    <Tooltip content={tooltip}>
+        <Button size="icon" variant="ghost" className="rounded-full">
+            {icon}
+        </Button>
+    </Tooltip>
 );
 
 interface NavbarProps extends React.HTMLAttributes<HTMLElement> {}
@@ -71,13 +62,15 @@ export function Navbar({ className, ...props }: NavbarProps) {
                             <AvatarFallback>RP</AvatarFallback>
                         </Avatar>
                         <DropdownMenuContent side="bottom">
+                            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
                             <DropdownMenuItem>
                                 <CgProfile className="mr-2 h-4 w-4" />
                                 <Link href="/profile">Profile</Link>
                             </DropdownMenuItem>
                             <DropdownMenuItem>
                                 <MdSettings className="mr-2 h-4 w-4" />
-                                <span>Settings</span>
+                                <Link href="/settings">Settings</Link>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem>

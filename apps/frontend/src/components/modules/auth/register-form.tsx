@@ -9,7 +9,6 @@ import {
     FormLabel,
     FormMessage,
     Input,
-    Label,
 } from "@itsrakesh/ui";
 import Link from "next/link";
 import React from "react";
@@ -74,6 +73,8 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
                                             type="email"
                                             placeholder="me@example.com"
                                             autoComplete="email"
+                                            disabled={form.formState.isSubmitting}
+                                            autoFocus
                                             {...field}
                                         />
                                     </FormControl>
@@ -93,6 +94,7 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
                                                 type="text"
                                                 placeholder="John"
                                                 autoComplete="given-name"
+                                                disabled={form.formState.isSubmitting}
                                                 {...field}
                                             />
                                         </FormControl>
@@ -111,6 +113,7 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
                                                 type="text"
                                                 placeholder="Doe"
                                                 autoComplete="family-name"
+                                                disabled={form.formState.isSubmitting}
                                                 {...field}
                                             />
                                         </FormControl>
@@ -130,6 +133,7 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
                                             type="password"
                                             placeholder="********"
                                             autoComplete="new-password"
+                                            disabled={form.formState.isSubmitting}
                                             {...field}
                                         />
                                     </FormControl>
@@ -148,6 +152,7 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
                                             type="password"
                                             placeholder="********"
                                             autoComplete="new-password"
+                                            disabled={form.formState.isSubmitting}
                                             {...field}
                                         />
                                     </FormControl>
@@ -155,7 +160,11 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit" className="w-full">
+                        <Button
+                            type="submit"
+                            className="w-full"
+                            disabled={form.formState.isSubmitting || !form.formState.isDirty}
+                        >
                             Create Account
                         </Button>
                     </form>

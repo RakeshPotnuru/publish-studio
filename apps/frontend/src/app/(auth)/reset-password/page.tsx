@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-import { AuthShell } from "@/components/ui/shell";
 import { ResetPasswordForm } from "@/components/modules/auth/reset-password-form";
 
 export const metadata: Metadata = {
@@ -8,9 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function ResetPage() {
-    return (
-        <AuthShell>
-            <ResetPasswordForm />
-        </AuthShell>
-    );
+    return <ResetPasswordForm />;
 }

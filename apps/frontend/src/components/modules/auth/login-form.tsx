@@ -54,6 +54,8 @@ export function LoginForm({ ...props }: LoginFormProps) {
                                             type="email"
                                             placeholder="me@example.com"
                                             autoComplete="email"
+                                            disabled={form.formState.isSubmitting}
+                                            autoFocus
                                             {...field}
                                         />
                                     </FormControl>
@@ -79,6 +81,7 @@ export function LoginForm({ ...props }: LoginFormProps) {
                                             type="password"
                                             placeholder="********"
                                             autoComplete="current-password"
+                                            disabled={form.formState.isSubmitting}
                                             {...field}
                                         />
                                     </FormControl>
@@ -86,7 +89,11 @@ export function LoginForm({ ...props }: LoginFormProps) {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit" className="w-full">
+                        <Button
+                            type="submit"
+                            className="w-full"
+                            disabled={form.formState.isSubmitting || !form.formState.isDirty}
+                        >
                             Continue
                         </Button>
                     </form>

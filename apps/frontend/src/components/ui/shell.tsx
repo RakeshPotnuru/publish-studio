@@ -1,11 +1,10 @@
+import { cn } from "@itsrakesh/utils";
+
 interface ShellProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export function AuthShell({ children, ...props }: ShellProps) {
+export function DashboardShell({ children, className, ...props }: ShellProps) {
     return (
-        <div
-            className="bg-background dark:bg-background-dark container mx-auto flex w-full flex-col justify-center space-y-6 rounded-lg p-14 shadow-xl sm:w-[500px]"
-            {...props}
-        >
+        <div className={cn("bg-background rounded-3xl p-8", className)} {...props}>
             {children}
         </div>
     );
