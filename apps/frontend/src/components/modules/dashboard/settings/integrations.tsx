@@ -1,80 +1,15 @@
 "use client";
 
 import { Heading } from "@/components/ui/heading";
-import { Button } from "@itsrakesh/ui";
-import Image from "next/image";
-import Link from "next/link";
+import { DevEditForm } from "./platforms/dev/dev-edit-form";
+import { DevConnectForm } from "./platforms/dev/dev-connect-form";
+import { PlatformCard } from "./platforms/platform-card";
+import { MediumConnectForm } from "./platforms/medium/medium-connect";
+import { MediumEditForm } from "./platforms/medium/medium-edit";
+import { HashnodeEditForm } from "./platforms/hashnode/hashnode-edit";
+import { HashnodeConnectForm } from "./platforms/hashnode/hashnode-connect";
 
 interface IntegrationsProps extends React.HTMLAttributes<HTMLDivElement> {}
-
-interface ConnectedPlatformCardProps {
-    name: string;
-    icon: string;
-    connected: true;
-    username: string;
-    profile_url: string;
-    profile_pic: string;
-}
-
-interface DisconnectedPlatformCardProps {
-    name: string;
-    icon: string;
-    connected: false;
-    username?: string;
-    profile_url?: string;
-    profile_pic?: string;
-}
-
-type PlatformCardProps = ConnectedPlatformCardProps | DisconnectedPlatformCardProps;
-
-const PlatformCard = ({
-    name,
-    icon,
-    connected,
-    username,
-    profile_url,
-    profile_pic,
-    ...props
-}: PlatformCardProps & React.HTMLAttributes<HTMLDivElement>) => {
-    return (
-        <div className="flex flex-row justify-between rounded-lg border p-4" {...props}>
-            <div className="flex flex-col space-y-2">
-                <div className="flex flex-row space-x-2">
-                    <Image src={icon} alt={name} width={50} height={50} className="rounded-lg" />
-                    <div className="flex flex-col justify-center">
-                        <Heading level={3} className="">
-                            {name}
-                        </Heading>
-                    </div>
-                </div>
-                {connected && (
-                    <Link href={profile_url}>
-                        <Button
-                            variant="link"
-                            className="text-muted-foreground h-max space-x-1 p-0"
-                        >
-                            <Image
-                                src={profile_pic}
-                                alt={username}
-                                width={20}
-                                height={20}
-                                className="rounded-full"
-                            />
-                            <span>@{username}</span>
-                        </Button>
-                    </Link>
-                )}
-            </div>
-            {connected ? (
-                <Button size="sm" variant="destructive">
-                    Disconnect
-                </Button>
-            ) : (
-                <Button size="sm">Connect</Button>
-            )}
-        </div>
-    );
-};
 
 export function Integrations({ ...props }: IntegrationsProps) {
     return (
@@ -91,20 +26,34 @@ export function Integrations({ ...props }: IntegrationsProps) {
                     <PlatformCard
                         name="Dev"
                         icon="/images/platforms/dev-logo.png"
-                        connected={true}
-                        username="itsrakesh"
-                        profile_url="https://dev.to/@itsrakesh"
-                        profile_pic="/images/logo.png"
+                        connected={false}
+                        // username="itsrakesh"
+                        // profile_url="https://dev.to/@itsrakesh"
+                        // editForm={<DevEditForm default_publish_status="true" />}
+                        connectForm={<DevConnectForm />}
                     />
                     <PlatformCard
                         name="Medium"
                         icon="/images/platforms/medium-logo.jpeg"
-                        connected={false}
+                        connected={true}
+                        username="itsrakesh"
+                        profile_url="https://dev.to/@itsrakesh"
+                        editForm={
+                            <MediumEditForm
+                                default_publish_status="unlisted"
+                                notify_followers="true"
+                            />
+                        }
+                        // connectForm={<MediumConnectForm />}
                     />
                     <PlatformCard
                         name="Hashnode"
                         icon="/images/platforms/hashnode-logo.jpeg"
-                        connected={false}
+                        connected={true}
+                        username="itsrakesh"
+                        profile_url="https://dev.to/@itsrakesh"
+                        editForm={<HashnodeEditForm username="itsrakesh" />}
+                        // connectForm={<HashnodeConnectForm />}
                     />
                 </div>
             </div>

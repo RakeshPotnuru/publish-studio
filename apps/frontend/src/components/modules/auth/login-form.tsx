@@ -16,6 +16,8 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { Heading } from "@/components/ui/heading";
+
 interface LoginFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const formSchema = z.object({
@@ -40,7 +42,7 @@ export function LoginForm({ ...props }: LoginFormProps) {
     return (
         <div {...props}>
             <div className="space-y-6">
-                <h1 className="text-2xl font-semibold">Sign in to your account</h1>
+                <Heading level={2}>Sign in to your account</Heading>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                         <FormField
@@ -55,7 +57,6 @@ export function LoginForm({ ...props }: LoginFormProps) {
                                             placeholder="me@example.com"
                                             autoComplete="email"
                                             disabled={form.formState.isSubmitting}
-                                            autoFocus
                                             {...field}
                                         />
                                     </FormControl>

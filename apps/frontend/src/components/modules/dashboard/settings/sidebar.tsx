@@ -43,7 +43,7 @@ const SidebarItem = ({
 export function Sidebar({ className, ...props }: SidebarProps) {
     return (
         <aside
-            className={cn("bg-background sticky top-0 flex flex-row rounded-xl", className)}
+            className={cn("bg-background sticky top-0 flex h-max flex-row rounded-xl", className)}
             {...props}
         >
             <ScrollArea className="h-max w-full">

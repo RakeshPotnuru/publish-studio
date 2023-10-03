@@ -16,6 +16,8 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { Heading } from "@/components/ui/heading";
+
 interface ResetPasswordFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const emailFormSchema = z.object({
@@ -71,11 +73,11 @@ export function ResetPasswordForm({ ...props }: ResetPasswordFormProps) {
     return (
         <div {...props}>
             <div className="space-y-6">
-                <h1 className="text-2xl font-semibold">
+                <Heading level={2}>
                     {step === "email" || step === "password"
                         ? "Reset your password"
                         : "Password reset link sent!"}
-                </h1>
+                </Heading>
                 <p className="text-sm">
                     {step === "email" ? (
                         "Enter the email associated with your account and we'll email you a link to reset your password."

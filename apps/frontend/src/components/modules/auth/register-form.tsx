@@ -16,6 +16,8 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { Heading } from "@/components/ui/heading";
+
 interface RegisterFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const formSchema = z
@@ -59,7 +61,7 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
     return (
         <div {...props}>
             <div className="space-y-6">
-                <h1 className="text-2xl font-semibold">Create an account to get started</h1>
+                <Heading level={2}>Create an account to get started</Heading>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                         <FormField
@@ -74,7 +76,6 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
                                             placeholder="me@example.com"
                                             autoComplete="email"
                                             disabled={form.formState.isSubmitting}
-                                            autoFocus
                                             {...field}
                                         />
                                     </FormControl>
