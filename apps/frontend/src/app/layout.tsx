@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { siteConfig } from "@/config/site";
 import { ThemeToggleButton } from "@/components/ui/dev-theme-toggle";
 import { ThemeProvider } from "@/components/ui/theme-provider";
+import LogRocketProvider from "@/lib/logrocket";
 
 export const metadata: Metadata = {
     title: {
@@ -47,6 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return (
         <html lang="en" className="dark" suppressHydrationWarning>
             <body className="min-h-screen bg-slate-100 dark:bg-slate-700">
+                <LogRocketProvider />
                 <ThemeProvider
                     attribute="class"
                     defaultTheme="system"

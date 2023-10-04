@@ -86,6 +86,9 @@ importers:
       '@trpc/client':
         specifier: ^10.33.0
         version: 10.33.0(@trpc/server@10.33.0)
+      logrocket:
+        specifier: ^6.0.0
+        version: 6.0.0
       lowlight:
         specifier: ^3.0.0
         version: 3.0.0
@@ -9460,6 +9463,10 @@ packages:
       slice-ansi: 4.0.0
       wrap-ansi: 6.2.0
     dev: true
+
+  /logrocket@6.0.0:
+    resolution: {integrity: sha512-67wlZnY/WPEboMHUv+rEhLawJyr/LogV3MsOlEKxsqNu0pD3pLj6Z/seQVGwHKqARtyF9xrAZd6H0Lfy+91C2w==}
+    dev: false
 
   /loose-envify@1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
