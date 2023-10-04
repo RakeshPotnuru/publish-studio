@@ -44,7 +44,7 @@
         "redis": "^4.6.7",
         "stripe": "^13.3.0",
         "uuid": "^9.0.0",
-        "zod": "^3.21.4"
+        "zod": "^3.22.3"
     },
     "devDependencies": {
         "@esbuild-kit/esm-loader": "^2.5.5",
