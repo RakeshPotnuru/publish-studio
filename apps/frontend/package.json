@@ -41,7 +41,7 @@
         "react-dom": "18.2.0",
         "react-hook-form": "^7.46.2",
         "react-icons": "^4.11.0",
-        "zod": "^3.21.4"
+        "zod": "^3.22.3"
     },
     "devDependencies": {
         "@types/node": "20.3.2",
