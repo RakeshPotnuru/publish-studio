@@ -2,7 +2,7 @@ interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
     level?: 1 | 2 | 3 | 4 | 5 | 6;
 }
 
-export function Heading({ level, children, ...props }: HeadingProps) {
+export function Heading({ level = 1, children, ...props }: HeadingProps) {
     switch (level) {
         case 1:
             return (
@@ -41,10 +41,5 @@ export function Heading({ level, children, ...props }: HeadingProps) {
                 </h6>
             );
         default:
-            return (
-                <h1 className="text-3xl font-semibold" {...props}>
-                    {children}
-                </h1>
-            );
     }
 }

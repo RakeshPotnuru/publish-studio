@@ -28,7 +28,7 @@ const SidebarItem = ({
                     "flex w-full cursor-pointer flex-row items-center space-x-4 rounded-lg px-4 py-2 text-lg font-medium",
                     {
                         "bg-primary text-background": segment === link,
-                        "hover:bg-secondary": segment !== link,
+                        "hover:bg-muted": segment !== link,
                     },
                 )}
                 {...props}

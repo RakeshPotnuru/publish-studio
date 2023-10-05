@@ -4,13 +4,8 @@ import { Heading } from "@/components/ui/heading";
 import { RadioGroup, RadioGroupItem } from "@itsrakesh/ui";
 import { useTheme } from "next-themes";
 import Image from "next/image";
-import { FormEvent } from "react";
 
 interface AppearanceProps extends React.HTMLAttributes<HTMLDivElement> {}
-
-const ThemeItem = ({
-    value,
-}: { value: "light" | "dark" | "system" } & React.HTMLAttributes<HTMLDivElement>) => {};
 
 export function Appearance({ ...props }: AppearanceProps) {
     const { theme, setTheme } = useTheme();

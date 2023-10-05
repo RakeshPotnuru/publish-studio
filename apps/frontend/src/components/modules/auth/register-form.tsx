@@ -83,7 +83,7 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
                                 </FormItem>
                             )}
                         />
-                        <div className="flex flex-row space-x-2">
+                        <div className="grid grid-cols-2 gap-2">
                             <FormField
                                 control={form.control}
                                 name="firstName"

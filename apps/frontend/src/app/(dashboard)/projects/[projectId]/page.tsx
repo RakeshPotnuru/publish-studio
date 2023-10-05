@@ -7,9 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function ProjectPage() {
-    return (
-        <div>
-            <Project />
-        </div>
-    );
+    return <Project />;
 }

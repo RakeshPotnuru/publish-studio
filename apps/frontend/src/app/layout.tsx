@@ -6,6 +6,7 @@ import { siteConfig } from "@/config/site";
 import { ThemeToggleButton } from "@/components/ui/dev-theme-toggle";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import LogRocketProvider from "@/lib/logrocket";
+import { env } from "@/config/env";
 
 export const metadata: Metadata = {
     title: {
@@ -56,7 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     disableTransitionOnChange
                 >
                     {children}
-                    {process.env.NODE_ENV === "development" && <ThemeToggleButton />}
+                    {env.NODE_ENV === "development" && <ThemeToggleButton />}
                 </ThemeProvider>
             </body>
         </html>

@@ -53,32 +53,38 @@ export function Navbar({ className, ...props }: NavbarProps) {
                 <NavItem icon={<AiFillQuestionCircle className="h-5 w-5" />} tooltip="Help" />
                 <NavItem icon={<AiFillBell className="h-5 w-5" />} tooltip="Notifications" />
                 <DropdownMenu>
-                    <DropdownMenuTrigger>
-                        <Avatar className="hover:opacity-80">
-                            <AvatarImage
-                                src="https://github.com/rakeshpotnuru.png"
-                                alt="@rakeshpotnuru"
-                            />
-                            <AvatarFallback>RP</AvatarFallback>
-                        </Avatar>
-                        <DropdownMenuContent side="bottom">
-                            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                            <Avatar className="h-9 w-9">
+                                <AvatarImage
+                                    src="https://github.com/rakeshpotnuru.png"
+                                    alt="@rakeshpotnuru"
+                                />
+                                <AvatarFallback>RP</AvatarFallback>
+                            </Avatar>
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-48" align="end" forceMount>
+                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <Link href="/profile">
                             <DropdownMenuItem>
                                 <CgProfile className="mr-2 h-4 w-4" />
-                                <Link href="/profile">Profile</Link>
+                                Profile
                             </DropdownMenuItem>
+                        </Link>
+                        <Link href="/settings">
                             <DropdownMenuItem>
                                 <MdSettings className="mr-2 h-4 w-4" />
-                                <Link href="/settings">Settings</Link>
+                                Settings
                             </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem>
-                                <IoMdLogOut className="mr-2 h-4 w-4" />
-                                <span>Logout</span>
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenuTrigger>
+                        </Link>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>
+                            <IoMdLogOut className="mr-2 h-4 w-4" />
+                            <span>Logout</span>
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
                 </DropdownMenu>
             </div>
         </nav>

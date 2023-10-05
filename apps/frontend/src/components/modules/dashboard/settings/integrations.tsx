@@ -1,13 +1,10 @@
 "use client";
 
 import { Heading } from "@/components/ui/heading";
-import { DevEditForm } from "./platforms/dev/dev-edit-form";
-import { DevConnectForm } from "./platforms/dev/dev-connect-form";
+import { DevConnectForm, DevEditForm } from "./platforms/dev";
 import { PlatformCard } from "./platforms/platform-card";
-import { MediumConnectForm } from "./platforms/medium/medium-connect";
-import { MediumEditForm } from "./platforms/medium/medium-edit";
-import { HashnodeEditForm } from "./platforms/hashnode/hashnode-edit";
-import { HashnodeConnectForm } from "./platforms/hashnode/hashnode-connect";
+import { MediumConnectForm, MediumEditForm } from "./platforms/medium";
+import { HashnodeConnectForm, HashnodeEditForm } from "./platforms/hashnode";
 
 interface IntegrationsProps extends React.HTMLAttributes<HTMLDivElement> {}
 
