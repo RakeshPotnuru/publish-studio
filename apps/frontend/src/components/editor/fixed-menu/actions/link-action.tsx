@@ -18,9 +18,9 @@ import {
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import type { MenuProps } from "..";
+import { Icons } from "@/components/ui/icons";
 import { cn } from "@itsrakesh/utils";
-import { AiOutlineLink } from "react-icons/ai";
+import type { MenuProps } from "..";
 
 const formSchema = z.object({
     link: z.string().url({ message: "Please enter a valid URL" }),
@@ -53,7 +53,7 @@ export function LinkAction({ editor }: MenuProps) {
                                     "bg-accent": editor.isActive("link"),
                                 })}
                             >
-                                <AiOutlineLink />
+                                <Icons.link />
                             </Button>
                         </TooltipTrigger>
                         <TooltipContent side="bottom" className="text-center">

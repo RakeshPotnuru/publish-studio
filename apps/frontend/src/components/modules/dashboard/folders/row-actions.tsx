@@ -28,7 +28,7 @@ export function RowActions<TData>({ row }: RowActionsProps<TData>) {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[160px]">
-                <Link href={`/projects/${row.original._id}`}>
+                <Link href={`/folders/${row.original._id}`}>
                     <DropdownMenuItem>
                         <Icons.edit className="mr-2 h-4 w-4" />
                         Edit

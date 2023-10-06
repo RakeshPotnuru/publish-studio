@@ -3,7 +3,8 @@
 
 import { Button } from "@itsrakesh/ui";
 import { useTheme } from "next-themes";
-import { BsFillSunFill } from "react-icons/bs";
+
+import { Icons } from "./icons";
 
 export function ThemeToggleButton() {
     const { theme, setTheme } = useTheme();
@@ -14,7 +15,7 @@ export function ThemeToggleButton() {
             className="text-foreground fixed bottom-4 right-4 z-50"
             size="icon"
         >
-            <BsFillSunFill />
+            <Icons.sun />
         </Button>
     );
 }

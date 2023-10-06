@@ -1,8 +1,4 @@
-import { AiOutlineStrikethrough } from "react-icons/ai";
-import { BiCode } from "react-icons/bi";
-import { FiItalic, FiUnderline } from "react-icons/fi";
-import { GoBold } from "react-icons/go";
-
+import { Icons } from "@/components/ui/icons";
 import type { MenuProps } from "..";
 import { MenuAction } from "../menu-action";
 
@@ -12,7 +8,7 @@ export function MarkActions({ editor }: MenuProps) {
             <MenuAction
                 editor={editor}
                 name="bold"
-                icon={<GoBold />}
+                icon={<Icons.bold />}
                 command={() => editor.chain().focus().toggleBold().run()}
                 tooltip="Bold"
                 shortcut={{
@@ -23,7 +19,7 @@ export function MarkActions({ editor }: MenuProps) {
             <MenuAction
                 editor={editor}
                 name="italic"
-                icon={<FiItalic />}
+                icon={<Icons.italic />}
                 command={() => editor.chain().focus().toggleItalic().run()}
                 tooltip="Italic"
                 shortcut={{
@@ -34,7 +30,7 @@ export function MarkActions({ editor }: MenuProps) {
             <MenuAction
                 editor={editor}
                 name="underline"
-                icon={<FiUnderline />}
+                icon={<Icons.underline />}
                 command={() => editor.chain().focus().toggleUnderline().run()}
                 tooltip="Underline"
                 shortcut={{
@@ -45,7 +41,7 @@ export function MarkActions({ editor }: MenuProps) {
             <MenuAction
                 editor={editor}
                 name="strike"
-                icon={<AiOutlineStrikethrough />}
+                icon={<Icons.strike />}
                 command={() => editor.chain().focus().toggleStrike().run()}
                 tooltip="Strike"
                 shortcut={{
@@ -56,7 +52,7 @@ export function MarkActions({ editor }: MenuProps) {
             <MenuAction
                 editor={editor}
                 name="code"
-                icon={<BiCode />}
+                icon={<Icons.code />}
                 command={() => editor.chain().focus().toggleCode().run()}
                 tooltip="Code"
                 shortcut={{

@@ -1,10 +1,9 @@
 import { Checkbox } from "@itsrakesh/ui";
 import { ColumnDef } from "@tanstack/react-table";
-import { MdEditDocument } from "react-icons/md";
-import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
 import { format } from "date-fns";
 
 import { DataTableColumnHeader } from "@/components/ui/data-table";
+import { Icons } from "@/components/ui/icons";
 import { RowActions } from "./row-actions";
 
 type Status = "draft" | "published";
@@ -14,11 +13,12 @@ export interface IProject {
     title: string;
     status: Status;
     created_at: Date;
+    updated_at: Date;
 }
 
 export const statuses = [
-    { label: "Draft", value: "draft", icon: MdEditDocument },
-    { label: "Published", value: "published", icon: IoCheckmarkDoneCircleSharp },
+    { label: "Draft", value: "draft", icon: Icons.draft },
+    { label: "Published", value: "published", icon: Icons.published },
 ];
 
 export const columns: ColumnDef<IProject>[] = [
@@ -76,8 +76,16 @@ export const columns: ColumnDef<IProject>[] = [
     },
     {
         accessorKey: "created_at",
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Created At" />,
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Created" />,
         cell: ({ row }) => <span>{format(row.getValue("created_at"), "PPPp")}</span>,
+        filterFn: (row, id, value) => {
+            return value.includes(row.getValue(id));
+        },
+    },
+    {
+        accessorKey: "updated_at",
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Last Edited" />,
+        cell: ({ row }) => <span>{format(row.getValue("updated_at"), "PPPp")}</span>,
         filterFn: (row, id, value) => {
             return value.includes(row.getValue(id));
         },

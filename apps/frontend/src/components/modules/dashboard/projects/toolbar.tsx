@@ -1,9 +1,10 @@
-import { Input, Button } from "@itsrakesh/ui";
+import { Button, Input } from "@itsrakesh/ui";
 import { Table } from "@tanstack/react-table";
-import { RxCross2 } from "react-icons/rx";
+import { useState } from "react";
 
 import { DataTableViewOptions } from "@/components/ui/data-table";
 import { DataTableFacetedFilter } from "@/components/ui/data-table/faceted-filter";
+import { Icons } from "@/components/ui/icons";
 import { statuses } from "./columns";
 
 interface ToolbarProps<TData> {
@@ -11,6 +12,8 @@ interface ToolbarProps<TData> {
 }
 
 export function Toolbar<TData>({ table }: ToolbarProps<TData>) {
+    const [askingForConfirmation, setAskingForConfirmation] = useState(false);
+
     const isFiltered = table.getState().columnFilters.length > 0;
 
     return (
@@ -36,11 +39,42 @@ export function Toolbar<TData>({ table }: ToolbarProps<TData>) {
                         className="h-8 px-2 lg:px-3"
                     >
                         Reset
-                        <RxCross2 className="ml-2 h-4 w-4" />
+                        <Icons.close className="ml-2 h-4 w-4" />
                     </Button>
                 )}
             </div>
-            <DataTableViewOptions table={table} />
+            <div className="flex flex-row items-center space-x-2">
+                {table.getFilteredSelectedRowModel().rows.length > 0 && (
+                    <>
+                        {askingForConfirmation ? (
+                            <div className="space-x-1 text-sm">
+                                <span>Confirm?</span>
+                                <Button variant="destructive" size="icon" className="h-8 w-8">
+                                    <Icons.check />
+                                </Button>
+                                <Button
+                                    onClick={() => setAskingForConfirmation(false)}
+                                    variant="outline"
+                                    size="icon"
+                                    className="h-8 w-8"
+                                >
+                                    <Icons.close />
+                                </Button>
+                            </div>
+                        ) : (
+                            <Button
+                                onClick={() => setAskingForConfirmation(true)}
+                                variant="destructive"
+                                size="sm"
+                            >
+                                <Icons.delete className="mr-2 h-4 w-4" />
+                                Delete ({table.getFilteredSelectedRowModel().rows.length})
+                            </Button>
+                        )}
+                    </>
+                )}
+                <DataTableViewOptions table={table} />
+            </div>
         </div>
     );
 }

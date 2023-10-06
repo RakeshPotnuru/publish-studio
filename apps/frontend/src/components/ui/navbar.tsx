@@ -1,11 +1,5 @@
 "use client";
 
-import { cn } from "@itsrakesh/utils";
-import Image from "next/image";
-import { AiFillBell, AiFillQuestionCircle } from "react-icons/ai";
-import { CgProfile } from "react-icons/cg";
-import { MdSettings } from "react-icons/md";
-import { IoMdLogOut } from "react-icons/io";
 import {
     Avatar,
     AvatarFallback,
@@ -18,7 +12,11 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@itsrakesh/ui";
+import { cn } from "@itsrakesh/utils";
+import Image from "next/image";
 import Link from "next/link";
+
+import { Icons } from "./icons";
 import { Tooltip } from "./tooltip";
 
 const NavItem = ({ icon, tooltip }: { icon: React.ReactNode; tooltip: string }) => (
@@ -50,8 +48,11 @@ export function Navbar({ className, ...props }: NavbarProps) {
                 />
             </Link>
             <div className="flex flex-row items-center space-x-1 text-gray-700 dark:text-gray-300">
-                <NavItem icon={<AiFillQuestionCircle className="h-5 w-5" />} tooltip="Help" />
-                <NavItem icon={<AiFillBell className="h-5 w-5" />} tooltip="Notifications" />
+                <NavItem icon={<Icons.question className="h-5 w-5" />} tooltip="Help" />
+                <NavItem
+                    icon={<Icons.notifications className="h-5 w-5" />}
+                    tooltip="Notifications"
+                />
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
@@ -69,19 +70,19 @@ export function Navbar({ className, ...props }: NavbarProps) {
                         <DropdownMenuSeparator />
                         <Link href="/profile">
                             <DropdownMenuItem>
-                                <CgProfile className="mr-2 h-4 w-4" />
+                                <Icons.profile className="mr-2 h-4 w-4" />
                                 Profile
                             </DropdownMenuItem>
                         </Link>
                         <Link href="/settings">
                             <DropdownMenuItem>
-                                <MdSettings className="mr-2 h-4 w-4" />
+                                <Icons.settings className="mr-2 h-4 w-4" />
                                 Settings
                             </DropdownMenuItem>
                         </Link>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem>
-                            <IoMdLogOut className="mr-2 h-4 w-4" />
+                            <Icons.logout className="mr-2 h-4 w-4" />
                             <span>Logout</span>
                         </DropdownMenuItem>
                     </DropdownMenuContent>

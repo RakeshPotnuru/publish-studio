@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { Projects } from "@/components/modules/dashboard/projects/projects";
+import { Projects } from "@/components/modules/dashboard/projects";
 import { DashboardShell } from "@/components/ui/shell";
 
 export const metadata: Metadata = {

@@ -1,5 +1,6 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Button,
     Form,
@@ -11,13 +12,12 @@ import {
     Input,
     Separator,
 } from "@itsrakesh/ui";
-import { MdManageAccounts } from "react-icons/md";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 import { Heading } from "@/components/ui/heading";
+import { Icons } from "@/components/ui/icons";
 import { Tooltip } from "@/components/ui/tooltip";
 
 interface ProfileProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -72,7 +72,7 @@ export function Profile({ ...props }: ProfileProps) {
                                     variant="ghost"
                                     size="icon"
                                 >
-                                    <MdManageAccounts size={25} />
+                                    <Icons.editprofile size={25} />
                                 </Button>
                             </Tooltip>
                         )}

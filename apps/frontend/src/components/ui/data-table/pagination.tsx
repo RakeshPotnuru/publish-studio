@@ -1,14 +1,14 @@
-import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
-import { MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from "react-icons/md";
-import { Table } from "@tanstack/react-table";
 import {
+    Button,
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-    Button,
 } from "@itsrakesh/ui";
+import { Table } from "@tanstack/react-table";
+
+import { Icons } from "../icons";
 
 interface DataTablePaginationProps<TData> {
     table: Table<TData>;
@@ -53,7 +53,7 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
                         disabled={!table.getCanPreviousPage()}
                     >
                         <span className="sr-only">Go to first page</span>
-                        <MdKeyboardDoubleArrowLeft className="h-4 w-4" />
+                        <Icons.first className="h-4 w-4" />
                     </Button>
                     <Button
                         variant="outline"
@@ -62,7 +62,7 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
                         disabled={!table.getCanPreviousPage()}
                     >
                         <span className="sr-only">Go to previous page</span>
-                        <BiChevronLeft className="h-4 w-4" />
+                        <Icons.previous className="h-4 w-4" />
                     </Button>
                     <Button
                         variant="outline"
@@ -71,7 +71,7 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
                         disabled={!table.getCanNextPage()}
                     >
                         <span className="sr-only">Go to next page</span>
-                        <BiChevronRight className="h-4 w-4" />
+                        <Icons.next className="h-4 w-4" />
                     </Button>
                     <Button
                         variant="outline"
@@ -80,7 +80,7 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
                         disabled={!table.getCanNextPage()}
                     >
                         <span className="sr-only">Go to last page</span>
-                        <MdKeyboardDoubleArrowRight className="h-4 w-4" />
+                        <Icons.last className="h-4 w-4" />
                     </Button>
                 </div>
             </div>

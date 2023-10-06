@@ -12,8 +12,9 @@ import {
     RadioGroupItem,
 } from "@itsrakesh/ui";
 import { useForm } from "react-hook-form";
-import { AiFillQuestionCircle } from "react-icons/ai";
 import { z } from "zod";
+
+import { Icons } from "@/components/ui/icons";
 
 const formSchema = z.object({
     api_key: z.string().optional(),
@@ -43,7 +44,7 @@ export function DevEditForm(props: z.infer<typeof formSchema>) {
                         <FormItem>
                             <div className="space-y-1">
                                 <FormLabel className="flex flex-row space-x-1">
-                                    <span>API key</span> <AiFillQuestionCircle />
+                                    <span>API key</span> <Icons.question />
                                 </FormLabel>
                                 <p className="text-muted-foreground text-xs">
                                     Your API key will be encrypted and stored securely.{" "}

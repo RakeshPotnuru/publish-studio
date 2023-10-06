@@ -1,8 +1,3 @@
-import * as React from "react";
-import { Column } from "@tanstack/react-table";
-import { PiPlusCircleLight } from "react-icons/pi";
-import { BsCheck } from "react-icons/bs";
-import { cn } from "@itsrakesh/utils";
 import {
     Badge,
     Button,
@@ -18,6 +13,11 @@ import {
     PopoverTrigger,
     Separator,
 } from "@itsrakesh/ui";
+import { cn } from "@itsrakesh/utils";
+import { Column } from "@tanstack/react-table";
+import * as React from "react";
+
+import { Icons } from "../icons";
 
 interface DataTableFacetedFilterProps<TData, TValue> {
     column?: Column<TData, TValue>;
@@ -41,7 +41,7 @@ export function DataTableFacetedFilter<TData, TValue>({
         <Popover>
             <PopoverTrigger asChild>
                 <Button variant="outline" size="sm" className="h-8 border-dashed">
-                    <PiPlusCircleLight className="mr-2 h-4 w-4" />
+                    <Icons.add className="mr-2 h-4 w-4" />
                     {title}
                     {selectedValues?.size > 0 && (
                         <>
@@ -109,7 +109,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                                                     : "opacity-50 [&_svg]:invisible",
                                             )}
                                         >
-                                            <BsCheck className={cn("h-4 w-4")} />
+                                            <Icons.check className={cn("h-4 w-4")} />
                                         </div>
                                         {option.icon && (
                                             <option.icon className="text-muted-foreground mr-2 h-4 w-4" />

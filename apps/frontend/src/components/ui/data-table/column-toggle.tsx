@@ -1,14 +1,15 @@
-import { RxMixerHorizontal } from "react-icons/rx";
-import { Table } from "@tanstack/react-table";
 import {
+    Button,
     DropdownMenu,
-    DropdownMenuTrigger,
     DropdownMenuCheckboxItem,
     DropdownMenuContent,
     DropdownMenuLabel,
     DropdownMenuSeparator,
-    Button,
+    DropdownMenuTrigger,
 } from "@itsrakesh/ui";
+import { Table } from "@tanstack/react-table";
+
+import { Icons } from "../icons";
 
 interface DataTableViewOptionsProps<TData> {
     table: Table<TData>;
@@ -19,7 +20,7 @@ export function DataTableViewOptions<TData>({ table }: DataTableViewOptionsProps
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="ml-auto hidden h-8 lg:flex">
-                    <RxMixerHorizontal className="mr-2 h-4 w-4" />
+                    <Icons.mixer className="mr-2 h-4 w-4" />
                     View
                 </Button>
             </DropdownMenuTrigger>
@@ -39,7 +40,7 @@ export function DataTableViewOptions<TData>({ table }: DataTableViewOptionsProps
                                 checked={column.getIsVisible()}
                                 onCheckedChange={value => column.toggleVisibility(!!value)}
                             >
-                                {column.id}
+                                {column.id.split("_").join(" ")}
                             </DropdownMenuCheckboxItem>
                         );
                     })}

@@ -1,12 +1,11 @@
 import { Button } from "@itsrakesh/ui";
-import Link from "next/link";
-import { AiFillEdit } from "react-icons/ai";
-import { BsFillPatchCheckFill } from "react-icons/bs";
 import Image from "next/image";
+import Link from "next/link";
 
-import { PlatformDialog } from "./platform-dialog";
 import { Heading } from "@/components/ui/heading";
+import { Icons } from "@/components/ui/icons";
 import { Tooltip } from "@/components/ui/tooltip";
+import { PlatformDialog } from "./platform-dialog";
 
 interface PlatformCardBaseProps {
     name: string;
@@ -51,7 +50,7 @@ export function PlatformCard({
                         {connected && (
                             <Tooltip content="Connected" side="top">
                                 <span>
-                                    <BsFillPatchCheckFill className="text-success" />
+                                    <Icons.connected className="text-success" />
                                 </span>
                             </Tooltip>
                         )}
@@ -77,7 +76,7 @@ export function PlatformCard({
                         <PlatformDialog mode="edit" platform={name} form={editForm}>
                             <Tooltip content="Edit details" side="top">
                                 <Button size="sm" variant="outline">
-                                    <AiFillEdit />
+                                    <Icons.edit />
                                 </Button>
                             </Tooltip>
                         </PlatformDialog>

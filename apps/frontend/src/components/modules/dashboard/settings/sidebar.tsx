@@ -4,7 +4,8 @@ import { ScrollArea } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
-import { FaPaintRoller, FaPuzzlePiece } from "react-icons/fa";
+
+import { Icons } from "@/components/ui/icons";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLElement> {}
 
@@ -48,11 +49,11 @@ export function Sidebar({ className, ...props }: SidebarProps) {
         >
             <ScrollArea className="h-max w-full">
                 <div className="space-y-4 p-4">
-                    <SidebarItem label="Appearance" link="appearance" icon={<FaPaintRoller />} />
+                    <SidebarItem label="Appearance" link="appearance" icon={<Icons.appearance />} />
                     <SidebarItem
                         label="Integrations"
                         link="integrations"
-                        icon={<FaPuzzlePiece />}
+                        icon={<Icons.integrations />}
                     />
                 </div>
             </ScrollArea>

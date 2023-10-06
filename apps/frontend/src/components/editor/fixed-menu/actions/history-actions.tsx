@@ -1,5 +1,4 @@
-import { GrUndo, GrRedo } from "react-icons/gr";
-
+import { Icons } from "@/components/ui/icons";
 import type { MenuProps } from "..";
 import { MenuAction } from "../menu-action";
 
@@ -9,7 +8,7 @@ export function HistoryActions({ editor }: MenuProps) {
             <MenuAction
                 editor={editor}
                 name="undo"
-                icon={<GrUndo />}
+                icon={<Icons.undo />}
                 command={() => editor.chain().focus().undo().run()}
                 tooltip="Undo"
                 shortcut={{
@@ -20,7 +19,7 @@ export function HistoryActions({ editor }: MenuProps) {
             <MenuAction
                 editor={editor}
                 name="redo"
-                icon={<GrRedo />}
+                icon={<Icons.redo />}
                 command={() => editor.chain().focus().redo().run()}
                 tooltip="Redo"
                 shortcut={{
