@@ -7,7 +7,6 @@ import {
     DropdownMenuTrigger,
 } from "@itsrakesh/ui";
 import { Row } from "@tanstack/react-table";
-import Link from "next/link";
 import { useState } from "react";
 
 import { Icons } from "@/components/ui/icons";
@@ -28,19 +27,9 @@ export function RowActions<TData>({ row }: RowActionsProps<TData>) {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[160px]">
-                <Link href={`/folders/${row.original._id}`}>
-                    <DropdownMenuItem>
-                        <Icons.edit className="mr-2 h-4 w-4" />
-                        Edit
-                    </DropdownMenuItem>
-                </Link>
                 <DropdownMenuItem>
-                    <Icons.duplicate className="mr-2 h-4 w-4" />
-                    Duplicate
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                    <Icons.move className="mr-2 h-4 w-4" />
-                    Move
+                    <Icons.edit className="mr-2 h-4 w-4" />
+                    Edit
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 {askingForConfirmation ? (

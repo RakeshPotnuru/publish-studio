@@ -1,13 +1,27 @@
 "use client";
 
+import { Button } from "@itsrakesh/ui";
+
 import { Heading } from "@/components/ui/heading";
+import { Icons } from "@/components/ui/icons";
+import { generateFolders } from "@/data/faker";
+import { columns } from "./columns";
+import { FoldersTable } from "./table";
 
 interface ProjectsProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function Folders({ ...props }: ProjectsProps) {
+    const data = generateFolders(14);
+
     return (
         <div className="space-y-8" {...props}>
-            <Heading>My Folders</Heading>
+            <div className="flex items-center justify-between">
+                <Heading>My Folders</Heading>
+                <Button>
+                    <Icons.plus className="mr-1" /> New Folder
+                </Button>
+            </div>
+            <FoldersTable columns={columns} data={data} />
         </div>
     );
 }

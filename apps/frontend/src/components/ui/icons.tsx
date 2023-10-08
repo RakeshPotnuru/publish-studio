@@ -9,7 +9,7 @@ import {
     AiOutlineStrikethrough,
     AiOutlineUnorderedList,
 } from "react-icons/ai";
-import { BiChevronLeft, BiChevronRight, BiCode, BiSolidHide } from "react-icons/bi";
+import { BiChevronLeft, BiChevronRight, BiCode, BiPlus, BiSolidHide } from "react-icons/bi";
 import {
     BsArrowDownShort,
     BsArrowUpShort,
@@ -18,7 +18,7 @@ import {
     BsFillSunFill,
 } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
-import { FaPaintRoller, FaPuzzlePiece } from "react-icons/fa";
+import { FaFolder, FaPaintRoller, FaPuzzlePiece } from "react-icons/fa";
 import { FiItalic, FiUnderline } from "react-icons/fi";
 import { GoBold } from "react-icons/go";
 import { GrRedo, GrUndo } from "react-icons/gr";
@@ -26,6 +26,7 @@ import { HiDocumentDuplicate } from "react-icons/hi";
 import { IoMdImage, IoMdLogOut } from "react-icons/io";
 import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
 import {
+    MdDriveFileMoveRtl,
     MdEditDocument,
     MdKeyboardDoubleArrowLeft,
     MdKeyboardDoubleArrowRight,
@@ -35,7 +36,6 @@ import {
 import { PiCodeBlockBold, PiDotsThreeBold, PiPlusCircleLight } from "react-icons/pi";
 import { RxCaretSort, RxCross2, RxDividerHorizontal, RxMixerHorizontal } from "react-icons/rx";
 import { TbBlockquote } from "react-icons/tb";
-import { MdDriveFileMoveRtl } from "react-icons/md";
 
 export type Icon = IconType;
 
@@ -83,4 +83,6 @@ export const Icons = {
     first: MdKeyboardDoubleArrowLeft,
     last: MdKeyboardDoubleArrowRight,
     move: MdDriveFileMoveRtl,
+    folder: FaFolder,
+    plus: BiPlus,
 };

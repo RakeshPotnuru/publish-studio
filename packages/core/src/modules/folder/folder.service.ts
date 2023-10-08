@@ -72,14 +72,15 @@ export default class FolderService {
     }
 
     /**
-     * The function deletes a folder and all associated projects from a database.
-     * @param {string} id - The `id` parameter is a string that represents the unique identifier of the
-     * folder that needs to be deleted.
+     * The function deletes a folder by setting the folder_id to null in the associated project and
+     * then deleting the folder itself.
+     * @param id - The `id` parameter is of type `Types.ObjectId`. It represents the unique identifier
+     * of the folder that needs to be deleted.
      * @returns the deleted folder as an IFolder object.
      */
     async deleteFolder(id: Types.ObjectId) {
         try {
-            await Project.find({ folder_id: id }).deleteMany().exec();
+            await Project.findOneAndUpdate({ folder_id: id }, { folder_id: null }).exec();
             return (await Folder.findByIdAndDelete(id).exec()) as IFolder;
         } catch (error) {
             console.log(error);
