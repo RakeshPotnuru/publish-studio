@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-import { project, user } from "../../constants";
+import { constants } from "../../constants";
 import type { IProject } from "./project.types";
 
 const ProjectSchema = new Schema<IProject>(
@@ -10,23 +10,23 @@ const ProjectSchema = new Schema<IProject>(
         title: {
             type: String,
             required: true,
-            minlength: project.title.MIN_LENGTH,
-            maxlength: project.title.MAX_LENGTH,
+            minlength: constants.project.title.MIN_LENGTH,
+            maxlength: constants.project.title.MAX_LENGTH,
         },
-        description: { type: String, maxlength: project.description.MAX_LENGTH },
-        body: { type: String, maxlength: project.body.MAX_LENGTH },
-        tags: [{ type: String, maxlength: project.tags.tag.MAX_LENGTH }],
+        description: { type: String, maxlength: constants.project.description.MAX_LENGTH },
+        body: { type: String, maxlength: constants.project.body.MAX_LENGTH },
+        tags: [{ type: String, maxlength: constants.project.tags.tag.MAX_LENGTH }],
         status: {
             type: String,
-            enum: project.status,
+            enum: constants.project.status,
             required: true,
-            default: project.status.DRAFT,
+            default: constants.project.status.DRAFT,
         },
         cover_image: String,
         assets: [{ type: Schema.Types.ObjectId, ref: "Asset" }],
         platforms: [
             {
-                name: { type: String, enum: user.platforms, required: true },
+                name: { type: String, enum: constants.user.platforms, required: true },
                 status: { type: String, enum: ["success", "error"] },
                 published_url: String,
                 id: String,

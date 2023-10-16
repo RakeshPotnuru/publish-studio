@@ -13,6 +13,7 @@ import { useRef, useState } from "react";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Icons } from "@/components/ui/icons";
 import { constants } from "@/config/constants";
+import { formatFileSize } from "@/lib/file-size";
 import { shortenText } from "@/lib/text-shortner";
 
 interface NewAssetDialogProps extends React.HTMLAttributes<HTMLDialogElement> {}
@@ -54,7 +55,7 @@ export function NewAssetDialog({ children, ...props }: NewAssetDialogProps) {
         if (file.size > constants.asset.MAX_FILE_SIZE) {
             setError({
                 title: "File too large",
-                description: `Max file size is ${fileSize(constants.asset.MAX_FILE_SIZE)}`,
+                description: `Max file size is ${formatFileSize(constants.asset.MAX_FILE_SIZE)}`,
             });
             return false;
         }
@@ -90,15 +91,6 @@ export function NewAssetDialog({ children, ...props }: NewAssetDialogProps) {
         setError(null);
     };
 
-    const fileSize = (size: number) => {
-        const i = Math.floor(Math.log(size) / Math.log(1024));
-        return (
-            parseFloat((size / Math.pow(1024, i)).toFixed(2)) +
-            " " +
-            ["B", "kB", "MB", "GB", "TB"][i]
-        );
-    };
-
     return (
         <Dialog {...props}>
             <DialogTrigger asChild>{children}</DialogTrigger>
@@ -111,7 +103,7 @@ export function NewAssetDialog({ children, ...props }: NewAssetDialogProps) {
                             .map(mimeType => mimeType.split("/")[1].toUpperCase())
                             .join(", ")}
                         <br />
-                        Max file size: {fileSize(constants.asset.MAX_FILE_SIZE)}
+                        Max file size: {formatFileSize(constants.asset.MAX_FILE_SIZE)}
                     </DialogDescription>
                 </DialogHeader>
                 {error && <ErrorBox title={error.title} description={error.description} />}
@@ -135,7 +127,7 @@ export function NewAssetDialog({ children, ...props }: NewAssetDialogProps) {
                             <div className="flex flex-col">
                                 <p className="text-sm font-medium">{shortenText(file.name, 20)}</p>
                                 <p className="text-muted-foreground text-xs">
-                                    {fileSize(file.size)}
+                                    {formatFileSize(file.size)}
                                 </p>
                             </div>
                             <Button

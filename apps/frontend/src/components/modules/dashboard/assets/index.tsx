@@ -4,7 +4,10 @@ import { Button } from "@itsrakesh/ui";
 
 import { Heading } from "@/components/ui/heading";
 import { Icons } from "@/components/ui/icons";
+import data from "@/data/assets.json";
+import { columns } from "./columns";
 import { NewAssetDialog } from "./new-asset";
+import { AssetsTable } from "./table";
 
 interface AssetsProps extends React.HTMLAttributes<HTMLElement> {}
 
@@ -19,6 +22,7 @@ export function Assets({ ...props }: AssetsProps) {
                     </Button>
                 </NewAssetDialog>
             </div>
+            <AssetsTable columns={columns} data={data} />
         </div>
     );
 }

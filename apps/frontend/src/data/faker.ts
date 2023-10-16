@@ -26,12 +26,16 @@ console.log("✅ Folders data generated.");
 const extensions = ["jpg", "png", "gif", "svg", "jpeg"];
 const assets = Array.from({ length: 100 }, () => ({
     _id: faker.string.uuid(),
-    original_file_name: faker.system.commonFileName(
-        extensions[(Math.random() * extensions.length) | 0],
-    ),
-    hosted_url: faker.image.url(),
+    name: faker.system.commonFileName(extensions[(Math.random() * extensions.length) | 0]),
+    url: faker.image.url(),
+    size: faker.number.int(5242880),
+    mime_type: faker.helpers.arrayElement([
+        "image/jpeg",
+        "image/png",
+        "image/gif",
+        "image/svg+xml",
+    ]),
     created: faker.date.past(),
-    last_edited: faker.date.past(),
 }));
 
 fs.writeFileSync(path.join(__dirname, "assets.json"), JSON.stringify(assets, null, 2));

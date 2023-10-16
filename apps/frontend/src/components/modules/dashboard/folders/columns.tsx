@@ -13,14 +13,7 @@ export interface IFolder {
 export const columns: ColumnDef<IFolder>[] = [
     {
         id: "select",
-        header: ({ table }) => (
-            <Checkbox
-                checked={table.getIsAllPageRowsSelected()}
-                onCheckedChange={value => table.toggleAllPageRowsSelected(!!value)}
-                aria-label="Select all"
-                className="translate-y-[2px]"
-            />
-        ),
+        header: "Select",
         cell: ({ row }) => (
             <Checkbox
                 checked={row.getIsSelected()}

@@ -19,8 +19,8 @@
     "scripts": {
         "build": "next build",
         "dev": "doppler run -- next dev",
+        "faker": "ts-node --esm --project ./tsconfig.scripts.json ./src/data/faker.ts",
         "lint": "next lint",
-        "seed:data": "ts-node --esm --project ./tsconfig.scripts.json ./src/data/seed.ts",
         "start": "doppler run -- next start"
     },
     "dependencies": {

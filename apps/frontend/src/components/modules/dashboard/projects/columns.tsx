@@ -1,4 +1,5 @@
 import { Checkbox } from "@itsrakesh/ui";
+import { cn } from "@itsrakesh/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 
@@ -6,7 +7,6 @@ import { DataTableColumnHeader } from "@/components/ui/data-table";
 import { Icons } from "@/components/ui/icons";
 import { constants } from "@/config/constants";
 import { shortenText } from "@/lib/text-shortner";
-import { cn } from "@itsrakesh/utils";
 import { RowActions } from "./row-actions";
 
 export interface IProject {

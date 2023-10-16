@@ -45,6 +45,8 @@ export default class AssetService extends ProjectService {
                 hosted_url: hostedUrl,
                 project_id: project_id,
                 user_id: user?._id,
+                size: size,
+                mimetype: mimetype,
             });
 
             await User.findByIdAndUpdate(user?._id, {
