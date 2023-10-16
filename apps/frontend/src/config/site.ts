@@ -5,6 +5,9 @@ interface ISiteConfig {
     theme?: {
         color: `#${string}`;
     };
+    links: {
+        [key: string]: string;
+    };
 }
 
 export const siteConfig: ISiteConfig = {
@@ -14,5 +17,11 @@ export const siteConfig: ISiteConfig = {
     url: "https://app.publishstudio.one",
     theme: {
         color: "#EB5757",
+    },
+    links: {
+        devAPIKeyGuide: "https://docs.publishstudio.one/platforms/dev#api-key",
+        mediumAPIKeyGuide: "https://docs.publishstudio.one/platforms/medium#api-key",
+        hashnodeAPIKeyGuide: "https://docs.publishstudio.one/platforms/hashnode#api-key",
+        apiKeysSecureStorage: "https://docs.publishstudio.one/platforms#secure-storage-of-api-keys",
     },
 };

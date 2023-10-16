@@ -1,6 +1,6 @@
 import type { Types } from "mongoose";
 
-import type { user } from "../../constants";
+import type { constants } from "../../constants";
 
 export interface IProject {
     user_id?: Types.ObjectId;
@@ -9,11 +9,11 @@ export interface IProject {
     description?: string;
     body?: string;
     tags?: string[];
-    status: "draft" | "published";
+    status: (typeof constants.project.status)[keyof typeof constants.project.status];
     cover_image?: string;
     assets?: Types.ObjectId[];
     platforms?: {
-        name: (typeof user.platforms)[keyof typeof user.platforms];
+        name: (typeof constants.user.platforms)[keyof typeof constants.user.platforms];
         status?: "success" | "error";
         published_url?: string;
         id?: string;

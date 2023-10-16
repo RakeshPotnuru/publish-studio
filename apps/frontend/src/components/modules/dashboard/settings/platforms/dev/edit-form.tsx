@@ -7,14 +7,19 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
+    HoverCard,
+    HoverCardContent,
+    HoverCardTrigger,
     Input,
     RadioGroup,
     RadioGroupItem,
 } from "@itsrakesh/ui";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import Link from "next/link";
 
 import { Icons } from "@/components/ui/icons";
+import { siteConfig } from "@/config/site";
 
 const formSchema = z.object({
     api_key: z.string().optional(),
@@ -44,12 +49,49 @@ export function DevEditForm(props: z.infer<typeof formSchema>) {
                         <FormItem>
                             <div className="space-y-1">
                                 <FormLabel className="flex flex-row space-x-1">
-                                    <span>API key</span> <Icons.question />
+                                    <span>API key</span>{" "}
+                                    <HoverCard>
+                                        <HoverCardTrigger asChild>
+                                            <Button
+                                                variant="link"
+                                                className="text-foreground h-max p-0"
+                                            >
+                                                <Icons.question />
+                                            </Button>
+                                        </HoverCardTrigger>
+                                        <HoverCardContent className="w-44" side="right">
+                                            <Button
+                                                type="button"
+                                                variant="link"
+                                                className="h-max p-0"
+                                                asChild
+                                            >
+                                                <Link
+                                                    href={siteConfig.links.devAPIKeyGuide}
+                                                    target="_blank"
+                                                >
+                                                    Learn
+                                                </Link>
+                                            </Button>{" "}
+                                            how to get your API key.
+                                        </HoverCardContent>
+                                    </HoverCard>
                                 </FormLabel>
                                 <p className="text-muted-foreground text-xs">
                                     Your API key will be encrypted and stored securely.{" "}
-                                    <Button variant="link" size="sm" className="h-max p-0">
-                                        Learn more
+                                    <Button
+                                        type="button"
+                                        variant="link"
+                                        size="sm"
+                                        className="h-max p-0"
+                                        asChild
+                                    >
+                                        <Link
+                                            href={siteConfig.links.apiKeysSecureStorage}
+                                            target="_blank"
+                                        >
+                                            Learn more
+                                        </Link>
                                     </Button>
                                 </p>
                             </div>
@@ -100,6 +142,7 @@ export function DevEditForm(props: z.infer<typeof formSchema>) {
                 <Button
                     type="submit"
                     disabled={form.formState.isSubmitting || !form.formState.isDirty}
+                    className="w-full"
                 >
                     Update
                 </Button>

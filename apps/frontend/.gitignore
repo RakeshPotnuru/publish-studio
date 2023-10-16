@@ -38,3 +38,6 @@ next-env.d.ts
 .turbo/
 
 .env
+
+# generated data files
+/src/data/**.json

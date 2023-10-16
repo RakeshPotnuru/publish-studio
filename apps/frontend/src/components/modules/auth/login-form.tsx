@@ -1,5 +1,6 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Button,
     Form,
@@ -12,9 +13,8 @@ import {
 } from "@itsrakesh/ui";
 import Link from "next/link";
 import React from "react";
-import { z } from "zod";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 import { Heading } from "@/components/ui/heading";
 
@@ -71,11 +71,9 @@ export function LoginForm({ ...props }: LoginFormProps) {
                                 <FormItem>
                                     <div className="flex justify-between">
                                         <FormLabel>Password</FormLabel>
-                                        <Link href="/reset-password">
-                                            <Button variant="link" className="h-max p-0">
-                                                Forgot Password?
-                                            </Button>
-                                        </Link>
+                                        <Button variant="link" className="h-max p-0" asChild>
+                                            <Link href="/reset-password">Forgot Password?</Link>
+                                        </Button>
                                     </div>
                                     <FormControl>
                                         <Input
@@ -101,11 +99,9 @@ export function LoginForm({ ...props }: LoginFormProps) {
                 </Form>
                 <p className="text-center text-sm">
                     Don&apos;t have an account?{" "}
-                    <Link href="/register">
-                        <Button variant="link" className="h-max p-0">
-                            Register
-                        </Button>
-                    </Link>
+                    <Button variant="link" className="h-max p-0" asChild>
+                        <Link href="/register">Register</Link>
+                    </Button>
                 </p>
             </div>
         </div>

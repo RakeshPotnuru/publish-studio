@@ -10,9 +10,11 @@ import { Row } from "@tanstack/react-table";
 import { useState } from "react";
 
 import { Icons } from "@/components/ui/icons";
+import { IFolder } from "./columns";
+import { EditFolderDialog } from "./edit-folder";
 
 interface RowActionsProps<TData> {
-    row: Row<TData & { _id: string }>;
+    row: Row<TData & IFolder>;
 }
 
 export function RowActions<TData>({ row }: RowActionsProps<TData>) {
@@ -27,10 +29,16 @@ export function RowActions<TData>({ row }: RowActionsProps<TData>) {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[160px]">
-                <DropdownMenuItem>
-                    <Icons.edit className="mr-2 h-4 w-4" />
-                    Edit
-                </DropdownMenuItem>
+                <EditFolderDialog name={row.original.name}>
+                    <DropdownMenuItem
+                        onSelect={event => {
+                            event.preventDefault();
+                        }}
+                    >
+                        <Icons.edit className="mr-2 h-4 w-4" />
+                        Rename
+                    </DropdownMenuItem>
+                </EditFolderDialog>
                 <DropdownMenuSeparator />
                 {askingForConfirmation ? (
                     <div className="space-x-1 py-1 pl-2 text-sm">

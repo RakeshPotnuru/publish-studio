@@ -4,21 +4,38 @@ import { format } from "date-fns";
 
 import { DataTableColumnHeader } from "@/components/ui/data-table";
 import { Icons } from "@/components/ui/icons";
+import { constants } from "@/config/constants";
+import { shortenText } from "@/lib/text-shortner";
+import { cn } from "@itsrakesh/utils";
 import { RowActions } from "./row-actions";
-
-type Status = "draft" | "published";
 
 export interface IProject {
     _id: string;
     title: string;
-    status: Status;
-    created_at: Date;
-    updated_at: Date;
+    status: string;
+    created: string;
+    last_edited: string;
 }
 
 export const statuses = [
-    { label: "Draft", value: "draft", icon: Icons.draft },
-    { label: "Published", value: "published", icon: Icons.published },
+    {
+        label: "Draft",
+        value: constants.project.status.DRAFT,
+        icon: Icons.draft,
+        color: "text-warning",
+    },
+    {
+        label: "Published",
+        value: constants.project.status.PUBLISHED,
+        icon: Icons.published,
+        color: "text-success",
+    },
+    {
+        label: "Scheduled",
+        value: constants.project.status.SCHEDULED,
+        icon: Icons.scheduled,
+        color: "text-info",
+    },
 ];
 
 export const columns: ColumnDef<IProject>[] = [
@@ -52,6 +69,9 @@ export const columns: ColumnDef<IProject>[] = [
     {
         accessorKey: "title",
         header: ({ column }) => <DataTableColumnHeader column={column} title="Title" />,
+        cell: ({ row }) => (
+            <span title={row.getValue("title")}>{shortenText(row.getValue("title"), 50)}</span>
+        ),
     },
     {
         accessorKey: "status",
@@ -64,8 +84,8 @@ export const columns: ColumnDef<IProject>[] = [
             }
 
             return (
-                <div className="flex w-[100px] items-center">
-                    {status.icon && <status.icon className="text-muted-foreground mr-2 h-4 w-4" />}
+                <div className={cn("flex w-[100px] items-center", status.color)}>
+                    {status.icon && <status.icon className="mr-2 h-4 w-4" />}
                     <span>{status.label}</span>
                 </div>
             );
@@ -75,17 +95,19 @@ export const columns: ColumnDef<IProject>[] = [
         },
     },
     {
-        accessorKey: "created_at",
+        accessorKey: "created",
         header: ({ column }) => <DataTableColumnHeader column={column} title="Created" />,
-        cell: ({ row }) => <span>{format(row.getValue("created_at"), "PPPp")}</span>,
+        // TODO: remove new Date()
+        cell: ({ row }) => <span>{format(new Date(row.getValue("created")), "PPPp")}</span>,
         filterFn: (row, id, value) => {
             return value.includes(row.getValue(id));
         },
     },
     {
-        accessorKey: "updated_at",
+        accessorKey: "last_edited",
         header: ({ column }) => <DataTableColumnHeader column={column} title="Last Edited" />,
-        cell: ({ row }) => <span>{format(row.getValue("updated_at"), "PPPp")}</span>,
+        // TODO: remove new Date()
+        cell: ({ row }) => <span>{format(new Date(row.getValue("last_edited")), "PPPp")}</span>,
         filterFn: (row, id, value) => {
             return value.includes(row.getValue(id));
         },

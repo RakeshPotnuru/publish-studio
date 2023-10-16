@@ -77,7 +77,7 @@ export function FoldersTable<TData, TValue>({ columns, data }: FoldersTableProps
                                 <Icons.folder />
                                 {row
                                     .getVisibleCells()
-                                    .filter(cell => cell.column.id === "title")
+                                    .filter(cell => cell.column.id === "name")
                                     .map(cell => (
                                         <div key={cell.id}>
                                             {flexRender(
@@ -87,14 +87,30 @@ export function FoldersTable<TData, TValue>({ columns, data }: FoldersTableProps
                                         </div>
                                     ))}
                             </div>
-                            {row
-                                .getVisibleCells()
-                                .filter(cell => cell.column.id === "actions")
-                                .map(cell => (
-                                    <div key={cell.id}>
-                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                    </div>
-                                ))}
+                            <div className="flex flex-row items-center space-x-2">
+                                {row
+                                    .getVisibleCells()
+                                    .filter(cell => cell.column.id === "edit")
+                                    .map(cell => (
+                                        <div key={cell.id}>
+                                            {flexRender(
+                                                cell.column.columnDef.cell,
+                                                cell.getContext(),
+                                            )}
+                                        </div>
+                                    ))}
+                                {row
+                                    .getVisibleCells()
+                                    .filter(cell => cell.column.id === "actions")
+                                    .map(cell => (
+                                        <div key={cell.id}>
+                                            {flexRender(
+                                                cell.column.columnDef.cell,
+                                                cell.getContext(),
+                                            )}
+                                        </div>
+                                    ))}
+                            </div>
                         </div>
                     ))
                 ) : (

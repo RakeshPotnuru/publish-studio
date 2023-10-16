@@ -1,4 +1,4 @@
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@itsrakesh/ui";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@itsrakesh/ui";
 import {
     ColumnDef,
     ColumnFiltersState,

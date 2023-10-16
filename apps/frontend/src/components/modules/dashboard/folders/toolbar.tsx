@@ -18,8 +18,8 @@ export function Toolbar<TData>({ table }: ToolbarProps<TData>) {
             <div className="flex flex-1 items-center space-x-2">
                 <Input
                     placeholder="Search folders..."
-                    value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
-                    onChange={event => table.getColumn("title")?.setFilterValue(event.target.value)}
+                    value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+                    onChange={event => table.getColumn("name")?.setFilterValue(event.target.value)}
                     className="h-8 w-[150px] lg:w-[250px]"
                 />
                 {isFiltered && (

@@ -1,5 +1,6 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Button,
     Form,
@@ -12,19 +13,31 @@ import {
 } from "@itsrakesh/ui";
 import Link from "next/link";
 import React from "react";
-import { z } from "zod";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 import { Heading } from "@/components/ui/heading";
+import { constants } from "@/config/constants";
 
 interface RegisterFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const formSchema = z
     .object({
         email: z.string().email({ message: "Please enter a valid email address" }),
-        firstName: z.string().nonempty({ message: "Please enter your first name" }),
-        lastName: z.string().nonempty({ message: "Please enter your last name" }),
+        firstName: z
+            .string()
+            .nonempty({ message: "Please enter your first name" })
+            .max(
+                constants.user.firstName.MAX_LENGTH,
+                `First name must not exceed ${constants.user.firstName.MAX_LENGTH} characters`,
+            ),
+        lastName: z
+            .string()
+            .nonempty({ message: "Please enter your last name" })
+            .max(
+                constants.user.lastName.MAX_LENGTH,
+                `Last name must not exceed ${constants.user.firstName.MAX_LENGTH} characters`,
+            ),
         password: z
             .string()
             .regex(
@@ -172,11 +185,9 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
                 </Form>
                 <p className="text-center text-sm">
                     Have an account?{" "}
-                    <Link href="/login">
-                        <Button variant="link" className="h-max p-0">
-                            Login
-                        </Button>
-                    </Link>
+                    <Button variant="link" className="h-max p-0" asChild>
+                        <Link href="/login">Login</Link>
+                    </Button>
                 </p>
             </div>
         </div>

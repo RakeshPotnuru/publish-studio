@@ -1,10 +1,11 @@
 "use client";
 
 import { Heading } from "@/components/ui/heading";
-import { DevConnectForm, DevEditForm } from "./platforms/dev";
+import { Images } from "@/components/ui/images";
+import { DevConnectForm } from "./platforms/dev";
+import { HashnodeEditForm } from "./platforms/hashnode";
+import { MediumEditForm } from "./platforms/medium";
 import { PlatformCard } from "./platforms/platform-card";
-import { MediumConnectForm, MediumEditForm } from "./platforms/medium";
-import { HashnodeConnectForm, HashnodeEditForm } from "./platforms/hashnode";
 
 interface IntegrationsProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -22,7 +23,7 @@ export function Integrations({ ...props }: IntegrationsProps) {
                 <div className="grid grid-cols-2 gap-4">
                     <PlatformCard
                         name="Dev"
-                        icon="/images/platforms/dev-logo.png"
+                        icon={Images.devLogo}
                         connected={false}
                         // username="itsrakesh"
                         // profile_url="https://dev.to/@itsrakesh"
@@ -31,7 +32,7 @@ export function Integrations({ ...props }: IntegrationsProps) {
                     />
                     <PlatformCard
                         name="Medium"
-                        icon="/images/platforms/medium-logo.jpeg"
+                        icon={Images.mediumLogo}
                         connected={true}
                         username="itsrakesh"
                         profile_url="https://dev.to/@itsrakesh"
@@ -45,7 +46,7 @@ export function Integrations({ ...props }: IntegrationsProps) {
                     />
                     <PlatformCard
                         name="Hashnode"
-                        icon="/images/platforms/hashnode-logo.jpeg"
+                        icon={Images.hashnodeLogo}
                         connected={true}
                         username="itsrakesh"
                         profile_url="https://dev.to/@itsrakesh"

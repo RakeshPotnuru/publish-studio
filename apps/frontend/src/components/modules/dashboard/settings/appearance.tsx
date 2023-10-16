@@ -1,14 +1,21 @@
 "use client";
 
-import { Heading } from "@/components/ui/heading";
 import { RadioGroup, RadioGroupItem } from "@itsrakesh/ui";
 import { useTheme } from "next-themes";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+
+import { Heading } from "@/components/ui/heading";
 
 interface AppearanceProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function Appearance({ ...props }: AppearanceProps) {
+    const [mounted, setMounted] = useState(false);
     const { theme, setTheme } = useTheme();
+
+    useEffect(() => setMounted(true), []);
+
+    if (!mounted) return null;
 
     return (
         <div {...props}>
@@ -22,7 +29,7 @@ export function Appearance({ ...props }: AppearanceProps) {
                 className="mt-8 flex flex-row space-x-4"
             >
                 <div className="space-y-2">
-                    <div className="grid grid-cols-2 items-center space-x-4 rounded-lg border bg-black p-4">
+                    <div className="grid grid-cols-2 items-center space-x-4 rounded-lg border bg-white p-4">
                         <RadioGroupItem value="light" />
                         <Image
                             src="/images/logo.png"
@@ -35,7 +42,7 @@ export function Appearance({ ...props }: AppearanceProps) {
                     <p className="text-center">Light</p>
                 </div>
                 <div className="space-y-2">
-                    <div className="grid grid-cols-2 items-center space-x-4 rounded-lg border bg-white p-4">
+                    <div className="grid grid-cols-2 items-center space-x-4 rounded-lg border bg-black p-4">
                         <RadioGroupItem value="dark" />
                         <Image
                             src="/images/logo.png"

@@ -18,6 +18,7 @@ import Link from "next/link";
 
 import { Icons } from "./icons";
 import { Tooltip } from "./tooltip";
+import { Images } from "./images";
 
 const NavItem = ({ icon, tooltip }: { icon: React.ReactNode; tooltip: string }) => (
     <Tooltip content={tooltip}>
@@ -40,10 +41,11 @@ export function Navbar({ className, ...props }: NavbarProps) {
         >
             <Link href="/">
                 <Image
-                    src="/images/logo.png"
+                    src={Images.logo}
                     alt="Publish Studio"
                     width={35}
                     height={35}
+                    priority={true}
                     className="rounded-md drop-shadow-md"
                 />
             </Link>

@@ -1,12 +1,13 @@
 import { Checkbox } from "@itsrakesh/ui";
 import { ColumnDef } from "@tanstack/react-table";
 
+import { shortenText } from "@/lib/text-shortner";
 import Link from "next/link";
 import { RowActions } from "./row-actions";
 
 export interface IFolder {
     _id: string;
-    title: string;
+    name: string;
 }
 
 export const columns: ColumnDef<IFolder>[] = [
@@ -38,11 +39,11 @@ export const columns: ColumnDef<IFolder>[] = [
         enableHiding: false,
     },
     {
-        accessorKey: "title",
-        header: "Title",
+        accessorKey: "name",
+        header: "Name",
         cell: ({ row }) => (
             <Link href={`/dashboard/folders/${row.getValue("_id")}`}>
-                <span>{row.getValue("title")}</span>
+                <span title={row.getValue("name")}>{shortenText(row.getValue("name"), 18)}</span>
             </Link>
         ),
     },

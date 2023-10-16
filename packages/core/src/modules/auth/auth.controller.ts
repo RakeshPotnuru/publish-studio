@@ -6,7 +6,7 @@ import type { OptionsType } from "cookies-next/lib/types";
 import type { Types } from "mongoose";
 
 import defaultConfig from "../../config/app.config";
-import { emailTemplates, user as userConsts } from "../../constants";
+import { constants } from "../../constants";
 import type { Context } from "../../trpc";
 import { scheduleEmail, sendEmail } from "../../utils/aws/ses";
 import { verifyGoogleToken } from "../../utils/google";
@@ -46,7 +46,7 @@ export default class AuthController extends UserService {
 
         await sendEmail(
             [email],
-            emailTemplates.VERIFY_EMAIL,
+            constants.emailTemplates.VERIFY_EMAIL,
             {
                 verification_url: verification_url,
             },
@@ -67,7 +67,7 @@ export default class AuthController extends UserService {
 
             await sendEmail(
                 [email],
-                emailTemplates.RESET_PASSWORD,
+                constants.emailTemplates.RESET_PASSWORD,
                 {
                     reset_password_url: reset_password_url,
                 },
@@ -151,7 +151,7 @@ export default class AuthController extends UserService {
 
         await scheduleEmail({
             emails: [user.email],
-            template: emailTemplates.WELCOME_EMAIL,
+            template: constants.emailTemplates.WELCOME_EMAIL,
             variables: {
                 first_name: user.first_name,
                 last_name: user.last_name,
@@ -241,8 +241,8 @@ export default class AuthController extends UserService {
                 last_name: payload.family_name,
                 email: payload.email,
                 profile_pic: payload.picture,
-                user_type: userConsts.userTypes.FREE,
-                auth_modes: [userConsts.authModes.GOOGLE],
+                user_type: constants.user.userTypes.FREE,
+                auth_modes: [constants.user.authModes.GOOGLE],
                 google_sub: payload.sub,
             });
 
@@ -268,9 +268,9 @@ export default class AuthController extends UserService {
             };
         }
 
-        if (!user.auth_modes.includes(userConsts.authModes.GOOGLE)) {
+        if (!user.auth_modes.includes(constants.user.authModes.GOOGLE)) {
             await super.updateUser(user._id, {
-                auth_modes: [...user.auth_modes, userConsts.authModes.GOOGLE],
+                auth_modes: [...user.auth_modes, constants.user.authModes.GOOGLE],
                 google_sub: payload.sub,
             });
         }

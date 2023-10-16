@@ -1,16 +1,15 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@itsrakesh/ui";
 
-interface ConnectDialogProps {
+interface ConnectDialogProps extends React.HTMLAttributes<HTMLDialogElement> {
     mode: "connect" | "edit";
     form: React.ReactNode;
     platform: string;
-    children: React.ReactNode;
 }
 
 export function PlatformDialog({ mode, form, platform, children }: ConnectDialogProps) {
     return (
         <Dialog>
-            <DialogTrigger>{children}</DialogTrigger>
+            <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>

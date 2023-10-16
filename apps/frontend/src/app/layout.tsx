@@ -2,11 +2,10 @@ import "@/styles/globals.css";
 
 import type { Metadata } from "next";
 
-import { siteConfig } from "@/config/site";
 import { ThemeToggleButton } from "@/components/ui/dev-theme-toggle";
 import { ThemeProvider } from "@/components/ui/theme-provider";
-import LogRocketProvider from "@/lib/logrocket";
 import { env } from "@/config/env";
+import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
     title: {
@@ -47,9 +46,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
-        <html lang="en" className="dark" suppressHydrationWarning>
+        <html lang="en" className="dark">
             <body className="min-h-screen bg-slate-100 dark:bg-slate-700">
-                <LogRocketProvider />
+                {/* <LogRocketProvider /> */}
                 <ThemeProvider
                     attribute="class"
                     defaultTheme="system"

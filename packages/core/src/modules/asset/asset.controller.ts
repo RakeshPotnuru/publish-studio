@@ -1,23 +1,15 @@
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
+import { constants } from "../../constants";
 import type { Context } from "../../trpc";
 import type { IFile } from "../../types/file.types";
 import AssetService from "./asset.service";
 
 export default class AssetController extends AssetService {
     private validateFile(file: IFile) {
-        // only allow images of specific mime types
-        const allowedMimeTypes = [
-            "image/png",
-            "image/jpg",
-            "image/jpeg",
-            "image/svg+xml",
-            "image/gif",
-        ];
-
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        if (!allowedMimeTypes.includes(file.mimetype)) {
+        if (!Object.values(constants.asset.ALLOWED_MIMETYPES).includes(file.mimetype)) {
             throw new TRPCError({
                 code: "BAD_REQUEST",
                 message: "Invalid file type",
@@ -25,7 +17,7 @@ export default class AssetController extends AssetService {
         }
 
         // file size should be less than 5MB
-        if (file.size > 5 * 1024 * 1024) {
+        if (file.size > constants.asset.MAX_FILE_SIZE) {
             throw new TRPCError({
                 code: "BAD_REQUEST",
                 message: "File size should be less than or equal to 5MB",

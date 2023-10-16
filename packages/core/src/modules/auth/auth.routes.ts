@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { user } from "../../constants";
+import { constants } from "../../constants";
 import { protectedProcedure, t } from "../../trpc";
 import AuthController from "./auth.controller";
 
@@ -10,9 +10,12 @@ const authRouter = t.router({
             z.object({
                 first_name: z
                     .string()
-                    .min(user.firstName.MIN_LENGTH)
-                    .max(user.firstName.MAX_LENGTH),
-                last_name: z.string().min(user.lastName.MIN_LENGTH).max(user.lastName.MAX_LENGTH),
+                    .min(constants.user.firstName.MIN_LENGTH)
+                    .max(constants.user.firstName.MAX_LENGTH),
+                last_name: z
+                    .string()
+                    .min(constants.user.lastName.MIN_LENGTH)
+                    .max(constants.user.lastName.MAX_LENGTH),
                 email: z.string().email().toLowerCase(),
                 password: z
                     .string()
@@ -20,7 +23,10 @@ const authRouter = t.router({
                         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!"#$%&'()*+,./:;<=>?@[\\\]^_{|}~-])(.{8,})$/,
                     ),
                 profile_pic: z.string().optional(),
-                user_type: z.nativeEnum(user.userTypes).optional().default(user.userTypes.FREE),
+                user_type: z
+                    .nativeEnum(constants.user.userTypes)
+                    .optional()
+                    .default(constants.user.userTypes.FREE),
             }),
         )
         .mutation(({ input }) => new AuthController().registerHandler(input)),
@@ -37,7 +43,7 @@ const authRouter = t.router({
         .input(
             z.object({
                 email: z.string().email(),
-                password: z.string().min(user.password.MIN_LENGTH),
+                password: z.string().min(constants.user.password.MIN_LENGTH),
             }),
         )
         .mutation(({ input, ctx }) => new AuthController().loginHandler(input, ctx)),

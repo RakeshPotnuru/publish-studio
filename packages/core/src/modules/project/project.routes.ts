@@ -1,7 +1,7 @@
 import type { Types } from "mongoose";
 import { z } from "zod";
 
-import { project, user } from "../../constants";
+import { constants } from "../../constants";
 import { proProtectedProcedure, protectedProcedure, t } from "../../trpc";
 import ProjectController from "./project.controller";
 import type { hashnode_tags } from "./project.types";
@@ -12,14 +12,23 @@ const projectRouter = t.router({
             z.object({
                 project: z.object({
                     folder_id: z.custom<Types.ObjectId>().optional(),
-                    title: z.string().min(project.title.MIN_LENGTH).max(project.title.MAX_LENGTH),
-                    description: z.string().max(project.description.MAX_LENGTH).optional(),
-                    body: z.string().max(project.body.MAX_LENGTH).optional(),
-                    tags: z
-                        .array(z.string().max(project.tags.tag.MAX_LENGTH))
-                        .max(project.tags.MAX_LENGTH)
+                    title: z
+                        .string()
+                        .min(constants.project.title.MIN_LENGTH)
+                        .max(constants.project.title.MAX_LENGTH),
+                    description: z
+                        .string()
+                        .max(constants.project.description.MAX_LENGTH)
                         .optional(),
-                    status: z.nativeEnum(project.status).optional().default(project.status.DRAFT),
+                    body: z.string().max(constants.project.body.MAX_LENGTH).optional(),
+                    tags: z
+                        .array(z.string().max(constants.project.tags.tag.MAX_LENGTH))
+                        .max(constants.project.tags.MAX_LENGTH)
+                        .optional(),
+                    status: z
+                        .nativeEnum(constants.project.status)
+                        .optional()
+                        .default(constants.project.status.DRAFT),
                     cover_image: z.string().optional(),
                     scheduled_at: z.string().pipe(z.coerce.date()).optional(),
                 }),
@@ -34,7 +43,7 @@ const projectRouter = t.router({
                 platforms: z
                     .array(
                         z.object({
-                            name: z.nativeEnum(user.platforms),
+                            name: z.nativeEnum(constants.user.platforms),
                         }),
                     )
                     .min(1),
@@ -51,7 +60,7 @@ const projectRouter = t.router({
                 platforms: z
                     .array(
                         z.object({
-                            name: z.nativeEnum(user.platforms),
+                            name: z.nativeEnum(constants.user.platforms),
                         }),
                     )
                     .min(1),
@@ -70,19 +79,28 @@ const projectRouter = t.router({
                 id: z.custom<Types.ObjectId>(),
                 project: z.object({
                     folder_id: z.custom<Types.ObjectId>().optional(),
-                    title: z.string().min(project.title.MIN_LENGTH).max(project.title.MAX_LENGTH),
-                    description: z.string().max(project.description.MAX_LENGTH).optional(),
-                    body: z.string().max(project.body.MAX_LENGTH).optional(),
-                    tags: z
-                        .array(z.string().max(project.tags.tag.MAX_LENGTH))
-                        .max(project.tags.MAX_LENGTH)
+                    title: z
+                        .string()
+                        .min(constants.project.title.MIN_LENGTH)
+                        .max(constants.project.title.MAX_LENGTH),
+                    description: z
+                        .string()
+                        .max(constants.project.description.MAX_LENGTH)
                         .optional(),
-                    status: z.nativeEnum(project.status).optional().default(project.status.DRAFT),
+                    body: z.string().max(constants.project.body.MAX_LENGTH).optional(),
+                    tags: z
+                        .array(z.string().max(constants.project.tags.tag.MAX_LENGTH))
+                        .max(constants.project.tags.MAX_LENGTH)
+                        .optional(),
+                    status: z
+                        .nativeEnum(constants.project.status)
+                        .optional()
+                        .default(constants.project.status.DRAFT),
                     cover_image: z.string().optional(),
                     platforms: z
                         .array(
                             z.object({
-                                name: z.nativeEnum(user.platforms),
+                                name: z.nativeEnum(constants.user.platforms),
                                 published_url: z.string().optional(),
                             }),
                         )

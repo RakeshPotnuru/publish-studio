@@ -3,8 +3,7 @@ import type { Message } from "amqplib";
 import type { Types } from "mongoose";
 
 import defaultConfig from "../../config/app.config";
-import type { user } from "../../constants";
-import { project as projectConsts, rabbitmq } from "../../constants";
+import { constants } from "../../constants";
 import type { Context } from "../../trpc";
 import { rabbitMQConnection } from "../../utils/rabbitmq";
 import ProjectHelpers from "./project.helpers";
@@ -64,8 +63,8 @@ export default class ProjectController extends ProjectService {
             status:
                 publishResponse.length > 0 &&
                 publishResponse.every(platform => platform.status === "success")
-                    ? projectConsts.status.PUBLISHED
-                    : projectConsts.status.DRAFT,
+                    ? constants.project.status.PUBLISHED
+                    : constants.project.status.DRAFT,
         });
 
         return {
@@ -80,7 +79,7 @@ export default class ProjectController extends ProjectService {
         input: {
             project_id: Types.ObjectId;
             platforms: {
-                name: (typeof user.platforms)[keyof typeof user.platforms];
+                name: (typeof constants.user.platforms)[keyof typeof constants.user.platforms];
             }[];
             hashnode_tags?: hashnode_tags;
         },
@@ -106,8 +105,8 @@ export default class ProjectController extends ProjectService {
             status:
                 updateResponse.length > 0 &&
                 updateResponse.every(platform => platform.status === "success")
-                    ? projectConsts.status.PUBLISHED
-                    : projectConsts.status.DRAFT,
+                    ? constants.project.status.PUBLISHED
+                    : constants.project.status.DRAFT,
         });
 
         return {
@@ -125,7 +124,7 @@ export default class ProjectController extends ProjectService {
             if (connection) {
                 const channel = await connection.createChannel();
 
-                const queue = rabbitmq.queues.POSTS;
+                const queue = constants.rabbitmq.queues.POSTS;
 
                 await channel.assertQueue(queue, {
                     durable: true,
@@ -181,7 +180,7 @@ export default class ProjectController extends ProjectService {
         input: {
             project_id: Types.ObjectId;
             platforms: {
-                name: (typeof user.platforms)[keyof typeof user.platforms];
+                name: (typeof constants.user.platforms)[keyof typeof constants.user.platforms];
             }[];
             hashnode_tags?: hashnode_tags;
             scheduled_at: Date;
@@ -193,7 +192,7 @@ export default class ProjectController extends ProjectService {
 
             const project = await super.getProjectById(project_id);
 
-            if (project.status === projectConsts.status.PUBLISHED) {
+            if (project.status === constants.project.status.PUBLISHED) {
                 throw new TRPCError({
                     code: "BAD_REQUEST",
                     message: "Project is already published.",
@@ -202,6 +201,7 @@ export default class ProjectController extends ProjectService {
 
             await super.updateProjectById(project_id, {
                 platforms: platforms,
+                status: constants.project.status.SCHEDULED,
                 scheduled_at: scheduled_at,
             });
 
@@ -210,7 +210,7 @@ export default class ProjectController extends ProjectService {
             if (connection) {
                 const channel = await connection.createChannel();
 
-                const queue = rabbitmq.queues.POST_JOBS;
+                const queue = constants.rabbitmq.queues.POST_JOBS;
 
                 await channel.assertQueue(queue, {
                     durable: true,

@@ -3,17 +3,26 @@ import {
     AiFillBell,
     AiFillDelete,
     AiFillEdit,
+    AiFillProject,
     AiFillQuestionCircle,
     AiOutlineLink,
     AiOutlineOrderedList,
     AiOutlineStrikethrough,
     AiOutlineUnorderedList,
 } from "react-icons/ai";
-import { BiChevronLeft, BiChevronRight, BiCode, BiPlus, BiSolidHide } from "react-icons/bi";
+import {
+    BiChevronLeft,
+    BiChevronRight,
+    BiCode,
+    BiPlus,
+    BiSolidErrorAlt,
+    BiSolidHide,
+} from "react-icons/bi";
 import {
     BsArrowDownShort,
     BsArrowUpShort,
     BsCheck,
+    BsFileEarmarkImage,
     BsFillPatchCheckFill,
     BsFillSunFill,
 } from "react-icons/bs";
@@ -22,7 +31,7 @@ import { FaFolder, FaPaintRoller, FaPuzzlePiece } from "react-icons/fa";
 import { FiItalic, FiUnderline } from "react-icons/fi";
 import { GoBold } from "react-icons/go";
 import { GrRedo, GrUndo } from "react-icons/gr";
-import { HiDocumentDuplicate } from "react-icons/hi";
+import { HiDocumentDuplicate, HiOutlineArrowNarrowRight } from "react-icons/hi";
 import { IoMdImage, IoMdLogOut } from "react-icons/io";
 import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
 import {
@@ -31,9 +40,13 @@ import {
     MdKeyboardDoubleArrowLeft,
     MdKeyboardDoubleArrowRight,
     MdManageAccounts,
+    MdPermMedia,
+    MdScheduleSend,
     MdSettings,
+    MdSpaceDashboard,
 } from "react-icons/md";
 import { PiCodeBlockBold, PiDotsThreeBold, PiPlusCircleLight } from "react-icons/pi";
+import { RiFoldersFill } from "react-icons/ri";
 import { RxCaretSort, RxCross2, RxDividerHorizontal, RxMixerHorizontal } from "react-icons/rx";
 import { TbBlockquote } from "react-icons/tb";
 
@@ -85,4 +98,12 @@ export const Icons = {
     move: MdDriveFileMoveRtl,
     folder: FaFolder,
     plus: BiPlus,
+    dashboard: MdSpaceDashboard,
+    projects: AiFillProject,
+    folders: RiFoldersFill,
+    scheduled: MdScheduleSend,
+    right: HiOutlineArrowNarrowRight,
+    assets: MdPermMedia,
+    imageFile: BsFileEarmarkImage,
+    error: BiSolidErrorAlt,
 };

@@ -74,11 +74,10 @@ export function PlatformCard({
                     </Button>
                     <div>
                         <PlatformDialog mode="edit" platform={name} form={editForm}>
-                            <Tooltip content="Edit details" side="top">
-                                <Button size="sm" variant="outline">
-                                    <Icons.edit />
-                                </Button>
-                            </Tooltip>
+                            <Button size="icon" variant="outline" className="h-8 w-8">
+                                <Icons.edit />
+                                <span className="sr-only">Edit your {name} account</span>
+                            </Button>
                         </PlatformDialog>
                     </div>
                 </div>

@@ -4,7 +4,7 @@ import { TRPCError } from "@trpc/server";
 import type { Message } from "amqplib";
 
 import defaultConfig from "../../config/app.config";
-import { type emailTemplates, rabbitmq } from "../../constants";
+import { constants } from "../../constants";
 import type { ISES } from "../../types/aws.types";
 import { rabbitMQConnection } from "../rabbitmq";
 
@@ -20,7 +20,7 @@ export default ses;
 
 export const sendEmail = async (
     emails: string[],
-    template: (typeof emailTemplates)[keyof typeof emailTemplates],
+    template: (typeof constants.emailTemplates)[keyof typeof constants.emailTemplates],
     variables: Record<string, string>,
     from_address: string,
 ) => {
@@ -52,7 +52,7 @@ export const sendEmail = async (
 
 export interface IEmail {
     emails: string[];
-    template: (typeof emailTemplates)[keyof typeof emailTemplates];
+    template: (typeof constants.emailTemplates)[keyof typeof constants.emailTemplates];
     variables: Record<string, string>;
     from_address: string;
     scheduled_at: Date;
@@ -65,7 +65,7 @@ export const emailReceiver = async () => {
         if (connection) {
             const channel = await connection.createChannel();
 
-            const queue = rabbitmq.queues.EMAILS;
+            const queue = constants.rabbitmq.queues.EMAILS;
 
             await channel.assertQueue(queue, {
                 durable: true,
@@ -122,7 +122,7 @@ export const scheduleEmail = async (data: IEmail) => {
         if (connection) {
             const channel = await connection.createChannel();
 
-            const queue = rabbitmq.queues.EMAIL_JOBS;
+            const queue = constants.rabbitmq.queues.EMAIL_JOBS;
 
             await channel.assertQueue(queue, {
                 durable: true,
