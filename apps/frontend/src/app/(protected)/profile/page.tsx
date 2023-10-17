@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { Profile } from "@/components/modules/dashboard/profile";
-import { DashboardShell } from "@/components/ui/shell";
+import { Shell } from "@/components/ui/shell";
 
 export const metadata: Metadata = {
     title: "Profile",
@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 
 export default function ProfilePage() {
     return (
-        <DashboardShell>
+        <Shell>
             <Profile />
-        </DashboardShell>
+        </Shell>
     );
 }

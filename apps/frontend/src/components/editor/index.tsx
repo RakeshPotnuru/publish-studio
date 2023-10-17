@@ -1,20 +1,25 @@
 "use client";
 
 import { cn } from "@itsrakesh/utils";
+import { TableOfContent, TableOfContentDataItem } from "@tiptap-pro/extension-table-of-content";
+import CharacterCount from "@tiptap/extension-character-count";
+import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
+import TipTapHeading from "@tiptap/extension-heading";
+import Image from "@tiptap/extension-image";
+import Link from "@tiptap/extension-link";
+import Placeholder from "@tiptap/extension-placeholder";
+import Underline from "@tiptap/extension-underline";
 import { mergeAttributes, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import Heading from "@tiptap/extension-heading";
-import Underline from "@tiptap/extension-underline";
-import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
-import Placeholder from "@tiptap/extension-placeholder";
-import Image from "@tiptap/extension-image";
-import CharacterCount from "@tiptap/extension-character-count";
-import Link from "@tiptap/extension-link";
-import { createLowlight, all } from "lowlight";
+import { all, createLowlight } from "lowlight";
+import { memo, useState } from "react";
 
-import { FixedMenu } from "./fixed-menu";
+import { Heading } from "../ui/heading";
+import { Shell } from "../ui/shell";
 import { EditorBody } from "./editor-body";
 import { EditorFooter } from "./editor-footer";
+import { FixedMenu } from "./fixed-menu";
+import { ToC } from "./toc";
 
 type Levels = 1 | 2 | 3;
 
@@ -26,7 +31,11 @@ const classes: Record<Levels, string> = {
 
 interface EditorProps extends React.HTMLAttributes<HTMLDivElement> {}
 
+const MemorizedToC = memo(ToC);
+
 export function Editor({ className, ...props }: EditorProps) {
+    const [items, setItems] = useState<TableOfContentDataItem[]>([]);
+
     const lowlight = createLowlight(all);
 
     const editor = useEditor({
@@ -57,7 +66,7 @@ export function Editor({ className, ...props }: EditorProps) {
             Placeholder.configure({
                 placeholder: "Once upon a time...",
             }),
-            Heading.configure({
+            TipTapHeading.configure({
                 levels: [1, 2, 3],
             }).extend({
                 renderHTML({ node, HTMLAttributes }) {
@@ -89,6 +98,11 @@ export function Editor({ className, ...props }: EditorProps) {
                     class: "text-blue-500 underline hover:text-blue-600 cursor-pointer",
                 },
             }),
+            TableOfContent.configure({
+                onUpdate(content) {
+                    setItems(content);
+                },
+            }),
         ],
         editorProps: {
             attributes: {
@@ -101,10 +115,16 @@ export function Editor({ className, ...props }: EditorProps) {
     if (!editor) return null;
 
     return (
-        <div className={cn("space-y-4", className)} {...props}>
-            <FixedMenu editor={editor} />
-            <EditorBody editor={editor} />
-            <EditorFooter editor={editor} />
+        <div className={cn("flex flex-row space-x-4", className)} {...props}>
+            <div className="w-3/4 space-y-4">
+                <FixedMenu editor={editor} />
+                <EditorBody editor={editor} />
+                <EditorFooter editor={editor} />
+            </div>
+            <Shell className="sticky top-4 h-max w-1/4 space-y-2">
+                <Heading level={2}>Table of Contents</Heading>
+                <MemorizedToC items={items} editor={editor} />
+            </Shell>
         </div>
     );
 }

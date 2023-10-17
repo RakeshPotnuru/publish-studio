@@ -41,3 +41,5 @@ next-env.d.ts
 
 # generated data files
 /src/data/**.json
+
+.npmrc

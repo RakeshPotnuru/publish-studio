@@ -29,6 +29,7 @@
         "@itsrakesh/utils": "^1.2.1",
         "@publish-studio/core": "*",
         "@tanstack/react-table": "^8.10.3",
+        "@tiptap-pro/extension-table-of-content": "^2.3.3",
         "@tiptap/extension-character-count": "^2.1.11",
         "@tiptap/extension-code-block-lowlight": "^2.1.11",
         "@tiptap/extension-heading": "^2.1.11",
