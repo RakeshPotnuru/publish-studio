@@ -49,6 +49,7 @@ import { PiCodeBlockBold, PiDotsThreeBold, PiPlusCircleLight } from "react-icons
 import { RiFoldersFill } from "react-icons/ri";
 import { RxCaretSort, RxCross2, RxDividerHorizontal, RxMixerHorizontal } from "react-icons/rx";
 import { TbBlockquote } from "react-icons/tb";
+import { TiLockClosed, TiLockOpen } from "react-icons/ti";
 
 export type Icon = IconType;
 
@@ -91,8 +92,8 @@ export const Icons = {
     mixer: RxMixerHorizontal,
     check: BsCheck,
     add: PiPlusCircleLight,
-    previous: BiChevronLeft,
-    next: BiChevronRight,
+    chevronleft: BiChevronLeft,
+    chevronright: BiChevronRight,
     first: MdKeyboardDoubleArrowLeft,
     last: MdKeyboardDoubleArrowRight,
     move: MdDriveFileMoveRtl,
@@ -106,4 +107,6 @@ export const Icons = {
     assets: MdPermMedia,
     imageFile: BsFileEarmarkImage,
     error: BiSolidErrorAlt,
+    lock: TiLockClosed,
+    unlock: TiLockOpen,
 };

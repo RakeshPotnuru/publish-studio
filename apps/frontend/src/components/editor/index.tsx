@@ -21,12 +21,15 @@ import { EditorFooter } from "./editor-footer";
 import { FixedMenu } from "./fixed-menu";
 import { ToC } from "./toc";
 
-type Levels = 1 | 2 | 3;
+type Levels = 1 | 2 | 3 | 4 | 5 | 6;
 
 const classes: Record<Levels, string> = {
     1: "text-4xl",
     2: "text-3xl",
     3: "text-2xl",
+    4: "text-xl",
+    5: "text-lg",
+    6: "text-base",
 };
 
 interface EditorProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -67,7 +70,7 @@ export function Editor({ className, ...props }: EditorProps) {
                 placeholder: "Once upon a time...",
             }),
             TipTapHeading.configure({
-                levels: [1, 2, 3],
+                levels: [1, 2, 3, 4, 5, 6],
             }).extend({
                 renderHTML({ node, HTMLAttributes }) {
                     const hasLevel = this.options.levels.includes(node.attrs.level);
@@ -89,7 +92,11 @@ export function Editor({ className, ...props }: EditorProps) {
                     spellcheck: false,
                 },
             }),
-            Image,
+            Image.configure({
+                HTMLAttributes: {
+                    class: "cursor-move",
+                },
+            }),
             CharacterCount.configure({
                 limit: 100000,
             }),
@@ -106,7 +113,7 @@ export function Editor({ className, ...props }: EditorProps) {
         ],
         editorProps: {
             attributes: {
-                class: "bg-background min-h-screen max-h-screen overflow-auto rounded-3xl shadow-sm p-8 outline-none space-y-4",
+                class: "bg-background min-h-screen rounded-3xl shadow-sm p-8 outline-none space-y-4",
             },
         },
         autofocus: true,
@@ -121,7 +128,7 @@ export function Editor({ className, ...props }: EditorProps) {
                 <EditorBody editor={editor} />
                 <EditorFooter editor={editor} />
             </div>
-            <Shell className="sticky top-4 h-max w-1/4 space-y-2">
+            <Shell className="sticky top-4 h-max max-h-screen w-1/4 space-y-2 overflow-scroll">
                 <Heading level={2}>Table of Contents</Heading>
                 <MemorizedToC items={items} editor={editor} />
             </Shell>

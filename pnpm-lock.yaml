@@ -45,8 +45,8 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1(react-hook-form@7.46.2)
       '@itsrakesh/ui':
-        specifier: ^0.7.0
-        version: 0.7.0(@types/react-dom@18.2.6)(@types/react@18.2.14)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.3)
+        specifier: ^0.8.0
+        version: 0.8.0(@types/react-dom@18.2.6)(@types/react@18.2.14)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.3)
       '@itsrakesh/utils':
         specifier: ^1.2.1
         version: 1.2.1(react@18.2.0)
@@ -2410,8 +2410,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /@itsrakesh/ui@0.7.0(@types/react-dom@18.2.6)(@types/react@18.2.14)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.3):
-    resolution: {integrity: sha512-MF+G15R9clV2wSpAWkRj+S4Q7ArSqEs5+6VBA27Sy/2OYSgresevK2tEeFhHFLLoOViiuYBhqYAHazTwxtxtmQ==}
+  /@itsrakesh/ui@0.8.0(@types/react-dom@18.2.6)(@types/react@18.2.14)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-+VB4SnfOup+xc8QQq5y6BWMdIRkjBw4vvzh+j5ZvLKcst4f7actsdcbL5vfNOic/EBfuWYAim8yXZb+zzrXJtA==}
     peerDependencies:
       react: ^18.2.0
     dependencies:

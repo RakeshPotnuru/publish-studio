@@ -3,6 +3,7 @@ import {
     Dialog,
     DialogContent,
     DialogDescription,
+    DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
@@ -86,7 +87,7 @@ export function NewAssetDialog({ children, ...props }: NewAssetDialogProps) {
         console.log(files);
     };
 
-    const handleClose = () => {
+    const handleRemove = () => {
         setFile(null);
         setError(null);
     };
@@ -131,7 +132,7 @@ export function NewAssetDialog({ children, ...props }: NewAssetDialogProps) {
                                 </p>
                             </div>
                             <Button
-                                onClick={handleClose}
+                                onClick={handleRemove}
                                 size="icon"
                                 variant="ghost"
                                 className="rounded-full"
@@ -161,6 +162,9 @@ export function NewAssetDialog({ children, ...props }: NewAssetDialogProps) {
                         </>
                     )}
                 </div>
+                <DialogFooter>
+                    <Button disabled={!file}>Upload</Button>
+                </DialogFooter>
             </DialogContent>
         </Dialog>
     );

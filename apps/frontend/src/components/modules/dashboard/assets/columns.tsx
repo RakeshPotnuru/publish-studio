@@ -56,6 +56,7 @@ export const columns: ColumnDef<IAsset>[] = [
                     width={50}
                     height={50}
                     loading="lazy"
+                    className="cursor-zoom-in"
                 />
             </AssetDialog>
         ),

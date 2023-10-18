@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-import { user } from "../../constants";
+import { constants } from "../../constants";
 import type { IPlatform } from "./platform.types";
 
 const PlatformModel = new Schema<IPlatform>(
@@ -12,7 +12,7 @@ const PlatformModel = new Schema<IPlatform>(
         name: {
             type: String,
             required: true,
-            enum: user.platforms,
+            enum: constants.user.platforms,
         },
         data: {
             type: Schema.Types.ObjectId,
