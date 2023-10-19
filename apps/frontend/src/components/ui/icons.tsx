@@ -5,6 +5,7 @@ import {
     AiFillEdit,
     AiFillProject,
     AiFillQuestionCircle,
+    AiOutlineCloudSync,
     AiOutlineLink,
     AiOutlineOrderedList,
     AiOutlineStrikethrough,
@@ -23,6 +24,8 @@ import {
     BsArrowUpShort,
     BsCheck,
     BsFileEarmarkImage,
+    BsFillCloudCheckFill,
+    BsFillCloudSlashFill,
     BsFillPatchCheckFill,
     BsFillSunFill,
 } from "react-icons/bs";
@@ -109,4 +112,7 @@ export const Icons = {
     error: BiSolidErrorAlt,
     lock: TiLockClosed,
     unlock: TiLockOpen,
+    synced: BsFillCloudCheckFill,
+    syncing: AiOutlineCloudSync,
+    offline: BsFillCloudSlashFill,
 };

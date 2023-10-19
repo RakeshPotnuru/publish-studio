@@ -8,19 +8,55 @@ import type { MenuProps } from "./fixed-menu";
 export function EditorFooter({ editor }: MenuProps & React.HTMLAttributes<HTMLDivElement>) {
     const [editable, setEditable] = useState(editor.isEditable);
 
+    const isOnline = navigator.onLine;
+    // TODO: temporary
+    const isLoading = false;
+
     const handleEditable = () => {
         editor.setEditable(!editable);
         setEditable(!editable);
     };
 
     return (
-        <div className="bg-background text-muted-foreground sticky bottom-0 flex flex-row items-center justify-between rounded-xl p-2 py-1 text-xs">
+        <div className="bg-background text-muted-foreground sticky bottom-0 flex flex-row items-center justify-between rounded-xl p-2 py-1 text-sm">
             <div className="flex flex-row items-center space-x-2">
                 <p>{editor.storage.characterCount.characters()} characters</p>
                 <Separator orientation="vertical" className="h-3 bg-gray-500" />
                 <p>{editor.storage.characterCount.words()} words</p>
             </div>
-            <div>
+            <div className="flex flex-row items-center space-x-2">
+                {isOnline ? (
+                    <>
+                        {isLoading ? (
+                            <Tooltip content="Changes are syncing">
+                                <span>
+                                    <Icons.syncing
+                                        onClick={handleEditable}
+                                        className="text-warning hover:opacity-80"
+                                    />
+                                </span>
+                            </Tooltip>
+                        ) : (
+                            <Tooltip content="All changes saved">
+                                <span>
+                                    <Icons.synced
+                                        onClick={handleEditable}
+                                        className="text-success hover:opacity-80"
+                                    />
+                                </span>
+                            </Tooltip>
+                        )}
+                    </>
+                ) : (
+                    <Tooltip content="You are offline">
+                        <span>
+                            <Icons.offline
+                                onClick={handleEditable}
+                                className="text-destructive hover:opacity-80"
+                            />
+                        </span>
+                    </Tooltip>
+                )}
                 {editable ? (
                     <Tooltip content="Disable editing">
                         <span>
