@@ -3,7 +3,7 @@ import type { Types } from "mongoose";
 
 import defaultConfig from "../../../config/app.config";
 import type { Context } from "../../../trpc";
-import type { IProject } from "../../project/project.types";
+import type { IProject, TTags } from "../../project/project.types";
 import MediumService from "./medium.service";
 import type { default_publish_status } from "./medium.types";
 
@@ -123,7 +123,7 @@ export default class MediumController extends MediumService {
         };
     }
 
-    async createPostHandler(input: { post: IProject }, user_id: Types.ObjectId) {
+    async createPostHandler(input: { post: IProject; tags: TTags }, user_id: Types.ObjectId) {
         const user = await super.getUserById(user_id);
 
         if (!user) {
@@ -138,7 +138,7 @@ export default class MediumController extends MediumService {
                 title: input.post.title,
                 contentFormat: "markdown",
                 content: input.post.body,
-                tags: input.post.tags,
+                tags: input.tags.medium_tags,
                 publishStatus: user.default_publish_status,
                 canonicalUrl: input.post.canonical_url,
             },

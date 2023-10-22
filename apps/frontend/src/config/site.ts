@@ -1,16 +1,4 @@
-interface ISiteConfig {
-    title: string;
-    description: string;
-    url: string;
-    theme?: {
-        color: `#${string}`;
-    };
-    links: {
-        [key: string]: string;
-    };
-}
-
-export const siteConfig: ISiteConfig = {
+export const siteConfig = {
     title: "Publish Studio",
     description:
         "Publish Studio is an all-in-one platform to curate content and publish to different platforms.",
@@ -23,5 +11,64 @@ export const siteConfig: ISiteConfig = {
         mediumAPIKeyGuide: "https://docs.publishstudio.one/platforms/medium#api-key",
         hashnodeAPIKeyGuide: "https://docs.publishstudio.one/platforms/hashnode#api-key",
         apiKeysSecureStorage: "https://docs.publishstudio.one/platforms#secure-storage-of-api-keys",
+        devTags: "https://dev.to/tags",
+        mediumTags: "https://medium.com/topics",
+    },
+    pages: {
+        login: {
+            title: "Login",
+            description: "Login to Publish Studio",
+            link: "/login",
+        },
+        register: {
+            title: "Register",
+            description: "Register on Publish Studio",
+            link: "/register",
+        },
+        resetPassword: {
+            title: "Reset Password",
+            description: "Reset your password",
+            link: "/reset-password",
+        },
+        dashboard: {
+            title: "Dashboard",
+            description: "Dashboard",
+            link: "/",
+        },
+        assets: {
+            title: "Assets",
+            description: "Assets",
+            link: "/assets",
+        },
+        folders: {
+            title: "Folders",
+            description: "Folders",
+            link: "/folders",
+        },
+        projects: {
+            title: "Projects",
+            description: "Projects",
+            link: "/projects",
+        },
+        profile: {
+            title: "Profile",
+            description: "Profile",
+            link: "/profile",
+        },
+        settings: {
+            title: "Settings",
+            description: "Settings",
+            link: "/settings",
+            appearance: {
+                title: "Appearance",
+                description: "Configure your appearance settings",
+                link: "/settings/appearance",
+            },
+            integrations: {
+                title: "Integrations",
+                description: "Configure your integrations",
+                link: "/settings/integrations",
+            },
+        },
     },
 };

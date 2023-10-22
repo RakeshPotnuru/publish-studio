@@ -1,15 +1,15 @@
 import type { Types } from "mongoose";
 
-import { user } from "../../constants";
+import { constants } from "../../constants";
 import DevToController from "../platform/devto/devto.controller";
 import HashnodeController from "../platform/hashnode/hashnode.controller";
 import MediumController from "../platform/medium/medium.controller";
-import type { hashnode_tags, IProject } from "./project.types";
+import type { IProject, TTags } from "./project.types";
 
 export default class ProjectHelpers {
     static shouldPublishOnPlatform(
         project: IProject,
-        targetPlatform: (typeof user.platforms)[keyof typeof user.platforms],
+        targetPlatform: (typeof constants.user.platforms)[keyof typeof constants.user.platforms],
     ) {
         return (
             project.platforms?.find(platform => platform.name === targetPlatform) &&
@@ -18,40 +18,37 @@ export default class ProjectHelpers {
         );
     }
 
-    async publishOnPlatforms(
-        project: IProject,
-        user_id: Types.ObjectId,
-        hashnode_tags?: hashnode_tags,
-    ) {
+    async publishOnPlatforms(project: IProject, user_id: Types.ObjectId, tags: TTags) {
         const publishResponse = [] as {
-            name: (typeof user.platforms)[keyof typeof user.platforms];
+            name: (typeof constants.user.platforms)[keyof typeof constants.user.platforms];
             status: "success" | "error";
             published_url: string;
             id: string;
         }[];
 
-        if (ProjectHelpers.shouldPublishOnPlatform(project, user.platforms.DEVTO)) {
+        if (ProjectHelpers.shouldPublishOnPlatform(project, constants.user.platforms.DEVTO)) {
             const response = await new DevToController().createPostHandler(
                 {
                     post: project,
+                    tags: tags,
                 },
                 user_id,
             );
 
             publishResponse.push({
-                name: user.platforms.DEVTO,
+                name: constants.user.platforms.DEVTO,
                 status: response.data.post.error ? "error" : "success",
                 published_url: response.data.post.url,
                 id: response.data.post.id.toString(),
             });
         }
 
-        if (ProjectHelpers.shouldPublishOnPlatform(project, user.platforms.HASHNODE)) {
+        if (ProjectHelpers.shouldPublishOnPlatform(project, constants.user.platforms.HASHNODE)) {
             const hashnodeUser = await new HashnodeController().getPlatformById(user_id);
             const response = await new HashnodeController().createPostHandler(
                 {
                     post: project,
-                    hashnode_tags: hashnode_tags,
+                    tags: tags,
                 },
                 user_id,
             );
@@ -60,23 +57,24 @@ export default class ProjectHelpers {
             const postSlug = response.data.post.data.createStory.post.slug ?? "unknown";
 
             publishResponse.push({
-                name: user.platforms.HASHNODE,
+                name: constants.user.platforms.HASHNODE,
                 status: response.data.post?.errors ? "error" : "success",
                 published_url: `https://${blogHandle}.hashnode.dev/${postSlug}`,
                 id: response.data.post.data.createStory.post._id,
             });
         }
 
-        if (ProjectHelpers.shouldPublishOnPlatform(project, user.platforms.MEDIUM)) {
+        if (ProjectHelpers.shouldPublishOnPlatform(project, constants.user.platforms.MEDIUM)) {
             const response = await new MediumController().createPostHandler(
                 {
                     post: project,
+                    tags: tags,
                 },
                 user_id,
             );
 
             publishResponse.push({
-                name: user.platforms.MEDIUM,
+                name: constants.user.platforms.MEDIUM,
                 status: response.data.post.errors ? "error" : "success",
                 published_url: response.data.post.data.url,
                 id: response.data.post.data.id,
@@ -88,7 +86,7 @@ export default class ProjectHelpers {
 
     static updatePlatformStatus(
         updateResponse: IProject["platforms"],
-        targetPlatform: (typeof user.platforms)[keyof typeof user.platforms],
+        targetPlatform: (typeof constants.user.platforms)[keyof typeof constants.user.platforms],
         status: "success" | "error",
     ) {
         const platform = updateResponse?.find(platform => platform.name === targetPlatform);
@@ -98,20 +96,16 @@ export default class ProjectHelpers {
         }
     }
 
-    async updateOnPlatforms(
-        project: IProject,
-        user_id: Types.ObjectId | undefined,
-        hashnode_tags?: hashnode_tags,
-    ) {
+    async updateOnPlatforms(project: IProject, user_id: Types.ObjectId | undefined, tags: TTags) {
         const updateResponse = project.platforms;
 
         if (!updateResponse) {
             return;
         }
 
-        if (project.platforms?.find(platform => platform.name === user.platforms.DEVTO)) {
+        if (project.platforms?.find(platform => platform.name === constants.user.platforms.DEVTO)) {
             const post_id = project.platforms?.find(
-                platform => platform.name === user.platforms.DEVTO,
+                platform => platform.name === constants.user.platforms.DEVTO,
             )?.id;
 
             if (!post_id) {
@@ -122,20 +116,23 @@ export default class ProjectHelpers {
                 {
                     post: project,
                     post_id: Number.parseInt(post_id),
+                    tags: tags,
                 },
                 user_id,
             );
 
             ProjectHelpers.updatePlatformStatus(
                 updateResponse,
-                user.platforms.DEVTO,
+                constants.user.platforms.DEVTO,
                 response.data.post.error ? "error" : "success",
             );
         }
 
-        if (project.platforms?.find(platform => platform.name === user.platforms.HASHNODE)) {
+        if (
+            project.platforms?.find(platform => platform.name === constants.user.platforms.HASHNODE)
+        ) {
             const post_id = project.platforms?.find(
-                platform => platform.name === user.platforms.HASHNODE,
+                platform => platform.name === constants.user.platforms.HASHNODE,
             )?.id;
 
             if (!post_id) {
@@ -145,7 +142,7 @@ export default class ProjectHelpers {
             const response = await new HashnodeController().updatePostHandler(
                 {
                     post: project,
-                    hashnode_tags: hashnode_tags,
+                    tags: tags,
                     post_id,
                 },
                 user_id,
@@ -153,7 +150,7 @@ export default class ProjectHelpers {
 
             ProjectHelpers.updatePlatformStatus(
                 updateResponse,
-                user.platforms.HASHNODE,
+                constants.user.platforms.HASHNODE,
                 response.data.post?.errors ? "error" : "success",
             );
         }

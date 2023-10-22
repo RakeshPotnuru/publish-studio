@@ -1,14 +1,14 @@
 import type { Editor } from "@tiptap/react";
 
-import { MenuAction } from "./menu-action";
-import { MenuShell } from "./menu-shell";
-import { MenuSeparator } from "./menu-seperator";
-import { LinkAction } from "./actions/link-action";
-import { TextStyleActions } from "./actions/text-style-actions";
-import { NodeActions } from "./actions/node-actions";
-import { MarkActions } from "./actions/mark-actions";
-import { HistoryActions } from "./actions/history-actions";
 import { Icons } from "@/components/ui/icons";
+import { MenuShell } from "@/components/ui/shell";
+import { HistoryActions } from "./actions/history-actions";
+import { LinkAction } from "./actions/link-action";
+import { MarkActions } from "./actions/mark-actions";
+import { NodeActions } from "./actions/node-actions";
+import { TextStyleActions } from "./actions/text-style-actions";
+import { MenuAction } from "./menu-action";
+import { MenuSeparator } from "./menu-seperator";
 
 export interface MenuProps {
     editor: Editor;

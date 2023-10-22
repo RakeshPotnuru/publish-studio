@@ -65,6 +65,8 @@ export function Editor({ className, ...props }: EditorProps) {
                         class: "list-decimal",
                     },
                 },
+                heading: false,
+                codeBlock: false,
             }),
             Placeholder.configure({
                 placeholder: "Once upon a time...",
@@ -128,7 +130,7 @@ export function Editor({ className, ...props }: EditorProps) {
                 <EditorBody editor={editor} />
                 <EditorFooter editor={editor} />
             </div>
-            <Shell className="sticky top-4 h-max max-h-screen w-1/4 space-y-2 overflow-scroll">
+            <Shell className="sticky top-4 h-max max-h-screen w-1/4 space-y-2 overflow-auto">
                 <Heading level={2}>Table of Contents</Heading>
                 <MemorizedToC items={items} editor={editor} />
             </Shell>

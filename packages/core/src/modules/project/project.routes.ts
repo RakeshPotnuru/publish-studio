@@ -4,7 +4,7 @@ import { z } from "zod";
 import { constants } from "../../constants";
 import { proProtectedProcedure, protectedProcedure, t } from "../../trpc";
 import ProjectController from "./project.controller";
-import type { hashnode_tags } from "./project.types";
+import type { THashnodeTag } from "./project.types";
 
 const projectRouter = t.router({
     createProject: protectedProcedure
@@ -21,10 +21,6 @@ const projectRouter = t.router({
                         .max(constants.project.description.MAX_LENGTH)
                         .optional(),
                     body: z.string().max(constants.project.body.MAX_LENGTH).optional(),
-                    tags: z
-                        .array(z.string().max(constants.project.tags.tag.MAX_LENGTH))
-                        .max(constants.project.tags.MAX_LENGTH)
-                        .optional(),
                     status: z
                         .nativeEnum(constants.project.status)
                         .optional()
@@ -47,7 +43,20 @@ const projectRouter = t.router({
                         }),
                     )
                     .min(1),
-                hashnode_tags: z.custom<hashnode_tags>().optional(),
+                tags: z.object({
+                    hashnode_tags: z
+                        .array(z.custom<THashnodeTag>())
+                        .max(constants.project.tags.hashnode.MAX_LENGTH)
+                        .optional(),
+                    devto_tags: z
+                        .array(z.string())
+                        .max(constants.project.tags.dev.MAX_LENGTH)
+                        .optional(),
+                    medium_tags: z
+                        .array(z.string())
+                        .max(constants.project.tags.medium.MAX_LENGTH)
+                        .optional(),
+                }),
                 scheduled_at: z.string().pipe(z.coerce.date()),
             }),
         )
@@ -64,7 +73,20 @@ const projectRouter = t.router({
                         }),
                     )
                     .min(1),
-                hashnode_tags: z.custom<hashnode_tags>().optional(),
+                tags: z.object({
+                    hashnode_tags: z
+                        .array(z.custom<THashnodeTag>())
+                        .max(constants.project.tags.hashnode.MAX_LENGTH)
+                        .optional(),
+                    devto_tags: z
+                        .array(z.string())
+                        .max(constants.project.tags.dev.MAX_LENGTH)
+                        .optional(),
+                    medium_tags: z
+                        .array(z.string())
+                        .max(constants.project.tags.medium.MAX_LENGTH)
+                        .optional(),
+                }),
             }),
         )
         .mutation(({ input, ctx }) => new ProjectController().updatePostHandler(input, ctx)),
@@ -88,10 +110,6 @@ const projectRouter = t.router({
                         .max(constants.project.description.MAX_LENGTH)
                         .optional(),
                     body: z.string().max(constants.project.body.MAX_LENGTH).optional(),
-                    tags: z
-                        .array(z.string().max(constants.project.tags.tag.MAX_LENGTH))
-                        .max(constants.project.tags.MAX_LENGTH)
-                        .optional(),
                     status: z
                         .nativeEnum(constants.project.status)
                         .optional()

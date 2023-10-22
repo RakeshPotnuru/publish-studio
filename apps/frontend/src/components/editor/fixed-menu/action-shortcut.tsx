@@ -1,5 +1,4 @@
 import { Badge } from "@itsrakesh/ui";
-import { randomBytes } from "crypto";
 
 interface ActionShortcutProps {
     shortcut: {
@@ -15,12 +14,10 @@ export function ActionShortcut({ shortcut, os }: ActionShortcutProps) {
 
     const keys = os === "mac" ? macKeys : pcKeys;
 
-    const uuid = randomBytes(20).toString("hex");
-
     return (
         <div className="space-x-1">
             {keys.map(key => (
-                <Badge key={uuid} variant="secondary">
+                <Badge key={key} variant="secondary">
                     {key}
                 </Badge>
             ))}

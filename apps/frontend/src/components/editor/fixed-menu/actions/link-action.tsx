@@ -10,16 +10,13 @@ import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
 } from "@itsrakesh/ui";
+import { cn } from "@itsrakesh/utils";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Icons } from "@/components/ui/icons";
-import { cn } from "@itsrakesh/utils";
+import { Tooltip } from "@/components/ui/tooltip";
 import type { MenuProps } from "..";
 
 const formSchema = z.object({
@@ -42,26 +39,19 @@ export function LinkAction({ editor }: MenuProps) {
 
     return (
         <Popover>
-            <PopoverTrigger>
-                <TooltipProvider>
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                className={cn("rounded-lg text-lg", {
-                                    "bg-accent": editor.isActive("link"),
-                                })}
-                            >
-                                <Icons.link />
-                            </Button>
-                        </TooltipTrigger>
-                        <TooltipContent side="bottom" className="text-center">
-                            <p>Insert Link</p>
-                        </TooltipContent>
-                    </Tooltip>
-                </TooltipProvider>
-            </PopoverTrigger>
+            <Tooltip content="Insert Link">
+                <PopoverTrigger asChild>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className={cn("rounded-lg text-lg", {
+                            "bg-accent": editor.isActive("link"),
+                        })}
+                    >
+                        <Icons.link />
+                    </Button>
+                </PopoverTrigger>
+            </Tooltip>
             <PopoverContent>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>

@@ -8,6 +8,7 @@ import {
     DialogTrigger,
     Form,
     FormControl,
+    FormDescription,
     FormField,
     FormItem,
     FormMessage,
@@ -70,6 +71,10 @@ export function NewProjectDialog({ children }: NewProjectDialogProps) {
                                             {...field}
                                         />
                                     </FormControl>
+                                    <FormDescription>
+                                        This will be used as the title of the post when you publish.
+                                        You can change it later.
+                                    </FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             )}

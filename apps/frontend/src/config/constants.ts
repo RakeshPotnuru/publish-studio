@@ -24,7 +24,15 @@ const project = {
     },
     tags: {
         tag: { MAX_LENGTH: 25 },
-        MAX_LENGTH: 5,
+        dev: {
+            MAX_LENGTH: 4,
+        },
+        medium: {
+            MAX_LENGTH: 5,
+        },
+        hashnode: {
+            MAX_LENGTH: 5,
+        },
     },
     status: projectStatus,
 } as const;

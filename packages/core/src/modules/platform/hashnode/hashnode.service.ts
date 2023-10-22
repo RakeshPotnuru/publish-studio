@@ -3,7 +3,7 @@ import axios from "axios";
 import type { Types } from "mongoose";
 
 import defaultConfig from "../../../config/app.config";
-import { user as userConsts } from "../../../constants";
+import { constants } from "../../../constants";
 import { decryptField } from "../../../utils/aws/kms";
 import User from "../../user/user.model";
 import Platform from "../platform.model";
@@ -17,7 +17,7 @@ import type {
 } from "./hashnode.types";
 
 export default class HashnodeService {
-    private readonly PLATFORM = userConsts.platforms.HASHNODE;
+    private readonly PLATFORM = constants.user.platforms.HASHNODE;
 
     private async hashnode(user_id: Types.ObjectId | undefined) {
         try {

@@ -3,7 +3,7 @@ import type { Types } from "mongoose";
 
 import defaultConfig from "../../../config/app.config";
 import type { Context } from "../../../trpc";
-import type { hashnode_tags, IProject } from "../../project/project.types";
+import type { IProject, TTags } from "../../project/project.types";
 import HashnodeService from "./hashnode.service";
 
 export default class HashnodeController extends HashnodeService {
@@ -134,7 +134,7 @@ export default class HashnodeController extends HashnodeService {
     async createPostHandler(
         input: {
             post: IProject;
-            hashnode_tags?: hashnode_tags;
+            tags?: TTags;
         },
         user_id: Types.ObjectId,
     ) {
@@ -147,13 +147,13 @@ export default class HashnodeController extends HashnodeService {
             });
         }
 
-        const { post, hashnode_tags } = input;
+        const { post, tags } = input;
 
         const postBody = post.canonical_url
             ? {
                   title: post.title,
                   contentMarkdown: post.body,
-                  tags: hashnode_tags,
+                  tags: tags?.hashnode_tags,
                   coverImageURL: post.cover_image,
                   isRepublished: {
                       originalArticleURL: post.canonical_url,
@@ -165,7 +165,7 @@ export default class HashnodeController extends HashnodeService {
             : {
                   title: post.title,
                   contentMarkdown: post.body,
-                  tags: hashnode_tags,
+                  tags: tags?.hashnode_tags,
                   coverImageURL: post.cover_image,
                   isPartOfPublication: {
                       publicationId: user.publication.publication_id,
@@ -206,7 +206,7 @@ export default class HashnodeController extends HashnodeService {
     async updatePostHandler(
         input: {
             post: IProject;
-            hashnode_tags?: hashnode_tags;
+            tags?: TTags;
             post_id: string;
         },
         user_id: Types.ObjectId | undefined,
@@ -220,13 +220,13 @@ export default class HashnodeController extends HashnodeService {
             });
         }
 
-        const { post, hashnode_tags, post_id } = input;
+        const { post, tags, post_id } = input;
 
         const postBody = post.canonical_url
             ? {
                   title: post.title,
                   contentMarkdown: post.body,
-                  tags: hashnode_tags,
+                  tags: tags?.hashnode_tags,
                   coverImageURL: post.cover_image,
                   isRepublished: {
                       originalArticleURL: post.canonical_url,
@@ -238,7 +238,7 @@ export default class HashnodeController extends HashnodeService {
             : {
                   title: post.title,
                   contentMarkdown: post.body,
-                  tags: hashnode_tags,
+                  tags: tags?.hashnode_tags,
                   coverImageURL: post.cover_image,
                   isPartOfPublication: {
                       publicationId: user.publication.publication_id,

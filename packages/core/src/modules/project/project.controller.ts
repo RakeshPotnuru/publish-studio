@@ -8,7 +8,7 @@ import type { Context } from "../../trpc";
 import { rabbitMQConnection } from "../../utils/rabbitmq";
 import ProjectHelpers from "./project.helpers";
 import ProjectService from "./project.service";
-import type { hashnode_tags, IProject, IProjectUpdate } from "./project.types";
+import type { IProject, IProjectUpdate, TTags } from "./project.types";
 
 export default class ProjectController extends ProjectService {
     async createProjectHandler(input: { project: IProject }, ctx: Context) {
@@ -31,7 +31,6 @@ export default class ProjectController extends ProjectService {
             title: project.title,
             description: project.description,
             body: project.body,
-            tags: project.tags,
             status: project.status,
             cover_image: project.cover_image,
             scheduled_at: project.scheduled_at,
@@ -45,17 +44,13 @@ export default class ProjectController extends ProjectService {
         };
     }
 
-    private async publishPost(
-        project_id: Types.ObjectId,
-        user_id: Types.ObjectId,
-        hashnode_tags?: hashnode_tags,
-    ) {
+    private async publishPost(project_id: Types.ObjectId, user_id: Types.ObjectId, tags: TTags) {
         const project = await super.getProjectById(project_id);
 
         const publishResponse = await new ProjectHelpers().publishOnPlatforms(
             project,
             user_id,
-            hashnode_tags,
+            tags,
         );
 
         await super.updateProjectById(project_id, {
@@ -81,7 +76,7 @@ export default class ProjectController extends ProjectService {
             platforms: {
                 name: (typeof constants.user.platforms)[keyof typeof constants.user.platforms];
             }[];
-            hashnode_tags?: hashnode_tags;
+            tags: TTags;
         },
         ctx: Context,
     ) {
@@ -90,7 +85,7 @@ export default class ProjectController extends ProjectService {
         const updateResponse = await new ProjectHelpers().updateOnPlatforms(
             project,
             ctx.user?._id,
-            input.hashnode_tags,
+            input.tags,
         );
 
         if (!updateResponse) {
@@ -143,7 +138,7 @@ export default class ProjectController extends ProjectService {
                     this.publishPost(
                         data.project_id as Types.ObjectId,
                         data.user_id as Types.ObjectId,
-                        data.hashnode_tags as hashnode_tags,
+                        data.tags as TTags,
                     ).catch(error => {
                         console.log(error);
                     });
@@ -182,13 +177,13 @@ export default class ProjectController extends ProjectService {
             platforms: {
                 name: (typeof constants.user.platforms)[keyof typeof constants.user.platforms];
             }[];
-            hashnode_tags?: hashnode_tags;
+            tags: TTags;
             scheduled_at: Date;
         },
         ctx: Context,
     ) {
         try {
-            const { project_id, platforms, hashnode_tags, scheduled_at } = input;
+            const { project_id, platforms, tags, scheduled_at } = input;
 
             const project = await super.getProjectById(project_id);
 
@@ -221,7 +216,7 @@ export default class ProjectController extends ProjectService {
                     Buffer.from(
                         JSON.stringify({
                             project_id: project_id,
-                            hashnode_tags: hashnode_tags,
+                            tags: tags,
                             scheduled_at: scheduled_at,
                             user_id: ctx.user?._id,
                         }),

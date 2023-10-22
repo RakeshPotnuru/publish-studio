@@ -15,7 +15,6 @@ const ProjectSchema = new Schema<IProject>(
         },
         description: { type: String, maxlength: constants.project.description.MAX_LENGTH },
         body: { type: String, maxlength: constants.project.body.MAX_LENGTH },
-        tags: [{ type: String, maxlength: constants.project.tags.tag.MAX_LENGTH }],
         status: {
             type: String,
             enum: constants.project.status,

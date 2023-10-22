@@ -51,7 +51,7 @@ import {
 import { PiCodeBlockBold, PiDotsThreeBold, PiPlusCircleLight } from "react-icons/pi";
 import { RiFoldersFill } from "react-icons/ri";
 import { RxCaretSort, RxCross2, RxDividerHorizontal, RxMixerHorizontal } from "react-icons/rx";
-import { TbBlockquote } from "react-icons/tb";
+import { TbBlockquote, TbPlugConnected } from "react-icons/tb";
 import { TiLockClosed, TiLockOpen } from "react-icons/ti";
 
 export type Icon = IconType;
@@ -115,4 +115,5 @@ export const Icons = {
     synced: BsFillCloudCheckFill,
     syncing: AiOutlineCloudSync,
     offline: BsFillCloudSlashFill,
+    connect: TbPlugConnected,
 };

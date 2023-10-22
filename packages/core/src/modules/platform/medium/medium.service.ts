@@ -3,7 +3,7 @@ import axios from "axios";
 import type { Types } from "mongoose";
 
 import defaultConfig from "../../../config/app.config";
-import { user as userConsts } from "../../../constants";
+import { constants } from "../../../constants";
 import { decryptField } from "../../../utils/aws/kms";
 import User from "../../user/user.model";
 import Platform from "../platform.model";
@@ -17,7 +17,7 @@ import type {
 } from "./medium.types";
 
 export default class MediumService {
-    private readonly PLATFORM = userConsts.platforms.MEDIUM;
+    private readonly PLATFORM = constants.user.platforms.MEDIUM;
 
     private async medium(user_id: Types.ObjectId | undefined) {
         try {

@@ -8,7 +8,6 @@ export interface IProject {
     title: string;
     description?: string;
     body?: string;
-    tags?: string[];
     status: (typeof constants.project.status)[keyof typeof constants.project.status];
     cover_image?: string;
     assets?: Types.ObjectId[];
@@ -24,8 +23,14 @@ export interface IProject {
 
 export type IProjectUpdate = Partial<IProject>;
 
-export type hashnode_tags = {
+export interface THashnodeTag {
     name: string;
     slug: string;
     _id: string;
-}[];
+}
+
+export interface TTags {
+    hashnode_tags?: THashnodeTag[];
+    devto_tags?: string[];
+    medium_tags?: string[];
+}

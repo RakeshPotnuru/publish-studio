@@ -9,3 +9,7 @@ export function Shell({ children, className, ...props }: ShellProps) {
         </div>
     );
 }
+
+export function MenuShell({ children }: ShellProps) {
+    return <div className="flex flex-row space-x-1">{children}</div>;
+}

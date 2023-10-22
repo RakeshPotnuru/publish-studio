@@ -3,7 +3,7 @@ import axios from "axios";
 import type { Types } from "mongoose";
 
 import defaultConfig from "../../../config/app.config";
-import { user as userConsts } from "../../../constants";
+import { constants } from "../../../constants";
 import { decryptField } from "../../../utils/aws/kms";
 import User from "../../user/user.model";
 import Platform from "../platform.model";
@@ -18,7 +18,7 @@ import type {
 } from "./devto.types";
 
 export default class DevToService {
-    private readonly PLATFORM = userConsts.platforms.DEVTO;
+    private readonly PLATFORM = constants.user.platforms.DEVTO;
 
     private async devTo(user_id: Types.ObjectId | undefined) {
         try {

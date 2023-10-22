@@ -4,7 +4,7 @@
 import { Button } from "@itsrakesh/ui";
 import { useTheme } from "next-themes";
 
-import { Icons } from "./icons";
+import { Icons } from "../ui/icons";
 
 export function ThemeToggleButton() {
     const { theme, setTheme } = useTheme();
