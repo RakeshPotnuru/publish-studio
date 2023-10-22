@@ -33,15 +33,16 @@ export function LinkAction({ editor }: MenuProps) {
     });
 
     const onSubmit = (data: z.infer<typeof formSchema>) => {
-        console.log(data);
         editor.chain().focus().setLink({ href: data.link, target: "_blank" }).run();
+        form.reset();
     };
 
     return (
         <Popover>
-            <Tooltip content="Insert Link">
-                <PopoverTrigger asChild>
+            {editor.isActive("link") ? (
+                <Tooltip content="Remove Link">
                     <Button
+                        onClick={() => editor.chain().focus().unsetLink().run()}
                         variant="ghost"
                         size="icon"
                         className={cn("rounded-lg text-lg", {
@@ -50,8 +51,22 @@ export function LinkAction({ editor }: MenuProps) {
                     >
                         <Icons.link />
                     </Button>
-                </PopoverTrigger>
-            </Tooltip>
+                </Tooltip>
+            ) : (
+                <Tooltip content="Insert Link">
+                    <PopoverTrigger asChild>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className={cn("rounded-lg text-lg", {
+                                "bg-accent": editor.isActive("link"),
+                            })}
+                        >
+                            <Icons.link />
+                        </Button>
+                    </PopoverTrigger>
+                </Tooltip>
+            )}
             <PopoverContent>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>

@@ -1,13 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Button,
-    Checkbox,
     Form,
     FormControl,
     FormDescription,
     FormField,
     FormItem,
-    FormLabel,
     FormMessage,
     Input,
     Sheet,
@@ -30,7 +28,7 @@ import { HookFormDevTool } from "@/components/dev-tools/hookform-dev-tool";
 import { Icons } from "@/components/ui/icons";
 import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
-import { platformConfig } from "./platforms";
+import { PlatformsField } from "./platforms";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDialogElement> {}
 
@@ -197,75 +195,9 @@ export function PublishPost({ children, ...props }: SidebarProps) {
                                             </FormItem>
                                         )}
                                     />
-                                    <FormField
-                                        control={form.control}
-                                        name="platforms"
-                                        render={() => (
-                                            <FormItem className="w-full">
-                                                <div className="mb-4">
-                                                    <FormLabel className="text-base">
-                                                        Platforms
-                                                    </FormLabel>
-                                                    <FormDescription>
-                                                        Select platforms to publish your post to.
-                                                    </FormDescription>
-                                                </div>
-                                                {platformConfig
-                                                    .filter(platform =>
-                                                        connectedPlatforms.includes(platform.value),
-                                                    )
-                                                    .map(platform => (
-                                                        <FormField
-                                                            key={platform.value}
-                                                            control={form.control}
-                                                            name="platforms"
-                                                            render={({ field }) => {
-                                                                return (
-                                                                    <div className="flex flex-col space-y-2">
-                                                                        <FormItem
-                                                                            key={platform.value}
-                                                                            className="flex items-center space-x-2 space-y-0"
-                                                                        >
-                                                                            <FormControl>
-                                                                                <Checkbox
-                                                                                    checked={field.value.includes(
-                                                                                        platform.value,
-                                                                                    )}
-                                                                                    onCheckedChange={checked => {
-                                                                                        return checked
-                                                                                            ? field.onChange(
-                                                                                                  [
-                                                                                                      ...field.value,
-                                                                                                      platform.value,
-                                                                                                  ],
-                                                                                              )
-                                                                                            : field.onChange(
-                                                                                                  field.value?.filter(
-                                                                                                      value =>
-                                                                                                          value !==
-                                                                                                          platform.value,
-                                                                                                  ),
-                                                                                              );
-                                                                                    }}
-                                                                                />
-                                                                            </FormControl>
-                                                                            <FormLabel className="text-sm font-normal">
-                                                                                {platform.label}
-                                                                            </FormLabel>
-                                                                        </FormItem>
-                                                                        {field.value.includes(
-                                                                            platform.value,
-                                                                        ) &&
-                                                                            platform.component(
-                                                                                form,
-                                                                            )}
-                                                                    </div>
-                                                                );
-                                                            }}
-                                                        />
-                                                    ))}
-                                            </FormItem>
-                                        )}
+                                    <PlatformsField
+                                        form={form}
+                                        connectedPlatforms={connectedPlatforms}
                                     />
                                 </div>
                                 <SheetFooter>

@@ -16,6 +16,7 @@ import { memo, useState } from "react";
 
 import { Heading } from "../ui/heading";
 import { Shell } from "../ui/shell";
+import { BubbleMenu } from "./bubble-menu";
 import { EditorBody } from "./editor-body";
 import { EditorFooter } from "./editor-footer";
 import { FixedMenu } from "./fixed-menu";
@@ -104,7 +105,7 @@ export function Editor({ className, ...props }: EditorProps) {
             }),
             Link.configure({
                 HTMLAttributes: {
-                    class: "text-blue-500 underline hover:text-blue-600 cursor-pointer",
+                    class: "text-blue-500 underline hover:text-blue-600",
                 },
             }),
             TableOfContent.configure({
@@ -119,6 +120,7 @@ export function Editor({ className, ...props }: EditorProps) {
             },
         },
         autofocus: true,
+        content: `<h1>Once upon a time...</h1><p>There was a <strong>bold</strong> fox.</p>`,
     });
 
     if (!editor) return null;
@@ -127,6 +129,7 @@ export function Editor({ className, ...props }: EditorProps) {
         <div className={cn("flex flex-row space-x-4", className)} {...props}>
             <div className="w-3/4 space-y-4">
                 <FixedMenu editor={editor} />
+                <BubbleMenu editor={editor} />
                 <EditorBody editor={editor} />
                 <EditorFooter editor={editor} />
             </div>

@@ -1,11 +1,20 @@
+import {
+    Checkbox,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+} from "@itsrakesh/ui";
+import { UseFormReturn } from "react-hook-form";
+import { z } from "zod";
+
 import { Images } from "@/components/ui/images";
 import { constants } from "@/config/constants";
-import { UseFormReturn } from "react-hook-form";
+import { schema } from "../publish-post";
 import { Dev } from "./dev";
 import { Hashnode } from "./hashnode";
 import { Medium } from "./medium";
-import { z } from "zod";
-import { schema } from "../publish-post";
 
 interface IPlatformConfig {
     label: string;
@@ -14,7 +23,7 @@ interface IPlatformConfig {
     component: (form: UseFormReturn<z.infer<typeof schema>>) => JSX.Element;
 }
 
-export const platformConfig: IPlatformConfig[] = [
+const platformConfig: IPlatformConfig[] = [
     {
         label: "Dev.to",
         value: constants.user.platforms.DEVTO,
@@ -34,3 +43,71 @@ export const platformConfig: IPlatformConfig[] = [
         component: (form: UseFormReturn<z.infer<typeof schema>>) => <Hashnode form={form} />,
     },
 ];
+
+interface PlatformsFieldProps {
+    form: UseFormReturn<z.infer<typeof schema>>;
+    connectedPlatforms: (typeof constants.user.platforms)[keyof typeof constants.user.platforms][];
+}
+
+export const PlatformsField = ({ form, connectedPlatforms }: PlatformsFieldProps) => {
+    return (
+        <FormField
+            control={form.control}
+            name="platforms"
+            render={() => (
+                <FormItem className="w-full">
+                    <div className="mb-4">
+                        <FormLabel className="text-base">Platforms</FormLabel>
+                        <FormDescription>Select platforms to publish your post to.</FormDescription>
+                    </div>
+                    {platformConfig
+                        .filter(platform => connectedPlatforms.includes(platform.value))
+                        .map(platform => (
+                            <FormField
+                                key={platform.value}
+                                control={form.control}
+                                name="platforms"
+                                render={({ field }) => {
+                                    return (
+                                        <div className="flex flex-col space-y-2">
+                                            <FormItem
+                                                key={platform.value}
+                                                className="flex items-center space-x-2 space-y-0"
+                                            >
+                                                <FormControl>
+                                                    <Checkbox
+                                                        checked={field.value.includes(
+                                                            platform.value,
+                                                        )}
+                                                        onCheckedChange={checked => {
+                                                            return checked
+                                                                ? field.onChange([
+                                                                      ...field.value,
+                                                                      platform.value,
+                                                                  ])
+                                                                : field.onChange(
+                                                                      field.value?.filter(
+                                                                          value =>
+                                                                              value !==
+                                                                              platform.value,
+                                                                      ),
+                                                                  );
+                                                        }}
+                                                    />
+                                                </FormControl>
+                                                <FormLabel className="text-sm font-normal">
+                                                    {platform.label}
+                                                </FormLabel>
+                                            </FormItem>
+                                            {field.value.includes(platform.value) &&
+                                                platform.component(form)}
+                                        </div>
+                                    );
+                                }}
+                            />
+                        ))}
+                </FormItem>
+            )}
+        />
+    );
+};

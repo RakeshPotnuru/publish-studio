@@ -15,6 +15,7 @@ export function HistoryActions({ editor }: MenuProps) {
                     mac: "⌘ + Z",
                     pc: "Ctrl + Z",
                 }}
+                disabled={!editor.can().undo()}
             />
             <MenuAction
                 editor={editor}
@@ -26,6 +27,7 @@ export function HistoryActions({ editor }: MenuProps) {
                     mac: "⌘ + Shift + Z",
                     pc: "Ctrl + Shift + Z",
                 }}
+                disabled={!editor.can().redo()}
             />
         </>
     );

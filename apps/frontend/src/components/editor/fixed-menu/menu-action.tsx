@@ -1,11 +1,4 @@
-import {
-    TooltipProvider,
-    Tooltip,
-    TooltipTrigger,
-    Button,
-    TooltipContent,
-    Badge,
-} from "@itsrakesh/ui";
+import { Button, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 
 import getOs from "@/lib/get-os";
@@ -21,6 +14,7 @@ export interface IEditorAction {
     command: () => void;
     tooltip: string;
     icon: React.ReactNode;
+    disabled?: boolean;
 }
 
 export function MenuAction({
@@ -30,6 +24,7 @@ export function MenuAction({
     icon,
     tooltip,
     shortcut,
+    disabled,
 }: MenuProps & IEditorAction) {
     const os = getOs();
 
@@ -44,6 +39,7 @@ export function MenuAction({
                         className={cn("rounded-lg text-lg", {
                             "bg-accent": editor.isActive(name),
                         })}
+                        disabled={disabled}
                     >
                         {icon}
                     </Button>
