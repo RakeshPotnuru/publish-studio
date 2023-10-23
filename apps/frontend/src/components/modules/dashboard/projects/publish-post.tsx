@@ -26,6 +26,7 @@ import { z } from "zod";
 
 import { HookFormDevTool } from "@/components/dev-tools/hookform-dev-tool";
 import { Icons } from "@/components/ui/icons";
+import { Tooltip } from "@/components/ui/tooltip";
 import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { PlatformsField } from "./platforms";
@@ -141,10 +142,10 @@ export function PublishPost({ children, ...props }: SidebarProps) {
                     </SheetDescription>
                 </SheetHeader>
                 {connectedPlatforms.length > 0 ? (
-                    <div className="my-4 max-h-[87vh] overflow-auto">
+                    <div className="my-4">
                         <Form {...form}>
                             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                                <div className="flex flex-col items-center space-y-4">
+                                <div className="flex max-h-[80vh] flex-col items-center space-y-4 overflow-auto">
                                     <Button type="button" variant="outline">
                                         <Icons.plus className="mr-2 h-4 w-4" />
                                         Select cover image
@@ -200,7 +201,17 @@ export function PublishPost({ children, ...props }: SidebarProps) {
                                         connectedPlatforms={connectedPlatforms}
                                     />
                                 </div>
-                                <SheetFooter>
+                                <SheetFooter className="bg-background sticky bottom-0 py-4">
+                                    <Tooltip content="Save changes">
+                                        <Button
+                                            type="button"
+                                            variant="info"
+                                            size="icon"
+                                            disabled={!form.formState.isDirty}
+                                        >
+                                            <Icons.save className="h-4 w-4" />
+                                        </Button>
+                                    </Tooltip>
                                     <Button type="submit" disabled={!form.formState.isDirty}>
                                         Publish Now
                                     </Button>

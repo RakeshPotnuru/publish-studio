@@ -18,6 +18,7 @@ import {
     BiPlus,
     BiSolidErrorAlt,
     BiSolidHide,
+    BiSolidSave,
 } from "react-icons/bi";
 import {
     BsArrowDownShort,
@@ -116,4 +117,5 @@ export const Icons = {
     syncing: AiOutlineCloudSync,
     offline: BsFillCloudSlashFill,
     connect: TbPlugConnected,
+    save: BiSolidSave,
 };

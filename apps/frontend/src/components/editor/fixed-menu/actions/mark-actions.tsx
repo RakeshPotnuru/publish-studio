@@ -2,7 +2,7 @@ import { Icons } from "@/components/ui/icons";
 import type { MenuProps } from "..";
 import { MenuAction } from "../menu-action";
 
-export function MarkActions({ editor }: MenuProps) {
+export function MarkActions({ editor, isBubbleMenu }: MenuProps) {
     return (
         <>
             <MenuAction
@@ -15,6 +15,7 @@ export function MarkActions({ editor }: MenuProps) {
                     mac: "⌘ + B",
                     pc: "Ctrl + B",
                 }}
+                isBubbleMenu={isBubbleMenu}
             />
             <MenuAction
                 editor={editor}
@@ -26,6 +27,7 @@ export function MarkActions({ editor }: MenuProps) {
                     mac: "⌘ + I",
                     pc: "Ctrl + I",
                 }}
+                isBubbleMenu={isBubbleMenu}
             />
             <MenuAction
                 editor={editor}
@@ -37,6 +39,7 @@ export function MarkActions({ editor }: MenuProps) {
                     mac: "⌘ + U",
                     pc: "Ctrl + U",
                 }}
+                isBubbleMenu={isBubbleMenu}
             />
             <MenuAction
                 editor={editor}
@@ -48,6 +51,7 @@ export function MarkActions({ editor }: MenuProps) {
                     mac: "⌘ + Shift + X",
                     pc: "Ctrl + Shift + X",
                 }}
+                isBubbleMenu={isBubbleMenu}
             />
             <MenuAction
                 editor={editor}
@@ -59,6 +63,7 @@ export function MarkActions({ editor }: MenuProps) {
                     mac: "⌘ + E",
                     pc: "Ctrl + E",
                 }}
+                isBubbleMenu={isBubbleMenu}
             />
         </>
     );

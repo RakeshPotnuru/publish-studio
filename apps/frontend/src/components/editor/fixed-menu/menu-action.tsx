@@ -25,6 +25,7 @@ export function MenuAction({
     tooltip,
     shortcut,
     disabled,
+    isBubbleMenu,
 }: MenuProps & IEditorAction) {
     const os = getOs();
 
@@ -37,7 +38,10 @@ export function MenuAction({
                         variant="ghost"
                         size="icon"
                         className={cn("rounded-lg text-lg", {
-                            "bg-accent": editor.isActive(name),
+                            "bg-accent": editor.isActive(name) && !isBubbleMenu,
+                            "hover:text-primary text-primary":
+                                editor.isActive(name) && isBubbleMenu,
+                            "rounded-none": isBubbleMenu,
                         })}
                         disabled={disabled}
                     >

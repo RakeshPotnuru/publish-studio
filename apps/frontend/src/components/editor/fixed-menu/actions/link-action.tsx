@@ -23,7 +23,7 @@ const formSchema = z.object({
     link: z.string().url({ message: "Please enter a valid URL" }),
 });
 
-export function LinkAction({ editor }: MenuProps) {
+export function LinkAction({ editor, isBubbleMenu }: MenuProps) {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         mode: "onBlur",
@@ -46,7 +46,9 @@ export function LinkAction({ editor }: MenuProps) {
                         variant="ghost"
                         size="icon"
                         className={cn("rounded-lg text-lg", {
-                            "bg-accent": editor.isActive("link"),
+                            "bg-accent": editor.isActive("link") && !isBubbleMenu,
+                            "text-primary": editor.isActive("link") && isBubbleMenu,
+                            "rounded-none": isBubbleMenu,
                         })}
                     >
                         <Icons.link />
@@ -59,7 +61,9 @@ export function LinkAction({ editor }: MenuProps) {
                             variant="ghost"
                             size="icon"
                             className={cn("rounded-lg text-lg", {
-                                "bg-accent": editor.isActive("link"),
+                                "bg-accent": editor.isActive("link") && !isBubbleMenu,
+                                "text-primary": editor.isActive("link") && isBubbleMenu,
+                                "rounded-none": isBubbleMenu,
                             })}
                         >
                             <Icons.link />

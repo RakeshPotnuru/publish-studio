@@ -47,7 +47,7 @@ export function Editor({ className, ...props }: EditorProps) {
             StarterKit.configure({
                 code: {
                     HTMLAttributes: {
-                        class: "bg-secondary text-sm p-2 py-1 rounded-lg",
+                        class: "bg-secondary text-sm p-1 rounded-md",
                         spellcheck: false,
                     },
                 },

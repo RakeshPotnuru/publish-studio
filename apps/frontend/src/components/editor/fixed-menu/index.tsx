@@ -12,6 +12,7 @@ import { MenuSeparator } from "./menu-seperator";
 
 export interface MenuProps {
     editor: Editor;
+    isBubbleMenu?: boolean;
 }
 
 interface FixedMenuProps extends MenuProps {}

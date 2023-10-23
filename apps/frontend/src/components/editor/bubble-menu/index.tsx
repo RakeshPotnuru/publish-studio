@@ -11,13 +11,13 @@ interface BubbleMenuProps extends MenuProps {}
 export function BubbleMenu({ editor }: BubbleMenuProps) {
     return (
         <TiptapBubbleMenu editor={editor}>
-            <div className="bg-popover flex flex-row items-center space-x-2 rounded-lg p-2 shadow-lg ">
+            <div className="bg-popover text-popover-foreground flex flex-row items-center rounded-md border shadow-md">
                 <MenuShell>
-                    <MarkActions editor={editor} />
+                    <MarkActions editor={editor} isBubbleMenu />
                 </MenuShell>
-                <MenuSeparator />
+                <MenuSeparator isBubbleMenu />
                 <MenuShell>
-                    <LinkAction editor={editor} />
+                    <LinkAction editor={editor} isBubbleMenu />
                 </MenuShell>
             </div>
         </TiptapBubbleMenu>
