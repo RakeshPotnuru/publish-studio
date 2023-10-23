@@ -17,8 +17,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Icons } from "./icons";
-import { Tooltip } from "./tooltip";
 import { Images } from "./images";
+import { Tooltip } from "./tooltip";
 
 const NavItem = ({ icon, tooltip }: { icon: React.ReactNode; tooltip: string }) => (
     <Tooltip content={tooltip}>

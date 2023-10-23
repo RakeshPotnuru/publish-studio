@@ -29,6 +29,7 @@ import { Icons } from "@/components/ui/icons";
 import { Tooltip } from "@/components/ui/tooltip";
 import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
+import { CharactersLengthViewer } from "./characters-length-viewer";
 import { PlatformsField } from "./platforms";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDialogElement> {}
@@ -169,6 +170,20 @@ export function PublishPost({ children, ...props }: SidebarProps) {
                                                         {...field}
                                                     />
                                                 </FormControl>
+                                                {field.value && (
+                                                    <CharactersLengthViewer
+                                                        maxLength={
+                                                            constants.project.title.MAX_LENGTH
+                                                        }
+                                                        length={field.value.length}
+                                                        recommendedLength={{
+                                                            min: constants.project.title
+                                                                .RECOMMENDED_MIN_LENGTH,
+                                                            max: constants.project.title
+                                                                .RECOMMENDED_MAX_LENGTH,
+                                                        }}
+                                                    />
+                                                )}
                                                 <FormDescription>
                                                     Recommended length is between 50-60 characters.
                                                 </FormDescription>
@@ -188,6 +203,20 @@ export function PublishPost({ children, ...props }: SidebarProps) {
                                                         {...field}
                                                     />
                                                 </FormControl>
+                                                {field.value && (
+                                                    <CharactersLengthViewer
+                                                        maxLength={
+                                                            constants.project.description.MAX_LENGTH
+                                                        }
+                                                        length={field.value.length}
+                                                        recommendedLength={{
+                                                            min: constants.project.description
+                                                                .RECOMMENDED_MIN_LENGTH,
+                                                            max: constants.project.description
+                                                                .RECOMMENDED_MAX_LENGTH,
+                                                        }}
+                                                    />
+                                                )}
                                                 <FormDescription>
                                                     Recommended length is between 120-160
                                                     characters.

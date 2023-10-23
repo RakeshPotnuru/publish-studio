@@ -11,7 +11,7 @@ import { z } from "zod";
 
 import { Images } from "@/components/ui/images";
 import { constants } from "@/config/constants";
-import { schema } from "../publish-post";
+import { schema } from "..";
 import { Dev } from "./dev";
 import { Hashnode } from "./hashnode";
 import { Medium } from "./medium";

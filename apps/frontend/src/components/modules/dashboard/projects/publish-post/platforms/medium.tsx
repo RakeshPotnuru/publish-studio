@@ -1,4 +1,5 @@
 import {
+    Button,
     FormControl,
     FormDescription,
     FormField,
@@ -7,27 +8,29 @@ import {
     FormMessage,
     Input,
 } from "@itsrakesh/ui";
+import Link from "next/link";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 
 import { constants } from "@/config/constants";
-import { schema } from "../publish-post";
+import { siteConfig } from "@/config/site";
+import { schema } from "..";
 
-interface HashnodeProps {
+interface MediumProps {
     form: UseFormReturn<z.infer<typeof schema>>;
 }
 
-export function Hashnode({ form }: HashnodeProps) {
+export function Medium({ form }: MediumProps) {
     return (
         <div>
             <FormField
                 control={form.control}
-                name="tags.hashnode_tags"
+                name="tags.medium_tags"
                 render={({ field }) => (
                     <FormItem className="w-full">
                         <FormLabel>
                             Tags (Enter comma seperated tags, max{" "}
-                            {constants.project.tags.hashnode.MAX_LENGTH}.)
+                            {constants.project.tags.medium.MAX_LENGTH}.)
                         </FormLabel>
                         <FormControl>
                             <Input
@@ -49,7 +52,15 @@ export function Hashnode({ form }: HashnodeProps) {
                                 ))}
                             </div>
                         )}
-                        <FormDescription></FormDescription>
+                        <FormDescription>
+                            💡 Hint: Search popular tags for your topic on{" "}
+                            <Button variant="link" size="sm" className="h-max p-0" asChild>
+                                <Link href={siteConfig.links.mediumTags} target="blank">
+                                    Medium
+                                </Link>
+                            </Button>{" "}
+                            and use them here.
+                        </FormDescription>
                         <FormMessage />
                     </FormItem>
                 )}

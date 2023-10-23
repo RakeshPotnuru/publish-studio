@@ -14,23 +14,23 @@ import { z } from "zod";
 
 import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
-import { schema } from "../publish-post";
+import { schema } from "..";
 
-interface MediumProps {
+interface DevProps {
     form: UseFormReturn<z.infer<typeof schema>>;
 }
 
-export function Medium({ form }: MediumProps) {
+export function Dev({ form }: DevProps) {
     return (
         <div>
             <FormField
                 control={form.control}
-                name="tags.medium_tags"
+                name="tags.devto_tags"
                 render={({ field }) => (
                     <FormItem className="w-full">
                         <FormLabel>
                             Tags (Enter comma seperated tags, max{" "}
-                            {constants.project.tags.medium.MAX_LENGTH}.)
+                            {constants.project.tags.dev.MAX_LENGTH}.)
                         </FormLabel>
                         <FormControl>
                             <Input
@@ -55,8 +55,8 @@ export function Medium({ form }: MediumProps) {
                         <FormDescription>
                             💡 Hint: Search popular tags for your topic on{" "}
                             <Button variant="link" size="sm" className="h-max p-0" asChild>
-                                <Link href={siteConfig.links.mediumTags} target="blank">
-                                    Medium
+                                <Link href={siteConfig.links.devTags} target="blank">
+                                    Dev.to
                                 </Link>
                             </Button>{" "}
                             and use them here.

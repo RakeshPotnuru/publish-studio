@@ -15,9 +15,13 @@ const project = {
     title: {
         MIN_LENGTH: 3,
         MAX_LENGTH: 120,
+        RECOMMENDED_MIN_LENGTH: 50,
+        RECOMMENDED_MAX_LENGTH: 60,
     },
     description: {
         MAX_LENGTH: 500,
+        RECOMMENDED_MIN_LENGTH: 120,
+        RECOMMENDED_MAX_LENGTH: 160,
     },
     body: {
         MAX_LENGTH: 100_000,
