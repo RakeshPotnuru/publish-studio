@@ -5,6 +5,9 @@
             "cache": true,
             "outputs": ["**/dist", "**/.next"]
         },
+        "clean": {
+            "cache": false
+        },
         "dev": {
             "cache": true,
             "outputs": ["**/.next"]

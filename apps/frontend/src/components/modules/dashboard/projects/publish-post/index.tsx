@@ -31,6 +31,7 @@ import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { CharactersLengthViewer } from "./characters-length-viewer";
 import { PlatformsField } from "./platforms";
+import { SchedulePost } from "./schedule-post";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDialogElement> {}
 
@@ -244,13 +245,15 @@ export function PublishPost({ children, ...props }: SidebarProps) {
                                     <Button type="submit" disabled={!form.formState.isDirty}>
                                         Publish Now
                                     </Button>
-                                    <Button
-                                        type="button"
-                                        variant="secondary"
-                                        disabled={!form.formState.isDirty}
-                                    >
-                                        Schedule <Icons.scheduled className="ml-2 h-4 w-4" />
-                                    </Button>
+                                    <SchedulePost>
+                                        <Button
+                                            type="button"
+                                            variant="secondary"
+                                            disabled={!form.formState.isDirty}
+                                        >
+                                            Schedule <Icons.schedule className="ml-2 h-4 w-4" />
+                                        </Button>
+                                    </SchedulePost>
                                 </SheetFooter>
                             </form>
                         </Form>

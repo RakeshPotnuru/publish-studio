@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 import { Heading } from "@/components/ui/heading";
+import { Images } from "@/components/ui/images";
 
 interface AppearanceProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -32,7 +33,7 @@ export function Appearance({ ...props }: AppearanceProps) {
                     <div className="grid grid-cols-2 items-center space-x-4 rounded-lg border bg-white p-4">
                         <RadioGroupItem value="light" />
                         <Image
-                            src="/images/logo.png"
+                            src={Images.logo}
                             alt="Light theme"
                             width={25}
                             height={25}
@@ -45,7 +46,7 @@ export function Appearance({ ...props }: AppearanceProps) {
                     <div className="grid grid-cols-2 items-center space-x-4 rounded-lg border bg-black p-4">
                         <RadioGroupItem value="dark" />
                         <Image
-                            src="/images/logo.png"
+                            src={Images.logo}
                             alt="Dark theme"
                             width={25}
                             height={25}
@@ -61,7 +62,7 @@ export function Appearance({ ...props }: AppearanceProps) {
                         </div>
                         <div className="rounded-r-lg bg-black p-4">
                             <Image
-                                src="/images/logo.png"
+                                src={Images.logo}
                                 alt="System theme"
                                 width={25}
                                 height={25}

@@ -18,6 +18,7 @@
     },
     "scripts": {
         "build": "next build",
+        "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
         "dev": "doppler run -- next dev",
         "faker": "ts-node --esm --project ./tsconfig.scripts.json ./src/data/faker.ts",
         "lint": "next lint",

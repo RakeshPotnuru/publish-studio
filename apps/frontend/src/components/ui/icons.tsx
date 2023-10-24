@@ -37,7 +37,7 @@ import { GoBold } from "react-icons/go";
 import { GrRedo, GrUndo } from "react-icons/gr";
 import { HiDocumentDuplicate, HiOutlineArrowNarrowRight } from "react-icons/hi";
 import { IoMdImage, IoMdLogOut } from "react-icons/io";
-import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
+import { IoCalendar, IoCheckmarkDoneCircleSharp } from "react-icons/io5";
 import {
     MdDriveFileMoveRtl,
     MdEditDocument,
@@ -106,7 +106,7 @@ export const Icons = {
     dashboard: MdSpaceDashboard,
     projects: AiFillProject,
     folders: RiFoldersFill,
-    scheduled: MdScheduleSend,
+    schedule: MdScheduleSend,
     right: HiOutlineArrowNarrowRight,
     assets: MdPermMedia,
     imageFile: BsFileEarmarkImage,
@@ -118,4 +118,5 @@ export const Icons = {
     offline: BsFillCloudSlashFill,
     connect: TbPlugConnected,
     save: BiSolidSave,
+    calendar: IoCalendar,
 };

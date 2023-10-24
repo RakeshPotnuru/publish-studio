@@ -7,6 +7,7 @@
     "author": "Rakesh Potnuru",
     "scripts": {
         "build": "turbo build",
+        "clean": "turbo run clean && rm -rf node_modules",
         "dev": "turbo dev",
         "dev:frontend": "turbo dev --filter=@publish-studio/frontend",
         "format": "prettier --write .",

@@ -17,7 +17,7 @@
     ],
     "scripts": {
         "build": "pnpm clear && cross-env NODE_ENV=production tsc",
-        "clear": "rimraf dist",
+        "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
         "dev": "doppler run -- cross-env NODE_ENV=development nodemon --watch '**/*.ts' --exec node --loader @esbuild-kit/esm-loader src/index.ts",
         "lint": "eslint --ext .ts .",
         "lint:fix": "eslint --ext .ts . --fix",

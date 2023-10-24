@@ -33,7 +33,7 @@ export const statuses = [
     {
         label: "Scheduled",
         value: constants.project.status.SCHEDULED,
-        icon: Icons.scheduled,
+        icon: Icons.schedule,
         color: "text-info",
     },
 ];
