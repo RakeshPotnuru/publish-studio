@@ -17,7 +17,7 @@ import { z } from "zod";
 
 import { Icons } from "@/components/ui/icons";
 import { Tooltip } from "@/components/ui/tooltip";
-import type { MenuProps } from "..";
+import type { MenuProps } from "../fixed-menu";
 
 const formSchema = z.object({
     link: z.string().url({ message: "Please enter a valid URL" }),

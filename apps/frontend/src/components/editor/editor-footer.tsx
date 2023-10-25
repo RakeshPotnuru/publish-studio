@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import { Icons } from "../ui/icons";
 import { Tooltip } from "../ui/tooltip";
-import type { MenuProps } from "./fixed-menu";
+import type { MenuProps } from "./menu/fixed-menu";
 
 export function EditorFooter({ editor }: MenuProps & React.HTMLAttributes<HTMLDivElement>) {
     const [editable, setEditable] = useState(editor.isEditable);

@@ -21,9 +21,16 @@ import { Toolbar } from "./toolbar";
 interface AssetsTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
+    isWidget?: boolean;
+    onAdd?: (url: string) => void;
 }
 
-export function AssetsTable<TData, TValue>({ columns, data }: AssetsTableProps<TData, TValue>) {
+export function AssetsTable<TData, TValue>({
+    columns,
+    data,
+    isWidget,
+    onAdd,
+}: AssetsTableProps<TData, TValue>) {
     const [rowSelection, setRowSelection] = useState({});
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -53,7 +60,7 @@ export function AssetsTable<TData, TValue>({ columns, data }: AssetsTableProps<T
 
     return (
         <div className="space-y-4">
-            <Toolbar table={table} />
+            <Toolbar table={table} isWidget={isWidget} onAdd={onAdd} />
             <div className="rounded-md border">
                 <Table>
                     <TableHeader>

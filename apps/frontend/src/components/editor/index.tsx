@@ -16,10 +16,10 @@ import { memo, useState } from "react";
 
 import { Heading } from "../ui/heading";
 import { Shell } from "../ui/shell";
-import { BubbleMenu } from "./bubble-menu";
 import { EditorBody } from "./editor-body";
 import { EditorFooter } from "./editor-footer";
-import { FixedMenu } from "./fixed-menu";
+import { BubbleMenu } from "./menu/bubble-menu";
+import { FixedMenu } from "./menu/fixed-menu";
 import { ToC } from "./toc";
 
 type Levels = 1 | 2 | 3 | 4 | 5 | 6;

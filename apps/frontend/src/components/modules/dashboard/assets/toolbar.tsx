@@ -9,12 +9,20 @@ import { constants } from "@/config/constants";
 
 interface ToolbarProps<TData> {
     table: Table<TData>;
+    isWidget?: boolean;
+    onAdd?: (url: string) => void;
 }
 
-export function Toolbar<TData>({ table }: ToolbarProps<TData>) {
+export function Toolbar<TData>({ table, isWidget, onAdd }: ToolbarProps<TData>) {
     const [askingForConfirmation, setAskingForConfirmation] = useState(false);
 
     const isFiltered = table.getState().columnFilters.length > 0;
+
+    const handleAdd = (urls: string[]) => {
+        if (onAdd && urls.length === 1) {
+            onAdd(urls[0]);
+        }
+    };
 
     return (
         <div className="flex items-center justify-between">
@@ -74,8 +82,29 @@ export function Toolbar<TData>({ table }: ToolbarProps<TData>) {
                                 Delete ({table.getFilteredSelectedRowModel().rows.length})
                             </Button>
                         )}
+                        {isWidget && (
+                            <Button
+                                onClick={() =>
+                                    handleAdd(
+                                        table
+                                            .getFilteredSelectedRowModel()
+                                            .rows.map(row => row.getValue("url")),
+                                    )
+                                }
+                                variant="info"
+                                size="sm"
+                                disabled={
+                                    table
+                                        .getFilteredSelectedRowModel()
+                                        .rows.map(row => row.getValue("url")).length > 1
+                                }
+                            >
+                                Add
+                            </Button>
+                        )}
                     </>
                 )}
+
                 <DataTableViewOptions table={table} />
             </div>
         </div>

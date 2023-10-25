@@ -5,6 +5,7 @@ import Image from "next/image";
 
 import { DataTableColumnHeader } from "@/components/ui/data-table";
 import { formatFileSize } from "@/lib/file-size";
+import { shortenText } from "@/lib/text-shortner";
 import { AssetDialog } from "./asset";
 import { RowActions } from "./row-actions";
 
@@ -14,6 +15,7 @@ export interface IAsset {
     url: string;
     size: number;
     mime_type: string;
+    // TODO: use Date
     created: string;
 }
 
@@ -46,7 +48,7 @@ export const columns: ColumnDef<IAsset>[] = [
         enableHiding: false,
     },
     {
-        accessorKey: "name",
+        accessorKey: "url",
         header: "Preview",
         cell: ({ row }) => (
             <AssetDialog name={row.original.name} url={row.original.url}>
@@ -60,6 +62,21 @@ export const columns: ColumnDef<IAsset>[] = [
                 />
             </AssetDialog>
         ),
+        filterFn: (row, id, value) => {
+            return value.includes(row.getValue(id));
+        },
+    },
+    {
+        accessorKey: "name",
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
+        cell: ({ row }) => (
+            <span title={row.getValue("name")}>
+                {shortenText(row.original.name.split(".").reverse().pop() ?? "", 50)}
+            </span>
+        ),
+        filterFn: (row, id, value) => {
+            return value.includes(row.getValue(id));
+        },
     },
     {
         accessorKey: "size",

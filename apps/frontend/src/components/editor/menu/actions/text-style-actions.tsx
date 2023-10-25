@@ -1,15 +1,15 @@
 import {
     Menubar,
-    MenubarMenu,
-    MenubarTrigger,
     MenubarContent,
     MenubarItem,
+    MenubarMenu,
     MenubarShortcut,
+    MenubarTrigger,
 } from "@itsrakesh/ui";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import getOs from "@/lib/get-os";
-import type { MenuProps } from "..";
+import type { MenuProps } from "../fixed-menu";
 
 export function TextStyleActions({ editor }: MenuProps) {
     const [activeTextStyle, setActiveTextStyle] = useState<

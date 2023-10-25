@@ -2,13 +2,14 @@ import type { Editor } from "@tiptap/react";
 
 import { Icons } from "@/components/ui/icons";
 import { MenuShell } from "@/components/ui/shell";
-import { HistoryActions } from "./actions/history-actions";
-import { LinkAction } from "./actions/link-action";
-import { MarkActions } from "./actions/mark-actions";
-import { NodeActions } from "./actions/node-actions";
-import { TextStyleActions } from "./actions/text-style-actions";
-import { MenuAction } from "./menu-action";
-import { MenuSeparator } from "./menu-seperator";
+import { HistoryActions } from "../actions/history-actions";
+import { ImageAction } from "../actions/image-action";
+import { LinkAction } from "../actions/link-action";
+import { MarkActions } from "../actions/mark-actions";
+import { NodeActions } from "../actions/node-actions";
+import { TextStyleActions } from "../actions/text-style-actions";
+import { MenuAction } from "../menu-action";
+import { MenuSeparator } from "../menu-seperator";
 
 export interface MenuProps {
     editor: Editor;
@@ -43,19 +44,7 @@ export function FixedMenu({
             </MenuShell>
             <MenuSeparator />
             <MenuShell>
-                <MenuAction
-                    editor={editor}
-                    name="image"
-                    icon={<Icons.image />}
-                    command={() =>
-                        editor
-                            .chain()
-                            .focus()
-                            .setImage({ src: "https://picsum.photos/300/200" })
-                            .run()
-                    }
-                    tooltip="Insert Image"
-                />
+                <ImageAction editor={editor} />
                 <LinkAction editor={editor} />
                 <MenuAction
                     editor={editor}

@@ -26,6 +26,7 @@ import { z } from "zod";
 
 import { HookFormDevTool } from "@/components/dev-tools/hookform-dev-tool";
 import { Icons } from "@/components/ui/icons";
+import { ImageWidget } from "@/components/ui/image-widget";
 import { Tooltip } from "@/components/ui/tooltip";
 import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
@@ -110,7 +111,8 @@ const publishedPlatforms: {
 ];
 
 export function PublishPost({ children, ...props }: SidebarProps) {
-    const [coverImage, setCoverImage] = useState<string>("");
+    const [coverImage, setCoverImage] = useState<string>();
+    const [openImageWidget, setOpenImageWidget] = useState<boolean>(false);
 
     const { projectId } = useParams();
 
@@ -148,16 +150,24 @@ export function PublishPost({ children, ...props }: SidebarProps) {
                         <Form {...form}>
                             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                                 <div className="flex max-h-[80vh] flex-col items-center space-y-4 overflow-auto">
-                                    <Button type="button" variant="outline">
+                                    <Button
+                                        onClick={() => setOpenImageWidget(true)}
+                                        type="button"
+                                        variant="outline"
+                                    >
                                         <Icons.plus className="mr-2 h-4 w-4" />
                                         Select cover image
                                     </Button>
-                                    <Image
-                                        src="https://res.cloudinary.com/dipibbt5w/image/upload/q_auto/f_auto/c_scale,h_840,w_1600/v1/blog/dockerize_mern_app_vtlqs4?_a=ATAMhAA0"
-                                        alt="Post title"
-                                        width={1000}
-                                        height={500}
-                                    />
+                                    {coverImage && (
+                                        <div className="max-h-[10rem] overflow-auto border p-2 shadow-inner">
+                                            <Image
+                                                src={coverImage}
+                                                alt="Post title"
+                                                width={1000}
+                                                height={500}
+                                            />
+                                        </div>
+                                    )}
                                     <FormField
                                         control={form.control}
                                         name="title"
@@ -258,6 +268,15 @@ export function PublishPost({ children, ...props }: SidebarProps) {
                             </form>
                         </Form>
                         <HookFormDevTool control={form.control} placement="bottom-left" />
+                        <ImageWidget
+                            open={openImageWidget}
+                            setOpen={setOpenImageWidget}
+                            isWidget
+                            onAdd={(url: string) => {
+                                setOpenImageWidget(false);
+                                setCoverImage(url);
+                            }}
+                        />
                     </div>
                 ) : (
                     <div className="text-muted-foreground flex h-full flex-col items-center justify-center space-y-4 text-center">

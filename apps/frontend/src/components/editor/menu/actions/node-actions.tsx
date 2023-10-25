@@ -1,5 +1,5 @@
 import { Icons } from "@/components/ui/icons";
-import type { MenuProps } from "..";
+import type { MenuProps } from "../fixed-menu";
 import { MenuAction } from "../menu-action";
 
 export function NodeActions({ editor }: MenuProps) {

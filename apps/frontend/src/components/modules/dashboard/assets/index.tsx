@@ -9,9 +9,12 @@ import { columns } from "./columns";
 import { NewAssetDialog } from "./new-asset";
 import { AssetsTable } from "./table";
 
-interface AssetsProps extends React.HTMLAttributes<HTMLElement> {}
+interface AssetsProps extends React.HTMLAttributes<HTMLElement> {
+    isWidget?: boolean;
+    onAdd?: (url: string) => void;
+}
 
-export function Assets({ ...props }: AssetsProps) {
+export function Assets({ isWidget, onAdd, ...props }: AssetsProps) {
     return (
         <div className="space-y-8" {...props}>
             <div className="flex items-center justify-between">
@@ -22,7 +25,7 @@ export function Assets({ ...props }: AssetsProps) {
                     </Button>
                 </NewAssetDialog>
             </div>
-            <AssetsTable columns={columns} data={data} />
+            <AssetsTable columns={columns} data={data} isWidget={isWidget} onAdd={onAdd} />
         </div>
     );
 }

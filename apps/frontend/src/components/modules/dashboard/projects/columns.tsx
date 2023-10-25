@@ -13,7 +13,9 @@ export interface IProject {
     _id: string;
     title: string;
     status: string;
+    // TODO: use Date
     created: string;
+    // TODO: use Date
     last_edited: string;
 }
 

@@ -2,8 +2,8 @@ import { Button, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from
 import { cn } from "@itsrakesh/utils";
 
 import getOs from "@/lib/get-os";
-import type { MenuProps } from ".";
-import { ActionShortcut } from "./action-shortcut";
+import { ActionShortcut } from "./actions/action-shortcut";
+import type { MenuProps } from "./fixed-menu";
 
 export interface IEditorAction {
     name: string;
