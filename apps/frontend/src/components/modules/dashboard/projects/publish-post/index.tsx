@@ -116,7 +116,7 @@ export function PublishPost({ children, ...props }: SidebarProps) {
 
     const { projectId } = useParams();
 
-    const form = useForm({
+    const form = useForm<z.infer<typeof schema>>({
         resolver: zodResolver(schema),
         mode: "onBlur",
         defaultValues: {
@@ -270,7 +270,7 @@ export function PublishPost({ children, ...props }: SidebarProps) {
                         <HookFormDevTool control={form.control} placement="bottom-left" />
                         <ImageWidget
                             open={openImageWidget}
-                            setOpen={setOpenImageWidget}
+                            onOpenChange={setOpenImageWidget}
                             isWidget
                             onAdd={url => {
                                 setOpenImageWidget(false);

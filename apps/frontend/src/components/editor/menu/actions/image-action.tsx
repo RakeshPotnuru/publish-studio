@@ -19,7 +19,7 @@ export function ImageAction({ editor }: MenuProps) {
             />
             <ImageWidget
                 open={open}
-                setOpen={setOpen}
+                onOpenChange={setOpen}
                 isWidget={true}
                 onAdd={url => {
                     setOpen(false);
