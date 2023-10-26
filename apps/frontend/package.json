@@ -37,6 +37,7 @@
         "@tiptap/extension-image": "^2.1.11",
         "@tiptap/extension-link": "^2.1.11",
         "@tiptap/extension-placeholder": "^2.1.11",
+        "@tiptap/extension-typography": "^2.1.12",
         "@tiptap/extension-underline": "^2.1.11",
         "@tiptap/pm": "^2.1.11",
         "@tiptap/react": "^2.1.11",

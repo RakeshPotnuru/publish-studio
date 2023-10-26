@@ -70,18 +70,18 @@ export function Navbar({ className, ...props }: NavbarProps) {
                     <DropdownMenuContent className="w-48" align="end" forceMount>
                         <DropdownMenuLabel>My Account</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <Link href="/profile">
-                            <DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                            <Link href="/profile">
                                 <Icons.profile className="mr-2 h-4 w-4" />
                                 Profile
-                            </DropdownMenuItem>
-                        </Link>
-                        <Link href="/settings">
-                            <DropdownMenuItem>
+                            </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                            <Link href="/settings">
                                 <Icons.settings className="mr-2 h-4 w-4" />
                                 Settings
-                            </DropdownMenuItem>
-                        </Link>
+                            </Link>
+                        </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem>
                             <Icons.logout className="mr-2 h-4 w-4" />

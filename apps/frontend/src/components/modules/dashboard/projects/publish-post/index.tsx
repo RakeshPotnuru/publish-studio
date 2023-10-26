@@ -272,7 +272,7 @@ export function PublishPost({ children, ...props }: SidebarProps) {
                             open={openImageWidget}
                             setOpen={setOpenImageWidget}
                             isWidget
-                            onAdd={(url: string) => {
+                            onAdd={url => {
                                 setOpenImageWidget(false);
                                 setCoverImage(url);
                             }}

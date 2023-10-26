@@ -8,9 +8,14 @@ import TipTapHeading from "@tiptap/extension-heading";
 import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
+import Typography from "@tiptap/extension-typography";
 import Underline from "@tiptap/extension-underline";
 import { mergeAttributes, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import css from "highlight.js/lib/languages/css";
+import js from "highlight.js/lib/languages/javascript";
+import ts from "highlight.js/lib/languages/typescript";
+import html from "highlight.js/lib/languages/xml";
 import { all, createLowlight } from "lowlight";
 import { memo, useState } from "react";
 
@@ -37,10 +42,14 @@ interface EditorProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const MemorizedToC = memo(ToC);
 
+const lowlight = createLowlight(all);
+lowlight.register("html", html);
+lowlight.register("css", css);
+lowlight.register("js", js);
+lowlight.register("ts", ts);
+
 export function Editor({ className, ...props }: EditorProps) {
     const [items, setItems] = useState<TableOfContentDataItem[]>([]);
-
-    const lowlight = createLowlight(all);
 
     const editor = useEditor({
         extensions: [
@@ -93,6 +102,7 @@ export function Editor({ className, ...props }: EditorProps) {
                 lowlight,
                 HTMLAttributes: {
                     spellcheck: false,
+                    class: "bg-secondary text-sm p-4 rounded-md",
                 },
             }),
             Image.configure({
@@ -113,6 +123,7 @@ export function Editor({ className, ...props }: EditorProps) {
                     setItems(content);
                 },
             }),
+            Typography,
         ],
         editorProps: {
             attributes: {
@@ -120,7 +131,23 @@ export function Editor({ className, ...props }: EditorProps) {
             },
         },
         autofocus: true,
-        content: `<h1>Once upon a time...</h1><p>There was a <strong>bold</strong> fox.</p>`,
+        content: `<h1>Once upon a time...</h1><p>There was a <strong>bold</strong> fox.</p><p>
+          That's a boring paragraph followed by a fenced code block:
+        </p>
+        <pre><code class="language-javascript">for (var i=1; i <= 20; i++)
+{
+  if (i % 15 == 0)
+    console.log("FizzBuzz");
+  else if (i % 3 == 0)
+    console.log("Fizz");
+  else if (i % 5 == 0)
+    console.log("Buzz");
+  else
+    console.log(i);
+}</code></pre>
+        <p>
+          Press Command/Ctrl + Enter to leave the fenced code block and continue typing in boring paragraphs.
+        </p>`,
     });
 
     if (!editor) return null;

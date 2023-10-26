@@ -77,6 +77,9 @@ importers:
       '@tiptap/extension-placeholder':
         specifier: ^2.1.11
         version: 2.1.11(@tiptap/core@2.1.12)(@tiptap/pm@2.1.11)
+      '@tiptap/extension-typography':
+        specifier: ^2.1.12
+        version: 2.1.12(@tiptap/core@2.1.12)
       '@tiptap/extension-underline':
         specifier: ^2.1.11
         version: 2.1.11(@tiptap/core@2.1.12)
@@ -5450,6 +5453,14 @@ packages:
 
   /@tiptap/extension-text@2.1.12(@tiptap/core@2.1.12):
     resolution: {integrity: sha512-rCNUd505p/PXwU9Jgxo4ZJv4A3cIBAyAqlx/dtcY6cjztCQuXJhuQILPhjGhBTOLEEL4kW2wQtqzCmb7O8i2jg==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+    dependencies:
+      '@tiptap/core': 2.1.12(@tiptap/pm@2.1.11)
+    dev: false
+
+  /@tiptap/extension-typography@2.1.12(@tiptap/core@2.1.12):
+    resolution: {integrity: sha512-OFkQHmUbKQwVO0b/NP2MLuuqQIWxw/gHaWQF/atgZf3mG0YDV2x3P/u+RBpKnsIujPZFvoEBRJGnstvEAB7zfQ==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
     dependencies:

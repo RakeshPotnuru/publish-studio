@@ -21,7 +21,7 @@ export function ImageAction({ editor }: MenuProps) {
                 open={open}
                 setOpen={setOpen}
                 isWidget={true}
-                onAdd={(url: string) => {
+                onAdd={url => {
                     setOpen(false);
                     editor.chain().focus().setImage({ src: url }).run();
                 }}

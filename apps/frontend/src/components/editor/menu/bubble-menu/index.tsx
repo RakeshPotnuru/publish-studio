@@ -10,7 +10,13 @@ interface BubbleMenuProps extends MenuProps {}
 
 export function BubbleMenu({ editor }: BubbleMenuProps) {
     return (
-        <TiptapBubbleMenu editor={editor}>
+        <TiptapBubbleMenu
+            editor={editor}
+            shouldShow={({ editor, state }) =>
+                !state.selection.empty &&
+                (editor.isActive("paragraph") || editor.isActive("heading"))
+            }
+        >
             <div className="bg-popover text-popover-foreground flex flex-row items-center rounded-md border shadow-md">
                 <MenuShell>
                     <MarkActions editor={editor} isBubbleMenu />
