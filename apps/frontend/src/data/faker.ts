@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 import fs from "fs";
 import path from "path";
 
-const projects = Array.from({ length: 100 }, () => ({
+const projects = Array.from({ length: 23 }, () => ({
     _id: faker.string.uuid(),
     title: faker.lorem.sentence(),
     status: faker.helpers.arrayElement(["draft", "published", "scheduled"]),
@@ -14,7 +14,7 @@ fs.writeFileSync(path.join(__dirname, "projects.json"), JSON.stringify(projects,
 
 console.log("✅ Projects data generated.");
 
-const folders = Array.from({ length: 100 }, () => ({
+const folders = Array.from({ length: 24 }, () => ({
     _id: faker.string.uuid(),
     name: faker.lorem.words(3),
 }));
@@ -24,7 +24,7 @@ fs.writeFileSync(path.join(__dirname, "folders.json"), JSON.stringify(folders, n
 console.log("✅ Folders data generated.");
 
 const extensions = ["jpg", "png", "gif", "svg", "jpeg"];
-const assets = Array.from({ length: 100 }, () => ({
+const assets = Array.from({ length: 26 }, () => ({
     _id: faker.string.uuid(),
     name: faker.system.commonFileName(extensions[(Math.random() * extensions.length) | 0]),
     url: faker.image.url(),

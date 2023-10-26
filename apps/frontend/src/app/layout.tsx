@@ -1,6 +1,6 @@
 import "@/styles/globals.css";
 
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 
 import { ThemeToggleButton } from "@/components/dev-tools/theme-toggle";
 import { ThemeProvider } from "@/components/ui/theme-provider";
@@ -30,18 +30,19 @@ export const metadata: Metadata = {
         shortcut: "/favicon-16x16.png",
         apple: "/apple-touch-icon.png",
     },
-    themeColor: siteConfig.theme?.color,
     manifest: "/manifest.json",
-    viewport: {
-        width: "device-width",
-        initialScale: 1,
-    },
     appLinks: {
         web: {
             url: siteConfig.url,
         },
     },
     category: "Software",
+};
+
+export const viewport: Viewport = {
+    width: "device-width",
+    initialScale: 1,
+    themeColor: siteConfig.theme?.color,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
