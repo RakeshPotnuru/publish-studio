@@ -17,12 +17,35 @@ export function EditorFooter({ editor }: MenuProps & React.HTMLAttributes<HTMLDi
         setEditable(!editable);
     };
 
+    const getSelection = () => {
+        const { view, state } = editor;
+        const { from, to } = view.state.selection;
+        const text = state.doc.textBetween(from, to, "");
+        const words = text.split(" ").filter(word => word !== "");
+
+        if (view.state.selection.empty)
+            return {
+                text: "",
+                characterCount: editor.storage.characterCount.characters(),
+                wordCount: editor.storage.characterCount.words(),
+            };
+
+        return {
+            text: text,
+            characterCount: text.length,
+            wordCount: words.length,
+        };
+    };
+
     return (
         <div className="bg-background text-muted-foreground sticky bottom-0 flex flex-row items-center justify-between rounded-xl p-2 py-1 text-sm">
             <div className="flex flex-row items-center space-x-2">
-                <p>{editor.storage.characterCount.characters()} characters</p>
+                <p>
+                    {getSelection().characterCount || editor.storage.characterCount.characters()}{" "}
+                    characters
+                </p>
                 <Separator orientation="vertical" className="h-3 bg-gray-500" />
-                <p>{editor.storage.characterCount.words()} words</p>
+                <p>{getSelection().wordCount || editor.storage.characterCount.words()} words</p>
             </div>
             <div className="flex flex-row items-center space-x-2">
                 {isOnline ? (
@@ -30,19 +53,13 @@ export function EditorFooter({ editor }: MenuProps & React.HTMLAttributes<HTMLDi
                         {isLoading ? (
                             <Tooltip content="Changes are syncing">
                                 <span>
-                                    <Icons.syncing
-                                        onClick={handleEditable}
-                                        className="text-warning hover:opacity-80"
-                                    />
+                                    <Icons.syncing className="text-warning hover:opacity-80" />
                                 </span>
                             </Tooltip>
                         ) : (
                             <Tooltip content="All changes saved">
                                 <span>
-                                    <Icons.synced
-                                        onClick={handleEditable}
-                                        className="text-success hover:opacity-80"
-                                    />
+                                    <Icons.synced className="text-success hover:opacity-80" />
                                 </span>
                             </Tooltip>
                         )}
@@ -50,10 +67,7 @@ export function EditorFooter({ editor }: MenuProps & React.HTMLAttributes<HTMLDi
                 ) : (
                     <Tooltip content="You are offline">
                         <span>
-                            <Icons.offline
-                                onClick={handleEditable}
-                                className="text-destructive hover:opacity-80"
-                            />
+                            <Icons.offline className="text-destructive hover:opacity-80" />
                         </span>
                     </Tooltip>
                 )}
