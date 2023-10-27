@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Heading } from "@/components/ui/heading";
 import { Icons } from "@/components/ui/icons";
 import { Tooltip } from "@/components/ui/tooltip";
+import { useState } from "react";
 import { PlatformDialog } from "./platform-dialog";
 
 interface PlatformCardBaseProps {
@@ -40,6 +41,8 @@ export function PlatformCard({
     editForm,
     ...props
 }: PlatformCardProps & React.HTMLAttributes<HTMLDivElement>) {
+    const [askingForConfirmation, setAskingForConfirmation] = useState(false);
+
     return (
         <div className="flex flex-row justify-between rounded-lg border p-4" {...props}>
             <div className="flex flex-row space-x-2">
@@ -56,22 +59,44 @@ export function PlatformCard({
                         )}
                     </Heading>
                     {connected && (
-                        <Link href={profile_url}>
-                            <Button
-                                variant="link"
-                                className="text-muted-foreground h-max space-x-1 p-0"
-                            >
+                        <Button
+                            variant="link"
+                            className="text-muted-foreground h-max w-max p-0"
+                            asChild
+                        >
+                            <Link href={profile_url} target="_blank">
                                 @{username}
-                            </Button>
-                        </Link>
+                            </Link>
+                        </Button>
                     )}
                 </div>
             </div>
             {connected ? (
                 <div className="flex flex-row space-x-1">
-                    <Button size="sm" variant="destructive">
-                        Disconnect
-                    </Button>
+                    {askingForConfirmation ? (
+                        <div className="space-x-1 text-sm">
+                            <span>Confirm?</span>
+                            <Button variant="destructive" size="icon" className="h-8 w-8">
+                                <Icons.check />
+                            </Button>
+                            <Button
+                                onClick={() => setAskingForConfirmation(false)}
+                                variant="outline"
+                                size="icon"
+                                className="h-8 w-8"
+                            >
+                                <Icons.close />
+                            </Button>
+                        </div>
+                    ) : (
+                        <Button
+                            onClick={() => setAskingForConfirmation(true)}
+                            size="sm"
+                            variant="destructive"
+                        >
+                            Disconnect
+                        </Button>
+                    )}
                     <div>
                         <PlatformDialog mode="edit" platform={name} form={editForm}>
                             <Button size="icon" variant="outline" className="h-8 w-8">

@@ -2,6 +2,8 @@
 
 import { Heading } from "@/components/ui/heading";
 import { Images } from "@/components/ui/images";
+import { Button } from "@itsrakesh/ui";
+import Image from "next/image";
 import { DevConnectForm } from "./platforms/dev";
 import { HashnodeEditForm } from "./platforms/hashnode";
 import { MediumEditForm } from "./platforms/medium";
@@ -53,6 +55,21 @@ export function Integrations({ ...props }: IntegrationsProps) {
                         editForm={<HashnodeEditForm username="itsrakesh" />}
                         // connectForm={<HashnodeConnectForm />}
                     />
+                </div>
+            </div>
+            <div className="space-y-4">
+                <Heading level={2}>Import your content</Heading>
+                <div className="flex flex-wrap gap-4">
+                    <Button variant="outline" className="flex h-min flex-col space-y-2">
+                        <Image
+                            src={Images.mediumLogo}
+                            alt="Medium"
+                            width={50}
+                            height={50}
+                            className="rounded-lg"
+                        />
+                        <span>Medium</span>
+                    </Button>
                 </div>
             </div>
         </div>

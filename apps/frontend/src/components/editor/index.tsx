@@ -12,15 +12,11 @@ import Typography from "@tiptap/extension-typography";
 import Underline from "@tiptap/extension-underline";
 import { mergeAttributes, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import css from "highlight.js/lib/languages/css";
-import js from "highlight.js/lib/languages/javascript";
-import ts from "highlight.js/lib/languages/typescript";
-import html from "highlight.js/lib/languages/xml";
 import { all, createLowlight } from "lowlight";
 import { memo, useState } from "react";
 
 import { Heading } from "../ui/heading";
-import { Shell } from "../ui/shell";
+import { Shell } from "../ui/layouts/shell";
 import { EditorBody } from "./editor-body";
 import { EditorFooter } from "./editor-footer";
 import { BubbleMenu } from "./menu/bubble-menu";
@@ -43,10 +39,6 @@ interface EditorProps extends React.HTMLAttributes<HTMLDivElement> {}
 const MemorizedToC = memo(ToC);
 
 const lowlight = createLowlight(all);
-lowlight.register("html", html);
-lowlight.register("css", css);
-lowlight.register("js", js);
-lowlight.register("ts", ts);
 
 export function Editor({ className, ...props }: EditorProps) {
     const [items, setItems] = useState<TableOfContentDataItem[]>([]);

@@ -1,6 +1,6 @@
 import { BubbleMenu as TiptapBubbleMenu } from "@tiptap/react";
 
-import { MenuShell } from "@/components/ui/shell";
+import { MenuShell } from "@/components/ui/layouts/shell";
 import { LinkAction } from "../actions/link-action";
 import { MarkActions } from "../actions/mark-actions";
 import type { MenuProps } from "../fixed-menu";

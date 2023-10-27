@@ -14,10 +14,10 @@ import { z } from "zod";
 
 import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
-import { schema } from "..";
+import { formSchema } from "..";
 
 interface MediumProps {
-    form: UseFormReturn<z.infer<typeof schema>>;
+    form: UseFormReturn<z.infer<typeof formSchema>>;
 }
 
 export function Medium({ form }: MediumProps) {
@@ -29,7 +29,7 @@ export function Medium({ form }: MediumProps) {
                 render={({ field }) => (
                     <FormItem className="w-full">
                         <FormLabel>
-                            Tags (Enter comma seperated tags, max{" "}
+                            Tags (Optionally enter comma seperated tags, max{" "}
                             {constants.project.tags.medium.MAX_LENGTH}.)
                         </FormLabel>
                         <FormControl>

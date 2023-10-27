@@ -6,6 +6,7 @@ import {
     FormDescription,
     FormField,
     FormItem,
+    FormLabel,
     FormMessage,
     Input,
     Sheet,
@@ -34,9 +35,9 @@ import { CharactersLengthViewer } from "./characters-length-viewer";
 import { PlatformsField } from "./platforms";
 import { SchedulePost } from "./schedule-post";
 
-interface SidebarProps extends React.HTMLAttributes<HTMLDialogElement> {}
+interface PublishPostProps extends React.HTMLAttributes<HTMLDialogElement> {}
 
-export const schema = z.object({
+export const formSchema = z.object({
     title: z
         .string()
         .nonempty("Please enter a title for your post.")
@@ -63,34 +64,35 @@ export const schema = z.object({
     tags: z.object({
         hashnode_tags: z
             .string()
-            .nonempty("Please enter at least one tag.")
             .refine(
                 value =>
                     (value ?? "").split(",").length <= constants.project.tags.hashnode.MAX_LENGTH,
                 {
                     message: `Maximum ${constants.project.tags.hashnode.MAX_LENGTH} tags allowed.`,
                 },
-            ),
+            )
+            .optional(),
         devto_tags: z
             .string()
-            .nonempty("Please enter at least one tag.")
             .refine(
                 value => (value ?? "").split(",").length <= constants.project.tags.dev.MAX_LENGTH,
                 {
                     message: `Maximum ${constants.project.tags.dev.MAX_LENGTH} tags allowed.`,
                 },
-            ),
+            )
+            .optional(),
         medium_tags: z
             .string()
-            .nonempty("Please enter at least one tag.")
             .refine(
                 value =>
                     (value ?? "").split(",").length <= constants.project.tags.medium.MAX_LENGTH,
                 {
                     message: `Maximum ${constants.project.tags.medium.MAX_LENGTH} tags allowed.`,
                 },
-            ),
+            )
+            .optional(),
     }),
+    canonical_url: z.string().optional(),
 });
 
 // TODO: Temporary
@@ -110,14 +112,14 @@ const publishedPlatforms: {
     // { name: constants.user.platforms.HASHNODE },
 ];
 
-export function PublishPost({ children, ...props }: SidebarProps) {
+export function PublishPost({ children, ...props }: PublishPostProps) {
     const [coverImage, setCoverImage] = useState<string>();
     const [openImageWidget, setOpenImageWidget] = useState<boolean>(false);
 
     const { projectId } = useParams();
 
-    const form = useForm<z.infer<typeof schema>>({
-        resolver: zodResolver(schema),
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
         mode: "onBlur",
         defaultValues: {
             title: "",
@@ -128,10 +130,11 @@ export function PublishPost({ children, ...props }: SidebarProps) {
                 devto_tags: "",
                 medium_tags: "",
             },
+            canonical_url: "",
         },
     });
 
-    const onSubmit = (data: z.infer<typeof schema>) => {
+    const onSubmit = (data: z.infer<typeof formSchema>) => {
         console.log(data);
     };
 
@@ -146,9 +149,9 @@ export function PublishPost({ children, ...props }: SidebarProps) {
                     </SheetDescription>
                 </SheetHeader>
                 {connectedPlatforms.length > 0 ? (
-                    <div className="my-4">
+                    <>
                         <Form {...form}>
-                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                            <form onSubmit={form.handleSubmit(onSubmit)} className="my-4 space-y-8">
                                 <div className="flex max-h-[80vh] flex-col items-center space-y-4 overflow-auto">
                                     <Button
                                         onClick={() => setOpenImageWidget(true)}
@@ -159,7 +162,7 @@ export function PublishPost({ children, ...props }: SidebarProps) {
                                         Select cover image
                                     </Button>
                                     {coverImage && (
-                                        <div className="max-h-[10rem] overflow-auto border p-2 shadow-inner">
+                                        <div className="min-h-[10rem] overflow-auto border p-2 shadow-inner">
                                             <Image
                                                 src={coverImage}
                                                 alt="Post title"
@@ -173,6 +176,7 @@ export function PublishPost({ children, ...props }: SidebarProps) {
                                         name="title"
                                         render={({ field }) => (
                                             <FormItem className="w-full">
+                                                <FormLabel>Title</FormLabel>
                                                 <FormControl>
                                                     <Input
                                                         type="text"
@@ -207,6 +211,7 @@ export function PublishPost({ children, ...props }: SidebarProps) {
                                         name="description"
                                         render={({ field }) => (
                                             <FormItem className="w-full">
+                                                <FormLabel>Description</FormLabel>
                                                 <FormControl>
                                                     <Textarea
                                                         placeholder="Post description"
@@ -239,6 +244,28 @@ export function PublishPost({ children, ...props }: SidebarProps) {
                                     <PlatformsField
                                         form={form}
                                         connectedPlatforms={connectedPlatforms}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="canonical_url"
+                                        render={({ field }) => (
+                                            <FormItem className="w-full">
+                                                <FormLabel>Canonical URL (Optional)</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        type="url"
+                                                        placeholder="https://example.com/post"
+                                                        disabled={form.formState.isSubmitting}
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+                                                <FormDescription>
+                                                    Enter the original URL of the post if you are
+                                                    republishing it.
+                                                </FormDescription>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
                                     />
                                 </div>
                                 <SheetFooter className="bg-background sticky bottom-0 py-4">
@@ -277,7 +304,7 @@ export function PublishPost({ children, ...props }: SidebarProps) {
                                 setCoverImage(url);
                             }}
                         />
-                    </div>
+                    </>
                 ) : (
                     <div className="text-muted-foreground flex h-full flex-col items-center justify-center space-y-4 text-center">
                         <p>

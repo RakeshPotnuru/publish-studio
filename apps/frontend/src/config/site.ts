@@ -15,6 +15,16 @@ export const siteConfig = {
         mediumTags: "https://medium.com/topics",
     },
     pages: {
+        privacyPolicy: {
+            title: "Privacy Policy",
+            description: "Privacy Policy",
+            link: "/privacy-policy",
+        },
+        termsOfService: {
+            title: "Terms of Service",
+            description: "Terms of Service",
+            link: "/terms-of-service",
+        },
         login: {
             title: "Login",
             description: "Login to Publish Studio",

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { Navbar } from "@/components/ui/navbar";
+import { Navbar } from "@/components/ui/layouts/navbar";
 import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {

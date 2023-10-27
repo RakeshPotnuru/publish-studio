@@ -16,9 +16,9 @@ import { cn } from "@itsrakesh/utils";
 import Image from "next/image";
 import Link from "next/link";
 
-import { Icons } from "./icons";
-import { Images } from "./images";
-import { Tooltip } from "./tooltip";
+import { Icons } from "../icons";
+import { Images } from "../images";
+import { Tooltip } from "../tooltip";
 
 const NavItem = ({ icon, tooltip }: { icon: React.ReactNode; tooltip: string }) => (
     <Tooltip content={tooltip}>
@@ -49,7 +49,7 @@ export function Navbar({ className, ...props }: NavbarProps) {
                     className="rounded-md drop-shadow-md"
                 />
             </Link>
-            <div className="flex flex-row items-center space-x-1 text-gray-700 dark:text-gray-300">
+            <div className="flex flex-row items-center space-x-1">
                 <NavItem icon={<Icons.question className="h-5 w-5" />} tooltip="Help" />
                 <NavItem
                     icon={<Icons.notifications className="h-5 w-5" />}

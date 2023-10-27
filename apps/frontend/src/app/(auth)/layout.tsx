@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { siteConfig } from "@/config/site";
-import { Footer } from "@/components/ui/footer";
+import { Footer } from "@/components/ui/layouts/footer";
 
 export const metadata: Metadata = {
     title: { template: `%s | ${siteConfig.title}`, default: "Authentication" },

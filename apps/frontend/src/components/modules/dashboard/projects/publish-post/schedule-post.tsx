@@ -16,7 +16,7 @@ export function SchedulePost({ children }: SchedulePostProps) {
 
     const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const [hours, minutes] = event.target.value.split(":");
-        const newTime = new Date(date || new Date());
+        const newTime = new Date(date ?? new Date());
         newTime.setHours(Number(hours));
         newTime.setMinutes(Number(minutes));
         setDate(newTime);
@@ -45,15 +45,14 @@ export function SchedulePost({ children }: SchedulePostProps) {
                             <Input
                                 onChange={handleTimeChange}
                                 type="time"
-                                value={format(date || initialDate, "HH:mm")}
+                                value={format(date ?? initialDate, "HH:mm")}
                                 min={format(minDate, "HH:mm")}
                                 onKeyDown={event => event.preventDefault()}
                             />
                             {date && (
                                 <p className="text-sm">
                                     <span className="font-semibold">Scheduled for:</span>{" "}
-                                    {format(date, "PPPp")}
-                                    <br />({format(date, "zzzz")})
+                                    {format(date, "PPPp")} ({format(date, "zzzz")})
                                 </p>
                             )}
                             {date && date <= minDate && (

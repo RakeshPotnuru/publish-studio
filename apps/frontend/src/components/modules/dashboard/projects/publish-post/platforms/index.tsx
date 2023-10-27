@@ -5,13 +5,14 @@ import {
     FormField,
     FormItem,
     FormLabel,
+    FormMessage,
 } from "@itsrakesh/ui";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 
 import { Images } from "@/components/ui/images";
 import { constants } from "@/config/constants";
-import { schema } from "..";
+import { formSchema } from "..";
 import { Dev } from "./dev";
 import { Hashnode } from "./hashnode";
 import { Medium } from "./medium";
@@ -20,7 +21,7 @@ interface IPlatformConfig {
     label: string;
     value: (typeof constants.user.platforms)[keyof typeof constants.user.platforms];
     logo: string;
-    component: (form: UseFormReturn<z.infer<typeof schema>>) => JSX.Element;
+    component: (form: UseFormReturn<z.infer<typeof formSchema>>) => JSX.Element;
 }
 
 const platformConfig: IPlatformConfig[] = [
@@ -28,24 +29,24 @@ const platformConfig: IPlatformConfig[] = [
         label: "Dev.to",
         value: constants.user.platforms.DEVTO,
         logo: Images.devLogo,
-        component: (form: UseFormReturn<z.infer<typeof schema>>) => <Dev form={form} />,
+        component: (form: UseFormReturn<z.infer<typeof formSchema>>) => <Dev form={form} />,
     },
     {
         label: "Medium",
         value: constants.user.platforms.MEDIUM,
         logo: Images.mediumLogo,
-        component: (form: UseFormReturn<z.infer<typeof schema>>) => <Medium form={form} />,
+        component: (form: UseFormReturn<z.infer<typeof formSchema>>) => <Medium form={form} />,
     },
     {
         label: "Hashnode",
         value: constants.user.platforms.HASHNODE,
         logo: Images.hashnodeLogo,
-        component: (form: UseFormReturn<z.infer<typeof schema>>) => <Hashnode form={form} />,
+        component: (form: UseFormReturn<z.infer<typeof formSchema>>) => <Hashnode form={form} />,
     },
 ];
 
 interface PlatformsFieldProps {
-    form: UseFormReturn<z.infer<typeof schema>>;
+    form: UseFormReturn<z.infer<typeof formSchema>>;
     connectedPlatforms: (typeof constants.user.platforms)[keyof typeof constants.user.platforms][];
 }
 
@@ -69,7 +70,7 @@ export const PlatformsField = ({ form, connectedPlatforms }: PlatformsFieldProps
                                 name="platforms"
                                 render={({ field }) => {
                                     return (
-                                        <div className="flex flex-col space-y-2">
+                                        <div className="flex flex-col space-y-2 rounded-md border p-2">
                                             <FormItem
                                                 key={platform.value}
                                                 className="flex items-center space-x-2 space-y-0"
@@ -106,6 +107,7 @@ export const PlatformsField = ({ form, connectedPlatforms }: PlatformsFieldProps
                                 }}
                             />
                         ))}
+                    <FormMessage />
                 </FormItem>
             )}
         />

@@ -1,7 +1,7 @@
 import type { Editor } from "@tiptap/react";
 
 import { Icons } from "@/components/ui/icons";
-import { MenuShell } from "@/components/ui/shell";
+import { MenuShell } from "@/components/ui/layouts/shell";
 import { HistoryActions } from "../actions/history-actions";
 import { ImageAction } from "../actions/image-action";
 import { LinkAction } from "../actions/link-action";

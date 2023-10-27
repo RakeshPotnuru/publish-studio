@@ -1,7 +1,9 @@
 "use client";
 
+import { siteConfig } from "@/config/site";
 import { Button } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
+import Link from "next/link";
 
 interface FooterProps extends React.HTMLAttributes<HTMLElement> {}
 
@@ -16,10 +18,14 @@ export function Footer({ className, ...props }: FooterProps) {
         >
             <p className="text-sm">&copy; Publish Studio</p>
             <Button variant="link" className="h-max p-0" asChild>
-                Privacy Policy
+                <Link href={siteConfig.pages.privacyPolicy.link} target="_blank">
+                    Privacy Policy
+                </Link>
             </Button>
             <Button variant="link" className="h-max p-0" asChild>
-                Terms of Service
+                <Link href={siteConfig.pages.termsOfService.link} target="_blank">
+                    Terms of Service
+                </Link>
             </Button>
         </footer>
     );
