@@ -44,6 +44,8 @@ import {
     MdKeyboardDoubleArrowLeft,
     MdKeyboardDoubleArrowRight,
     MdManageAccounts,
+    MdOutlineFullscreen,
+    MdOutlineFullscreenExit,
     MdPermMedia,
     MdScheduleSend,
     MdSettings,
@@ -119,4 +121,6 @@ export const Icons = {
     connect: TbPlugConnected,
     save: BiSolidSave,
     calendar: IoCalendar,
+    fullscreen: MdOutlineFullscreen,
+    fullscreenexit: MdOutlineFullscreenExit,
 };

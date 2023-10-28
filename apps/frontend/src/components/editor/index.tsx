@@ -119,7 +119,7 @@ export function Editor({ className, ...props }: EditorProps) {
         ],
         editorProps: {
             attributes: {
-                class: "bg-background min-h-screen rounded-3xl shadow-sm p-8 outline-none space-y-4",
+                class: "bg-background max-h-[90vh] h-screen rounded-3xl shadow-sm p-8 outline-none space-y-4 overflow-auto",
             },
         },
         autofocus: true,
@@ -127,16 +127,16 @@ export function Editor({ className, ...props }: EditorProps) {
           That's a boring paragraph followed by a fenced code block:
         </p>
         <pre><code class="language-javascript">for (var i=1; i <= 20; i++)
-{
-  if (i % 15 == 0)
-    console.log("FizzBuzz");
-  else if (i % 3 == 0)
-    console.log("Fizz");
-  else if (i % 5 == 0)
-    console.log("Buzz");
-  else
-    console.log(i);
-}</code></pre>
+            {
+            if (i % 15 == 0)
+                console.log("FizzBuzz");
+            else if (i % 3 == 0)
+                console.log("Fizz");
+            else if (i % 5 == 0)
+                console.log("Buzz");
+            else
+                console.log(i);
+            }</code></pre>
         <p>
           Press Command/Ctrl + Enter to leave the fenced code block and continue typing in boring paragraphs.
         </p>`,
@@ -146,7 +146,7 @@ export function Editor({ className, ...props }: EditorProps) {
 
     return (
         <div className={cn("flex flex-row space-x-4", className)} {...props}>
-            <div className="w-3/4 space-y-4">
+            <div id="editor" className="w-3/4 space-y-4">
                 <FixedMenu editor={editor} />
                 <BubbleMenu editor={editor} />
                 <EditorBody editor={editor} />
