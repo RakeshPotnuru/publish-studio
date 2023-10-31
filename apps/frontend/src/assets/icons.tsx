@@ -18,6 +18,8 @@ import {
     BiPlus,
     BiSolidErrorAlt,
     BiSolidHide,
+    BiSolidMicrophone,
+    BiSolidMicrophoneOff,
     BiSolidSave,
 } from "react-icons/bi";
 import {
@@ -41,6 +43,7 @@ import { IoCalendar, IoCheckmarkDoneCircleSharp } from "react-icons/io5";
 import {
     MdDriveFileMoveRtl,
     MdEditDocument,
+    MdFormatClear,
     MdKeyboardDoubleArrowLeft,
     MdKeyboardDoubleArrowRight,
     MdManageAccounts,
@@ -123,4 +126,7 @@ export const Icons = {
     calendar: IoCalendar,
     fullscreen: MdOutlineFullscreen,
     fullscreenexit: MdOutlineFullscreenExit,
+    clearFormatting: MdFormatClear,
+    mic: BiSolidMicrophone,
+    micoff: BiSolidMicrophoneOff,
 };

@@ -2,9 +2,9 @@ import { Button, Input } from "@itsrakesh/ui";
 import { Table } from "@tanstack/react-table";
 import { useState } from "react";
 
+import { Icons } from "@/assets/icons";
 import { DataTableViewOptions } from "@/components/ui/data-table";
 import { DataTableFacetedFilter } from "@/components/ui/data-table/faceted-filter";
-import { Icons } from "@/components/ui/icons";
 import { constants } from "@/config/constants";
 
 interface ToolbarProps<TData> {

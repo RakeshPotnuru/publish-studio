@@ -24,7 +24,7 @@ import {
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Icons } from "@/components/ui/icons";
+import { Icons } from "@/assets/icons";
 import folders from "@/data/folders.json";
 import { cn } from "@itsrakesh/utils";
 

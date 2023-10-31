@@ -25,8 +25,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { Icons } from "@/assets/icons";
 import { HookFormDevTool } from "@/components/dev-tools/hookform-dev-tool";
-import { Icons } from "@/components/ui/icons";
 import { ImageWidget } from "@/components/ui/image-widget";
 import { Tooltip } from "@/components/ui/tooltip";
 import { constants } from "@/config/constants";

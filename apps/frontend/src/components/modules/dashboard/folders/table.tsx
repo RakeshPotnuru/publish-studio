@@ -14,8 +14,8 @@ import {
 } from "@tanstack/react-table";
 import { useState } from "react";
 
+import { Icons } from "@/assets/icons";
 import { DataTablePagination } from "@/components/ui/data-table";
-import { Icons } from "@/components/ui/icons";
 import { Toolbar } from "./toolbar";
 
 interface FoldersTableProps<TData, TValue> {

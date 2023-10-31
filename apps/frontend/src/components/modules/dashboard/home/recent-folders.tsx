@@ -1,8 +1,8 @@
 import { Button } from "@itsrakesh/ui";
 import Link from "next/link";
 
+import { Icons } from "@/assets/icons";
 import { Heading } from "@/components/ui/heading";
-import { Icons } from "@/components/ui/icons";
 import folders from "@/data/folders.json";
 import { shortenText } from "@/lib/text-shortner";
 

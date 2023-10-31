@@ -5,8 +5,8 @@ import { useTheme } from "next-themes";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
+import { Images } from "@/assets/images";
 import { Heading } from "@/components/ui/heading";
-import { Images } from "@/components/ui/images";
 
 interface AppearanceProps extends React.HTMLAttributes<HTMLDivElement> {}
 

@@ -3,8 +3,8 @@ import { cn } from "@itsrakesh/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 
+import { Icons } from "@/assets/icons";
 import { DataTableColumnHeader } from "@/components/ui/data-table";
-import { Icons } from "@/components/ui/icons";
 import { constants } from "@/config/constants";
 import { shortenText } from "@/lib/text-shortner";
 import { RowActions } from "./row-actions";

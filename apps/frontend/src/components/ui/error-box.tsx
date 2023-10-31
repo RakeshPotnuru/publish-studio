@@ -1,6 +1,6 @@
 import { Alert, AlertDescription, AlertTitle } from "@itsrakesh/ui";
 
-import { Icons } from "./icons";
+import { Icons } from "../../assets/icons";
 
 interface ErrorBoxProps {
     title: string;

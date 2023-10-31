@@ -16,8 +16,8 @@ import { cn } from "@itsrakesh/utils";
 import Image from "next/image";
 import Link from "next/link";
 
-import { Icons } from "../icons";
-import { Images } from "../images";
+import { Icons } from "../../../assets/icons";
+import { Images } from "../../../assets/images";
 import { Tooltip } from "../tooltip";
 
 const NavItem = ({ icon, tooltip }: { icon: React.ReactNode; tooltip: string }) => (

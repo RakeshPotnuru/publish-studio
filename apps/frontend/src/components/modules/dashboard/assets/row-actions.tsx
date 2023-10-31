@@ -2,7 +2,7 @@ import { Button, DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "
 import { Row } from "@tanstack/react-table";
 import { useState } from "react";
 
-import { Icons } from "@/components/ui/icons";
+import { Icons } from "@/assets/icons";
 
 interface RowActionsProps<TData> {
     row: Row<TData>;

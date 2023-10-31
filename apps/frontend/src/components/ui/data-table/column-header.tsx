@@ -9,7 +9,7 @@ import {
 import { cn } from "@itsrakesh/utils";
 import { Column } from "@tanstack/react-table";
 
-import { Icons } from "../icons";
+import { Icons } from "../../../assets/icons";
 
 interface DataTableColumnHeaderProps<TData, TValue> extends React.HTMLAttributes<HTMLDivElement> {
     column: Column<TData, TValue>;

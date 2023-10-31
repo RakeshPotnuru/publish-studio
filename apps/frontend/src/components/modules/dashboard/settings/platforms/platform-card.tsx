@@ -2,8 +2,8 @@ import { Button } from "@itsrakesh/ui";
 import Image from "next/image";
 import Link from "next/link";
 
+import { Icons } from "@/assets/icons";
 import { Heading } from "@/components/ui/heading";
-import { Icons } from "@/components/ui/icons";
 import { Tooltip } from "@/components/ui/tooltip";
 import { useState } from "react";
 import { PlatformDialog } from "./platform-dialog";

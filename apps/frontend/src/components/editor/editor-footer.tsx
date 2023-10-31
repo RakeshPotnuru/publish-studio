@@ -1,7 +1,7 @@
 import { Separator } from "@itsrakesh/ui";
 import { useState } from "react";
 
-import { Icons } from "../ui/icons";
+import { Icons } from "../../assets/icons";
 import { Tooltip } from "../ui/tooltip";
 import type { MenuProps } from "./menu/fixed-menu";
 

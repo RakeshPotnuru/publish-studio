@@ -2,7 +2,7 @@ import { Button, Input } from "@itsrakesh/ui";
 import { Table } from "@tanstack/react-table";
 import { useState } from "react";
 
-import { Icons } from "@/components/ui/icons";
+import { Icons } from "@/assets/icons";
 
 interface ToolbarProps<TData> {
     table: Table<TData>;

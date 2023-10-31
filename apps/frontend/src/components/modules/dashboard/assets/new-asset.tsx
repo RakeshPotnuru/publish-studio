@@ -11,8 +11,8 @@ import {
 import { cn } from "@itsrakesh/utils";
 import { useRef, useState } from "react";
 
+import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
-import { Icons } from "@/components/ui/icons";
 import { constants } from "@/config/constants";
 import { formatFileSize } from "@/lib/file-size";
 import { shortenText } from "@/lib/text-shortner";

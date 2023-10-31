@@ -10,7 +10,7 @@ import { Row } from "@tanstack/react-table";
 import Link from "next/link";
 import { useState } from "react";
 
-import { Icons } from "@/components/ui/icons";
+import { Icons } from "@/assets/icons";
 import { IProject } from "./columns";
 import { MoveProject } from "./move-project";
 

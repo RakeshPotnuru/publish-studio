@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { Icons } from "@/components/ui/icons";
+import { Icons } from "@/assets/icons";
 import { toggleFullscreen } from "@/lib/fullscreen-mode";
 import { MenuProps } from "../fixed-menu";
 import { MenuAction } from "../menu-action";

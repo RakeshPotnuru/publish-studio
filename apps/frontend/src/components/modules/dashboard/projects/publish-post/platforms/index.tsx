@@ -10,7 +10,7 @@ import {
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 
-import { Images } from "@/components/ui/images";
+import { Images } from "@/assets/images";
 import { constants } from "@/config/constants";
 import { formSchema } from "..";
 import { Dev } from "./dev";

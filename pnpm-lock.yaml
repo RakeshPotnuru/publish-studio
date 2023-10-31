@@ -59,6 +59,9 @@ importers:
       '@tiptap-pro/extension-table-of-content':
         specifier: ^2.3.3
         version: 2.3.3(@tiptap/core@2.1.12)(@tiptap/pm@2.1.11)
+      '@tiptap/core':
+        specifier: ^2.1.12
+        version: 2.1.12(@tiptap/pm@2.1.11)
       '@tiptap/extension-character-count':
         specifier: ^2.1.11
         version: 2.1.11(@tiptap/core@2.1.12)(@tiptap/pm@2.1.11)
@@ -102,8 +105,8 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0
       lowlight:
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: ^3.1.0
+        version: 3.1.0
       next:
         specifier: 14.0.0
         version: 14.0.0(react-dom@18.2.0)(react@18.2.0)
@@ -5662,7 +5665,7 @@ packages:
   /@types/hast@3.0.2:
     resolution: {integrity: sha512-B5hZHgHsXvfCoO3xgNJvBnX7N8p86TqQeGKXcokW4XXi+qY4vxxPSFYofytvVmpFxzPv7oxDQzjg5Un5m2/xiw==}
     dependencies:
-      '@types/unist': 3.0.1
+      '@types/unist': 2.0.9
     dev: false
 
   /@types/http-errors@2.0.3:
@@ -5798,8 +5801,8 @@ packages:
     resolution: {integrity: sha512-5eQEtSCoESnh2FsiLTxE121IiE60hnMqcb435fShf4bpLRjEu1Eoekht23y6zXS9Ts3l+Szu3TARnTsA0GkOkQ==}
     dev: false
 
-  /@types/unist@3.0.1:
-    resolution: {integrity: sha512-ue/hDUpPjC85m+PM9OQDMZr3LywT+CT6mPsQq8OJtCLiERkGRcQUFvu9XASF5XWqyZFXbf15lvb3JFJ4dRLWPg==}
+  /@types/unist@2.0.9:
+    resolution: {integrity: sha512-zC0iXxAv1C1ERURduJueYzkzZ2zaGyc+P2c95hgkikHPr3z8EdUZOlgEQ5X0DRmwDZn+hekycQnoeiiRVrmilQ==}
     dev: false
 
   /@types/uuid@9.0.2:
@@ -8399,8 +8402,8 @@ packages:
     dependencies:
       function-bind: 1.1.2
 
-  /highlight.js@11.8.0:
-    resolution: {integrity: sha512-MedQhoqVdr0U6SSnWPzfiadUcDHfN/Wzq25AkXiQv9oiOO/sG0S7XkvpFIqWBl9Yq1UYyYOOVORs5UW2XlPyzg==}
+  /highlight.js@11.9.0:
+    resolution: {integrity: sha512-fJ7cW7fQGCYAkgv4CPfwFHrfd/cLS4Hau96JuJ+ZTOWhjnhoeN1ub1tFmALm/+lW5z4WCAuAV9bm05AP0mS6Gw==}
     engines: {node: '>=12.0.0'}
     dev: false
 
@@ -9587,12 +9590,12 @@ packages:
       get-func-name: 2.0.2
     dev: true
 
-  /lowlight@3.0.0:
-    resolution: {integrity: sha512-kedX6yxvgak8P4LGh3vKRDQuMbVcnP+qRuDJlve2w+mNJAbEhEQPjYCp9QJnpVL5F2aAAVjeIzzrbQZUKHiDJw==}
+  /lowlight@3.1.0:
+    resolution: {integrity: sha512-CEbNVoSikAxwDMDPjXlqlFYiZLkDJHwyGu/MfOsJnF3d7f3tds5J3z8s/l9TMXhzfsJCCJEAsD78842mwmg0PQ==}
     dependencies:
       '@types/hast': 3.0.2
       devlop: 1.1.0
-      highlight.js: 11.8.0
+      highlight.js: 11.9.0
     dev: false
 
   /lru-cache@10.0.1:

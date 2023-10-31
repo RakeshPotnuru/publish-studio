@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Icons } from "@/components/ui/icons";
+import { Icons } from "@/assets/icons";
 import { ImageWidget } from "@/components/ui/image-widget";
 import { MenuProps } from "../fixed-menu";
 import { MenuAction } from "../menu-action";

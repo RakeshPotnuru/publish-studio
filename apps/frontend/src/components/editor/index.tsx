@@ -15,6 +15,7 @@ import StarterKit from "@tiptap/starter-kit";
 import { all, createLowlight } from "lowlight";
 import { memo, useState } from "react";
 
+import { constants } from "@/config/constants";
 import { Heading } from "../ui/heading";
 import { Shell } from "../ui/layouts/shell";
 import { EditorBody } from "./editor-body";
@@ -22,6 +23,7 @@ import { EditorFooter } from "./editor-footer";
 import { BubbleMenu } from "./menu/bubble-menu";
 import { FixedMenu } from "./menu/fixed-menu";
 import { ToC } from "./toc";
+import SpeechRecognition from "./custom-extensions/speech-recognition";
 
 type Levels = 1 | 2 | 3 | 4 | 5 | 6;
 
@@ -94,7 +96,7 @@ export function Editor({ className, ...props }: EditorProps) {
                 lowlight,
                 HTMLAttributes: {
                     spellcheck: false,
-                    class: "bg-secondary text-sm p-4 rounded-md",
+                    class: "bg-code text-code-foreground text-sm p-4 rounded-md",
                 },
             }),
             Image.configure({
@@ -103,7 +105,7 @@ export function Editor({ className, ...props }: EditorProps) {
                 },
             }),
             CharacterCount.configure({
-                limit: 100000,
+                limit: constants.project.body.MAX_LENGTH,
             }),
             Link.configure({
                 HTMLAttributes: {
@@ -116,6 +118,7 @@ export function Editor({ className, ...props }: EditorProps) {
                 },
             }),
             Typography,
+            SpeechRecognition,
         ],
         editorProps: {
             attributes: {
@@ -123,20 +126,24 @@ export function Editor({ className, ...props }: EditorProps) {
             },
         },
         autofocus: true,
-        content: `<h1>Once upon a time...</h1><p>There was a <strong>bold</strong> fox.</p><p>
+        content: `
+        <h1>Once upon a time...</h1>
+        <p>There was a <strong>bold</strong> fox.</p>
+        <p>
           That's a boring paragraph followed by a fenced code block:
         </p>
-        <pre><code class="language-javascript">for (var i=1; i <= 20; i++)
-            {
-            if (i % 15 == 0)
-                console.log("FizzBuzz");
-            else if (i % 3 == 0)
-                console.log("Fizz");
-            else if (i % 5 == 0)
-                console.log("Buzz");
-            else
-                console.log(i);
-            }</code></pre>
+<pre><code class="language-javascript">
+    for (var i=1; i <= 20; i++) {
+        if (i % 15 == 0)
+            console.log("FizzBuzz");
+        else if (i % 3 == 0)
+            console.log("Fizz");
+        else if (i % 5 == 0)
+            console.log("Buzz");
+        else
+            console.log(i);
+    }
+</code></pre>
         <p>
           Press Command/Ctrl + Enter to leave the fenced code block and continue typing in boring paragraphs.
         </p>`,

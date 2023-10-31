@@ -64,6 +64,18 @@ module.exports = {
                     DEFAULT: "hsl(var(--card))",
                     foreground: "hsl(var(--card-foreground))",
                 },
+                code: {
+                    DEFAULT: "hsl(var(--code))",
+                    foreground: "hsl(var(--code-foreground))",
+                },
+                pexels: {
+                    DEFAULT: "#05A081",
+                    foreground: "#FFFFFF",
+                },
+                unsplash: {
+                    DEFAULT: "#111111",
+                    foreground: "#FFFFFF",
+                },
             },
             borderRadius: {
                 lg: `var(--radius)`,

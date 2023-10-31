@@ -1,7 +1,7 @@
 "use client";
 
+import { Images } from "@/assets/images";
 import { Heading } from "@/components/ui/heading";
-import { Images } from "@/components/ui/images";
 import { Button } from "@itsrakesh/ui";
 import Image from "next/image";
 import { DevConnectForm } from "./platforms/dev";

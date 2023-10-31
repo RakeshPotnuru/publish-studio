@@ -5,7 +5,7 @@ import { cn } from "@itsrakesh/utils";
 import Link from "next/link";
 import { usePathname, useSelectedLayoutSegment } from "next/navigation";
 
-import { Icons } from "@/components/ui/icons";
+import { Icons } from "@/assets/icons";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLElement> {}
 

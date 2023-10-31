@@ -2,8 +2,8 @@
 
 import { Button } from "@itsrakesh/ui";
 
+import { Icons } from "@/assets/icons";
 import { Heading } from "@/components/ui/heading";
-import { Icons } from "@/components/ui/icons";
 import data from "@/data/folders.json";
 import { columns } from "./columns";
 import { NewFolderDialog } from "./new-folder";

@@ -16,7 +16,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Icons } from "@/components/ui/icons";
+import { Icons } from "@/assets/icons";
 import { siteConfig } from "@/config/site";
 
 const formSchema = z.object({

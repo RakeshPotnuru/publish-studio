@@ -2,8 +2,8 @@
 
 import { Button } from "@itsrakesh/ui";
 
+import { Icons } from "@/assets/icons";
 import { Heading } from "@/components/ui/heading";
-import { Icons } from "@/components/ui/icons";
 import data from "@/data/projects.json";
 import { columns } from "./columns";
 import { NewProjectDialog } from "./new-project";

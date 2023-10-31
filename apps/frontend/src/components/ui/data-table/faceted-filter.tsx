@@ -17,7 +17,7 @@ import { cn } from "@itsrakesh/utils";
 import { Column } from "@tanstack/react-table";
 import * as React from "react";
 
-import { Icons } from "../icons";
+import { Icons } from "../../../assets/icons";
 
 interface DataTableFacetedFilterProps<TData, TValue> {
     column?: Column<TData, TValue>;

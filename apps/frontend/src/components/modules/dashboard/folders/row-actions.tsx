@@ -9,7 +9,7 @@ import {
 import { Row } from "@tanstack/react-table";
 import { useState } from "react";
 
-import { Icons } from "@/components/ui/icons";
+import { Icons } from "@/assets/icons";
 import { IFolder } from "./columns";
 import { EditFolderDialog } from "./edit-folder";
 
