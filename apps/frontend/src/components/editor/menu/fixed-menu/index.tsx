@@ -1,8 +1,8 @@
-import type { Editor } from "@tiptap/react";
+import { type Editor } from "@tiptap/react";
+import { useState } from "react";
 
 import { Icons } from "@/assets/icons";
 import { MenuShell } from "@/components/ui/layouts/shell";
-import { useState } from "react";
 import { FullscreenAction } from "../actions/fullscreen-action";
 import { HistoryActions } from "../actions/history-actions";
 import { ImageAction } from "../actions/image-action";
@@ -73,7 +73,7 @@ export function FixedMenu({
                     <MenuAction
                         editor={editor}
                         name="stopSpeechRecognition"
-                        icon={<Icons.mic />}
+                        icon={<Icons.mic className="animate-pulse" />}
                         command={() => {
                             setIsDictating(false);
                             editor.commands.stopSpeechRecognition();
