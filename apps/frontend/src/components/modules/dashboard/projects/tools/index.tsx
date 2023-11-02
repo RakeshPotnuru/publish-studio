@@ -9,7 +9,7 @@ import {
 
 import { MenuProps } from "@/components/editor/menu/fixed-menu";
 import { DownloadProject } from "./download-project";
-import { ImportMarkdown } from "./import-markdown";
+import { ImportMarkdown } from "./import-content";
 
 interface ProjectToolsProps extends React.HTMLAttributes<HTMLDivElement> {}
 
