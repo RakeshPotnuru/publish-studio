@@ -10,7 +10,7 @@ import { ProjectTools } from "./tools";
 
 interface ProjectProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-const SideButton = forwardRef<HTMLButtonElement, React.HTMLAttributes<HTMLButtonElement>>(
+export const SideButton = forwardRef<HTMLButtonElement, React.HTMLAttributes<HTMLButtonElement>>(
     ({ children, className, ...props }, ref) => {
         return (
             <Button
@@ -35,9 +35,6 @@ export function Project({ ...props }: ProjectProps) {
             <PublishPost>
                 <SideButton>Publish Post</SideButton>
             </PublishPost>
-            <ProjectTools>
-                <SideButton className="right-0 top-64 -mr-6 hover:-mr-4">Tools</SideButton>
-            </ProjectTools>
         </div>
     );
 }

@@ -42,7 +42,7 @@ export function NodeActions({ editor }: MenuProps) {
                 editor={editor}
                 name="orderedlist"
                 icon={<Icons.orderedlist />}
-                command={() => editor.chain().focus().toggleBulletList().run()}
+                command={() => editor.chain().focus().toggleOrderedList().run()}
                 tooltip="Ordered List"
                 shortcut={{
                     mac: "⌘ + Shift + 7",

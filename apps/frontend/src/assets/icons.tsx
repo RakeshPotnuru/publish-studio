@@ -33,7 +33,7 @@ import {
     BsFillSunFill,
 } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
-import { FaFolder, FaPaintRoller, FaPuzzlePiece } from "react-icons/fa";
+import { FaFolder, FaMarkdown, FaPaintRoller, FaPuzzlePiece } from "react-icons/fa";
 import { FiItalic, FiUnderline } from "react-icons/fi";
 import { GoBold } from "react-icons/go";
 import { GrRedo, GrUndo } from "react-icons/gr";
@@ -59,6 +59,7 @@ import { RiFoldersFill } from "react-icons/ri";
 import { RxCaretSort, RxCross2, RxDividerHorizontal, RxMixerHorizontal } from "react-icons/rx";
 import { TbBlockquote, TbPlugConnected } from "react-icons/tb";
 import { TiLockClosed, TiLockOpen } from "react-icons/ti";
+import { VscNewline } from "react-icons/vsc";
 
 export type Icon = IconType;
 
@@ -129,4 +130,6 @@ export const Icons = {
     clearFormatting: MdFormatClear,
     mic: BiSolidMicrophone,
     micoff: BiSolidMicrophoneOff,
+    hardbreak: VscNewline,
+    markdown: FaMarkdown,
 };

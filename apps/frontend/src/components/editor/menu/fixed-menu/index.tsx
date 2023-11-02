@@ -25,6 +25,7 @@ export function FixedMenu({
     ...props
 }: FixedMenuProps & React.HTMLAttributes<HTMLDivElement>) {
     const [isDictating, setIsDictating] = useState(false);
+    const [isMarkdown, setIsMarkdown] = useState(false);
 
     return (
         <div
@@ -60,6 +61,13 @@ export function FixedMenu({
                     />
                     <MenuAction
                         editor={editor}
+                        name="hardbreak"
+                        icon={<Icons.hardbreak />}
+                        command={() => editor.chain().focus().setHardBreak().run()}
+                        tooltip="Insert Hard Break"
+                    />
+                    <MenuAction
+                        editor={editor}
                         name="clearFormatting"
                         icon={<Icons.clearFormatting />}
                         command={() => editor.chain().focus().clearNodes().unsetAllMarks().run()}
@@ -75,8 +83,8 @@ export function FixedMenu({
                         name="stopSpeechRecognition"
                         icon={<Icons.mic className="animate-pulse" />}
                         command={() => {
-                            setIsDictating(false);
                             editor.commands.stopSpeechRecognition();
+                            setIsDictating(false);
                         }}
                         tooltip="Stop Dictation"
                     />
@@ -86,12 +94,37 @@ export function FixedMenu({
                         name="startSpeechRecognition"
                         icon={<Icons.micoff />}
                         command={() => {
-                            setIsDictating(true);
                             editor.commands.startSpeechRecognition();
+                            setIsDictating(true);
                         }}
                         tooltip="Start Dictation"
                     />
                 )}
+                {/* {isMarkdown ? (
+                    <MenuAction
+                        editor={editor}
+                        name="showRichText"
+                        icon={<Icons.markdown />}
+                        command={() => {
+                            const content = deserialize(editor.schema, editor.getText());
+                            editor.commands.setContent(content);
+                            setIsMarkdown(false);
+                        }}
+                        tooltip="Show Rich Text"
+                    />
+                ) : (
+                    <MenuAction
+                        editor={editor}
+                        name="showMarkdown"
+                        icon={<Icons.markdown />}
+                        command={() => {
+                            const content = serialize(editor.schema, editor.getJSON());
+                            editor.commands.setContent(content);
+                            setIsMarkdown(true);
+                        }}
+                        tooltip="Show Markdown"
+                    />
+                )} */}
                 <FullscreenAction editor={editor} />
             </MenuShell>
         </div>

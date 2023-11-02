@@ -2,28 +2,46 @@
 
 import { cn } from "@itsrakesh/utils";
 import { TableOfContent, TableOfContentDataItem } from "@tiptap-pro/extension-table-of-content";
+import Blockquote from "@tiptap/extension-blockquote";
+import Bold from "@tiptap/extension-bold";
+import BulletList from "@tiptap/extension-bullet-list";
 import CharacterCount from "@tiptap/extension-character-count";
+import Code from "@tiptap/extension-code";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
-import TipTapHeading from "@tiptap/extension-heading";
+import Document from "@tiptap/extension-document";
+import Dropcursor from "@tiptap/extension-dropcursor";
+import Gapcursor from "@tiptap/extension-gapcursor";
+import HardBreak from "@tiptap/extension-hard-break";
+import TiptapHeading from "@tiptap/extension-heading";
+import History from "@tiptap/extension-history";
+import HorizontalRule from "@tiptap/extension-horizontal-rule";
 import Image from "@tiptap/extension-image";
+import Italic from "@tiptap/extension-italic";
 import Link from "@tiptap/extension-link";
+import ListItem from "@tiptap/extension-list-item";
+import OrderedList from "@tiptap/extension-ordered-list";
+import Paragraph from "@tiptap/extension-paragraph";
 import Placeholder from "@tiptap/extension-placeholder";
+import Strike from "@tiptap/extension-strike";
+import Text from "@tiptap/extension-text";
 import Typography from "@tiptap/extension-typography";
 import Underline from "@tiptap/extension-underline";
 import { mergeAttributes, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
 import { all, createLowlight } from "lowlight";
 import { memo, useState } from "react";
 
 import { constants } from "@/config/constants";
+import { useFullscreenStatus } from "@/hooks/useFullscreenStatus";
+import { SideButton } from "../modules/dashboard/projects/project";
+import { ProjectTools } from "../modules/dashboard/projects/tools";
 import { Heading } from "../ui/heading";
 import { Shell } from "../ui/layouts/shell";
+import SpeechRecognition from "./custom-extensions/speech-recognition";
 import { EditorBody } from "./editor-body";
 import { EditorFooter } from "./editor-footer";
 import { BubbleMenu } from "./menu/bubble-menu";
 import { FixedMenu } from "./menu/fixed-menu";
 import { ToC } from "./toc";
-import SpeechRecognition from "./custom-extensions/speech-recognition";
 
 type Levels = 1 | 2 | 3 | 4 | 5 | 6;
 
@@ -44,38 +62,50 @@ const lowlight = createLowlight(all);
 
 export function Editor({ className, ...props }: EditorProps) {
     const [items, setItems] = useState<TableOfContentDataItem[]>([]);
+    const isFullscreen = useFullscreenStatus();
 
     const editor = useEditor({
         extensions: [
-            StarterKit.configure({
-                code: {
-                    HTMLAttributes: {
-                        class: "bg-secondary text-sm p-1 rounded-md",
-                        spellcheck: false,
-                    },
+            Document,
+            Bold,
+            Text,
+            Paragraph,
+            Underline,
+            ListItem,
+            Typography,
+            SpeechRecognition,
+            History,
+            Italic,
+            Strike,
+            HardBreak,
+            HorizontalRule,
+            Dropcursor,
+            Gapcursor,
+            Code.configure({
+                HTMLAttributes: {
+                    class: "bg-secondary text-sm p-1 rounded-md",
+                    spellcheck: false,
                 },
-                blockquote: {
-                    HTMLAttributes: {
-                        class: "p-2 my-2 border-l-4 border-gray-300 bg-gray-50 italic dark:border-gray-500 dark:bg-gray-800",
-                    },
+            }),
+            Blockquote.configure({
+                HTMLAttributes: {
+                    class: "p-2 my-2 border-l-4 border-gray-300 bg-gray-50 italic dark:border-gray-500 dark:bg-gray-800",
                 },
-                bulletList: {
-                    HTMLAttributes: {
-                        class: "list-disc",
-                    },
+            }),
+            BulletList.configure({
+                HTMLAttributes: {
+                    class: "list-disc",
                 },
-                orderedList: {
-                    HTMLAttributes: {
-                        class: "list-decimal",
-                    },
+            }),
+            OrderedList.configure({
+                HTMLAttributes: {
+                    class: "list-decimal",
                 },
-                heading: false,
-                codeBlock: false,
             }),
             Placeholder.configure({
                 placeholder: "Once upon a time...",
             }),
-            TipTapHeading.configure({
+            TiptapHeading.configure({
                 levels: [1, 2, 3, 4, 5, 6],
             }).extend({
                 renderHTML({ node, HTMLAttributes }) {
@@ -91,7 +121,6 @@ export function Editor({ className, ...props }: EditorProps) {
                     ];
                 },
             }),
-            Underline,
             CodeBlockLowlight.configure({
                 lowlight,
                 HTMLAttributes: {
@@ -117,52 +146,39 @@ export function Editor({ className, ...props }: EditorProps) {
                     setItems(content);
                 },
             }),
-            Typography,
-            SpeechRecognition,
         ],
         editorProps: {
             attributes: {
-                class: "bg-background max-h-[90vh] h-screen rounded-3xl shadow-sm p-8 outline-none space-y-4 overflow-auto",
+                class: "bg-background min-h-screen rounded-3xl shadow-sm p-8 outline-none space-y-4",
             },
         },
         autofocus: true,
-        content: `
-        <h1>Once upon a time...</h1>
-        <p>There was a <strong>bold</strong> fox.</p>
-        <p>
-          That's a boring paragraph followed by a fenced code block:
-        </p>
-<pre><code class="language-javascript">
-    for (var i=1; i <= 20; i++) {
-        if (i % 15 == 0)
-            console.log("FizzBuzz");
-        else if (i % 3 == 0)
-            console.log("Fizz");
-        else if (i % 5 == 0)
-            console.log("Buzz");
-        else
-            console.log(i);
-    }
-</code></pre>
-        <p>
-          Press Command/Ctrl + Enter to leave the fenced code block and continue typing in boring paragraphs.
-        </p>`,
     });
 
     if (!editor) return null;
 
     return (
-        <div className={cn("flex flex-row space-x-4", className)} {...props}>
-            <div id="editor" className="w-3/4 space-y-4">
-                <FixedMenu editor={editor} />
-                <BubbleMenu editor={editor} />
-                <EditorBody editor={editor} />
-                <EditorFooter editor={editor} />
+        <>
+            <div className={cn("flex flex-row space-x-4", className)} {...props}>
+                <div
+                    id="editor"
+                    className={cn("w-3/4 space-y-4", {
+                        "overflow-auto": isFullscreen,
+                    })}
+                >
+                    <FixedMenu editor={editor} />
+                    <BubbleMenu editor={editor} />
+                    <EditorBody editor={editor} />
+                    <EditorFooter editor={editor} />
+                </div>
+                <Shell className="sticky top-3 h-max max-h-[98vh] w-1/4 space-y-2 overflow-auto">
+                    <Heading level={2}>Table of Contents</Heading>
+                    <MemorizedToC items={items} editor={editor} />
+                </Shell>
             </div>
-            <Shell className="sticky top-4 h-max max-h-screen w-1/4 space-y-2 overflow-auto">
-                <Heading level={2}>Table of Contents</Heading>
-                <MemorizedToC items={items} editor={editor} />
-            </Shell>
-        </div>
+            <ProjectTools editor={editor}>
+                <SideButton className="right-0 top-64 -mr-6 hover:-mr-4">Tools</SideButton>
+            </ProjectTools>
+        </>
     );
 }

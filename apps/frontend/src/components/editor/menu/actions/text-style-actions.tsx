@@ -50,7 +50,7 @@ export function TextStyleActions({ editor }: MenuProps) {
     return (
         <Menubar>
             <MenubarMenu>
-                <MenubarTrigger>{activeTextStyle}</MenubarTrigger>
+                <MenubarTrigger className="whitespace-nowrap">{activeTextStyle}</MenubarTrigger>
                 <MenubarContent>
                     <MenubarItem
                         onClick={() => {

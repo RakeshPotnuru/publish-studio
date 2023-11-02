@@ -112,10 +112,6 @@
     pointer-events: none;
 }
 
-.code-block {
-    position: relative;
-}
-
 .hljs-comment,
 .hljs-quote {
     color: #616161;
