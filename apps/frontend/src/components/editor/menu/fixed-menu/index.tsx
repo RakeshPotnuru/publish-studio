@@ -52,27 +52,6 @@ export function FixedMenu({
                 <MenuShell>
                     <ImageAction editor={editor} />
                     <LinkAction editor={editor} />
-                    <MenuAction
-                        editor={editor}
-                        name="horizontalRule"
-                        icon={<Icons.divider />}
-                        command={() => editor.chain().focus().setHorizontalRule().run()}
-                        tooltip="Insert Divider"
-                    />
-                    <MenuAction
-                        editor={editor}
-                        name="hardbreak"
-                        icon={<Icons.hardbreak />}
-                        command={() => editor.chain().focus().setHardBreak().run()}
-                        tooltip="Insert Hard Break"
-                    />
-                    <MenuAction
-                        editor={editor}
-                        name="clearFormatting"
-                        icon={<Icons.clearFormatting />}
-                        command={() => editor.chain().focus().clearNodes().unsetAllMarks().run()}
-                        tooltip="Clear Formatting"
-                    />
                 </MenuShell>
             </div>
 
