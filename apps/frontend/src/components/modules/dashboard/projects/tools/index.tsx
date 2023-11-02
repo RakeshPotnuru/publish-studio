@@ -8,6 +8,7 @@ import {
 } from "@itsrakesh/ui";
 
 import { MenuProps } from "@/components/editor/menu/fixed-menu";
+import { DownloadProject } from "./download-project";
 import { ImportMarkdown } from "./import-markdown";
 
 interface ProjectToolsProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -21,8 +22,9 @@ export function ProjectTools({ children, editor, ...props }: ProjectToolsProps &
                     <SheetTitle>Tools</SheetTitle>
                     <SheetDescription>Tools to help you manage your project.</SheetDescription>
                 </SheetHeader>
-                <div className="my-4">
+                <div className="my-4 space-y-4">
                     <ImportMarkdown editor={editor} />
+                    <DownloadProject editor={editor} />
                 </div>
             </SheetContent>
         </Sheet>

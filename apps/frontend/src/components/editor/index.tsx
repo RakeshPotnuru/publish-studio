@@ -23,6 +23,10 @@ import OrderedList from "@tiptap/extension-ordered-list";
 import Paragraph from "@tiptap/extension-paragraph";
 import Placeholder from "@tiptap/extension-placeholder";
 import Strike from "@tiptap/extension-strike";
+import Table from "@tiptap/extension-table";
+import TableCell from "@tiptap/extension-table-cell";
+import TableHeader from "@tiptap/extension-table-header";
+import TableRow from "@tiptap/extension-table-row";
 import Text from "@tiptap/extension-text";
 import Typography from "@tiptap/extension-typography";
 import Underline from "@tiptap/extension-underline";
@@ -81,6 +85,20 @@ export function Editor({ className, ...props }: EditorProps) {
             HorizontalRule,
             Dropcursor,
             Gapcursor,
+            TableRow,
+            TableHeader.configure({
+                HTMLAttributes: {
+                    class: "border p-2 bg-secondary",
+                },
+            }),
+            TableCell.configure({
+                HTMLAttributes: {
+                    class: "border p-2",
+                },
+            }),
+            Table.configure({
+                resizable: true,
+            }),
             Code.configure({
                 HTMLAttributes: {
                     class: "bg-secondary text-sm p-1 rounded-md",

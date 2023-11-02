@@ -17,6 +17,7 @@ import {
     BiCode,
     BiPlus,
     BiSolidErrorAlt,
+    BiSolidFileTxt,
     BiSolidHide,
     BiSolidMicrophone,
     BiSolidMicrophoneOff,
@@ -27,17 +28,19 @@ import {
     BsArrowUpShort,
     BsCheck,
     BsFileEarmarkImage,
+    BsFileEarmarkPdfFill,
     BsFillCloudCheckFill,
     BsFillCloudSlashFill,
     BsFillPatchCheckFill,
     BsFillSunFill,
 } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
-import { FaFolder, FaMarkdown, FaPaintRoller, FaPuzzlePiece } from "react-icons/fa";
+import { FaFileCsv, FaFolder, FaMarkdown, FaPaintRoller, FaPuzzlePiece } from "react-icons/fa";
 import { FiItalic, FiUnderline } from "react-icons/fi";
 import { GoBold } from "react-icons/go";
 import { GrRedo, GrUndo } from "react-icons/gr";
 import { HiDocumentDuplicate, HiOutlineArrowNarrowRight } from "react-icons/hi";
+import { HiTableCells } from "react-icons/hi2";
 import { IoMdImage, IoMdLogOut } from "react-icons/io";
 import { IoCalendar, IoCheckmarkDoneCircleSharp } from "react-icons/io5";
 import {
@@ -58,7 +61,7 @@ import { PiCodeBlockBold, PiDotsThreeBold, PiPlusCircleLight } from "react-icons
 import { RiFoldersFill } from "react-icons/ri";
 import { RxCaretSort, RxCross2, RxDividerHorizontal, RxMixerHorizontal } from "react-icons/rx";
 import { TbBlockquote, TbPlugConnected } from "react-icons/tb";
-import { TiLockClosed, TiLockOpen } from "react-icons/ti";
+import { TiDownload, TiLockClosed, TiLockOpen } from "react-icons/ti";
 import { VscNewline } from "react-icons/vsc";
 
 export type Icon = IconType;
@@ -132,4 +135,9 @@ export const Icons = {
     micoff: BiSolidMicrophoneOff,
     hardbreak: VscNewline,
     markdown: FaMarkdown,
+    pdf: BsFileEarmarkPdfFill,
+    csv: FaFileCsv,
+    txt: BiSolidFileTxt,
+    import: TiDownload,
+    table: HiTableCells,
 };

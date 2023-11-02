@@ -76,6 +76,22 @@ module.exports = {
                     DEFAULT: "#111111",
                     foreground: "#FFFFFF",
                 },
+                pdf: {
+                    DEFAULT: "#FF0000",
+                    foreground: "#FFFFFF",
+                },
+                csv: {
+                    DEFAULT: "#33A852",
+                    foreground: "#FFFFFF",
+                },
+                txt: {
+                    DEFAULT: "#0052CC",
+                    foreground: "#FFFFFF",
+                },
+                md: {
+                    DEFAULT: "#333333",
+                    foreground: "#FFFFFF",
+                },
             },
             borderRadius: {
                 lg: `var(--radius)`,

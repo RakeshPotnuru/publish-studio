@@ -49,6 +49,40 @@ export function NodeActions({ editor }: MenuProps) {
                     pc: "Ctrl + Shift + 7",
                 }}
             />
+            <MenuAction
+                editor={editor}
+                command={() =>
+                    editor
+                        .chain()
+                        .focus()
+                        .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+                        .run()
+                }
+                icon={<Icons.table />}
+                name="table"
+                tooltip="Insert Table"
+            />
+            <MenuAction
+                editor={editor}
+                name="horizontalRule"
+                icon={<Icons.divider />}
+                command={() => editor.chain().focus().setHorizontalRule().run()}
+                tooltip="Insert Divider"
+            />
+            <MenuAction
+                editor={editor}
+                name="hardbreak"
+                icon={<Icons.hardbreak />}
+                command={() => editor.chain().focus().setHardBreak().run()}
+                tooltip="Insert Hard Break"
+            />
+            <MenuAction
+                editor={editor}
+                name="clearFormatting"
+                icon={<Icons.clearFormatting />}
+                command={() => editor.chain().focus().clearNodes().unsetAllMarks().run()}
+                tooltip="Clear Formatting"
+            />
         </>
     );
 }

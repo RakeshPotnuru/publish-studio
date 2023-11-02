@@ -12,6 +12,11 @@ import {
     FormField,
     FormItem,
     FormMessage,
+    Input,
+    Tabs,
+    TabsContent,
+    TabsList,
+    TabsTrigger,
     Textarea,
 } from "@itsrakesh/ui";
 import { useState } from "react";
@@ -23,75 +28,136 @@ import { MenuProps } from "@/components/editor/menu/fixed-menu";
 import { deserialize } from "@/components/editor/transform-markdown";
 import { Heading } from "@/components/ui/heading";
 
-const formSchema = z.object({
+const mdFormSchema = z.object({
     markdown: z.string().nonempty("Markdown is required."),
+});
+
+const urlFormSchema = z.object({
+    url: z.string().url("URL is invalid."),
 });
 
 export function ImportMarkdown({ editor }: MenuProps) {
     const [open, setOpen] = useState(false);
 
-    const form = useForm<z.infer<typeof formSchema>>({
+    const mdForm = useForm<z.infer<typeof mdFormSchema>>({
         mode: "onBlur",
-        resolver: zodResolver(formSchema),
+        resolver: zodResolver(mdFormSchema),
         defaultValues: {
             markdown: "",
         },
     });
 
-    const onSubmit = (data: z.infer<typeof formSchema>) => {
+    const urlForm = useForm<z.infer<typeof urlFormSchema>>({
+        mode: "onBlur",
+        resolver: zodResolver(urlFormSchema),
+        defaultValues: {
+            url: "",
+        },
+    });
+
+    const onMdSubmit = (data: z.infer<typeof mdFormSchema>) => {
         const deserialized = deserialize(editor.schema, data.markdown);
         editor.commands.setContent(deserialized);
-        form.reset();
+        mdForm.reset();
         setOpen(false);
     };
 
+    const onUrlSubmit = async (data: z.infer<typeof urlFormSchema>) => {
+        console.log(data);
+    };
+
     return (
-        <div className="space-y-4">
+        <div className="space-y-2">
             <div>
-                <Heading level={5}>Markdown</Heading>
-                <p className="text-muted-foreground text-sm">Import markdown into the editor.</p>
+                <Heading level={5}>Import content</Heading>
+                <p className="text-muted-foreground text-sm">
+                    Import content from URL or Markdown into the editor.
+                </p>
             </div>
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                    <Button className="w-full">
-                        <Icons.markdown className="mr-2 h-4 w-4" /> Import Markdown
+                    <Button size="sm" className="w-full">
+                        <Icons.import className="mr-2 h-4 w-4" /> Import
                     </Button>
                 </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Import Markdown</DialogTitle>
+                        <DialogTitle>Import Content</DialogTitle>
                         <DialogDescription className="text-warning">
                             ⚠️ Warning: This action will replace the current content in the editor.
                         </DialogDescription>
                     </DialogHeader>
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                            <FormField
-                                control={form.control}
-                                name="markdown"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormControl>
-                                            <Textarea
-                                                rows={10}
-                                                className="w-full"
-                                                placeholder="Paste markdown here..."
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <Button
-                                type="submit"
-                                disabled={!form.formState.isDirty}
-                                className="w-full"
-                            >
-                                Submit
-                            </Button>
-                        </form>
-                    </Form>
+                    <Tabs defaultValue="markdown">
+                        <TabsList className="grid grid-cols-2">
+                            <TabsTrigger value="markdown">Markdown</TabsTrigger>
+                            <TabsTrigger value="url">URL</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="markdown">
+                            <Form {...mdForm}>
+                                <form
+                                    onSubmit={mdForm.handleSubmit(onMdSubmit)}
+                                    className="space-y-4"
+                                >
+                                    <FormField
+                                        control={mdForm.control}
+                                        name="markdown"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormControl>
+                                                    <Textarea
+                                                        rows={10}
+                                                        className="w-full"
+                                                        placeholder="Paste markdown here..."
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <Button
+                                        type="submit"
+                                        className="w-full"
+                                        disabled={!mdForm.formState.isDirty}
+                                    >
+                                        Submit
+                                    </Button>
+                                </form>
+                            </Form>
+                        </TabsContent>
+                        <TabsContent value="url">
+                            <Form {...urlForm}>
+                                <form
+                                    onSubmit={urlForm.handleSubmit(onUrlSubmit)}
+                                    className="space-y-4"
+                                >
+                                    <FormField
+                                        control={urlForm.control}
+                                        name="url"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormControl>
+                                                    <Input
+                                                        className="w-full"
+                                                        placeholder="https://example.com/blog/123"
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <Button
+                                        type="submit"
+                                        className="w-full"
+                                        disabled={!urlForm.formState.isDirty}
+                                    >
+                                        Submit
+                                    </Button>
+                                </form>
+                            </Form>
+                        </TabsContent>
+                    </Tabs>
                 </DialogContent>
             </Dialog>
         </div>
