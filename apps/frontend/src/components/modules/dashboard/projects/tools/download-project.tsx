@@ -22,7 +22,7 @@ export function DownloadProject({ editor }: MenuProps) {
                 <Button size="sm" className="bg-txt text-txt-foreground hover:opacity-80">
                     <Icons.txt className="mr-2 h-4 w-4" /> TXT
                 </Button>
-                <Button size="sm" className="bg-md text-md-foreground hover:opacity-80">
+                <Button size="sm" className="bg-markdown text-markdown-foreground hover:opacity-80">
                     <Icons.markdown className="mr-2 h-4 w-4" /> MD
                 </Button>
             </div>

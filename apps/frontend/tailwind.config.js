@@ -88,7 +88,7 @@ module.exports = {
                     DEFAULT: "#0052CC",
                     foreground: "#FFFFFF",
                 },
-                md: {
+                markdown: {
                     DEFAULT: "#333333",
                     foreground: "#FFFFFF",
                 },
