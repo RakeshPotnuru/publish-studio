@@ -2,7 +2,7 @@ import type { inferAsyncReturnType } from "@trpc/server";
 import { initTRPC, TRPCError } from "@trpc/server";
 import type { CreateExpressContextOptions } from "@trpc/server/adapters/express";
 
-import { user } from "./constants";
+import { constants } from "./constants";
 import { deserializeUser } from "./middlewares/deserialize-user";
 
 export const createContext = ({ req, res }: CreateExpressContextOptions) => {
@@ -30,7 +30,7 @@ const isPro = t.middleware(({ next, ctx }) => {
         });
     }
 
-    if (ctx.user.user_type !== user.userTypes.PRO) {
+    if (ctx.user.user_type !== constants.user.userTypes.PRO) {
         throw new TRPCError({
             code: "UNAUTHORIZED",
             message: "You must be a pro user to access this resource",

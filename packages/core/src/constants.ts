@@ -75,14 +75,21 @@ const user = {
     authModes: authModes,
 } as const;
 
-const rabbitmq = {
+// const rabbitmq = {
+//     queues: {
+//         POSTS: "posts",
+//         POST_JOBS: "post_jobs",
+//         EMAILS: "emails",
+//         EMAIL_JOBS: "email_jobs",
+//     },
+// };
+
+const bullmq = {
     queues: {
-        POSTS: "posts",
-        POST_JOBS: "post_jobs",
-        EMAILS: "emails",
-        EMAIL_JOBS: "email_jobs",
+        POST: "post",
+        EMAIL: "email",
     },
-};
+} as const;
 
 enum emailTemplates {
     VERIFY_EMAIL = "ps_verify_email",
@@ -118,7 +125,8 @@ export const constants = {
     project,
     user,
     folder,
-    rabbitmq,
+    // rabbitmq,
+    bullmq,
     payment,
     emailTemplates,
     asset,

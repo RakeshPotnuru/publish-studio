@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-import { folder } from "../../constants";
+import { constants } from "../../constants";
 import type { IFolder } from "./folder.types";
 
 const FolderSchema = new Schema<IFolder>(
@@ -10,8 +10,8 @@ const FolderSchema = new Schema<IFolder>(
             type: String,
             required: true,
             unique: true,
-            minlength: folder.name.MIN_LENGTH,
-            maxlength: folder.name.MAX_LENGTH,
+            minlength: constants.folder.name.MIN_LENGTH,
+            maxlength: constants.folder.name.MAX_LENGTH,
         },
         projects: [{ type: Schema.Types.ObjectId, ref: "Project" }],
     },

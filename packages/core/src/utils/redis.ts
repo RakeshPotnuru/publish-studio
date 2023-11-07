@@ -4,7 +4,7 @@ import { createClient } from "redis";
 
 import defaultConfig from "../config/app.config";
 
-const redisUrl = defaultConfig.redisUrl;
+const redisUrl = defaultConfig.redis_url;
 const redisClient = createClient({
     url: redisUrl,
 });
@@ -12,7 +12,7 @@ const redisClient = createClient({
 const connectRedis = async () => {
     try {
         await redisClient.connect();
-        console.log("✅ Connect to Redis 📦");
+        console.log("✅ Connected to Redis 📦");
     } catch (error) {
         console.log(error);
     }

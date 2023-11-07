@@ -3,7 +3,7 @@ import type { Types } from "mongoose";
 import mongoose from "mongoose";
 import type Stripe from "stripe";
 
-import { user as userConsts } from "../../constants";
+import { constants } from "../../constants";
 import type { Context } from "../../trpc";
 import stripe from "../../utils/stripe";
 import PaymentService from "./payment.service";
@@ -24,7 +24,7 @@ export default class PaymentController extends PaymentService {
         const session = await super.fetchCheckoutSession(session_id);
 
         await super.updateUser(user_id, {
-            user_type: userConsts.userTypes.PRO,
+            user_type: constants.user.userTypes.PRO,
         });
 
         await super.createPayment({
@@ -67,7 +67,7 @@ export default class PaymentController extends PaymentService {
         }
 
         await super.updateUser(user._id, {
-            user_type: userConsts.userTypes.FREE,
+            user_type: constants.user.userTypes.FREE,
             stripe_customer_id: undefined,
         });
 
@@ -117,7 +117,7 @@ export default class PaymentController extends PaymentService {
         // Handle the event
         switch (event.type) {
             case "checkout.session.completed": {
-                const session = event.data.object as Stripe.Checkout.Session;
+                const session = event.data.object;
 
                 if (session.client_reference_id) {
                     await this.upgradePlan(
@@ -129,7 +129,7 @@ export default class PaymentController extends PaymentService {
                 break;
             }
             case "subscription_schedule.canceled": {
-                const subscription = event.data.object as Stripe.Subscription;
+                const subscription = event.data.object;
 
                 await this.downgradePlan(subscription.id);
 

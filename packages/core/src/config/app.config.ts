@@ -2,7 +2,7 @@ interface ICustomConfig {
     port: number;
     baseUrl: string;
     whitelist_origins?: string[];
-    redisUrl: string;
+    redis_url: string;
     mongoURI: string;
     accessTokenExpiresIn: number;
     refreshTokenExpiresIn: number;
@@ -24,7 +24,9 @@ interface ICustomConfig {
     app_name: string;
     resetPasswordTokenPrivateKey: string;
     resetPasswordTokenPublicKey: string;
-    rabbitmqUrl: string;
+    // rabbitmqUrl: string;
+    redis_host: string;
+    redis_port: number;
 }
 
 const defaultConfig: ICustomConfig = {
@@ -36,7 +38,9 @@ const defaultConfig: ICustomConfig = {
     resetPasswordTokenExpiresIn: 60, // 1 hour
     redisCacheExpiresIn: 1440, // 24 hours
     whitelist_origins: process.env.WHITELIST_ORIGINS?.split(","),
-    redisUrl: process.env.REDIS_URL || "redis://localhost:6379",
+    redis_url: process.env.REDIS_URL || "redis://localhost:6379",
+    redis_host: process.env.REDIS_HOST || "localhost",
+    redis_port: process.env.REDIS_PORT ? Number.parseInt(process.env.REDIS_PORT) : 6379,
     mongoURI: process.env.MONGO_URI || "mongodb://localhost:27017/psDB",
     accessTokenPrivateKey: process.env.ACCESS_TOKEN_PRIVATE_KEY,
     accessTokenPublicKey: process.env.ACCESS_TOKEN_PUBLIC_KEY,
@@ -53,7 +57,12 @@ const defaultConfig: ICustomConfig = {
     kickbox_api_url: "https://open.kickbox.com/v1/disposable",
     client_url: process.env.CLIENT_URL || "http://localhost:3000",
     app_name: "Publish Studio",
-    rabbitmqUrl: process.env.RABBITMQ_URL || "amqp://127.0.0.1:5672",
+    // rabbitmqUrl: process.env.RABBITMQ_URL || "amqp://127.0.0.1:5672",
+};
+
+export const bullMQConnectionOptions = {
+    host: defaultConfig.redis_host,
+    port: defaultConfig.redis_port,
 };
 
 export default defaultConfig;

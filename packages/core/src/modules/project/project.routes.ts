@@ -32,7 +32,7 @@ const projectRouter = t.router({
         )
         .mutation(({ input, ctx }) => new ProjectController().createProjectHandler(input, ctx)),
 
-    publishPost: protectedProcedure
+    schedulePost: protectedProcedure
         .input(
             z.object({
                 project_id: z.custom<Types.ObjectId>(),
@@ -43,20 +43,22 @@ const projectRouter = t.router({
                         }),
                     )
                     .min(1),
-                tags: z.object({
-                    hashnode_tags: z
-                        .array(z.custom<THashnodeTag>())
-                        .max(constants.project.tags.hashnode.MAX_LENGTH)
-                        .optional(),
-                    devto_tags: z
-                        .array(z.string())
-                        .max(constants.project.tags.dev.MAX_LENGTH)
-                        .optional(),
-                    medium_tags: z
-                        .array(z.string())
-                        .max(constants.project.tags.medium.MAX_LENGTH)
-                        .optional(),
-                }),
+                tags: z
+                    .object({
+                        hashnode_tags: z
+                            .array(z.custom<THashnodeTag>())
+                            .max(constants.project.tags.hashnode.MAX_LENGTH)
+                            .optional(),
+                        devto_tags: z
+                            .array(z.string())
+                            .max(constants.project.tags.dev.MAX_LENGTH)
+                            .optional(),
+                        medium_tags: z
+                            .array(z.string())
+                            .max(constants.project.tags.medium.MAX_LENGTH)
+                            .optional(),
+                    })
+                    .optional(),
                 scheduled_at: z.string().pipe(z.coerce.date()),
             }),
         )

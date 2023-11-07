@@ -31,10 +31,12 @@ const ZodEnvironmentVariables = z.object({
     AWS_SES_PERSONAL_FROM_EMAIL: z.string().email(),
     WHITELIST_ORIGINS: z.string().optional(),
     CLIENT_URL: z.string().url(),
-    RABBITMQ_URL: z.string(),
+    // RABBITMQ_URL: z.string(),
     GOOGLE_OAUTH_CLIENT_ID: z.string(),
     STRIPE_SECRET_KEY: z.string(),
     STRIPE_WEBHOOK_SECRET: z.string(),
+    REDIS_HOST: z.string(),
+    REDIS_PORT: z.string(),
 });
 
 ZodEnvironmentVariables.parse(process.env);

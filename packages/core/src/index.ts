@@ -7,14 +7,12 @@ import type { Application } from "express";
 import express from "express";
 import { renderTrpcPanel } from "trpc-panel";
 
-import "./utils/db";
 import "./config/env";
+import "./utils/db";
 
 import defaultConfig from "./config/app.config";
-import ProjectController from "./modules/project/project.controller";
 import trpcRouter from "./routes";
 import { createContext } from "./trpc";
-import { emailReceiver } from "./utils/aws/ses";
 
 const app: Application = express();
 
@@ -57,9 +55,9 @@ app.use("/panel", (_, res) => {
     return res.send(renderTrpcPanel(trpcRouter, { url: defaultConfig.baseUrl }));
 });
 
-const project = new ProjectController();
-await project.postReceiver();
-await emailReceiver();
+// const project = new ProjectController();
+// await project.postReceiver();
+// await emailReceiver();
 
 app.listen(defaultConfig.port, () => {
     console.log(`✅ Server running on port ${defaultConfig.port}`);

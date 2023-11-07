@@ -3,7 +3,7 @@ import type { Types } from "mongoose";
 import type Stripe from "stripe";
 
 import defaultConfig from "../../config/app.config";
-import { payment } from "../../constants";
+import { constants } from "../../constants";
 import type { Context } from "../../trpc";
 import stripe from "../../utils/stripe";
 import UserService from "../user/user.service";
@@ -65,7 +65,7 @@ export default class PaymentService extends UserService {
                 mode: "subscription",
                 line_items: [
                     {
-                        price: payment.plans.proMonthly.PRICE_ID,
+                        price: constants.payment.plans.proMonthly.PRICE_ID,
                         quantity: 1,
                     },
                 ],

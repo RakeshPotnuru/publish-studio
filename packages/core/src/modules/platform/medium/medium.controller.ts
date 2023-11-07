@@ -123,7 +123,7 @@ export default class MediumController extends MediumService {
         };
     }
 
-    async createPostHandler(input: { post: IProject; tags: TTags }, user_id: Types.ObjectId) {
+    async createPostHandler(input: { post: IProject; tags?: TTags }, user_id: Types.ObjectId) {
         const user = await super.getUserById(user_id);
 
         if (!user) {
@@ -138,7 +138,7 @@ export default class MediumController extends MediumService {
                 title: input.post.title,
                 contentFormat: "markdown",
                 content: input.post.body,
-                tags: input.tags.medium_tags,
+                tags: input.tags?.medium_tags,
                 publishStatus: user.default_publish_status,
                 canonicalUrl: input.post.canonical_url,
             },

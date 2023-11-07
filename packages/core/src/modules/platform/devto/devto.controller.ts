@@ -109,7 +109,7 @@ export default class DevToController extends DevToService {
         };
     }
 
-    async createPostHandler(input: { post: IProject; tags: TTags }, user_id: Types.ObjectId) {
+    async createPostHandler(input: { post: IProject; tags?: TTags }, user_id: Types.ObjectId) {
         const user = await super.getPlatformById(user_id);
 
         if (!user) {
@@ -126,7 +126,7 @@ export default class DevToController extends DevToService {
                 description: input.post.description,
                 published: user.default_publish_status,
                 canonical_url: input.post.canonical_url,
-                tags: input.tags.devto_tags,
+                tags: input.tags?.devto_tags,
                 main_image: input.post.cover_image,
             },
             user_id,

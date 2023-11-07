@@ -34,3 +34,10 @@ export interface TTags {
     devto_tags?: string[];
     medium_tags?: string[];
 }
+
+export interface IPost {
+    project_id: Types.ObjectId;
+    tags?: TTags;
+    scheduled_at: Date;
+    user_id: Types.ObjectId | undefined;
+}
