@@ -33,7 +33,7 @@ const mdFormSchema = z.object({
 });
 
 const urlFormSchema = z.object({
-    url: z.string().url("URL is invalid."),
+    url: z.string().url("Please enter a valid URL."),
 });
 
 export function ImportMarkdown({ editor }: MenuProps) {

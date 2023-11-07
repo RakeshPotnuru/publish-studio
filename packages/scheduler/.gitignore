@@ -1,9 +1,0 @@
-node_modules/
-dist
-
-# turbo
-.turbo/
-
-.env
-
-keys/
