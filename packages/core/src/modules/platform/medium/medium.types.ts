@@ -1,6 +1,6 @@
 import type { Types } from "mongoose";
 
-export type default_publish_status = "public" | "draft" | "unlisted";
+export type TMediumStatus = "public" | "draft" | "unlisted";
 
 export interface IMedium {
     user_id?: Types.ObjectId;
@@ -8,7 +8,7 @@ export interface IMedium {
     username: string;
     profile_pic: string;
     author_id: string;
-    default_publish_status: default_publish_status;
+    default_publish_status: TMediumStatus;
     notify_followers: boolean;
 }
 
@@ -17,7 +17,7 @@ export interface IMediumUserUpdate {
     username?: string;
     profile_pic?: string;
     author_id?: string;
-    default_publish_status?: default_publish_status;
+    default_publish_status?: TMediumStatus;
     notify_followers?: boolean;
 }
 
@@ -38,7 +38,7 @@ export interface IMediumCreatePostInput {
     content?: string;
     tags?: string[];
     canonicalUrl?: string;
-    publishStatus?: "public" | "draft" | "unlisted";
+    publishStatus?: TMediumStatus;
     notifyFollowers?: boolean;
 }
 

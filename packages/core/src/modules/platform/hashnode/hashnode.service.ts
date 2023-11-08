@@ -5,8 +5,8 @@ import type { Types } from "mongoose";
 import defaultConfig from "../../../config/app.config";
 import { constants } from "../../../constants";
 import { decryptField } from "../../../utils/aws/kms";
+import Platform from "../../platform/platform.model";
 import User from "../../user/user.model";
-import Platform from "../platform.model";
 import Hashnode from "./hashnode.model";
 import type {
     IHashnode,
@@ -21,7 +21,7 @@ export default class HashnodeService {
 
     private async hashnode(user_id: Types.ObjectId | undefined) {
         try {
-            const user = await this.getPlatformById(user_id);
+            const user = await this.getPlatform(user_id);
 
             if (!user.api_key) {
                 return;
@@ -109,12 +109,12 @@ export default class HashnodeService {
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
                 message:
-                    "An error occurred while disconnecting the account. Please try again later.",
+                    "An error occurred while disconnecting the platform. Please try again later.",
             });
         }
     }
 
-    async getPlatformById(user_id: Types.ObjectId | undefined) {
+    async getPlatform(user_id: Types.ObjectId | undefined) {
         try {
             return (await Hashnode.findOne({ user_id }).exec()) as IHashnode;
         } catch (error) {
@@ -122,7 +122,7 @@ export default class HashnodeService {
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while fetching the account. Please try again later.",
+                message: "An error occurred while fetching the platform. Please try again later.",
             });
         }
     }

@@ -10,12 +10,12 @@ import PaymentService from "./payment.service";
 
 export default class PaymentController extends PaymentService {
     async makePaymentHandler(ctx: Context) {
-        await super.createCheckoutSession(ctx);
+        const session = await super.createCheckoutSession(ctx);
 
         return {
             status: "success",
             data: {
-                message: "Payment successful",
+                url: session.url,
             },
         };
     }

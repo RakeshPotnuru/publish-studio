@@ -391,7 +391,7 @@ export default class AuthController extends UserService {
     async refreshAccessTokenHandler(ctx: Context) {
         // Get the refresh token from cookie
         const { req, res } = ctx;
-        const refresh_token = getCookie("refresh_token", { req, res }) as string;
+        const refresh_token = getCookie("refresh_token", { req, res });
 
         const errorMessage = "Could not refresh access token.";
 

@@ -1,13 +1,15 @@
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
+import { encryptField } from "@/utils/aws/kms";
+
 import defaultConfig from "../../../config/app.config";
 import type { Context } from "../../../trpc";
 import type { IProject, TTags } from "../../project/project.types";
 import DevToService from "./devto.service";
 
 export default class DevToController extends DevToService {
-    async createUserHandler(
+    async createPlatformHandler(
         input: { api_key: string; default_publish_status: boolean },
         ctx: Context,
     ) {
@@ -27,7 +29,7 @@ export default class DevToController extends DevToService {
             });
         }
 
-        const newUser = await super.createPlatform({
+        const newPlatform = await super.createPlatform({
             user_id: ctx.user?._id,
             api_key: input.api_key,
             username: user.username,
@@ -38,17 +40,18 @@ export default class DevToController extends DevToService {
         return {
             status: "success",
             data: {
-                user: newUser,
+                user: newPlatform,
             },
         };
     }
 
-    async updateUserHandler(
+    async updatePlatformHandler(
         input: { api_key?: string; default_publish_status?: boolean },
         ctx: Context,
     ) {
         if (input.api_key) {
             const user = await super.getDevUser(input.api_key);
+
             if (!user) {
                 throw new TRPCError({
                     code: "UNAUTHORIZED",
@@ -56,7 +59,9 @@ export default class DevToController extends DevToService {
                 });
             }
 
-            const updatedUser = await super.updatePlatform(
+            input.api_key = await encryptField(input.api_key);
+
+            const updatedPlatform = await super.updatePlatform(
                 {
                     api_key: input.api_key,
                     username: user.username,
@@ -69,12 +74,12 @@ export default class DevToController extends DevToService {
             return {
                 status: "success",
                 data: {
-                    user: updatedUser,
+                    user: updatedPlatform,
                 },
             };
         }
 
-        const updatedUser = await super.updatePlatform(
+        const updatedPlatform = await super.updatePlatform(
             {
                 default_publish_status: input.default_publish_status,
             },
@@ -84,12 +89,12 @@ export default class DevToController extends DevToService {
         return {
             status: "success",
             data: {
-                user: updatedUser,
+                user: updatedPlatform,
             },
         };
     }
 
-    async deleteUserHandler(ctx: Context) {
+    async deletePlatformHandler(ctx: Context) {
         const user = await super.getPlatformById(ctx.user?._id);
 
         if (!user) {
@@ -99,12 +104,12 @@ export default class DevToController extends DevToService {
             });
         }
 
-        const deletedUser = await super.deletePlatform(ctx.user?._id);
+        await super.deletePlatform(ctx.user?._id);
 
         return {
             status: "success",
             data: {
-                user: deletedUser,
+                message: "Platform disconnected successfully.",
             },
         };
     }

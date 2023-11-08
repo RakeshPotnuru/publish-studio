@@ -3,6 +3,7 @@ enum platforms {
     HASHNODE = "Hashnode",
     DEVTO = "DevTo",
     MEDIUM = "Medium",
+    GHOST = "Ghost",
 }
 
 enum projectStatus {

@@ -1,6 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
+import { encryptField } from "@/utils/aws/kms";
+
 import defaultConfig from "../../../config/app.config";
 import type { Context } from "../../../trpc";
 import type { IProject, TTags } from "../../project/project.types";
@@ -68,6 +70,8 @@ export default class HashnodeController extends HashnodeService {
         }
 
         if (input.api_key) {
+            input.api_key = await encryptField(input.api_key);
+
             const updatedUser = await super.updatePlatform(
                 {
                     api_key: input.api_key,
@@ -112,7 +116,7 @@ export default class HashnodeController extends HashnodeService {
     }
 
     async deleteUserHandler(ctx: Context) {
-        const user = await super.getPlatformById(ctx.user?._id);
+        const user = await super.getPlatform(ctx.user?._id);
 
         if (!user) {
             throw new TRPCError({
@@ -138,7 +142,7 @@ export default class HashnodeController extends HashnodeService {
         },
         user_id: Types.ObjectId,
     ) {
-        const user = await super.getPlatformById(user_id);
+        const user = await super.getPlatform(user_id);
 
         if (!user) {
             throw new TRPCError({
@@ -211,7 +215,7 @@ export default class HashnodeController extends HashnodeService {
         },
         user_id: Types.ObjectId | undefined,
     ) {
-        const user = await super.getPlatformById(user_id);
+        const user = await super.getPlatform(user_id);
 
         if (!user) {
             throw new TRPCError({

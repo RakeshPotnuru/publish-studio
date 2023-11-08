@@ -31,6 +31,7 @@
         "@aws-sdk/s3-presigned-post": "^3.441.0",
         "@trpc/client": "^10.43.1",
         "@trpc/server": "^10.43.1",
+        "@ts-ghost/admin-api": "^3.0.10",
         "axios": "^1.6.0",
         "bcryptjs": "^2.4.3",
         "bullmq": "^4.13.0",

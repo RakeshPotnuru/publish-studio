@@ -49,7 +49,7 @@ export default class ProjectHelpers {
         }
 
         if (ProjectHelpers.shouldPublishOnPlatform(project, constants.user.platforms.HASHNODE)) {
-            const hashnodeUser = await new HashnodeController().getPlatformById(user_id);
+            const hashnodeUser = await new HashnodeController().getPlatform(user_id);
             const response = await new HashnodeController().createPostHandler(
                 {
                     post: project,

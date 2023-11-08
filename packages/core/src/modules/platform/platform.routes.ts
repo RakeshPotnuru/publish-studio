@@ -2,9 +2,11 @@ import { z } from "zod";
 
 import { protectedProcedure, t } from "../../trpc";
 import DevToController from "./devto/devto.controller";
+import GhostController from "./ghost/ghost.controller";
+import type { TGhostStatus } from "./ghost/ghost.types";
 import HashnodeController from "./hashnode/hashnode.controller";
 import MediumController from "./medium/medium.controller";
-import type { default_publish_status } from "./medium/medium.types";
+import type { TMediumStatus } from "./medium/medium.types";
 import PlatformController from "./platform.controller";
 
 const platformRouter = t.router({
@@ -41,7 +43,7 @@ const platformRouter = t.router({
                 default_publish_status: z.boolean(),
             }),
         )
-        .mutation(({ input, ctx }) => new DevToController().createUserHandler(input, ctx)),
+        .mutation(({ input, ctx }) => new DevToController().createPlatformHandler(input, ctx)),
 
     updateDevTo: protectedProcedure
         .input(
@@ -50,17 +52,17 @@ const platformRouter = t.router({
                 default_publish_status: z.boolean().optional(),
             }),
         )
-        .mutation(({ input, ctx }) => new DevToController().updateUserHandler(input, ctx)),
+        .mutation(({ input, ctx }) => new DevToController().updatePlatformHandler(input, ctx)),
 
     disconnectDevTo: protectedProcedure.query(({ ctx }) =>
-        new DevToController().deleteUserHandler(ctx),
+        new DevToController().deletePlatformHandler(ctx),
     ),
 
     connectMedium: protectedProcedure
         .input(
             z.object({
                 api_key: z.string(),
-                default_publish_status: z.custom<default_publish_status>(),
+                default_publish_status: z.custom<TMediumStatus>(),
                 notify_followers: z.boolean(),
             }),
         )
@@ -70,7 +72,7 @@ const platformRouter = t.router({
         .input(
             z.object({
                 api_key: z.string().optional(),
-                default_publish_status: z.custom<default_publish_status>().optional(),
+                default_publish_status: z.custom<TMediumStatus>().optional(),
                 notify_followers: z.boolean().optional(),
             }),
         )
@@ -78,6 +80,32 @@ const platformRouter = t.router({
 
     disconnectMedium: protectedProcedure.query(({ ctx }) =>
         new MediumController().deleteUserHandler(ctx),
+    ),
+
+    connectGhost: protectedProcedure
+        .input(
+            z.object({
+                api_url: z.string(),
+                admin_api_key: z.string(),
+                ghost_version: z.custom<`v5.${string}`>(),
+                default_publish_status: z.custom<TGhostStatus>(),
+            }),
+        )
+        .mutation(({ input, ctx }) => new GhostController().createPlatformHandler(input, ctx)),
+
+    updateGhost: protectedProcedure
+        .input(
+            z.object({
+                api_url: z.string(),
+                admin_api_key: z.string().optional(),
+                ghost_version: z.custom<`v5.${string}`>(),
+                default_publish_status: z.custom<TGhostStatus>(),
+            }),
+        )
+        .mutation(({ input, ctx }) => new GhostController().updatePlatformHandler(input, ctx)),
+
+    disconnectGhost: protectedProcedure.query(({ ctx }) =>
+        new GhostController().deletePlatformHandler(ctx),
     ),
 });
 

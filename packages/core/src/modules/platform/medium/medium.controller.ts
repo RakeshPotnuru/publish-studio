@@ -1,17 +1,19 @@
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
+import { encryptField } from "@/utils/aws/kms";
+
 import defaultConfig from "../../../config/app.config";
 import type { Context } from "../../../trpc";
 import type { IProject, TTags } from "../../project/project.types";
 import MediumService from "./medium.service";
-import type { default_publish_status } from "./medium.types";
+import type { TMediumStatus } from "./medium.types";
 
 export default class MediumController extends MediumService {
     async createUserHandler(
         input: {
             api_key: string;
-            default_publish_status: default_publish_status;
+            default_publish_status: TMediumStatus;
             notify_followers: boolean;
         },
         ctx: Context,
@@ -53,19 +55,22 @@ export default class MediumController extends MediumService {
     async updateUserHandler(
         input: {
             api_key?: string;
-            default_publish_status?: default_publish_status;
+            default_publish_status?: TMediumStatus;
             notify_followers?: boolean;
         },
         ctx: Context,
     ) {
         if (input.api_key) {
             const user = await super.getMediumUser(input.api_key);
+
             if (!user) {
                 throw new TRPCError({
                     code: "UNAUTHORIZED",
                     message: "Invalid API key",
                 });
             }
+
+            input.api_key = await encryptField(input.api_key);
 
             const updatedUser = await super.updatePlatform(
                 {
