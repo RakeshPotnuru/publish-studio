@@ -1,10 +1,9 @@
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
-import { encryptField } from "@/utils/aws/kms";
-
 import defaultConfig from "../../../config/app.config";
 import type { Context } from "../../../trpc";
+import { encryptField } from "../../../utils/aws/kms";
 import type { IProject, TTags } from "../../project/project.types";
 import MediumService from "./medium.service";
 import type { TMediumStatus } from "./medium.types";
