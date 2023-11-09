@@ -20,7 +20,13 @@ const projectRouter = t.router({
                         .string()
                         .max(constants.project.description.MAX_LENGTH)
                         .optional(),
-                    body: z.string().max(constants.project.body.MAX_LENGTH).optional(),
+                    body: z
+                        .object({
+                            json: z.custom<JSON>().optional(),
+                            html: z.string().optional(),
+                            markdown: z.string().optional(),
+                        })
+                        .optional(),
                     status: z
                         .nativeEnum(constants.project.status)
                         .optional()
@@ -57,6 +63,10 @@ const projectRouter = t.router({
                             .array(z.string())
                             .max(constants.project.tags.medium.MAX_LENGTH)
                             .optional(),
+                        ghost_tags: z
+                            .array(z.object({ name: z.string() }))
+                            .max(constants.project.tags.ghost.MAX_LENGTH)
+                            .optional(),
                     })
                     .optional(),
                 scheduled_at: z.string().pipe(z.coerce.date()),
@@ -88,6 +98,10 @@ const projectRouter = t.router({
                         .array(z.string())
                         .max(constants.project.tags.medium.MAX_LENGTH)
                         .optional(),
+                    ghost_tags: z
+                        .array(z.object({ name: z.string() }))
+                        .max(constants.project.tags.ghost.MAX_LENGTH)
+                        .optional(),
                 }),
             }),
         )
@@ -111,7 +125,13 @@ const projectRouter = t.router({
                         .string()
                         .max(constants.project.description.MAX_LENGTH)
                         .optional(),
-                    body: z.string().max(constants.project.body.MAX_LENGTH).optional(),
+                    body: z
+                        .object({
+                            json: z.custom<JSON>().optional(),
+                            html: z.string().optional(),
+                            markdown: z.string().optional(),
+                        })
+                        .optional(),
                     status: z
                         .nativeEnum(constants.project.status)
                         .optional()

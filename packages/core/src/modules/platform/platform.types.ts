@@ -11,3 +11,6 @@ export interface IPlatform {
     name: (typeof constants.user.platforms)[keyof typeof constants.user.platforms];
     data: IHashnode | IMedium | IDevTo;
 }
+
+export type TPlatformName =
+    (typeof constants.user.platforms)[keyof typeof constants.user.platforms];

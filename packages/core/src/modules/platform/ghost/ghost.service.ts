@@ -2,11 +2,11 @@ import { TRPCError } from "@trpc/server";
 import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 import type { Types } from "mongoose";
 
-import defaultConfig from "@/config/app.config";
-import { constants } from "@/constants";
-import Platform from "@/modules/platform/platform.model";
-import User from "@/modules/user/user.model";
-
+import defaultConfig from "../../../config/app.config";
+import { constants } from "../../../constants";
+import Platform from "../../../modules/platform/platform.model";
+import User from "../../../modules/user/user.model";
+import { decryptField } from "../../../utils/aws/kms";
 import Ghost from "./ghost.model";
 import type { IGhost, IGhostPostInput, TGhostPostUpdate, TGhostUpdate } from "./ghost.types";
 
@@ -21,7 +21,9 @@ export default class GhostService {
                 return;
             }
 
-            return new TSGhostAdminAPI(user.api_url, user.admin_api_key, user.ghost_version);
+            const decryptedAPIKey = await decryptField(user.admin_api_key);
+
+            return new TSGhostAdminAPI(user.api_url, decryptedAPIKey, user.ghost_version);
         } catch (error) {
             console.log(error);
 

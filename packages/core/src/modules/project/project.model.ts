@@ -14,7 +14,11 @@ const ProjectSchema = new Schema<IProject>(
             maxlength: constants.project.title.MAX_LENGTH,
         },
         description: { type: String, maxlength: constants.project.description.MAX_LENGTH },
-        body: { type: String, maxlength: constants.project.body.MAX_LENGTH },
+        body: {
+            json: { type: Object },
+            html: { type: String },
+            markdown: { type: String },
+        },
         status: {
             type: String,
             enum: constants.project.status,
@@ -33,8 +37,6 @@ const ProjectSchema = new Schema<IProject>(
         ],
         scheduled_at: {
             type: Date,
-            required: true,
-            default: Date.now,
             validate: [
                 {
                     validator: function (value: Date) {

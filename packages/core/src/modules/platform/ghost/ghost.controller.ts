@@ -1,7 +1,9 @@
 import { TRPCError } from "@trpc/server";
+import type { Types } from "mongoose";
 
 import type { Context } from "../../../trpc";
 import { encryptField } from "../../../utils/aws/kms";
+import type { IProject, TTags } from "../../project/project.types";
 import GhostService from "./ghost.service";
 import type { IGhost, TGhostUpdate } from "./ghost.types";
 
@@ -96,6 +98,69 @@ export default class GhostController extends GhostService {
             status: "success",
             data: {
                 message: "Platform disconnected successfully.",
+            },
+        };
+    }
+
+    async createPostHandler(input: { post: IProject; tags?: TTags }, user_id: Types.ObjectId) {
+        const platform = await super.getPlatform(user_id);
+
+        if (!platform) {
+            throw new TRPCError({
+                code: "NOT_FOUND",
+                message: "Platform not found. Please connect your Ghost account to continue.",
+            });
+        }
+
+        const newPost = await super.publishPost(
+            {
+                html: input.post.body?.html,
+                title: input.post.title,
+                canonical_url: input.post.canonical_url,
+                status: platform.default_publish_status,
+                tags: input.tags?.ghost_tags,
+            },
+            user_id,
+        );
+
+        return {
+            status: "success",
+            data: {
+                post: newPost,
+            },
+        };
+    }
+
+    async updatePostHandler(
+        input: { post: IProject; tags?: TTags; post_id: string },
+        user_id: Types.ObjectId | undefined,
+    ) {
+        const platform = await super.getPlatform(user_id);
+
+        if (!platform) {
+            throw new TRPCError({
+                code: "NOT_FOUND",
+                message: "Platform not found. Please connect your Ghost account to continue.",
+            });
+        }
+
+        const updatedPost = await super.updatePost(
+            {
+                html: input.post.body?.html,
+                title: input.post.title,
+                canonical_url: input.post.canonical_url,
+                status: platform.default_publish_status,
+                tags: input.tags?.ghost_tags,
+                updated_at: new Date(),
+            },
+            input.post_id,
+            user_id,
+        );
+
+        return {
+            status: "success",
+            data: {
+                post: updatedPost,
             },
         };
     }

@@ -2,8 +2,7 @@ import { TRPCError } from "@trpc/server";
 import type { Document } from "mongoose";
 import mongoose, { Schema } from "mongoose";
 
-import { encryptField } from "@/utils/aws/kms";
-
+import { encryptField } from "../../../utils/aws/kms";
 import type { IGhost } from "./ghost.types";
 
 const GhostSchema = new Schema<IGhost>(

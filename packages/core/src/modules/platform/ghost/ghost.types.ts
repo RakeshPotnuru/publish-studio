@@ -42,7 +42,7 @@ export interface IGhostSiteOutput {
 
 export interface IGhostPostInput {
     title: string;
-    html: string;
+    html?: string;
     canonical_url?: string;
     status?: TGhostStatus;
     tags?: { name: string }[];

@@ -1,10 +1,9 @@
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
-import { encryptField } from "@/utils/aws/kms";
-
 import defaultConfig from "../../../config/app.config";
 import type { Context } from "../../../trpc";
+import { encryptField } from "../../../utils/aws/kms";
 import type { IProject, TTags } from "../../project/project.types";
 import HashnodeService from "./hashnode.service";
 
@@ -156,7 +155,7 @@ export default class HashnodeController extends HashnodeService {
         const postBody = post.canonical_url
             ? {
                   title: post.title,
-                  contentMarkdown: post.body,
+                  contentMarkdown: post.body?.markdown,
                   tags: tags?.hashnode_tags,
                   coverImageURL: post.cover_image,
                   isRepublished: {
@@ -168,7 +167,7 @@ export default class HashnodeController extends HashnodeService {
               }
             : {
                   title: post.title,
-                  contentMarkdown: post.body,
+                  contentMarkdown: post.body?.markdown,
                   tags: tags?.hashnode_tags,
                   coverImageURL: post.cover_image,
                   isPartOfPublication: {
@@ -229,7 +228,7 @@ export default class HashnodeController extends HashnodeService {
         const postBody = post.canonical_url
             ? {
                   title: post.title,
-                  contentMarkdown: post.body,
+                  contentMarkdown: post.body?.markdown,
                   tags: tags?.hashnode_tags,
                   coverImageURL: post.cover_image,
                   isRepublished: {
@@ -241,7 +240,7 @@ export default class HashnodeController extends HashnodeService {
               }
             : {
                   title: post.title,
-                  contentMarkdown: post.body,
+                  contentMarkdown: post.body?.markdown,
                   tags: tags?.hashnode_tags,
                   coverImageURL: post.cover_image,
                   isPartOfPublication: {

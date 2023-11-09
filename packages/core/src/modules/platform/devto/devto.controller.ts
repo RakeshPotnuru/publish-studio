@@ -114,21 +114,21 @@ export default class DevToController extends DevToService {
     }
 
     async createPostHandler(input: { post: IProject; tags?: TTags }, user_id: Types.ObjectId) {
-        const user = await super.getPlatformById(user_id);
+        const platform = await super.getPlatformById(user_id);
 
-        if (!user) {
+        if (!platform) {
             throw new TRPCError({
                 code: "NOT_FOUND",
-                message: "Account not found. Please connect your Dev.to account to continue.",
+                message: "Platform not found. Please connect your Dev.to account to continue.",
             });
         }
 
         const newPost = await super.publishPost(
             {
                 title: input.post.title,
-                body_markdown: input.post.body,
+                body_markdown: input.post.body?.markdown,
                 description: input.post.description,
-                published: user.default_publish_status,
+                published: platform.default_publish_status,
                 canonical_url: input.post.canonical_url,
                 tags: input.tags?.devto_tags,
                 main_image: input.post.cover_image,
@@ -169,9 +169,9 @@ export default class DevToController extends DevToService {
         input: { post: IProject; post_id: number; tags: TTags },
         user_id: Types.ObjectId | undefined,
     ) {
-        const user = await super.getPlatformById(user_id);
+        const platform = await super.getPlatformById(user_id);
 
-        if (!user) {
+        if (!platform) {
             throw new TRPCError({
                 code: "NOT_FOUND",
                 message: "Account not found. Please connect your Dev.to account to continue.",
@@ -181,9 +181,9 @@ export default class DevToController extends DevToService {
         const updatedPost = await super.updatePost(
             {
                 title: input.post.title,
-                body_markdown: input.post.body,
+                body_markdown: input.post.body?.markdown,
                 description: input.post.description,
-                published: user.default_publish_status,
+                published: platform.default_publish_status,
                 canonical_url: input.post.canonical_url,
                 tags: input.tags.devto_tags,
                 main_image: input.post.cover_image,

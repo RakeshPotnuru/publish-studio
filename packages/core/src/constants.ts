@@ -38,6 +38,9 @@ const project = {
         hashnode: {
             MAX_LENGTH: 5,
         },
+        ghost: {
+            MAX_LENGTH: 5,
+        },
     },
     status: projectStatus,
 } as const;
@@ -75,15 +78,6 @@ const user = {
     platforms: platforms,
     authModes: authModes,
 } as const;
-
-// const rabbitmq = {
-//     queues: {
-//         POSTS: "posts",
-//         POST_JOBS: "post_jobs",
-//         EMAILS: "emails",
-//         EMAIL_JOBS: "email_jobs",
-//     },
-// };
 
 const bullmq = {
     queues: {

@@ -7,7 +7,11 @@ export interface IProject {
     folder_id?: Types.ObjectId;
     title: string;
     description?: string;
-    body?: string;
+    body?: {
+        json?: JSON;
+        html?: string;
+        markdown?: string;
+    };
     status: (typeof constants.project.status)[keyof typeof constants.project.status];
     cover_image?: string;
     assets?: Types.ObjectId[];
@@ -33,6 +37,7 @@ export interface TTags {
     hashnode_tags?: THashnodeTag[];
     devto_tags?: string[];
     medium_tags?: string[];
+    ghost_tags?: { name: string }[];
 }
 
 export interface IPost {
