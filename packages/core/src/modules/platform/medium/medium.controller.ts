@@ -108,7 +108,7 @@ export default class MediumController extends MediumService {
     }
 
     async deleteUserHandler(ctx: Context) {
-        const user = await super.getUserById(ctx.user?._id);
+        const user = await super.getPlatform(ctx.user?._id);
 
         if (!user) {
             throw new TRPCError({
@@ -117,18 +117,18 @@ export default class MediumController extends MediumService {
             });
         }
 
-        const deletedUser = await super.deletePlatform(ctx.user?._id);
+        await super.deletePlatform(ctx.user?._id);
 
         return {
             status: "success",
             data: {
-                user: deletedUser,
+                message: "Platform disconnected successfully.",
             },
         };
     }
 
     async createPostHandler(input: { post: IProject; tags?: TTags }, user_id: Types.ObjectId) {
-        const user = await super.getUserById(user_id);
+        const user = await super.getPlatform(user_id);
 
         if (!user) {
             throw new TRPCError({
@@ -141,7 +141,7 @@ export default class MediumController extends MediumService {
             {
                 title: input.post.title,
                 contentFormat: "markdown",
-                content: input.post.body,
+                content: input.post.body?.markdown,
                 tags: input.tags?.medium_tags,
                 publishStatus: user.default_publish_status,
                 canonicalUrl: input.post.canonical_url,

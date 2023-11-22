@@ -8,6 +8,7 @@ import HashnodeController from "./hashnode/hashnode.controller";
 import MediumController from "./medium/medium.controller";
 import type { TMediumStatus } from "./medium/medium.types";
 import PlatformController from "./platform.controller";
+import WordPressService from "./wordpress/wordpress.service";
 
 const platformRouter = t.router({
     getAllPlatforms: protectedProcedure.query(({ ctx }) =>
@@ -21,7 +22,7 @@ const platformRouter = t.router({
                 api_key: z.string(),
             }),
         )
-        .mutation(({ input, ctx }) => new HashnodeController().createUserHandler(input, ctx)),
+        .mutation(({ input, ctx }) => new HashnodeController().createPlatformHandler(input, ctx)),
 
     updateHashnode: protectedProcedure
         .input(
@@ -30,10 +31,10 @@ const platformRouter = t.router({
                 api_key: z.string().optional(),
             }),
         )
-        .mutation(({ input, ctx }) => new HashnodeController().updateUserHandler(input, ctx)),
+        .mutation(({ input, ctx }) => new HashnodeController().updatePlatformHandler(input, ctx)),
 
     disconnectHashnode: protectedProcedure.query(({ ctx }) =>
-        new HashnodeController().deleteUserHandler(ctx),
+        new HashnodeController().deletePlatformHandler(ctx),
     ),
 
     connectDevTo: protectedProcedure
@@ -107,6 +108,19 @@ const platformRouter = t.router({
     disconnectGhost: protectedProcedure.query(({ ctx }) =>
         new GhostController().deletePlatformHandler(ctx),
     ),
+
+    connectWordPress: protectedProcedure
+        .input(
+            z.object({
+                api_url: z.string(),
+                username: z.string(),
+                password: z.string(),
+                // default_publish_status: z.custom<TGhostStatus>(),
+            }),
+        )
+        .mutation(({ input }) =>
+            new WordPressService().getWordPressSite(input.api_url, input.username, input.password),
+        ),
 });
 
 export default platformRouter;

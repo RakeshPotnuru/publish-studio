@@ -22,13 +22,13 @@ export default class DevToService {
 
     private async devTo(user_id: Types.ObjectId | undefined) {
         try {
-            const user = await this.getPlatformById(user_id);
+            const platform = await this.getPlatform(user_id);
 
-            if (!user) {
+            if (!platform) {
                 return;
             }
 
-            const decryptedAPIKey = await decryptField(user.api_key);
+            const decryptedAPIKey = await decryptField(platform.api_key);
 
             return axios.create({
                 baseURL: defaultConfig.devto_api_url,
@@ -70,7 +70,7 @@ export default class DevToService {
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while connecting the account. Please try again later.",
+                message: "An error occurred while connecting the platform. Please try again later.",
             });
         }
     }
@@ -85,7 +85,7 @@ export default class DevToService {
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while updating the account. Please try again later.",
+                message: "An error occurred while updating the platform. Please try again later.",
             });
         }
     }
@@ -110,12 +110,12 @@ export default class DevToService {
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
                 message:
-                    "An error occurred while disconnecting the account. Please try again later.",
+                    "An error occurred while disconnecting the platform. Please try again later.",
             });
         }
     }
 
-    async getPlatformById(user_id: Types.ObjectId | undefined) {
+    async getPlatform(user_id: Types.ObjectId | undefined) {
         try {
             return (await DevTo.findOne({ user_id }).exec()) as IDevTo;
         } catch (error) {
@@ -123,7 +123,7 @@ export default class DevToService {
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while fetching the account. Please try again later.",
+                message: "An error occurred while fetching the platform. Please try again later.",
             });
         }
     }

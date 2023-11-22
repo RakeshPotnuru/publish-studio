@@ -21,13 +21,13 @@ export default class MediumService {
 
     private async medium(user_id: Types.ObjectId | undefined) {
         try {
-            const user = await this.getUserById(user_id);
+            const platform = await this.getPlatform(user_id);
 
-            if (!user) {
+            if (!platform) {
                 return;
             }
 
-            const decryptedAPIKey = await decryptField(user.api_key);
+            const decryptedAPIKey = await decryptField(platform.api_key);
 
             return axios.create({
                 baseURL: defaultConfig.medium_api_url,
@@ -69,7 +69,7 @@ export default class MediumService {
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while connecting the account. Please try again later.",
+                message: "An error occurred while connecting the platform. Please try again later.",
             });
         }
     }
@@ -84,7 +84,7 @@ export default class MediumService {
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while updating the account. Please try again later.",
+                message: "An error occurred while updating the platform. Please try again later.",
             });
         }
     }
@@ -109,12 +109,12 @@ export default class MediumService {
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
                 message:
-                    "An error occurred while disconnecting the account. Please try again later.",
+                    "An error occurred while disconnecting the platform. Please try again later.",
             });
         }
     }
 
-    async getUserById(user_id: Types.ObjectId | undefined) {
+    async getPlatform(user_id: Types.ObjectId | undefined) {
         try {
             return (await Medium.findOne({ user_id }).exec()) as IMedium;
         } catch (error) {
@@ -122,7 +122,7 @@ export default class MediumService {
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while fetching the account. Please try again later.",
+                message: "An error occurred while fetching the platform. Please try again later.",
             });
         }
     }

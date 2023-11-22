@@ -58,6 +58,7 @@
         "@types/jsonwebtoken": "^9.0.5",
         "@types/node": "20.8.10",
         "@types/uuid": "^9.0.6",
+        "@types/wpapi": "^1.1.4",
         "eslint": "8.53.0",
         "jest": "^29.7.0",
         "nodemon": "^3.0.1",

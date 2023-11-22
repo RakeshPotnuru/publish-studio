@@ -9,7 +9,11 @@ import type { IGhost, TGhostUpdate } from "./ghost.types";
 
 export default class GhostController extends GhostService {
     async createPlatformHandler(input: IGhost, ctx: Context) {
-        const site = await super.getGhostSite(input);
+        const site = await super.getGhostSite(
+            input.api_url,
+            input.ghost_version,
+            input.admin_api_key,
+        );
 
         if (!site.success) {
             throw new TRPCError({
@@ -36,7 +40,11 @@ export default class GhostController extends GhostService {
 
     async updatePlatformHandler(input: TGhostUpdate, ctx: Context) {
         if (input.admin_api_key) {
-            const site = await super.getGhostSite(input);
+            const site = await super.getGhostSite(
+                input.api_url,
+                input.ghost_version,
+                input.admin_api_key,
+            );
 
             if (!site.success) {
                 throw new TRPCError({

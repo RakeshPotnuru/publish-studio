@@ -21,13 +21,13 @@ export default class HashnodeService {
 
     private async hashnode(user_id: Types.ObjectId | undefined) {
         try {
-            const user = await this.getPlatform(user_id);
+            const platform = await this.getPlatform(user_id);
 
-            if (!user.api_key) {
+            if (!platform.api_key) {
                 return;
             }
 
-            const decryptedAPIKey = await decryptField(user.api_key);
+            const decryptedAPIKey = await decryptField(platform.api_key);
 
             return axios.create({
                 baseURL: defaultConfig.hashnode_api_url,
@@ -69,7 +69,7 @@ export default class HashnodeService {
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while connecting the account. Please try again later.",
+                message: "An error occurred while connecting the platform. Please try again later.",
             });
         }
     }
@@ -84,7 +84,7 @@ export default class HashnodeService {
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while updating the account. Please try again later.",
+                message: "An error occurred while updating the platform. Please try again later.",
             });
         }
     }

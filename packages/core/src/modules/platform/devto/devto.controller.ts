@@ -94,7 +94,7 @@ export default class DevToController extends DevToService {
     }
 
     async deletePlatformHandler(ctx: Context) {
-        const user = await super.getPlatformById(ctx.user?._id);
+        const user = await super.getPlatform(ctx.user?._id);
 
         if (!user) {
             throw new TRPCError({
@@ -114,7 +114,7 @@ export default class DevToController extends DevToService {
     }
 
     async createPostHandler(input: { post: IProject; tags?: TTags }, user_id: Types.ObjectId) {
-        const platform = await super.getPlatformById(user_id);
+        const platform = await super.getPlatform(user_id);
 
         if (!platform) {
             throw new TRPCError({
@@ -169,7 +169,7 @@ export default class DevToController extends DevToService {
         input: { post: IProject; post_id: number; tags: TTags },
         user_id: Types.ObjectId | undefined,
     ) {
-        const platform = await super.getPlatformById(user_id);
+        const platform = await super.getPlatform(user_id);
 
         if (!platform) {
             throw new TRPCError({

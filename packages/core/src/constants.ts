@@ -4,6 +4,7 @@ enum platforms {
     DEVTO = "DevTo",
     MEDIUM = "Medium",
     GHOST = "Ghost",
+    WORDPRESS = "WordPress",
 }
 
 enum projectStatus {

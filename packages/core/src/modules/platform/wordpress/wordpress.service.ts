@@ -1,19 +1,19 @@
 import { TRPCError } from "@trpc/server";
-import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 import type { Types } from "mongoose";
+import WPAPI from "wpapi";
 
 import defaultConfig from "../../../config/app.config";
 import { constants } from "../../../constants";
 import Platform from "../../../modules/platform/platform.model";
 import User from "../../../modules/user/user.model";
 import { decryptField } from "../../../utils/aws/kms";
-import Ghost from "./ghost.model";
-import type { IGhost, IGhostPostInput, TGhostPostUpdate, TGhostUpdate } from "./ghost.types";
+import Wordpress from "./wordpress.model";
+import type { IWordPress, TWordPressUpdate } from "./wordpress.types";
 
-export default class GhostService {
-    private readonly PLATFORM = constants.user.platforms.GHOST;
+export default class WordPressService {
+    private readonly PLATFORM = constants.user.platforms.WORDPRESS;
 
-    private async ghost(user_id: Types.ObjectId | undefined) {
+    private async wordpress(user_id: Types.ObjectId | undefined) {
         try {
             const platform = await this.getPlatform(user_id);
 
@@ -21,9 +21,16 @@ export default class GhostService {
                 return;
             }
 
-            const decryptedAPIKey = await decryptField(platform.admin_api_key);
+            const decryptedPassword = await decryptField(platform.password);
 
-            return new TSGhostAdminAPI(platform.api_url, decryptedAPIKey, platform.ghost_version);
+            const wp = await WPAPI.discover(platform.site_url);
+
+            wp.auth({
+                username: platform.username,
+                password: decryptedPassword,
+            });
+
+            return wp;
         } catch (error) {
             console.log(error);
 
@@ -34,9 +41,9 @@ export default class GhostService {
         }
     }
 
-    async createPlatform(platform: IGhost) {
+    async createPlatform(platform: IWordPress) {
         try {
-            const newPlatform = await Ghost.create(platform);
+            const newPlatform = await Wordpress.create(platform);
 
             await User.findByIdAndUpdate(platform.user_id, {
                 $push: {
@@ -50,7 +57,7 @@ export default class GhostService {
                 data: newPlatform._id,
             });
 
-            return newPlatform as IGhost;
+            return newPlatform as IWordPress;
         } catch (error) {
             console.log(error);
 
@@ -61,11 +68,19 @@ export default class GhostService {
         }
     }
 
-    async updatePlatform(user: TGhostUpdate, user_id: Types.ObjectId | undefined) {
+    async updatePlatform(platform: TWordPressUpdate, user_id: Types.ObjectId | undefined) {
         try {
-            return (await Ghost.findOneAndUpdate({ user_id }, user, {
-                new: true,
-            }).exec()) as IGhost;
+            const updatedPlatform = await Wordpress.findOneAndUpdate(
+                {
+                    user_id,
+                },
+                platform,
+                {
+                    new: true,
+                },
+            );
+
+            return updatedPlatform as IWordPress;
         } catch (error) {
             console.log(error);
 
@@ -89,7 +104,7 @@ export default class GhostService {
                 },
             }).exec();
 
-            return (await Ghost.findOneAndDelete({ user_id }).exec()) as IGhost;
+            return (await Wordpress.findOneAndDelete({ user_id }).exec()) as IWordPress;
         } catch (error) {
             console.log(error);
 
@@ -103,7 +118,7 @@ export default class GhostService {
 
     async getPlatform(user_id: Types.ObjectId | undefined) {
         try {
-            return (await Ghost.findOne({ user_id }).exec()) as IGhost;
+            return (await Wordpress.findOne({ user_id }).exec()) as IWordPress;
         } catch (error) {
             console.log(error);
 
@@ -114,56 +129,28 @@ export default class GhostService {
         }
     }
 
-    async publishPost(post: IGhostPostInput, user_id: Types.ObjectId | undefined) {
+    async getWordPressSite(site_url: string, username: string, password: string) {
         try {
-            const ghost = await this.ghost(user_id);
-
-            return await ghost?.posts.add(post);
-        } catch (error) {
-            console.log(error);
-
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while publishing the post. Please try again later.",
-            });
-        }
-    }
-
-    async updatePost(post: TGhostPostUpdate, post_id: string, user_id: Types.ObjectId | undefined) {
-        try {
-            const ghost = await this.ghost(user_id);
-
-            return await ghost?.posts.edit(post_id, post);
-        } catch (error) {
-            console.log(error);
-
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while updating the post. Please try again later.",
-            });
-        }
-    }
-
-    /* This method is used exactly twice before creating or updating site in `GhostController()` class
-    to check if the site exists or not. That's why api key is being used directly. */
-    async getGhostSite(api_url: string, ghost_version: `v5.${string}`, admin_api_key?: string) {
-        try {
-            if (!admin_api_key) {
-                return {
-                    success: false,
-                };
+            if (!password) {
+                return;
             }
 
-            const ghost = new TSGhostAdminAPI(api_url, admin_api_key, ghost_version);
+            const wp = await WPAPI.discover(site_url);
 
-            return await ghost.site.fetch();
+            wp.auth({
+                username: username,
+                password: password,
+            });
+
+            console.log({ wp });
+            return wp;
         } catch (error) {
             console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
                 message:
-                    "An error occurred while fetching the site. Make sure all the details are correct and try again.",
+                    "An error occurred while fetching the WordPress site. Make sure all the details are correct and try again.",
             });
         }
     }

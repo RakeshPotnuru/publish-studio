@@ -26,7 +26,7 @@ export default class HashnodeController extends HashnodeService {
         };
     }
 
-    async createUserHandler(input: { username: string; api_key: string }, ctx: Context) {
+    async createPlatformHandler(input: { username: string; api_key: string }, ctx: Context) {
         const { username, api_key } = input;
 
         const user = await super.getHashnodeUser(username);
@@ -38,7 +38,7 @@ export default class HashnodeController extends HashnodeService {
             });
         }
 
-        const newUser = await super.createPlatform({
+        const newPlatform = await super.createPlatform({
             user_id: ctx.user?._id,
             api_key: api_key,
             username,
@@ -53,12 +53,12 @@ export default class HashnodeController extends HashnodeService {
         return {
             status: "success",
             data: {
-                user: newUser,
+                user: newPlatform,
             },
         };
     }
 
-    async updateUserHandler(input: { username: string; api_key?: string }, ctx: Context) {
+    async updatePlatformHandler(input: { username: string; api_key?: string }, ctx: Context) {
         const user = await super.getHashnodeUser(input.username);
 
         if (!user) {
@@ -71,7 +71,7 @@ export default class HashnodeController extends HashnodeService {
         if (input.api_key) {
             input.api_key = await encryptField(input.api_key);
 
-            const updatedUser = await super.updatePlatform(
+            const updatedPlatform = await super.updatePlatform(
                 {
                     api_key: input.api_key,
                     username: input.username,
@@ -88,12 +88,12 @@ export default class HashnodeController extends HashnodeService {
             return {
                 status: "success",
                 data: {
-                    user: updatedUser,
+                    user: updatedPlatform,
                 },
             };
         }
 
-        const updatedUser = await super.updatePlatform(
+        const updatedPlatform = await super.updatePlatform(
             {
                 username: input.username,
                 profile_pic: user.photo,
@@ -109,27 +109,27 @@ export default class HashnodeController extends HashnodeService {
         return {
             status: "success",
             data: {
-                user: updatedUser,
+                user: updatedPlatform,
             },
         };
     }
 
-    async deleteUserHandler(ctx: Context) {
-        const user = await super.getPlatform(ctx.user?._id);
+    async deletePlatformHandler(ctx: Context) {
+        const platform = await super.getPlatform(ctx.user?._id);
 
-        if (!user) {
+        if (!platform) {
             throw new TRPCError({
                 code: "NOT_FOUND",
                 message: "Account not found. Please connect your Hashnode account to continue.",
             });
         }
 
-        const deletedUser = await super.deletePlatform(ctx.user?._id);
+        await super.deletePlatform(ctx.user?._id);
 
         return {
             status: "success",
             data: {
-                user: deletedUser,
+                message: "Platform disconnected successfully.",
             },
         };
     }
@@ -141,9 +141,9 @@ export default class HashnodeController extends HashnodeService {
         },
         user_id: Types.ObjectId,
     ) {
-        const user = await super.getPlatform(user_id);
+        const platform = await super.getPlatform(user_id);
 
-        if (!user) {
+        if (!platform) {
             throw new TRPCError({
                 code: "NOT_FOUND",
                 message: "Account not found. Please connect your Hashnode account to continue.",
@@ -162,7 +162,7 @@ export default class HashnodeController extends HashnodeService {
                       originalArticleURL: post.canonical_url,
                   },
                   isPartOfPublication: {
-                      publicationId: user.publication.publication_id,
+                      publicationId: platform.publication.publication_id,
                   },
               }
             : {
@@ -171,7 +171,7 @@ export default class HashnodeController extends HashnodeService {
                   tags: tags?.hashnode_tags,
                   coverImageURL: post.cover_image,
                   isPartOfPublication: {
-                      publicationId: user.publication.publication_id,
+                      publicationId: platform.publication.publication_id,
                   },
               };
 
