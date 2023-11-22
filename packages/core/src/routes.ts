@@ -5,9 +5,9 @@ import paymentRouter from "./modules/payment/payment.routes";
 import platformRouter from "./modules/platform/platform.routes";
 import projectRouter from "./modules/project/project.routes";
 import userRouter from "./modules/user/user.routes";
-import { t } from "./trpc";
+import { mergeRouters } from "./trpc";
 
-const trpcRouter = t.mergeRouters(
+const appRouter = mergeRouters(
     authRouter,
     userRouter,
     folderRouter,
@@ -17,5 +17,5 @@ const trpcRouter = t.mergeRouters(
     paymentRouter,
 );
 
-export type TRPCRouter = typeof trpcRouter;
-export default trpcRouter;
+export type AppRouter = typeof appRouter;
+export default appRouter;

@@ -11,7 +11,7 @@ import "./config/env";
 import "./utils/db";
 
 import defaultConfig from "./config/app.config";
-import trpcRouter from "./routes";
+import appRouter from "./routes";
 import { createContext } from "./trpc";
 
 const app: Application = express();
@@ -46,21 +46,17 @@ app.use(cors(corsOptions));
 app.use(
     "/api",
     createExpressMiddleware({
-        router: trpcRouter,
+        router: appRouter,
         createContext,
     }),
 );
 
 app.use("/panel", (_, res) => {
-    return res.send(renderTrpcPanel(trpcRouter, { url: defaultConfig.baseUrl }));
+    return res.send(renderTrpcPanel(appRouter, { url: defaultConfig.baseUrl }));
 });
-
-// const project = new ProjectController();
-// await project.postReceiver();
-// await emailReceiver();
 
 app.listen(defaultConfig.port, () => {
     console.log(`✅ Server running on port ${defaultConfig.port}`);
 });
 
-export type AppRouter = typeof trpcRouter;
+export type AppRouter = typeof appRouter;

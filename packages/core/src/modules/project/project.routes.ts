@@ -2,11 +2,11 @@ import type { Types } from "mongoose";
 import { z } from "zod";
 
 import { constants } from "../../constants";
-import { proProtectedProcedure, protectedProcedure, t } from "../../trpc";
+import { proProtectedProcedure, protectedProcedure, router } from "../../trpc";
 import ProjectController from "./project.controller";
 import type { THashnodeTag } from "./project.types";
 
-const projectRouter = t.router({
+const projectRouter = router({
     createProject: protectedProcedure
         .input(
             z.object({

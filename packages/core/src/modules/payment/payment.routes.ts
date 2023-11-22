@@ -1,7 +1,7 @@
-import { proProtectedProcedure, protectedProcedure, t } from "../../trpc";
+import { proProtectedProcedure, protectedProcedure, publicProcedure, router } from "../../trpc";
 import PaymentController from "./payment.controller";
 
-const paymentRouter = t.router({
+const paymentRouter = router({
     createCheckoutSession: protectedProcedure.query(({ ctx }) =>
         new PaymentController().makePaymentHandler(ctx),
     ),
@@ -10,7 +10,7 @@ const paymentRouter = t.router({
         new PaymentController().cancelSubscriptionHandler(ctx),
     ),
 
-    stripeWebhook: t.procedure.mutation(({ ctx }) =>
+    stripeWebhook: publicProcedure.mutation(({ ctx }) =>
         new PaymentController().stripeWebhookHandler(ctx),
     ),
 });

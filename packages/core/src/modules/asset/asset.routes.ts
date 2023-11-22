@@ -1,16 +1,17 @@
 import type { Types } from "mongoose";
 import { z } from "zod";
 
-import { protectedProcedure, t } from "../../trpc";
+import { protectedProcedure, router } from "../../trpc";
 import AssetController from "./asset.controller";
+import type { TMimeType } from "./asset.types";
 
-const assetRouter = t.router({
+const assetRouter = router({
     uploadImage: protectedProcedure
         .input(
             z.object({
                 file: z.object({
                     originalname: z.string(),
-                    mimetype: z.string(),
+                    mimetype: z.custom<TMimeType>(),
                     size: z.number(),
                 }),
                 project_id: z.custom<Types.ObjectId>().optional(),

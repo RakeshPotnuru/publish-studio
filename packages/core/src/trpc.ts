@@ -10,7 +10,7 @@ export const createContext = ({ req, res }: CreateExpressContextOptions) => {
 };
 
 export type Context = inferAsyncReturnType<typeof createContext>;
-export const t = initTRPC.context<Context>().create();
+const t = initTRPC.context<Context>().create();
 
 const isAuthed = t.middleware(({ next, ctx }) => {
     if (!ctx.user) {
@@ -39,6 +39,8 @@ const isPro = t.middleware(({ next, ctx }) => {
     return next();
 });
 
+export const router = t.router;
+export const mergeRouters = t.mergeRouters;
 export const publicProcedure = t.procedure;
 export const protectedProcedure = t.procedure.use(isAuthed);
 export const proProtectedProcedure = t.procedure.use(isPro);

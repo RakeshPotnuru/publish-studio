@@ -2,10 +2,10 @@ import type { Types } from "mongoose";
 import { z } from "zod";
 
 import { constants } from "../../constants";
-import { protectedProcedure, t } from "../../trpc";
+import { protectedProcedure, router } from "../../trpc";
 import FolderController from "./folder.controller";
 
-const folderRouter = t.router({
+const folderRouter = router({
     createFolder: protectedProcedure
         .input(
             z.object({

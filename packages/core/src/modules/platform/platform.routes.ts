@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { protectedProcedure, t } from "../../trpc";
+import { protectedProcedure, router } from "../../trpc";
 import DevToController from "./devto/devto.controller";
 import GhostController from "./ghost/ghost.controller";
 import type { TGhostStatus } from "./ghost/ghost.types";
@@ -10,7 +10,7 @@ import type { TMediumStatus } from "./medium/medium.types";
 import PlatformController from "./platform.controller";
 import WordPressService from "./wordpress/wordpress.service";
 
-const platformRouter = t.router({
+const platformRouter = router({
     getAllPlatforms: protectedProcedure.query(({ ctx }) =>
         new PlatformController().getAllPlatformsHandler(ctx),
     ),

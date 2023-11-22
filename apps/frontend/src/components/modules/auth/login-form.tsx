@@ -17,12 +17,13 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Heading } from "@/components/ui/heading";
+import trpc from "@/lib/trpc";
 
 interface LoginFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const formSchema = z.object({
     email: z.string().email({ message: "Please enter a valid email address" }),
-    password: z.string().nonempty({ message: "Please enter your password" }),
+    password: z.string().min(1, { message: "Please enter your password" }),
 });
 
 export function LoginForm({ ...props }: LoginFormProps) {
@@ -35,8 +36,9 @@ export function LoginForm({ ...props }: LoginFormProps) {
         },
     });
 
-    const onSubmit = (data: z.infer<typeof formSchema>) => {
-        console.log(data);
+    const onSubmit = async (data: z.infer<typeof formSchema>) => {
+        const response = await trpc.login.mutate(data);
+        console.log(response.data);
     };
 
     return (
