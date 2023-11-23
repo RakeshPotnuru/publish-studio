@@ -60,7 +60,7 @@ import {
 import { PiCodeBlockBold, PiDotsThreeBold, PiPlusCircleLight } from "react-icons/pi";
 import { RiFoldersFill } from "react-icons/ri";
 import { RxCaretSort, RxCross2, RxDividerHorizontal, RxMixerHorizontal } from "react-icons/rx";
-import { TbBlockquote, TbPlugConnected } from "react-icons/tb";
+import { TbBlockquote, TbLoader, TbPlugConnected } from "react-icons/tb";
 import { TiDownload, TiLockClosed, TiLockOpen } from "react-icons/ti";
 import { VscNewline } from "react-icons/vsc";
 
@@ -119,7 +119,7 @@ export const Icons = {
     right: HiOutlineArrowNarrowRight,
     assets: MdPermMedia,
     imageFile: BsFileEarmarkImage,
-    error: BiSolidErrorAlt,
+    Error: BiSolidErrorAlt,
     lock: TiLockClosed,
     unlock: TiLockOpen,
     synced: BsFillCloudCheckFill,
@@ -140,4 +140,5 @@ export const Icons = {
     txt: BiSolidFileTxt,
     import: TiDownload,
     table: HiTableCells,
+    Loading: TbLoader,
 };

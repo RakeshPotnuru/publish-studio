@@ -10,14 +10,18 @@ import {
     FormLabel,
     FormMessage,
     Input,
+    useToast,
 } from "@itsrakesh/ui";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { Icons } from "@/assets/icons";
+import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
-import trpc from "@/lib/trpc";
+import { trpc } from "@/utils/trpc";
+import { useRouter } from "next/navigation";
 
 interface LoginFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -27,6 +31,25 @@ const formSchema = z.object({
 });
 
 export function LoginForm({ ...props }: LoginFormProps) {
+    const [error, setError] = useState<string | null>(null);
+
+    const { toast } = useToast();
+    const router = useRouter();
+
+    const { mutateAsync: Login, isLoading } = trpc.login.useMutation({
+        onSuccess(data) {
+            toast({
+                variant: "success",
+                title: "Logged in successfully",
+                description: `Welcome back, ${data.data.user.first_name} ${data.data.user.last_name}!`,
+            });
+            router.push("/");
+        },
+        onError(error) {
+            setError(error.message);
+        },
+    });
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         mode: "onBlur",
@@ -37,8 +60,9 @@ export function LoginForm({ ...props }: LoginFormProps) {
     });
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
-        const response = await trpc.login.mutate(data);
-        console.log(response.data);
+        try {
+            await Login(data);
+        } catch (error) {}
     };
 
     return (
@@ -47,6 +71,7 @@ export function LoginForm({ ...props }: LoginFormProps) {
                 <Heading level={2}>Sign in to your account</Heading>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                        {error && <ErrorBox title="Login failed" description={error} />}
                         <FormField
                             control={form.control}
                             name="email"
@@ -58,7 +83,7 @@ export function LoginForm({ ...props }: LoginFormProps) {
                                             type="email"
                                             placeholder="me@example.com"
                                             autoComplete="email"
-                                            disabled={form.formState.isSubmitting}
+                                            disabled={form.formState.isSubmitting || isLoading}
                                             {...field}
                                         />
                                     </FormControl>
@@ -82,7 +107,7 @@ export function LoginForm({ ...props }: LoginFormProps) {
                                             type="password"
                                             placeholder="********"
                                             autoComplete="current-password"
-                                            disabled={form.formState.isSubmitting}
+                                            disabled={form.formState.isSubmitting || isLoading}
                                             {...field}
                                         />
                                     </FormControl>
@@ -93,9 +118,18 @@ export function LoginForm({ ...props }: LoginFormProps) {
                         <Button
                             type="submit"
                             className="w-full"
-                            disabled={form.formState.isSubmitting || !form.formState.isDirty}
+                            disabled={
+                                form.formState.isSubmitting || !form.formState.isDirty || isLoading
+                            }
                         >
-                            Continue
+                            {isLoading ? (
+                                <>
+                                    <Icons.Loading className="mr-2 h-4 w-4 animate-spin" />
+                                    Please wait
+                                </>
+                            ) : (
+                                "Continue"
+                            )}
                         </Button>
                     </form>
                 </Form>

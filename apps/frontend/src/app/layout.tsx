@@ -4,8 +4,10 @@ import type { Metadata, Viewport } from "next";
 
 import { ThemeToggleButton } from "@/components/dev-tools/theme-toggle";
 import { ThemeProvider } from "@/components/ui/theme-provider";
+import { Toaster } from "@/components/ui/toaster";
 import { env } from "@/config/env";
 import { siteConfig } from "@/config/site";
+import { TRPCProvider } from "@/utils/trpc-provider";
 
 export const metadata: Metadata = {
     title: {
@@ -45,7 +47,7 @@ export const viewport: Viewport = {
     themeColor: siteConfig.theme?.color,
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     return (
         <html lang="en" suppressHydrationWarning>
             <head>
@@ -73,14 +75,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <meta name="theme-color" content="#ffffff" />
             </head>
             <body className="min-h-screen bg-slate-200 dark:bg-slate-700">
-                {/* <LogRocketProvider /> */}
                 <ThemeProvider
                     attribute="class"
                     defaultTheme="system"
                     enableSystem
                     disableTransitionOnChange
                 >
-                    {children}
+                    <TRPCProvider>{children}</TRPCProvider>
+                    <Toaster />
                     {env.NODE_ENV === "development" && <ThemeToggleButton />}
                 </ThemeProvider>
             </body>

@@ -1,11 +1,11 @@
 import { z } from "zod";
 
 import { constants } from "../../constants";
-import { protectedProcedure, publicProcedure, router } from "../../trpc";
+import { protectedProcedure, router, t } from "../../trpc";
 import AuthController from "./auth.controller";
 
 const authRouter = router({
-    register: publicProcedure
+    register: t.procedure
         .input(
             z.object({
                 first_name: z
@@ -31,7 +31,7 @@ const authRouter = router({
         )
         .mutation(({ input }) => new AuthController().registerHandler(input)),
 
-    connectGoogle: publicProcedure
+    connectGoogle: t.procedure
         .input(
             z.object({
                 id_token: z.string(),
@@ -39,11 +39,11 @@ const authRouter = router({
         )
         .mutation(({ input, ctx }) => new AuthController().connectGoogleHandler(input, ctx)),
 
-    login: protectedProcedure
+    login: t.procedure
         .input(
             z.object({
                 email: z.string().email(),
-                password: z.string().min(constants.user.password.MIN_LENGTH),
+                password: z.string().min(1),
             }),
         )
         .mutation(({ input, ctx }) => new AuthController().loginHandler(input, ctx)),

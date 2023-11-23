@@ -1,4 +1,4 @@
-import { proProtectedProcedure, protectedProcedure, publicProcedure, router } from "../../trpc";
+import { proProtectedProcedure, protectedProcedure, router, t } from "../../trpc";
 import PaymentController from "./payment.controller";
 
 const paymentRouter = router({
@@ -10,7 +10,7 @@ const paymentRouter = router({
         new PaymentController().cancelSubscriptionHandler(ctx),
     ),
 
-    stripeWebhook: publicProcedure.mutation(({ ctx }) =>
+    stripeWebhook: t.procedure.mutation(({ ctx }) =>
         new PaymentController().stripeWebhookHandler(ctx),
     ),
 });

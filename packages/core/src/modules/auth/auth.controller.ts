@@ -300,14 +300,15 @@ export default class AuthController extends UserService {
     async loginHandler(input: ILoginInput, ctx: Context) {
         const user = await super.getUserByEmail(input.email);
 
-        if (!user.password) {
+        if (user && !user.password) {
             throw new TRPCError({
                 code: "BAD_REQUEST",
-                message: "Password is required",
+                message:
+                    "This email is associated with a google account. Please login with Google.",
             });
         }
 
-        if (!user || !(await bycrypt.compare(input.password, user.password))) {
+        if (!user || (user.password && !(await bycrypt.compare(input.password, user.password)))) {
             throw new TRPCError({
                 code: "UNAUTHORIZED",
                 message: "Invalid email or password",
@@ -332,6 +333,7 @@ export default class AuthController extends UserService {
             status: "success",
             data: {
                 access_token,
+                user,
             },
         };
     }
