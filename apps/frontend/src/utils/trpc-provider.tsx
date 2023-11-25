@@ -9,6 +9,11 @@ import { trpc } from "./trpc";
 export function TRPCProvider({ children }: Readonly<{ children: React.ReactNode }>) {
     const queryClient = new QueryClient({ defaultOptions: { queries: { staleTime: 5000 } } });
 
+    let token: string | null = null;
+    if (typeof window !== "undefined") {
+        token = localStorage.getItem("ps_access_token");
+    }
+
     const trpcClient = trpc.createClient({
         links: [
             loggerLink({
@@ -16,6 +21,11 @@ export function TRPCProvider({ children }: Readonly<{ children: React.ReactNode 
             }),
             httpBatchLink({
                 url: process.env.NEXT_PUBLIC_TRPC_API_URL as string,
+                async headers() {
+                    return {
+                        Authorization: `Bearer ${token}`,
+                    };
+                },
                 fetch: async (input, init?) => {
                     const fetch = getFetch();
                     return fetch(input, {

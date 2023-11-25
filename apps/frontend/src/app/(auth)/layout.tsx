@@ -1,13 +1,22 @@
-import type { Metadata } from "next";
+"use client";
 
-import { siteConfig } from "@/config/site";
+import { FullScreenLoader } from "@/components/ui/full-screen-loader";
 import { Footer } from "@/components/ui/layouts/footer";
-
-export const metadata: Metadata = {
-    title: { template: `%s | ${siteConfig.title}`, default: "Authentication" },
-};
+import { siteConfig } from "@/config/site";
+import { trpc } from "@/utils/trpc";
+import { redirect } from "next/navigation";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
+    const { data, isLoading, error } = trpc.getMe.useQuery();
+
+    if (isLoading) {
+        return <FullScreenLoader />;
+    }
+
+    if (data?.status === "success") {
+        redirect(siteConfig.pages.dashboard.link);
+    }
+
     return (
         <main className="bg-pattern-light dark:bg-pattern-dark min-h-screen">
             <div className="container flex flex-col items-center justify-center pb-8 pt-28">

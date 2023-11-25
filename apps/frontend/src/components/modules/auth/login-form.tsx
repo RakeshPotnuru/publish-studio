@@ -21,7 +21,6 @@ import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
 import { trpc } from "@/utils/trpc";
-import { useRouter } from "next/navigation";
 
 interface LoginFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -34,16 +33,23 @@ export function LoginForm({ ...props }: LoginFormProps) {
     const [error, setError] = useState<string | null>(null);
 
     const { toast } = useToast();
-    const router = useRouter();
 
-    const { mutateAsync: Login, isLoading } = trpc.login.useMutation({
-        onSuccess(data) {
+    const { mutateAsync: login, isLoading } = trpc.login.useMutation({
+        onSuccess({ data }) {
             toast({
                 variant: "success",
                 title: "Logged in successfully",
-                description: `Welcome back, ${data.data.user.first_name} ${data.data.user.last_name}!`,
+                description: `Welcome back, ${data.full_name}!`,
             });
-            router.push("/");
+
+            if (!data.access_token) {
+                setError("Something went wrong. Please try again.");
+                return;
+            }
+
+            localStorage.setItem("ps_access_token", data.access_token);
+
+            window.location.reload();
         },
         onError(error) {
             setError(error.message);
@@ -61,7 +67,7 @@ export function LoginForm({ ...props }: LoginFormProps) {
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         try {
-            await Login(data);
+            await login(data);
         } catch (error) {}
     };
 

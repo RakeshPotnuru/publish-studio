@@ -81,7 +81,7 @@ export const Icons = {
     codeblock: PiCodeBlockBold,
     bulletlist: AiOutlineUnorderedList,
     orderedlist: AiOutlineOrderedList,
-    editprofile: MdManageAccounts,
+    EditProfile: MdManageAccounts,
     draft: MdEditDocument,
     published: IoCheckmarkDoneCircleSharp,
     rowactions: PiDotsThreeBold,

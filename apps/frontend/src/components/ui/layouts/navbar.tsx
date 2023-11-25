@@ -16,6 +16,7 @@ import { cn } from "@itsrakesh/utils";
 import Image from "next/image";
 import Link from "next/link";
 
+import { trpc } from "@/utils/trpc";
 import { Icons } from "../../../assets/icons";
 import { Images } from "../../../assets/images";
 import { Tooltip } from "../tooltip";
@@ -31,6 +32,14 @@ const NavItem = ({ icon, tooltip }: { icon: React.ReactNode; tooltip: string }) 
 interface NavbarProps extends React.HTMLAttributes<HTMLElement> {}
 
 export function Navbar({ className, ...props }: NavbarProps) {
+    const { mutate: logout } = trpc.logout.useMutation();
+
+    const handleLogout = () => {
+        logout();
+        localStorage.removeItem("ps_access_token");
+        window.location.reload();
+    };
+
     return (
         <nav
             className={cn(
@@ -83,7 +92,7 @@ export function Navbar({ className, ...props }: NavbarProps) {
                             </Link>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={handleLogout}>
                             <Icons.logout className="mr-2 h-4 w-4" />
                             <span>Logout</span>
                         </DropdownMenuItem>

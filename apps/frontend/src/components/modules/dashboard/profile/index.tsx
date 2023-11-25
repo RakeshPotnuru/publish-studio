@@ -12,32 +12,35 @@ import {
     Input,
     Separator,
 } from "@itsrakesh/ui";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Icons } from "@/assets/icons";
+import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
 import { Tooltip } from "@/components/ui/tooltip";
+import { trpc } from "@/utils/trpc";
 
 interface ProfileProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const formSchema = z.object({
-    firstName: z.string().nonempty("First Name cannot be empty").optional(),
-    lastName: z.string().nonempty("Last Name cannot be empty").optional(),
-    email: z.string().nonempty("Email cannot be empty").email().optional(),
+    firstName: z.string().min(1, "First Name cannot be empty").optional(),
+    lastName: z.string().min(1, "Last Name cannot be empty").optional(),
+    email: z.string().min(1, "Email cannot be empty").email().optional(),
 });
 
 export function Profile({ ...props }: ProfileProps) {
-    const [editMode, setEditMode] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const { data: user, isLoading, error } = trpc.getUser.useQuery();
 
     const form = useForm({
         resolver: zodResolver(formSchema),
         mode: "onBlur",
         defaultValues: {
-            firstName: "Rakesh",
-            lastName: "Potnuru",
-            email: "rakesh@itsrakesh.com",
+            firstName: "",
+            lastName: "",
+            email: "",
         },
     });
 
@@ -45,102 +48,130 @@ export function Profile({ ...props }: ProfileProps) {
         console.log(data);
     };
 
+    useEffect(() => {
+        if (user) {
+            form.reset({
+                firstName: user.data.user?.first_name,
+                lastName: user.data.user?.last_name,
+                email: user.data.user?.email,
+            });
+        }
+    }, [user]);
+
     return (
-        <div className="" {...props}>
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                    <div className="flex flex-row justify-between">
-                        <Heading>Profile</Heading>
-                        {editMode ? (
-                            <div className="flex flex-row space-x-4">
-                                <Button variant="outline" onClick={() => setEditMode(false)}>
-                                    Cancel
-                                </Button>
-                                <Button
-                                    type="submit"
-                                    disabled={
-                                        form.formState.isSubmitting || !form.formState.isDirty
-                                    }
-                                >
-                                    Save
-                                </Button>
-                            </div>
-                        ) : (
-                            <Tooltip content="Edit Profile">
-                                <Button
-                                    onClick={() => setEditMode(true)}
-                                    variant="ghost"
-                                    size="icon"
-                                >
-                                    <Icons.editprofile size={25} />
-                                </Button>
-                            </Tooltip>
-                        )}
-                    </div>
-                    <Separator />
-                    <div className="space-y-8">
-                        <FormField
-                            control={form.control}
-                            name="email"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Email</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            type="email"
-                                            placeholder="me@example.com"
-                                            autoComplete="email"
-                                            disabled={!editMode}
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <div className="grid grid-cols-2 gap-4">
-                            <FormField
-                                control={form.control}
-                                name="firstName"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>First Name</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                type="text"
-                                                placeholder="John"
-                                                autoComplete="given-name"
-                                                disabled={!editMode}
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="lastName"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Last Name</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                type="text"
-                                                placeholder="Doe"
-                                                autoComplete="family-name"
-                                                disabled={!editMode}
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+        <div {...props}>
+            {isLoading ? (
+                <div className="flex h-screen w-screen items-center justify-center">
+                    <Icons.Loading className="h-4 w-4 animate-spin" />
+                </div>
+            ) : (
+                <>
+                    {error ? (
+                        <div className="mx-auto w-max justify-center">
+                            <ErrorBox title="Error" description={error.message} />
                         </div>
-                    </div>
-                </form>
-            </Form>
+                    ) : (
+                        <Form {...form}>
+                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                                <div className="flex flex-row justify-between">
+                                    <Heading>Profile</Heading>
+                                    {isEditing ? (
+                                        <div className="flex flex-row space-x-4">
+                                            <Button
+                                                variant="outline"
+                                                onClick={() => setIsEditing(false)}
+                                            >
+                                                Cancel
+                                            </Button>
+                                            <Button
+                                                type="submit"
+                                                disabled={
+                                                    form.formState.isSubmitting ||
+                                                    !form.formState.isDirty
+                                                }
+                                            >
+                                                Save
+                                            </Button>
+                                        </div>
+                                    ) : (
+                                        <Tooltip content="Edit Profile">
+                                            <Button
+                                                onClick={() => setIsEditing(true)}
+                                                variant="ghost"
+                                                size="icon"
+                                            >
+                                                <Icons.EditProfile size={25} />
+                                            </Button>
+                                        </Tooltip>
+                                    )}
+                                </div>
+                                <Separator />
+                                <div className="space-y-8">
+                                    <FormField
+                                        control={form.control}
+                                        name="email"
+                                        disabled={!isEditing}
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Email</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        type="email"
+                                                        placeholder="me@example.com"
+                                                        autoComplete="email"
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <FormField
+                                            control={form.control}
+                                            name="firstName"
+                                            disabled={!isEditing}
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>First Name</FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            type="text"
+                                                            placeholder="John"
+                                                            autoComplete="given-name"
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={form.control}
+                                            name="lastName"
+                                            disabled={!isEditing}
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Last Name</FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            type="text"
+                                                            placeholder="Doe"
+                                                            autoComplete="family-name"
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                </div>
+                            </form>
+                        </Form>
+                    )}
+                </>
+            )}
         </div>
     );
 }
