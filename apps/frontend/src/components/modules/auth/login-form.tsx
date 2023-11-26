@@ -39,7 +39,7 @@ export function LoginForm({ ...props }: LoginFormProps) {
             toast({
                 variant: "success",
                 title: "Logged in successfully",
-                description: `Welcome back, ${data.full_name}!`,
+                description: `Welcome back, ${data.user.first_name} ${data.user.last_name}!`,
             });
 
             if (!data.access_token) {
@@ -49,7 +49,9 @@ export function LoginForm({ ...props }: LoginFormProps) {
 
             localStorage.setItem("ps_access_token", data.access_token);
 
-            window.location.reload();
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
         },
         onError(error) {
             setError(error.message);

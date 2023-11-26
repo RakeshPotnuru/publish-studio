@@ -11,11 +11,13 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
+    Skeleton,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import Image from "next/image";
 import Link from "next/link";
 
+import useUserStore from "@/store/user-store";
 import { trpc } from "@/utils/trpc";
 import { Icons } from "../../../assets/icons";
 import { Images } from "../../../assets/images";
@@ -33,10 +35,26 @@ interface NavbarProps extends React.HTMLAttributes<HTMLElement> {}
 
 export function Navbar({ className, ...props }: NavbarProps) {
     const { mutate: logout } = trpc.logout.useMutation();
+    const { user, setUser } = useUserStore();
+
+    const { isFetching } = trpc.getUser.useQuery(undefined, {
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+        retry: false,
+        onSuccess: data => {
+            setUser({
+                _id: data.data.user._id,
+                first_name: data.data.user.first_name,
+                last_name: data.data.user.last_name,
+                email: data.data.user.email,
+                profile_pic: data.data.user.profile_pic,
+            });
+        },
+    });
 
     const handleLogout = () => {
         logout();
-        localStorage.removeItem("ps_access_token");
+        localStorage.clear();
         window.location.reload();
     };
 
@@ -69,10 +87,19 @@ export function Navbar({ className, ...props }: NavbarProps) {
                         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                             <Avatar className="h-9 w-9">
                                 <AvatarImage
-                                    src="https://github.com/rakeshpotnuru.png"
-                                    alt="@rakeshpotnuru"
+                                    src={user?.profile_pic}
+                                    alt={`${user?.first_name} ${user?.last_name}`}
                                 />
-                                <AvatarFallback>RP</AvatarFallback>
+                                {isFetching ? (
+                                    <AvatarFallback>
+                                        <Skeleton className="h-4 w-4 animate-ping rounded-full" />
+                                    </AvatarFallback>
+                                ) : (
+                                    <AvatarFallback>
+                                        {user?.first_name?.charAt(0)}
+                                        {user?.last_name.charAt(0)}
+                                    </AvatarFallback>
+                                )}
                             </Avatar>
                         </Button>
                     </DropdownMenuTrigger>

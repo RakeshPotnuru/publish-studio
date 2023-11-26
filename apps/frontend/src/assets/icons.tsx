@@ -37,7 +37,7 @@ import {
 import { CgProfile } from "react-icons/cg";
 import { FaFileCsv, FaFolder, FaMarkdown, FaPaintRoller, FaPuzzlePiece } from "react-icons/fa";
 import { FiItalic, FiUnderline } from "react-icons/fi";
-import { GoBold } from "react-icons/go";
+import { GoBold, GoDotFill } from "react-icons/go";
 import { GrRedo, GrUndo } from "react-icons/gr";
 import { HiDocumentDuplicate, HiOutlineArrowNarrowRight } from "react-icons/hi";
 import { HiTableCells } from "react-icons/hi2";

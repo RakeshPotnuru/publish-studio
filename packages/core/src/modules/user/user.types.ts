@@ -1,6 +1,7 @@
 import type { Types } from "mongoose";
 
-import type { user } from "../../constants";
+import type { constants } from "../../constants";
+import type { TPlatformName } from "../platform/platform.types";
 
 export interface IUser {
     _id: Types.ObjectId;
@@ -9,13 +10,13 @@ export interface IUser {
     email: string;
     password?: string;
     profile_pic?: string;
-    user_type: (typeof user.userTypes)[keyof typeof user.userTypes];
+    user_type: (typeof constants.user.userTypes)[keyof typeof constants.user.userTypes];
     projects?: Types.ObjectId[];
     assets?: Types.ObjectId[];
-    platforms?: (typeof user.platforms)[keyof typeof user.platforms][];
+    platforms?: TPlatformName[];
     is_verified: boolean;
     last_login: Date;
-    auth_modes: (typeof user.authModes)[keyof typeof user.authModes][];
+    auth_modes: (typeof constants.user.authModes)[keyof typeof constants.user.authModes][];
     google_sub?: string;
     stripe_customer_id?: string;
 }

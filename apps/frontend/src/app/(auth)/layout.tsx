@@ -1,19 +1,29 @@
 "use client";
 
-import { FullScreenLoader } from "@/components/ui/full-screen-loader";
+import { redirect } from "next/navigation";
+import { useEffect, useState } from "react";
+
 import { Footer } from "@/components/ui/layouts/footer";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
-import { redirect } from "next/navigation";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
-    const { data, isLoading, error } = trpc.getMe.useQuery();
+    const [token, setToken] = useState<string | null>(null);
 
-    if (isLoading) {
-        return <FullScreenLoader />;
-    }
+    const { data, isFetching, error } = trpc.getMe.useQuery(undefined, {
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+        retry: false,
+        enabled: token !== null,
+    });
 
-    if (data?.status === "success") {
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            setToken(localStorage.getItem("ps_access_token"));
+        }
+    }, []);
+
+    if (token && !isFetching && !error && data?.status === "success") {
         redirect(siteConfig.pages.dashboard.link);
     }
 

@@ -333,7 +333,7 @@ export default class AuthController extends UserService {
             status: "success",
             data: {
                 access_token,
-                full_name: user.first_name + " " + user.last_name,
+                user,
             },
         };
     }
