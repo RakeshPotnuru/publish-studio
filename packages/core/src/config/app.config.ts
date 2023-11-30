@@ -24,7 +24,6 @@ interface ICustomConfig {
     app_name: string;
     resetPasswordTokenPrivateKey: string;
     resetPasswordTokenPublicKey: string;
-    // rabbitmqUrl: string;
     redis_host: string;
     redis_port: number;
 }
@@ -57,7 +56,6 @@ const defaultConfig: ICustomConfig = {
     kickbox_api_url: "https://open.kickbox.com/v1/disposable",
     client_url: process.env.CLIENT_URL || "http://localhost:3000",
     app_name: "Publish Studio",
-    // rabbitmqUrl: process.env.RABBITMQ_URL || "amqp://127.0.0.1:5672",
 };
 
 export const bullMQConnectionOptions = {

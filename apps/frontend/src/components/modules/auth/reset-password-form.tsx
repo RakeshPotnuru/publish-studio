@@ -12,7 +12,7 @@ import {
     Input,
 } from "@itsrakesh/ui";
 import Link from "next/link";
-import React from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -35,7 +35,7 @@ const passwordFormSchema = z
                         "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number and one special character",
                 },
             ),
-        confirmPassword: z.string().nonempty({ message: "Please confirm your password" }),
+        confirmPassword: z.string().min(1, { message: "Please confirm your password" }),
     })
     .refine(data => data.password === data.confirmPassword, {
         message: "Passwords do not match",
@@ -43,7 +43,7 @@ const passwordFormSchema = z
     });
 
 export function ResetPasswordForm({ ...props }: ResetPasswordFormProps) {
-    const [step, setStep] = React.useState<"email" | "success" | "password">("email");
+    const [step, setStep] = useState<"email" | "success" | "password">("email");
 
     const emailForm = useForm<z.infer<typeof emailFormSchema>>({
         resolver: zodResolver(emailFormSchema),
@@ -85,9 +85,11 @@ export function ResetPasswordForm({ ...props }: ResetPasswordFormProps) {
                         <>
                             {step === "success" && (
                                 <span>
-                                    Check your email for a link to reset your password. If it
-                                    doesn&apos;t appear within a few minutes, check your spam
-                                    folder. If you still can&apos;t find it,{" "}
+                                    <p>
+                                        Check your email for a link to reset your password. If it
+                                        doesn&apos;t appear within a few minutes, check your spam
+                                        folder. If you still can&apos;t find it,
+                                    </p>{" "}
                                     <Button
                                         variant="link"
                                         className="h-max p-0"

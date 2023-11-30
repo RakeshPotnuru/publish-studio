@@ -236,7 +236,7 @@ export default class AuthController extends UserService {
         const user = await super.getUserByEmail(payload.email);
 
         if (!user) {
-            const newUser = await super.createUser({
+            let newUser = await super.createUser({
                 first_name: payload.given_name,
                 last_name: payload.family_name,
                 email: payload.email,
@@ -245,6 +245,8 @@ export default class AuthController extends UserService {
                 auth_modes: [constants.user.authModes.GOOGLE],
                 google_sub: payload.sub,
             });
+
+            newUser = await super.updateUser(newUser._id, { is_verified: true });
 
             const { access_token, refresh_token } = await super.signTokens(newUser);
 
@@ -305,6 +307,14 @@ export default class AuthController extends UserService {
                 code: "BAD_REQUEST",
                 message:
                     "This email is associated with a google account. Please login with Google.",
+            });
+        }
+
+        if (user && !user.is_verified) {
+            throw new TRPCError({
+                code: "BAD_REQUEST",
+                message:
+                    "Please verify your email first. Check your inbox for the verification email.",
             });
         }
 
@@ -395,12 +405,12 @@ export default class AuthController extends UserService {
         const { req, res } = ctx;
         const refresh_token = getCookie("refresh_token", { req, res });
 
-        const errorMessage = "Could not refresh access token.";
+        const error_message = "Could not refresh access token.";
 
         if (!refresh_token) {
             throw new TRPCError({
                 code: "FORBIDDEN",
-                message: errorMessage,
+                message: error_message,
             });
         }
 
@@ -410,7 +420,7 @@ export default class AuthController extends UserService {
         if (!decoded) {
             throw new TRPCError({
                 code: "FORBIDDEN",
-                message: errorMessage,
+                message: error_message,
             });
         }
 
@@ -420,7 +430,7 @@ export default class AuthController extends UserService {
         if (!session) {
             throw new TRPCError({
                 code: "FORBIDDEN",
-                message: errorMessage,
+                message: error_message,
             });
         }
 
@@ -430,7 +440,7 @@ export default class AuthController extends UserService {
         if (!user) {
             throw new TRPCError({
                 code: "FORBIDDEN",
-                message: errorMessage,
+                message: error_message,
             });
         }
 
