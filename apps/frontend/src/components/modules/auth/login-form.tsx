@@ -20,7 +20,9 @@ import { z } from "zod";
 import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
+import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
+import { ShowPassword } from "./show-password";
 
 interface LoginFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -31,6 +33,7 @@ const formSchema = z.object({
 
 export function LoginForm({ ...props }: LoginFormProps) {
     const [error, setError] = useState<string | null>(null);
+    const [passwordVisible, setPasswordVisible] = useState(false);
 
     const { toast } = useToast();
 
@@ -83,6 +86,7 @@ export function LoginForm({ ...props }: LoginFormProps) {
                         <FormField
                             control={form.control}
                             name="email"
+                            disabled={form.formState.isSubmitting || isLoading}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Email</FormLabel>
@@ -91,7 +95,6 @@ export function LoginForm({ ...props }: LoginFormProps) {
                                             type="email"
                                             placeholder="me@example.com"
                                             autoComplete="email"
-                                            disabled={form.formState.isSubmitting || isLoading}
                                             {...field}
                                         />
                                     </FormControl>
@@ -102,6 +105,7 @@ export function LoginForm({ ...props }: LoginFormProps) {
                         <FormField
                             control={form.control}
                             name="password"
+                            disabled={form.formState.isSubmitting || isLoading}
                             render={({ field }) => (
                                 <FormItem>
                                     <div className="flex justify-between">
@@ -112,14 +116,17 @@ export function LoginForm({ ...props }: LoginFormProps) {
                                     </div>
                                     <FormControl>
                                         <Input
-                                            type="password"
+                                            type={passwordVisible ? "text" : "password"}
                                             placeholder="********"
                                             autoComplete="current-password"
-                                            disabled={form.formState.isSubmitting || isLoading}
                                             {...field}
                                         />
                                     </FormControl>
                                     <FormMessage />
+                                    <ShowPassword
+                                        passwordVisible={passwordVisible}
+                                        setPasswordVisible={setPasswordVisible}
+                                    />
                                 </FormItem>
                             )}
                         />
@@ -144,7 +151,7 @@ export function LoginForm({ ...props }: LoginFormProps) {
                 <p className="text-center text-sm">
                     Don&apos;t have an account?{" "}
                     <Button variant="link" className="h-max p-0" asChild>
-                        <Link href="/register">Register</Link>
+                        <Link href={siteConfig.pages.register.link}>Register</Link>
                     </Button>
                 </p>
             </div>

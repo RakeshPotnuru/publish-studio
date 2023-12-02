@@ -6,6 +6,9 @@ interface HookFormDevToolProps {
     placement?: PLACEMENT;
 }
 
-export function HookFormDevTool({ control, placement = "bottom-left" }: HookFormDevToolProps) {
+export function HookFormDevTool({
+    control,
+    placement = "bottom-left",
+}: Readonly<HookFormDevToolProps>) {
     return <DevTool control={control} placement={placement} />;
 }

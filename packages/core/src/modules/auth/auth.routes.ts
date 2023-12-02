@@ -54,7 +54,7 @@ const authRouter = router({
         new AuthController().refreshAccessTokenHandler(ctx),
     ),
 
-    verifyEmail: protectedProcedure
+    verifyEmail: t.procedure
         .input(
             z.object({
                 token: z.string(),
@@ -62,7 +62,7 @@ const authRouter = router({
         )
         .mutation(({ input }) => new AuthController().verifyEmailHandler(input)),
 
-    resendVerificationEmail: protectedProcedure
+    resendVerificationEmail: t.procedure
         .input(
             z.object({
                 email: z.string().email(),
@@ -70,7 +70,7 @@ const authRouter = router({
         )
         .mutation(({ input }) => new AuthController().resendVerificationEmailHandler(input)),
 
-    sendResetPasswordEmail: protectedProcedure
+    sendResetPasswordEmail: t.procedure
         .input(
             z.object({
                 email: z.string().email(),
@@ -78,7 +78,7 @@ const authRouter = router({
         )
         .mutation(({ input }) => new AuthController().sendResetPasswordEmailHandler(input)),
 
-    resetPassword: protectedProcedure
+    resetPassword: t.procedure
         .input(
             z.object({
                 token: z.string(),

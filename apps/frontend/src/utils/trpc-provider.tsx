@@ -22,6 +22,10 @@ export function TRPCProvider({ children }: Readonly<{ children: React.ReactNode 
             httpBatchLink({
                 url: process.env.NEXT_PUBLIC_TRPC_API_URL as string,
                 async headers() {
+                    if (!token) {
+                        return {};
+                    }
+
                     return {
                         Authorization: `Bearer ${token}`,
                     };
@@ -44,7 +48,7 @@ export function TRPCProvider({ children }: Readonly<{ children: React.ReactNode 
         <trpc.Provider client={trpcClient} queryClient={queryClient}>
             <QueryClientProvider client={queryClient}>
                 {children}
-                <ReactQueryDevtools />
+                <ReactQueryDevtools position="bottom-right" />
             </QueryClientProvider>
         </trpc.Provider>
     );

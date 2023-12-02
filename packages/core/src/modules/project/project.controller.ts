@@ -109,65 +109,6 @@ export default class ProjectController extends ProjectService {
         };
     }
 
-    // async postReceiver() {
-    //     try {
-    //         const connection = await rabbitMQConnection();
-
-    //         if (connection) {
-    //             const channel = await connection.createChannel();
-
-    //             const queue = constants.rabbitmq.queues.POSTS;
-
-    //             await channel.assertQueue(queue, {
-    //                 durable: true,
-    //             });
-    //             await channel.prefetch(1);
-
-    //             console.log(`🐇 Waiting for requests in ${queue} queue.`);
-
-    //             await channel.consume(queue, message => {
-    //                 if (!message) {
-    //                     return;
-    //                 }
-
-    //                 const data = JSON.parse(message?.content.toString());
-
-    //                 this.publishPost(
-    //                     data.project_id as Types.ObjectId,
-    //                     data.user_id as Types.ObjectId,
-    //                     data.tags as TTags,
-    //                 ).catch(error => {
-    //                     console.log(error);
-    //                 });
-
-    //                 channel.sendToQueue(
-    //                     message?.properties.replyTo as string,
-    //                     Buffer.from(
-    //                         JSON.stringify({
-    //                             status: "success",
-    //                             job: "post",
-    //                         }),
-    //                     ),
-    //                     {
-    //                         correlationId: message?.properties.correlationId as string,
-    //                     },
-    //                 );
-
-    //                 channel.ack(message as Message);
-    //             });
-    //         } else {
-    //             console.log("❌ Failed to connect to RabbitMQ 🐇");
-    //         }
-    //     } catch (error) {
-    //         console.log(error);
-
-    //         throw new TRPCError({
-    //             code: "INTERNAL_SERVER_ERROR",
-    //             message: defaultConfig.defaultErrorMessage,
-    //         });
-    //     }
-    // }
-
     async schedulePostHandler(
         input: {
             project_id: Types.ObjectId;
@@ -204,43 +145,6 @@ export default class ProjectController extends ProjectService {
             status: constants.project.status.SCHEDULED,
             scheduled_at: scheduled_at,
         });
-
-        // const connection = await rabbitMQConnection();
-
-        // if (connection) {
-        //     const channel = await connection.createChannel();
-
-        //     const queue = constants.rabbitmq.queues.POST_JOBS;
-
-        //     await channel.assertQueue(queue, {
-        //         durable: true,
-        //     });
-
-        //     channel.sendToQueue(
-        //         queue,
-        //         Buffer.from(
-        //             JSON.stringify({
-        //                 project_id: project_id,
-        //                 tags: tags,
-        //                 scheduled_at: scheduled_at,
-        //                 user_id: ctx.user?._id,
-        //             }),
-        //         ),
-        //     );
-
-        //     return {
-        //         status: "success",
-        //         data: {
-        //             message: "Post scheduled successfully",
-        //         },
-        //     };
-        // } else {
-        //     console.log("❌ Failed to connect to RabbitMQ 🐇");
-
-        //     return {
-        //         status: "error",
-        //     };
-        // }
     }
 
     async getProjectHandler(input: { id: Types.ObjectId }) {

@@ -16,22 +16,27 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { Icons } from "@/assets/icons";
+import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
 import { constants } from "@/config/constants";
+import { siteConfig } from "@/config/site";
+import { trpc } from "@/utils/trpc";
+import { ShowPassword } from "./show-password";
 
 interface RegisterFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const formSchema = z
     .object({
         email: z.string().email({ message: "Please enter a valid email address" }),
-        firstName: z
+        first_name: z
             .string()
             .min(1, { message: "Please enter your first name" })
             .max(
                 constants.user.firstName.MAX_LENGTH,
                 `First name must not exceed ${constants.user.firstName.MAX_LENGTH} characters`,
             ),
-        lastName: z
+        last_name: z
             .string()
             .min(1, { message: "Please enter your last name" })
             .max(
@@ -47,30 +52,43 @@ const formSchema = z
                         "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number and one special character",
                 },
             ),
-        confirmPassword: z.string().min(1, { message: "Please confirm your password" }),
+        confirm_password: z.string().min(1, { message: "Please confirm your password" }),
     })
-    .refine(data => data.password === data.confirmPassword, {
+    .refine(data => data.password === data.confirm_password, {
         message: "Passwords do not match",
         path: ["confirmPassword"],
     });
 
 export function RegisterForm({ ...props }: RegisterFormProps) {
     const [step, setStep] = useState<"register" | "success">("register");
+    const [error, setError] = useState<string | null>(null);
+    const [passwordVisible, setPasswordVisible] = useState(false);
+
+    const { mutateAsync: register, isLoading } = trpc.register.useMutation({
+        onSuccess() {
+            setStep("success");
+        },
+        onError(error) {
+            setError(error.message);
+        },
+    });
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         mode: "onBlur",
         defaultValues: {
             email: "",
-            firstName: "",
-            lastName: "",
+            first_name: "",
+            last_name: "",
             password: "",
-            confirmPassword: "",
+            confirm_password: "",
         },
     });
 
-    const onSubmit = (data: z.infer<typeof formSchema>) => {
-        console.log(data);
+    const onSubmit = async (data: z.infer<typeof formSchema>) => {
+        try {
+            await register(data);
+        } catch (error) {}
     };
 
     return (
@@ -80,9 +98,11 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
                     <Heading level={2}>Create an account to get started</Heading>
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                            {error && <ErrorBox title="Registration failed" description={error} />}
                             <FormField
                                 control={form.control}
                                 name="email"
+                                disabled={form.formState.isSubmitting || isLoading}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Email</FormLabel>
@@ -91,7 +111,6 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
                                                 type="email"
                                                 placeholder="me@example.com"
                                                 autoComplete="email"
-                                                disabled={form.formState.isSubmitting}
                                                 {...field}
                                             />
                                         </FormControl>
@@ -102,7 +121,8 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
                             <div className="grid grid-cols-2 gap-2">
                                 <FormField
                                     control={form.control}
-                                    name="firstName"
+                                    name="first_name"
+                                    disabled={form.formState.isSubmitting || isLoading}
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>First Name</FormLabel>
@@ -111,7 +131,6 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
                                                     type="text"
                                                     placeholder="John"
                                                     autoComplete="given-name"
-                                                    disabled={form.formState.isSubmitting}
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -121,7 +140,8 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
                                 />
                                 <FormField
                                     control={form.control}
-                                    name="lastName"
+                                    name="last_name"
+                                    disabled={form.formState.isSubmitting || isLoading}
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>Last Name</FormLabel>
@@ -130,7 +150,6 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
                                                     type="text"
                                                     placeholder="Doe"
                                                     autoComplete="family-name"
-                                                    disabled={form.formState.isSubmitting}
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -142,25 +161,30 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
                             <FormField
                                 control={form.control}
                                 name="password"
+                                disabled={form.formState.isSubmitting || isLoading}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Password</FormLabel>
                                         <FormControl>
                                             <Input
-                                                type="password"
+                                                type={passwordVisible ? "text" : "password"}
                                                 placeholder="********"
                                                 autoComplete="new-password"
-                                                disabled={form.formState.isSubmitting}
                                                 {...field}
                                             />
                                         </FormControl>
                                         <FormMessage />
+                                        <ShowPassword
+                                            passwordVisible={passwordVisible}
+                                            setPasswordVisible={setPasswordVisible}
+                                        />
                                     </FormItem>
                                 )}
                             />
                             <FormField
                                 control={form.control}
-                                name="confirmPassword"
+                                name="confirm_password"
+                                disabled={form.formState.isSubmitting || isLoading}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Confirm Password</FormLabel>
@@ -169,7 +193,6 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
                                                 type="password"
                                                 placeholder="********"
                                                 autoComplete="new-password"
-                                                disabled={form.formState.isSubmitting}
                                                 {...field}
                                             />
                                         </FormControl>
@@ -180,24 +203,35 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
                             <Button
                                 type="submit"
                                 className="w-full"
-                                disabled={form.formState.isSubmitting || !form.formState.isDirty}
+                                disabled={
+                                    form.formState.isSubmitting ||
+                                    !form.formState.isDirty ||
+                                    isLoading
+                                }
                             >
-                                Create Account
+                                {isLoading ? (
+                                    <>
+                                        <Icons.Loading className="mr-2 h-4 w-4 animate-spin" />
+                                        Please wait
+                                    </>
+                                ) : (
+                                    "Create Account"
+                                )}
                             </Button>
                         </form>
                     </Form>
                     <p className="text-center text-sm">
                         Have an account?{" "}
                         <Button variant="link" className="h-max p-0" asChild>
-                            <Link href="/login">Login</Link>
+                            <Link href={siteConfig.pages.login.link}>Login</Link>
                         </Button>
                     </p>
                 </div>
             ) : (
-                <span>
+                <span className="space-y-6">
                     <Heading level={2}>Verify your email</Heading>
                     <p>
-                        Check your email for a link to verify your email. If it doesn&apos;t appear
+                        Check your inbox for a link to verify your email. If it doesn&apos;t appear
                         within a few minutes, check your spam folder. If you still can&apos;t find
                         it,
                     </p>{" "}

@@ -349,6 +349,23 @@ export default class AuthController extends UserService {
     }
 
     async sendResetPasswordEmailHandler(input: { email: string }) {
+        const user = await super.getUserByEmail(input.email);
+
+        if (!user) {
+            throw new TRPCError({
+                code: "NOT_FOUND",
+                message: "This email is not associated with any account. Please register instead.",
+            });
+        }
+
+        if (!user.is_verified) {
+            throw new TRPCError({
+                code: "BAD_REQUEST",
+                message:
+                    "Please verify your email first. Check your inbox for the verification email.",
+            });
+        }
+
         const reset_email_token = signJwt({ email: input.email }, "resetPasswordTokenPrivateKey", {
             expiresIn: `${defaultConfig.resetPasswordTokenExpiresIn}m`,
         });

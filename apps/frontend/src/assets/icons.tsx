@@ -93,7 +93,7 @@ export const Icons = {
     integrations: FaPuzzlePiece,
     connected: BsFillPatchCheckFill,
     question: AiFillQuestionCircle,
-    sun: BsFillSunFill,
+    Sun: BsFillSunFill,
     notifications: AiFillBell,
     profile: CgProfile,
     settings: MdSettings,
@@ -141,4 +141,5 @@ export const Icons = {
     import: TiDownload,
     table: HiTableCells,
     Loading: TbLoader,
+    LoadingDot: GoDotFill,
 };
