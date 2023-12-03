@@ -117,13 +117,17 @@ const asset = {
     MAX_FILE_SIZE: 5 * 1024 * 1024, // 5MB
 } as const;
 
+const errorCauses = {
+    VERIFICATION_PENDING: "verification_pending",
+};
+
 export const constants = {
     project,
     user,
     folder,
-    // rabbitmq,
     bullmq,
     payment,
     emailTemplates,
     asset,
+    errorCauses,
 };

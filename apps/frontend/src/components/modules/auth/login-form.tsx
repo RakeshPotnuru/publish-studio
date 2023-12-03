@@ -20,6 +20,7 @@ import { z } from "zod";
 import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
+import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
 import { GoogleAuth } from "./google-auth";
@@ -35,6 +36,7 @@ const formSchema = z.object({
 export function LoginForm({ ...props }: LoginFormProps) {
     const [error, setError] = useState<string | null>(null);
     const [passwordVisible, setPasswordVisible] = useState(false);
+    const [isVerificationError, setIsVerificationError] = useState(false);
 
     const { toast } = useToast();
 
@@ -58,6 +60,14 @@ export function LoginForm({ ...props }: LoginFormProps) {
             }, 1000);
         },
         onError(error) {
+            if (error.message === constants.errorCauses.VERIFICATION_PENDING) {
+                setError(
+                    "Please verify your email address to continue. Check your inbox for the verification email.",
+                );
+                setIsVerificationError(true);
+                return;
+            }
+            setIsVerificationError(false);
             setError(error.message);
         },
     });
@@ -81,9 +91,14 @@ export function LoginForm({ ...props }: LoginFormProps) {
         <div {...props}>
             <div className="space-y-6">
                 <Heading level={2}>Sign in to your account</Heading>
+                {error && <ErrorBox title="Login failed" description={error} />}
+                {isVerificationError && (
+                    <div className="flex justify-center">
+                        <Button variant="ghost">Resend verification email</Button>
+                    </div>
+                )}
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                        {error && <ErrorBox title="Login failed" description={error} />}
                         <FormField
                             control={form.control}
                             name="email"

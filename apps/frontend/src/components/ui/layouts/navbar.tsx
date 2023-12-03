@@ -35,7 +35,7 @@ interface NavbarProps extends React.HTMLAttributes<HTMLElement> {}
 
 export function Navbar({ className, ...props }: NavbarProps) {
     const { mutateAsync: logout } = trpc.logout.useMutation();
-    const { user, setUser } = useUserStore();
+    const { user, setUser, setIsLoading } = useUserStore();
 
     const { isFetching } = trpc.getUser.useQuery(undefined, {
         refetchOnWindowFocus: false,
@@ -49,6 +49,7 @@ export function Navbar({ className, ...props }: NavbarProps) {
                 email: data.data.user.email,
                 profile_pic: data.data.user.profile_pic,
             });
+            setIsLoading(false);
         },
     });
 

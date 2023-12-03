@@ -3,6 +3,8 @@ enum platforms {
     HASHNODE = "Hashnode",
     DEVTO = "DevTo",
     MEDIUM = "Medium",
+    GHOST = "Ghost",
+    WORDPRESS = "WordPress",
 }
 
 enum projectStatus {
@@ -35,6 +37,9 @@ const project = {
             MAX_LENGTH: 5,
         },
         hashnode: {
+            MAX_LENGTH: 5,
+        },
+        ghost: {
             MAX_LENGTH: 5,
         },
     },
@@ -75,14 +80,12 @@ const user = {
     authModes: authModes,
 } as const;
 
-const rabbitmq = {
+const bullmq = {
     queues: {
-        POSTS: "posts",
-        POST_JOBS: "post_jobs",
-        EMAILS: "emails",
-        EMAIL_JOBS: "email_jobs",
+        POST: "post",
+        EMAIL: "email",
     },
-};
+} as const;
 
 enum emailTemplates {
     VERIFY_EMAIL = "ps_verify_email",
@@ -114,12 +117,17 @@ const asset = {
     MAX_FILE_SIZE: 5 * 1024 * 1024, // 5MB
 } as const;
 
+const errorCauses = {
+    VERIFICATION_PENDING: "verification_pending",
+};
+
 export const constants = {
     project,
     user,
     folder,
-    rabbitmq,
+    bullmq,
     payment,
     emailTemplates,
     asset,
+    errorCauses,
 };

@@ -47,22 +47,24 @@ export function GoogleAuth() {
 
     useEffect(() => {
         if (typeof window !== "undefined") {
-            window.google?.accounts.id.initialize({
-                client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-                use_fedcm_for_prompt: true,
-                callback: handleConnectGoogle,
-                auto_select: true,
-            });
-            window.google?.accounts.id.renderButton(authButtonRef.current, {
-                type: "standard",
-                theme: theme === "dark" ? "filled_black" : "filled_blue",
-                size: "large",
-                text: "continue_with",
-                shape: "rectangular",
-            });
-            window.google?.accounts.id.prompt();
+            try {
+                window.google?.accounts.id.initialize({
+                    client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+                    use_fedcm_for_prompt: true,
+                    callback: handleConnectGoogle,
+                    auto_select: true,
+                });
+                window.google?.accounts.id.renderButton(authButtonRef.current, {
+                    type: "standard",
+                    theme: theme === "dark" ? "filled_black" : "filled_blue",
+                    size: "large",
+                    text: "continue_with",
+                    shape: "rectangular",
+                });
+                window.google?.accounts.id.prompt();
+            } catch (error) {}
         }
-    }, [theme, handleConnectGoogle]);
+    }, [theme]);
 
     return (
         <div className="flex justify-center">

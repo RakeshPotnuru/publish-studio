@@ -275,6 +275,10 @@ export default class AuthController extends UserService {
                 auth_modes: [...user.auth_modes, constants.user.authModes.GOOGLE],
                 google_sub: payload.sub,
             });
+
+            if (!user.profile_pic && payload.picture) {
+                await super.updateUser(user._id, { profile_pic: payload.picture });
+            }
         }
 
         const { access_token, refresh_token } = await super.signTokens(user);
@@ -310,18 +314,17 @@ export default class AuthController extends UserService {
             });
         }
 
-        if (user && !user.is_verified) {
-            throw new TRPCError({
-                code: "BAD_REQUEST",
-                message:
-                    "Please verify your email first. Check your inbox for the verification email.",
-            });
-        }
-
         if (!user || (user.password && !(await bycrypt.compare(input.password, user.password)))) {
             throw new TRPCError({
                 code: "UNAUTHORIZED",
                 message: "Invalid email or password",
+            });
+        }
+
+        if (user && !user.is_verified) {
+            throw new TRPCError({
+                code: "BAD_REQUEST",
+                message: constants.errorCauses.VERIFICATION_PENDING,
             });
         }
 

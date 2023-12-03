@@ -97,9 +97,9 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
             {step === "register" ? (
                 <div className="space-y-6">
                     <Heading level={2}>Create an account to get started</Heading>
+                    {error && <ErrorBox title="Registration failed" description={error} />}
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                            {error && <ErrorBox title="Registration failed" description={error} />}
                             <FormField
                                 control={form.control}
                                 name="email"
