@@ -22,6 +22,7 @@ import { Heading } from "@/components/ui/heading";
 import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
+import { GoogleAuth } from "./google-auth";
 import { ShowPassword } from "./show-password";
 
 interface RegisterFormProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -220,6 +221,8 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
                             </Button>
                         </form>
                     </Form>
+                    <p className="text-center">Or</p>
+                    <GoogleAuth />
                     <p className="text-center text-sm">
                         Have an account?{" "}
                         <Button variant="link" className="h-max p-0" asChild>
