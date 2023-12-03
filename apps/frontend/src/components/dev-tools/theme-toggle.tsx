@@ -9,12 +9,14 @@ export function ThemeToggleButton() {
     const { theme, setTheme } = useTheme();
 
     return (
-        <Button
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="text-foreground fixed bottom-3 right-14 z-50"
-            size="icon"
-        >
-            <Icons.Sun />
-        </Button>
+        <aside>
+            <Button
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                className="text-foreground fixed bottom-3 right-14 z-50"
+                size="icon"
+            >
+                <Icons.Sun />
+            </Button>
+        </aside>
     );
 }

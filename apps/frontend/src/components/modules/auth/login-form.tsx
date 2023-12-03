@@ -22,6 +22,7 @@ import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
+import { GoogleAuth } from "./google-auth";
 import { ShowPassword } from "./show-password";
 
 interface LoginFormProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -148,6 +149,8 @@ export function LoginForm({ ...props }: LoginFormProps) {
                         </Button>
                     </form>
                 </Form>
+                <p className="text-center">Or</p>
+                <GoogleAuth />
                 <p className="text-center text-sm">
                     Don&apos;t have an account?{" "}
                     <Button variant="link" className="h-max p-0" asChild>

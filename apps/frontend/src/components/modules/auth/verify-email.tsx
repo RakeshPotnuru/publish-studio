@@ -10,6 +10,7 @@ import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
+import { DotsLoader } from "@/components/ui/dots-loader";
 
 interface VerifyEmailProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -46,7 +47,7 @@ export function VerifyEmail({ ...props }: VerifyEmailProps) {
         }
 
         handleVerifyEmail();
-    }, [token]);
+    }, [token, handleVerifyEmail]);
 
     if (!token) {
         return (
@@ -82,11 +83,5 @@ export function VerifyEmail({ ...props }: VerifyEmailProps) {
         );
     }
 
-    return (
-        <div className="flex items-center justify-center">
-            <Icons.LoadingDot className="h-4 w-4 animate-bounce" />
-            <Icons.LoadingDot className="h-4 w-4 animate-bounce delay-100" />
-            <Icons.LoadingDot className="h-4 w-4 animate-bounce delay-200" />
-        </div>
-    );
+    return <DotsLoader />;
 }

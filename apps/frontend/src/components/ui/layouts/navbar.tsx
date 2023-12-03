@@ -34,7 +34,7 @@ const NavItem = ({ icon, tooltip }: { icon: React.ReactNode; tooltip: string }) 
 interface NavbarProps extends React.HTMLAttributes<HTMLElement> {}
 
 export function Navbar({ className, ...props }: NavbarProps) {
-    const { mutate: logout } = trpc.logout.useMutation();
+    const { mutateAsync: logout } = trpc.logout.useMutation();
     const { user, setUser } = useUserStore();
 
     const { isFetching } = trpc.getUser.useQuery(undefined, {
@@ -52,10 +52,13 @@ export function Navbar({ className, ...props }: NavbarProps) {
         },
     });
 
-    const handleLogout = () => {
-        logout();
-        localStorage.clear();
-        window.location.reload();
+    const handleLogout = async () => {
+        try {
+            await logout();
+            window.google?.accounts.id.disableAutoSelect();
+            localStorage.clear();
+            window.location.reload();
+        } catch (error) {}
     };
 
     return (

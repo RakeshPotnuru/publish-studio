@@ -264,8 +264,8 @@ export default class AuthController extends UserService {
             return {
                 status: "success",
                 data: {
-                    user: newUser,
                     access_token,
+                    user: newUser,
                 },
             };
         }
@@ -293,8 +293,8 @@ export default class AuthController extends UserService {
         return {
             status: "success",
             data: {
-                user,
                 access_token,
+                user,
             },
         };
     }
