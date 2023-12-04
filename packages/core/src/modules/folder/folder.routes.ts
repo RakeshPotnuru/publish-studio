@@ -17,9 +17,16 @@ const folderRouter = router({
         )
         .mutation(({ input, ctx }) => new FolderController().createFolderHandler(input, ctx)),
 
-    getAllFolders: protectedProcedure.query(({ ctx }) =>
-        new FolderController().getAllFoldersHandler(ctx),
-    ),
+    getAllFolders: protectedProcedure
+        .input(
+            z.object({
+                pagination: z.object({
+                    page: z.number().min(1).default(1),
+                    limit: z.number().min(1).default(10),
+                }),
+            }),
+        )
+        .mutation(({ input, ctx }) => new FolderController().getAllFoldersHandler(input, ctx)),
 
     updateFolder: protectedProcedure
         .input(

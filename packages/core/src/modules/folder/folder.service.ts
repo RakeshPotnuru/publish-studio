@@ -45,9 +45,28 @@ export default class FolderService {
         }
     }
 
-    async getAllFolders(user_id: Types.ObjectId | undefined) {
+    async getAllFoldersByUserId(
+        pagination: { page: number; limit: number },
+        user_id: Types.ObjectId | undefined,
+    ) {
         try {
-            return (await Folder.find({ user_id }).populate("projects").exec()) as IFolder[];
+            const total_rows = await Folder.countDocuments({ user_id }).exec();
+            const total_pages = Math.ceil(total_rows / pagination.limit);
+
+            const folders = (await Folder.find({ user_id })
+                .skip((pagination.page - 1) * pagination.limit)
+                .limit(pagination.limit)
+                .exec()) as IFolder[];
+
+            return {
+                folders,
+                pagination: {
+                    page: pagination.page,
+                    limit: pagination.limit,
+                    total_rows,
+                    total_pages,
+                },
+            };
         } catch (error) {
             console.log(error);
 

@@ -107,9 +107,16 @@ const projectRouter = router({
         )
         .mutation(({ input, ctx }) => new ProjectController().updatePostHandler(input, ctx)),
 
-    getAllProjects: protectedProcedure.query(({ ctx }) =>
-        new ProjectController().getAllProjectsHandler(ctx),
-    ),
+    getAllProjects: protectedProcedure
+        .input(
+            z.object({
+                pagination: z.object({
+                    page: z.number().min(1).default(1),
+                    limit: z.number().min(1).default(10),
+                }),
+            }),
+        )
+        .mutation(({ input, ctx }) => new ProjectController().getAllProjectsHandler(input, ctx)),
 
     updateProject: protectedProcedure
         .input(

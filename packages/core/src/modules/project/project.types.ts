@@ -1,6 +1,7 @@
 import type { Types } from "mongoose";
 
 import type { constants } from "../../config/constants";
+import type { IPagination } from "../../types/common.types";
 
 export interface IProject {
     user_id?: Types.ObjectId;
@@ -23,6 +24,7 @@ export interface IProject {
     }[];
     canonical_url?: string;
     scheduled_at?: Date;
+    pagination?: IPagination;
 }
 
 export type IProjectUpdate = Partial<IProject>;

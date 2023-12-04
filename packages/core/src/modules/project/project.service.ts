@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
+import type { IPagination } from "../../types/common.types";
 import Folder from "../folder/folder.model";
 import FolderService from "../folder/folder.service";
 import User from "../user/user.model";
@@ -46,9 +47,25 @@ export default class ProjectService extends FolderService {
         }
     }
 
-    async getProjectsByUserId(user_id: Types.ObjectId | undefined) {
+    async getAllProjectsByUserId(pagination: IPagination, user_id: Types.ObjectId | undefined) {
         try {
-            return (await Project.find({ user_id }).exec()) as IProject[];
+            const total_rows = await Project.countDocuments({ user_id }).exec();
+            const total_pages = Math.ceil(total_rows / pagination.limit);
+
+            const projects = (await Project.find({ user_id })
+                .skip((pagination.page - 1) * pagination.limit)
+                .limit(pagination.limit)
+                .exec()) as IProject[];
+
+            return {
+                projects,
+                pagination: {
+                    page: pagination.page,
+                    limit: pagination.limit,
+                    total_rows,
+                    total_pages,
+                },
+            };
         } catch (error) {
             console.log(error);
 

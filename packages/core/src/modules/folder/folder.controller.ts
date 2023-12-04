@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
 import type { Context } from "../../trpc";
+import type { IPagination } from "../../types/common.types";
 import FolderService from "./folder.service";
 import type { IFolder } from "./folder.types";
 
@@ -29,13 +30,17 @@ export default class FolderController extends FolderService {
         };
     }
 
-    async getAllFoldersHandler(ctx: Context) {
-        const folders = await super.getAllFolders(ctx.user?._id);
+    async getAllFoldersHandler(input: { pagination: IPagination }, ctx: Context) {
+        const { folders, pagination } = await super.getAllFoldersByUserId(
+            input.pagination,
+            ctx.user?._id,
+        );
 
         return {
             status: "success",
             data: {
-                folders: folders,
+                folders,
+                pagination,
             },
         };
     }
