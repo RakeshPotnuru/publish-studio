@@ -1,6 +1,6 @@
 import type { Types } from "mongoose";
 
-import type { constants } from "../../constants";
+import type { constants } from "../../config/constants";
 
 export interface IProject {
     user_id?: Types.ObjectId;

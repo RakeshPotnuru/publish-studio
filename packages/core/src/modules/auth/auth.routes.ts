@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { constants } from "../../constants";
+import { constants } from "../../config/constants";
 import { protectedProcedure, router, t } from "../../trpc";
 import AuthController from "./auth.controller";
 

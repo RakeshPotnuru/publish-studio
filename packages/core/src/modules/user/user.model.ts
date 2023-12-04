@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-import { constants } from "../../constants";
+import { constants } from "../../config/constants";
 import type { IUser } from "./user.types";
 
 const UserSchema = new Schema<IUser>(

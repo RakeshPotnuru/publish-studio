@@ -3,7 +3,7 @@ import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 import type { Types } from "mongoose";
 
 import defaultConfig from "../../../config/app.config";
-import { constants } from "../../../constants";
+import { constants } from "../../../config/constants";
 import Platform from "../../../modules/platform/platform.model";
 import User from "../../../modules/user/user.model";
 import { decryptField } from "../../../utils/aws/kms";

@@ -1,4 +1,4 @@
-import type { constants } from "../constants";
+import type { constants } from "../config/constants";
 
 export interface IFile {
     originalname: string;

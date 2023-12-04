@@ -1,8 +1,6 @@
 import { Icons } from "@/assets/icons";
 
-interface FullScreenLoaderProps extends React.HTMLAttributes<HTMLDivElement> {}
-
-export function FullScreenLoader({}: FullScreenLoaderProps) {
+export function FullScreenLoader() {
     return (
         <div className="flex h-screen w-screen items-center justify-center">
             <Icons.LoadingDot className="h-4 w-4 animate-bounce" />

@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
-import { constants } from "../../constants";
+import { constants } from "../../config/constants";
 import type { Context } from "../../trpc";
 import type { IFile } from "../../types/file.types";
 import AssetService from "./asset.service";

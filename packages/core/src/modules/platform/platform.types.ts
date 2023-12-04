@@ -1,6 +1,6 @@
 import type { Types } from "mongoose";
 
-import type { constants } from "../../constants";
+import type { constants } from "../../config/constants";
 import type { IDevTo } from "./devto/devto.types";
 import type { IHashnode } from "./hashnode/hashnode.types";
 import type { IMedium } from "./medium/medium.types";

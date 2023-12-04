@@ -2,7 +2,7 @@ import type { inferAsyncReturnType } from "@trpc/server";
 import { initTRPC, TRPCError } from "@trpc/server";
 import type { CreateExpressContextOptions } from "@trpc/server/adapters/express";
 
-import { constants } from "./constants";
+import { constants } from "./config/constants";
 import { deserializeUser } from "./middlewares/deserialize-user";
 
 export const createContext = ({ req, res }: CreateExpressContextOptions) => {

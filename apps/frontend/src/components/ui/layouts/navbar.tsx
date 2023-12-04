@@ -18,7 +18,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { siteConfig } from "@/config/site";
-import useUserStore from "@/store/user-store";
+import useUserStore from "@/lib/store/user-store";
 import { trpc } from "@/utils/trpc";
 import { Icons } from "../../../assets/icons";
 import { Images } from "../../../assets/images";
@@ -82,9 +82,9 @@ export function Navbar({ className, ...props }: NavbarProps) {
                 />
             </Link>
             <div className="flex flex-row items-center space-x-1">
-                <NavItem icon={<Icons.question className="h-5 w-5" />} tooltip="Help" />
+                <NavItem icon={<Icons.Question className="h-5 w-5" />} tooltip="Help" />
                 <NavItem
-                    icon={<Icons.notifications className="h-5 w-5" />}
+                    icon={<Icons.Notifications className="h-5 w-5" />}
                     tooltip="Notifications"
                 />
                 <DropdownMenu>
@@ -113,19 +113,19 @@ export function Navbar({ className, ...props }: NavbarProps) {
                         <DropdownMenuSeparator />
                         <DropdownMenuItem asChild>
                             <Link href="/profile">
-                                <Icons.profile className="mr-2 h-4 w-4" />
+                                <Icons.Profile className="mr-2 h-4 w-4" />
                                 Profile
                             </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
                             <Link href="/settings">
-                                <Icons.settings className="mr-2 h-4 w-4" />
+                                <Icons.Settings className="mr-2 h-4 w-4" />
                                 Settings
                             </Link>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={handleLogout}>
-                            <Icons.logout className="mr-2 h-4 w-4" />
+                            <Icons.Logout className="mr-2 h-4 w-4" />
                             <span>Logout</span>
                         </DropdownMenuItem>
                     </DropdownMenuContent>

@@ -4,7 +4,7 @@ import { Queue, Worker } from "bullmq";
 import { Types } from "mongoose";
 
 import { bullMQConnectionOptions } from "../../config/app.config";
-import { constants } from "../../constants";
+import { constants } from "../../config/constants";
 import DevToController from "../platform/devto/devto.controller";
 import GhostController from "../platform/ghost/ghost.controller";
 import HashnodeController from "../platform/hashnode/hashnode.controller";

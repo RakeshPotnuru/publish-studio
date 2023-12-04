@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-import { constants } from "../../constants";
+import { constants } from "../../config/constants";
 import type { IProject } from "./project.types";
 
 const ProjectSchema = new Schema<IProject>(

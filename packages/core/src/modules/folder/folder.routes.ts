@@ -1,7 +1,7 @@
 import type { Types } from "mongoose";
 import { z } from "zod";
 
-import { constants } from "../../constants";
+import { constants } from "../../config/constants";
 import { protectedProcedure, router } from "../../trpc";
 import FolderController from "./folder.controller";
 

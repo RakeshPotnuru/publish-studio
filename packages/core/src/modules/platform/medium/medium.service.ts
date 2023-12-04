@@ -3,7 +3,7 @@ import axios from "axios";
 import type { Types } from "mongoose";
 
 import defaultConfig from "../../../config/app.config";
-import { constants } from "../../../constants";
+import { constants } from "../../../config/constants";
 import { decryptField } from "../../../utils/aws/kms";
 import User from "../../user/user.model";
 import Platform from "../platform.model";

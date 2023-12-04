@@ -6,7 +6,7 @@ import type { OptionsType } from "cookies-next/lib/types";
 import type { Types } from "mongoose";
 
 import defaultConfig from "../../config/app.config";
-import { constants } from "../../constants";
+import { constants } from "../../config/constants";
 import type { Context } from "../../trpc";
 import { scheduleEmail, sendEmail } from "../../utils/aws/ses";
 import { verifyGoogleToken } from "../../utils/google";

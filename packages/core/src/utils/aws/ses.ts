@@ -5,7 +5,7 @@ import type { Job } from "bullmq";
 import { Queue, Worker } from "bullmq";
 
 import defaultConfig, { bullMQConnectionOptions } from "../../config/app.config";
-import { constants } from "../../constants";
+import { constants } from "../../config/constants";
 import type { ISES } from "../../types/aws.types";
 
 const ses = new SESv2Client({

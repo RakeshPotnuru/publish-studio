@@ -1,8 +1,8 @@
 import { useToast } from "@itsrakesh/ui";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { DotsLoader } from "@/components/ui/dots-loader";
 import { ErrorBox } from "@/components/ui/error-box";
+import { DotsLoader } from "@/components/ui/loaders/dots-loader";
 import { trpc } from "@/utils/trpc";
 import { useTheme } from "next-themes";
 

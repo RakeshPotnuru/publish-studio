@@ -5,9 +5,9 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
-import { DotsLoader } from "@/components/ui/dots-loader";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
+import { DotsLoader } from "@/components/ui/loaders/dots-loader";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
 

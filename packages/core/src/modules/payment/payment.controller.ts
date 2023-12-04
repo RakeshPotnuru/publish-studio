@@ -3,7 +3,7 @@ import type { Types } from "mongoose";
 import mongoose from "mongoose";
 import type Stripe from "stripe";
 
-import { constants } from "../../constants";
+import { constants } from "../../config/constants";
 import type { Context } from "../../trpc";
 import stripe from "../../utils/stripe";
 import PaymentService from "./payment.service";

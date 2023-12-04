@@ -1,4 +1,4 @@
-import { FullScreenLoader } from "@/components/ui/full-screen-loader";
+import { FullScreenLoader } from "@/components/ui/loaders/full-screen-loader";
 
 export default function Loading() {
     return <FullScreenLoader />;

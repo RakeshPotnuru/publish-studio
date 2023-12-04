@@ -3,7 +3,7 @@ import type { Types } from "mongoose";
 import type Stripe from "stripe";
 
 import defaultConfig from "../../config/app.config";
-import { constants } from "../../constants";
+import { constants } from "../../config/constants";
 import type { Context } from "../../trpc";
 import stripe from "../../utils/stripe";
 import UserService from "../user/user.service";

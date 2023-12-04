@@ -1,7 +1,7 @@
 import type { Types } from "mongoose";
 import { z } from "zod";
 
-import { constants } from "../../constants";
+import { constants } from "../../config/constants";
 import { proProtectedProcedure, protectedProcedure, router } from "../../trpc";
 import ProjectController from "./project.controller";
 import type { THashnodeTag } from "./project.types";
