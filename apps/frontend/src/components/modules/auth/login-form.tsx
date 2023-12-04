@@ -56,7 +56,7 @@ export function LoginForm({ ...props }: LoginFormProps) {
             localStorage.setItem("ps_access_token", data.access_token);
 
             setTimeout(() => {
-                window.location.reload();
+                window.location.href = siteConfig.pages.dashboard.link;
             }, 1000);
         },
         onError(error) {

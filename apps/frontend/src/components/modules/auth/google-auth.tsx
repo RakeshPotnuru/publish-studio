@@ -1,5 +1,5 @@
 import { useToast } from "@itsrakesh/ui";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { DotsLoader } from "@/components/ui/dots-loader";
 import { ErrorBox } from "@/components/ui/error-box";
@@ -35,15 +35,18 @@ export function GoogleAuth() {
         },
     });
 
-    const handleConnectGoogle = async (response: { credential: string }) => {
-        if (!response.credential) {
-            return;
-        }
+    const handleConnectGoogle = useCallback(
+        async (response: { credential: string }) => {
+            if (!response.credential) {
+                return;
+            }
 
-        try {
-            await connectGoogle({ id_token: response.credential });
-        } catch (error) {}
-    };
+            try {
+                await connectGoogle({ id_token: response.credential });
+            } catch (error) {}
+        },
+        [connectGoogle],
+    );
 
     useEffect(() => {
         if (typeof window !== "undefined") {
@@ -64,7 +67,7 @@ export function GoogleAuth() {
                 window.google?.accounts.id.prompt();
             } catch (error) {}
         }
-    }, [theme]);
+    }, [theme, handleConnectGoogle]);
 
     return (
         <div className="flex justify-center">

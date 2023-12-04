@@ -3,14 +3,13 @@
 import { Button } from "@itsrakesh/ui";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-import { Icons } from "@/assets/icons";
+import { DotsLoader } from "@/components/ui/dots-loader";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
-import { DotsLoader } from "@/components/ui/dots-loader";
 
 interface VerifyEmailProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -31,7 +30,7 @@ export function VerifyEmail({ ...props }: VerifyEmailProps) {
         },
     });
 
-    const handleVerifyEmail = async () => {
+    const handleVerifyEmail = useCallback(async () => {
         if (!token) {
             return;
         }
@@ -39,7 +38,7 @@ export function VerifyEmail({ ...props }: VerifyEmailProps) {
         try {
             await verifyEmail({ token });
         } catch (error) {}
-    };
+    }, [token, verifyEmail]);
 
     useEffect(() => {
         if (!token) {

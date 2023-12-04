@@ -17,6 +17,7 @@ import { cn } from "@itsrakesh/utils";
 import Image from "next/image";
 import Link from "next/link";
 
+import { siteConfig } from "@/config/site";
 import useUserStore from "@/store/user-store";
 import { trpc } from "@/utils/trpc";
 import { Icons } from "../../../assets/icons";
@@ -58,7 +59,7 @@ export function Navbar({ className, ...props }: NavbarProps) {
             await logout();
             window.google?.accounts.id.disableAutoSelect();
             localStorage.clear();
-            window.location.reload();
+            window.location.href = siteConfig.pages.login.link;
         } catch (error) {}
     };
 
