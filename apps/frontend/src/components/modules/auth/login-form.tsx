@@ -16,6 +16,8 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useCookies } from "react-cookie";
+import { jwtDecode } from "jwt-decode";
 
 import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
@@ -38,6 +40,8 @@ export function LoginForm({ ...props }: LoginFormProps) {
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [isVerificationError, setIsVerificationError] = useState(false);
 
+    const [_, setCookie] = useCookies(["ps_access_token"]);
+
     const { toast } = useToast();
 
     const { mutateAsync: login, isLoading } = trpc.login.useMutation({
@@ -53,7 +57,12 @@ export function LoginForm({ ...props }: LoginFormProps) {
                 return;
             }
 
-            localStorage.setItem("ps_access_token", data.access_token);
+            const decoded = jwtDecode<{ exp: number }>(data.access_token);
+            setCookie("ps_access_token", data.access_token, {
+                path: "/",
+                expires: new Date(decoded.exp * 1000),
+                sameSite: true,
+            });
 
             setTimeout(() => {
                 window.location.href = siteConfig.pages.dashboard.link;

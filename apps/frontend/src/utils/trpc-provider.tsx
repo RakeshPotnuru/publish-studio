@@ -3,18 +3,20 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { getFetch, httpBatchLink, loggerLink } from "@trpc/client";
+import superjson from "superjson";
 
+import { useCookies } from "react-cookie";
 import { trpc } from "./trpc";
 
 export function TRPCProvider({ children }: Readonly<{ children: React.ReactNode }>) {
+    const [cookies, _] = useCookies(["ps_access_token"]);
+
     const queryClient = new QueryClient({ defaultOptions: { queries: { staleTime: 5000 } } });
 
-    let token: string | null = null;
-    if (typeof window !== "undefined") {
-        token = localStorage.getItem("ps_access_token");
-    }
+    const token = cookies.ps_access_token;
 
     const trpcClient = trpc.createClient({
+        transformer: superjson,
         links: [
             loggerLink({
                 enabled: () => true,

@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { env } from "@/config/env";
 import { siteConfig } from "@/config/site";
 import { TRPCProvider } from "@/utils/trpc-provider";
+import { CookiesProvider } from "@/utils/cookies-provider";
 
 export const metadata: Metadata = {
     title: {
@@ -81,7 +82,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                     enableSystem
                     disableTransitionOnChange
                 >
-                    <TRPCProvider>{children}</TRPCProvider>
+                    <CookiesProvider>
+                        <TRPCProvider>{children}</TRPCProvider>
+                    </CookiesProvider>
                     <Toaster />
                     {env.NODE_ENV === "development" && <ThemeToggleButton />}
                 </ThemeProvider>

@@ -6,7 +6,7 @@ import Folder from "../folder/folder.model";
 import FolderService from "../folder/folder.service";
 import User from "../user/user.model";
 import Project from "./project.model";
-import type { IProject, IProjectUpdate } from "./project.types";
+import type { IProject, IProjectsResponse, IProjectUpdate } from "./project.types";
 
 export default class ProjectService extends FolderService {
     async createProject(project: IProject) {
@@ -65,7 +65,7 @@ export default class ProjectService extends FolderService {
                     total_rows,
                     total_pages,
                 },
-            };
+            } as IProjectsResponse;
         } catch (error) {
             console.log(error);
 

@@ -1,6 +1,7 @@
 import type { inferAsyncReturnType } from "@trpc/server";
 import { initTRPC, TRPCError } from "@trpc/server";
 import type { CreateExpressContextOptions } from "@trpc/server/adapters/express";
+import superjson from "superjson";
 
 import { constants } from "./config/constants";
 import { deserializeUser } from "./middlewares/deserialize-user";
@@ -10,7 +11,9 @@ export const createContext = ({ req, res }: CreateExpressContextOptions) => {
 };
 
 export type Context = inferAsyncReturnType<typeof createContext>;
-export const t = initTRPC.context<Context>().create();
+export const t = initTRPC.context<Context>().create({
+    transformer: superjson,
+});
 
 const isAuthed = t.middleware(({ next, ctx }) => {
     if (!ctx.user) {

@@ -18,8 +18,9 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { siteConfig } from "@/config/site";
-import useUserStore from "@/lib/store/user-store";
+import useUserStore from "@/lib/store/user";
 import { trpc } from "@/utils/trpc";
+import { useCookies } from "react-cookie";
 import { Icons } from "../../../assets/icons";
 import { Images } from "../../../assets/images";
 import { Tooltip } from "../tooltip";
@@ -35,6 +36,8 @@ const NavItem = ({ icon, tooltip }: { icon: React.ReactNode; tooltip: string }) 
 interface NavbarProps extends React.HTMLAttributes<HTMLElement> {}
 
 export function Navbar({ className, ...props }: NavbarProps) {
+    const [_, __, removeCookie] = useCookies(["ps_access_token"]);
+
     const { mutateAsync: logout } = trpc.logout.useMutation();
     const { user, setUser, setIsLoading } = useUserStore();
 
@@ -57,8 +60,10 @@ export function Navbar({ className, ...props }: NavbarProps) {
     const handleLogout = async () => {
         try {
             await logout();
+
+            removeCookie("ps_access_token");
+
             window.google?.accounts.id.disableAutoSelect();
-            localStorage.clear();
             window.location.href = siteConfig.pages.login.link;
         } catch (error) {}
     };

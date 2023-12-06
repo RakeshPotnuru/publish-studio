@@ -14,7 +14,7 @@ interface DataTablePaginationProps<TData> {
     table: Table<TData>;
 }
 
-export function DataTablePagination<TData>({ table }: DataTablePaginationProps<TData>) {
+export function DataTablePagination<TData>({ table }: Readonly<DataTablePaginationProps<TData>>) {
     return (
         <div className="flex items-center justify-between px-2">
             <div className="text-muted-foreground flex-1 text-sm">
@@ -53,7 +53,7 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
                         disabled={!table.getCanPreviousPage()}
                     >
                         <span className="sr-only">Go to first page</span>
-                        <Icons.first className="h-4 w-4" />
+                        <Icons.First className="h-4 w-4" />
                     </Button>
                     <Button
                         variant="outline"
@@ -62,7 +62,7 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
                         disabled={!table.getCanPreviousPage()}
                     >
                         <span className="sr-only">Go to previous page</span>
-                        <Icons.chevronleft className="h-4 w-4" />
+                        <Icons.ChevronLeft className="h-4 w-4" />
                     </Button>
                     <Button
                         variant="outline"
@@ -71,7 +71,7 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
                         disabled={!table.getCanNextPage()}
                     >
                         <span className="sr-only">Go to next page</span>
-                        <Icons.chevronright className="h-4 w-4" />
+                        <Icons.ChevronRight className="h-4 w-4" />
                     </Button>
                     <Button
                         variant="outline"
@@ -80,7 +80,7 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
                         disabled={!table.getCanNextPage()}
                     >
                         <span className="sr-only">Go to last page</span>
-                        <Icons.last className="h-4 w-4" />
+                        <Icons.Last className="h-4 w-4" />
                     </Button>
                 </div>
             </div>

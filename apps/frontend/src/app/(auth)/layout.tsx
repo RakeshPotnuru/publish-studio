@@ -1,12 +1,8 @@
-"use client";
-
-import { redirect } from "next/navigation";
-import { useEffect, useState } from "react";
+import type { Metadata } from "next";
+import Script from "next/script";
 
 import { Footer } from "@/components/ui/layouts/footer";
 import { siteConfig } from "@/config/site";
-import { trpc } from "@/utils/trpc";
-import Script from "next/script";
 
 declare global {
     interface Window {
@@ -14,26 +10,11 @@ declare global {
     }
 }
 
+export const metadata: Metadata = {
+    title: { template: `%s | ${siteConfig.title}`, default: "Authentication" },
+};
+
 export default function AuthLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-    const [token, setToken] = useState<string | null>(null);
-
-    const { data, isFetching, error } = trpc.getMe.useQuery(undefined, {
-        refetchOnWindowFocus: false,
-        refetchOnReconnect: false,
-        retry: false,
-        enabled: token !== null,
-    });
-
-    useEffect(() => {
-        if (typeof window !== "undefined") {
-            setToken(localStorage.getItem("ps_access_token"));
-        }
-    }, []);
-
-    if (token && !isFetching && !error && data?.status === "success") {
-        redirect(siteConfig.pages.dashboard.link);
-    }
-
     return (
         <>
             <main className="bg-pattern-light dark:bg-pattern-dark min-h-screen">

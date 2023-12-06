@@ -23,7 +23,10 @@ interface ProjectsTableProps<TData, TValue> {
     data: TData[];
 }
 
-export function ProjectsTable<TData, TValue>({ columns, data }: ProjectsTableProps<TData, TValue>) {
+export function ProjectsTable<TData, TValue>({
+    columns,
+    data,
+}: Readonly<ProjectsTableProps<TData, TValue>>) {
     const [rowSelection, setRowSelection] = useState({});
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);

@@ -6,18 +6,9 @@ import { format } from "date-fns";
 import { Icons } from "@/assets/icons";
 import { DataTableColumnHeader } from "@/components/ui/data-table";
 import { constants } from "@/config/constants";
+import type { IProject } from "@/lib/store/projects";
 import { shortenText } from "@/lib/text-shortner";
 import { RowActions } from "./row-actions";
-
-export interface IProject {
-    _id: string;
-    title: string;
-    status: string;
-    // TODO: use Date
-    created: string;
-    // TODO: use Date
-    last_edited: string;
-}
 
 export const statuses = [
     {
@@ -99,7 +90,6 @@ export const columns: ColumnDef<IProject>[] = [
     {
         accessorKey: "created",
         header: ({ column }) => <DataTableColumnHeader column={column} title="Created" />,
-        // TODO: remove new Date()
         cell: ({ row }) => <span>{format(new Date(row.getValue("created")), "PPPp")}</span>,
         filterFn: (row, id, value) => {
             return value.includes(row.getValue(id));
@@ -108,7 +98,6 @@ export const columns: ColumnDef<IProject>[] = [
     {
         accessorKey: "last_edited",
         header: ({ column }) => <DataTableColumnHeader column={column} title="Last Edited" />,
-        // TODO: remove new Date()
         cell: ({ row }) => <span>{format(new Date(row.getValue("last_edited")), "PPPp")}</span>,
         filterFn: (row, id, value) => {
             return value.includes(row.getValue(id));

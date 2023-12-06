@@ -1,7 +1,8 @@
+import type { Types } from "mongoose";
 import { create } from "zustand";
 
 interface IUser {
-    _id: string;
+    _id: Types.ObjectId;
     email: string;
     first_name: string;
     last_name: string;

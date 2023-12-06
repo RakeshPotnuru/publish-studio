@@ -19,7 +19,7 @@ import { z } from "zod";
 import { Icons } from "@/assets/icons";
 import { Heading } from "@/components/ui/heading";
 import { Tooltip } from "@/components/ui/tooltip";
-import useUserStore from "@/lib/store/user-store";
+import useUserStore from "@/lib/store/user";
 
 interface ProfileProps extends React.HTMLAttributes<HTMLDivElement> {}
 
