@@ -11,6 +11,7 @@ import {
     FormMessage,
     Input,
 } from "@itsrakesh/ui";
+import { cn } from "@itsrakesh/utils";
 import Link from "next/link";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -88,16 +89,24 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         try {
+            setError(null);
             await register(data);
         } catch (error) {}
     };
 
     return (
-        <div {...props}>
+        <div
+            className={cn({
+                "animate-shake": error,
+            })}
+            {...props}
+        >
             {step === "register" ? (
                 <div className="space-y-6">
                     <Heading level={2}>Create an account to get started</Heading>
                     {error && <ErrorBox title="Registration failed" description={error} />}
+                    <GoogleAuth />
+                    <p className="text-center">Or</p>
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                             <FormField
@@ -221,8 +230,6 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
                             </Button>
                         </form>
                     </Form>
-                    <p className="text-center">Or</p>
-                    <GoogleAuth />
                     <p className="text-center text-sm">
                         Have an account?{" "}
                         <Button variant="link" className="h-max p-0" asChild>

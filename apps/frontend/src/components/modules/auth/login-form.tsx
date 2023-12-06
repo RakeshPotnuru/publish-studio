@@ -12,12 +12,13 @@ import {
     Input,
     useToast,
 } from "@itsrakesh/ui";
+import { jwtDecode } from "jwt-decode";
 import Link from "next/link";
 import React, { useState } from "react";
+import { useCookies } from "react-cookie";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useCookies } from "react-cookie";
-import { jwtDecode } from "jwt-decode";
+import { cn } from "@itsrakesh/utils";
 
 import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
@@ -92,12 +93,18 @@ export function LoginForm({ ...props }: LoginFormProps) {
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         try {
+            setError(null);
             await login(data);
         } catch (error) {}
     };
 
     return (
-        <div {...props}>
+        <div
+            className={cn({
+                "animate-shake": error && !isVerificationError,
+            })}
+            {...props}
+        >
             <div className="space-y-6">
                 <Heading level={2}>Sign in to your account</Heading>
                 {error && <ErrorBox title="Login failed" description={error} />}

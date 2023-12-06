@@ -111,6 +111,7 @@ module.exports = {
             animation: {
                 "accordion-down": "accordion-down 0.2s ease-out",
                 "accordion-up": "accordion-up 0.2s ease-out",
+                shake: "shake 0.82s cubic-bezier(.36,.07,.19,.97)",
             },
         },
     },

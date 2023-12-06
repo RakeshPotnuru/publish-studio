@@ -1,6 +1,5 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { escape } from "querystring";
 
 import { siteConfig } from "./config/site";
 
@@ -13,7 +12,7 @@ export function middleware(request: NextRequest) {
         (request.nextUrl.pathname.startsWith(siteConfig.pages.login.link) ||
             request.nextUrl.pathname.startsWith(siteConfig.pages.register.link))
     ) {
-        return NextResponse.redirect(new URL(siteConfig.pages.dashboard.link, escape(request.url)));
+        return NextResponse.redirect(new URL(siteConfig.pages.dashboard.link, request.url));
     }
 
     if (
@@ -21,16 +20,12 @@ export function middleware(request: NextRequest) {
         !request.nextUrl.pathname.startsWith(siteConfig.pages.login.link) &&
         !request.nextUrl.pathname.startsWith(siteConfig.pages.register.link)
     ) {
-        return NextResponse.redirect(new URL(siteConfig.pages.login.link, escape(request.url)));
+        return NextResponse.redirect(new URL(siteConfig.pages.login.link, request.url));
     }
 
     return response;
 }
 
 export const config = {
-    matcher: [
-        siteConfig.pages.login.link,
-        siteConfig.pages.register.link,
-        siteConfig.pages.dashboard.link,
-    ],
+    matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };
