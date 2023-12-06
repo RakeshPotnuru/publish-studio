@@ -3,7 +3,7 @@ import type { Types } from "mongoose";
 
 import Project from "../project/project.model";
 import Folder from "./folder.model";
-import type { IFolder } from "./folder.types";
+import type { IFolder, IFoldersResponse } from "./folder.types";
 
 export default class FolderService {
     async createFolder(folder: IFolder) {
@@ -66,7 +66,7 @@ export default class FolderService {
                     total_rows,
                     total_pages,
                 },
-            };
+            } as IFoldersResponse;
         } catch (error) {
             console.log(error);
 

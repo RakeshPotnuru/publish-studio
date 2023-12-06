@@ -4,8 +4,8 @@ import { format } from "date-fns";
 import Image from "next/image";
 
 import { DataTableColumnHeader } from "@/components/ui/data-table";
-import { formatFileSize } from "@/lib/file-size";
-import { shortenText } from "@/lib/text-shortner";
+import { formatFileSize } from "@/utils/file-size";
+import { shortenText } from "@/utils/text-shortner";
 import { AssetDialog } from "./asset";
 import { RowActions } from "./row-actions";
 

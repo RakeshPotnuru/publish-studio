@@ -8,10 +8,10 @@ import {
 } from "@itsrakesh/ui";
 import { useEffect, useState } from "react";
 
-import getOs from "@/lib/get-os";
+import getOs from "@/utils/get-os";
 import type { MenuProps } from "../fixed-menu";
 
-export function TextStyleActions({ editor }: MenuProps) {
+export function TextStyleActions({ editor }: Readonly<MenuProps>) {
     const [activeTextStyle, setActiveTextStyle] = useState<
         "Normal Text" | "Heading 1" | "Heading 2" | "Heading 3"
     >("Normal Text");

@@ -3,12 +3,10 @@ import "@/styles/globals.css";
 import type { Metadata, Viewport } from "next";
 
 import { ThemeToggleButton } from "@/components/dev-tools/theme-toggle";
-import { ThemeProvider } from "@/components/ui/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 import { env } from "@/config/env";
 import { siteConfig } from "@/config/site";
-import { TRPCProvider } from "@/utils/trpc-provider";
-import { CookiesProvider } from "@/utils/cookies-provider";
+import Providers from "@/lib/providers";
 
 export const metadata: Metadata = {
     title: {
@@ -76,18 +74,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                 <meta name="theme-color" content="#ffffff" />
             </head>
             <body className="min-h-screen bg-slate-200 dark:bg-slate-700">
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="system"
-                    enableSystem
-                    disableTransitionOnChange
-                >
-                    <CookiesProvider>
-                        <TRPCProvider>{children}</TRPCProvider>
-                    </CookiesProvider>
+                <Providers>
+                    {children}
                     <Toaster />
                     {env.NODE_ENV === "development" && <ThemeToggleButton />}
-                </ThemeProvider>
+                </Providers>
             </body>
         </html>
     );

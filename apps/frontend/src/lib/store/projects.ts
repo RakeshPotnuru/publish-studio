@@ -1,7 +1,7 @@
-import { constants } from "@/config/constants";
-import { IPagination } from "@/types/common";
-import { Types } from "mongoose";
+import type { Types } from "mongoose";
 import { create } from "zustand";
+
+import { constants } from "@/config/constants";
 
 type TProjectStatus = (typeof constants.project.status)[keyof typeof constants.project.status];
 

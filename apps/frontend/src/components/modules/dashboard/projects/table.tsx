@@ -2,6 +2,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import {
     ColumnDef,
     ColumnFiltersState,
+    PaginationState,
     SortingState,
     VisibilityState,
     flexRender,
@@ -13,24 +14,44 @@ import {
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { DataTablePagination } from "@/components/ui/data-table";
+import { TableLoader } from "@/components/ui/loaders/table-loader";
+import { IPagination } from "@/types/common";
 import { Toolbar } from "./toolbar";
 
 interface ProjectsTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
+    isLoading: boolean;
+    paginationData: IPagination;
+    fetchProjects: (page: number, limit: number) => Promise<void>;
 }
 
 export function ProjectsTable<TData, TValue>({
     columns,
     data,
+    isLoading,
+    paginationData,
+    fetchProjects,
 }: Readonly<ProjectsTableProps<TData, TValue>>) {
     const [rowSelection, setRowSelection] = useState({});
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [sorting, setSorting] = useState<SortingState>([]);
+    const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
+        pageIndex: 0,
+        pageSize: 10,
+    });
+
+    const pagination = useMemo(
+        () => ({
+            pageIndex,
+            pageSize,
+        }),
+        [pageIndex, pageSize],
+    );
 
     const table = useReactTable({
         data,
@@ -40,6 +61,7 @@ export function ProjectsTable<TData, TValue>({
             columnVisibility,
             rowSelection,
             columnFilters,
+            pagination,
         },
         enableRowSelection: true,
         onRowSelectionChange: setRowSelection,
@@ -52,7 +74,14 @@ export function ProjectsTable<TData, TValue>({
         getSortedRowModel: getSortedRowModel(),
         getFacetedRowModel: getFacetedRowModel(),
         getFacetedUniqueValues: getFacetedUniqueValues(),
+        manualPagination: true,
+        onPaginationChange: setPagination,
+        pageCount: paginationData.total_pages,
     });
+
+    useEffect(() => {
+        fetchProjects(pageIndex + 1, pageSize);
+    }, [fetchProjects, pageIndex, pageSize]);
 
     return (
         <div className="space-y-4">
@@ -80,7 +109,23 @@ export function ProjectsTable<TData, TValue>({
                         ))}
                     </TableHeader>
                     <TableBody>
-                        {table.getRowModel().rows?.length ? (
+                        {isLoading ? (
+                            <TableRow>
+                                <TableCell colSpan={columns.length}>
+                                    <TableLoader
+                                        columns={
+                                            table
+                                                .getAllColumns()
+                                                .filter(
+                                                    column =>
+                                                        typeof column.accessorFn !== "undefined" &&
+                                                        column.getCanHide(),
+                                                ).length
+                                        }
+                                    />
+                                </TableCell>
+                            </TableRow>
+                        ) : table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map(row => (
                                 <TableRow
                                     key={row.id}
@@ -110,7 +155,7 @@ export function ProjectsTable<TData, TValue>({
                     </TableBody>
                 </Table>
             </div>
-            <DataTablePagination table={table} />
+            <DataTablePagination table={table} isLoading={isLoading} />
         </div>
     );
 }

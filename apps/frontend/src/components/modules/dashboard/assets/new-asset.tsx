@@ -14,8 +14,8 @@ import { useRef, useState } from "react";
 import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
 import { constants } from "@/config/constants";
-import { formatFileSize } from "@/lib/file-size";
-import { shortenText } from "@/lib/text-shortner";
+import { formatFileSize } from "@/utils/file-size";
+import { shortenText } from "@/utils/text-shortner";
 
 interface NewAssetDialogProps extends React.HTMLAttributes<HTMLDialogElement> {}
 

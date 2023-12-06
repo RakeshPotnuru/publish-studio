@@ -8,8 +8,7 @@ import { Heading } from "@/components/ui/heading";
 import { IProject } from "@/lib/store/projects";
 import { IPagination } from "@/types/common";
 import { trpc } from "@/utils/trpc";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { columns } from "./columns";
 import { NewProjectDialog } from "./new-project";
 import { ProjectsTable } from "./table";
@@ -18,12 +17,16 @@ interface ProjectsProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function Projects({ ...props }: ProjectsProps) {
     const [projects, setProjects] = useState<IProject[]>([]);
-    const [pagination, setPagination] = useState<IPagination>();
+    const [pagination, setPagination] = useState<IPagination>({
+        page: 0,
+        limit: 10,
+        total_pages: 0,
+        total_rows: 0,
+    });
     const [error, setError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    const searchParams = useSearchParams();
-
-    const { mutateAsync: getAllProjects, isLoading } = trpc.getAllProjects.useMutation({
+    const { mutateAsync: getAllProjects } = trpc.getAllProjects.useMutation({
         onSuccess: ({ data }) => {
             setProjects(
                 data.projects.map(project => ({
@@ -36,19 +39,23 @@ export function Projects({ ...props }: ProjectsProps) {
         },
         onError: error => {
             setError(error.message);
+            setIsLoading(false);
         },
     });
 
-    useEffect(() => {
-        getAllProjects({
-            pagination: {
-                page: searchParams.get("page") ? parseInt(searchParams.get("page") as string) : 1,
-                limit: searchParams.get("limit")
-                    ? parseInt(searchParams.get("limit") as string)
-                    : 10,
-            },
-        });
-    }, [getAllProjects, searchParams]);
+    const fetchProjects = useCallback(
+        async (page: number, limit: number) => {
+            setIsLoading(true);
+            await getAllProjects({
+                pagination: {
+                    page,
+                    limit,
+                },
+            });
+            setIsLoading(false);
+        },
+        [getAllProjects],
+    );
 
     return (
         <div className="space-y-8" {...props}>
@@ -63,7 +70,13 @@ export function Projects({ ...props }: ProjectsProps) {
             {error ? (
                 <ErrorBox title="Error" description={error} />
             ) : (
-                <ProjectsTable columns={columns} data={projects} />
+                <ProjectsTable
+                    columns={columns}
+                    data={projects}
+                    fetchProjects={fetchProjects}
+                    paginationData={pagination}
+                    isLoading={isLoading}
+                />
             )}
         </div>
     );

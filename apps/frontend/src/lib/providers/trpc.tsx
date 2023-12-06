@@ -6,7 +6,7 @@ import { getFetch, httpBatchLink, loggerLink } from "@trpc/client";
 import superjson from "superjson";
 
 import { useCookies } from "react-cookie";
-import { trpc } from "./trpc";
+import { trpc } from "../../utils/trpc";
 
 export function TRPCProvider({ children }: Readonly<{ children: React.ReactNode }>) {
     const [cookies, _] = useCookies(["ps_access_token"]);

@@ -1,7 +1,7 @@
 import { Button, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 
-import getOs from "@/lib/get-os";
+import getOs from "@/utils/get-os";
 import { ActionShortcut } from "./actions/action-shortcut";
 import type { MenuProps } from "./fixed-menu";
 

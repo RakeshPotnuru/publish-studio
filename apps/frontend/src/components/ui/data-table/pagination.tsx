@@ -5,6 +5,7 @@ import {
     SelectItem,
     SelectTrigger,
     SelectValue,
+    Skeleton,
 } from "@itsrakesh/ui";
 import { Table } from "@tanstack/react-table";
 
@@ -12,14 +13,22 @@ import { Icons } from "../../../assets/icons";
 
 interface DataTablePaginationProps<TData> {
     table: Table<TData>;
+    isLoading: boolean;
 }
 
-export function DataTablePagination<TData>({ table }: Readonly<DataTablePaginationProps<TData>>) {
+export function DataTablePagination<TData>({
+    table,
+    isLoading,
+}: Readonly<DataTablePaginationProps<TData>>) {
     return (
         <div className="flex items-center justify-between px-2">
             <div className="text-muted-foreground flex-1 text-sm">
-                {table.getFilteredSelectedRowModel().rows.length} of{" "}
-                {table.getFilteredRowModel().rows.length} row(s) selected
+                {isLoading ? (
+                    <Skeleton className="h-6 w-36" />
+                ) : (
+                    `${table.getFilteredSelectedRowModel().rows.length} of 
+                ${table.getFilteredRowModel().rows.length} row(s) selected`
+                )}
             </div>
             <div className="flex items-center space-x-6 lg:space-x-8">
                 <div className="flex items-center space-x-2">
@@ -30,7 +39,7 @@ export function DataTablePagination<TData>({ table }: Readonly<DataTablePaginati
                             table.setPageSize(Number(value));
                         }}
                     >
-                        <SelectTrigger className="h-8 w-[70px]">
+                        <SelectTrigger className="h-8 w-[70px]" disabled={isLoading}>
                             <SelectValue placeholder={table.getState().pagination.pageSize} />
                         </SelectTrigger>
                         <SelectContent side="top">
@@ -43,7 +52,13 @@ export function DataTablePagination<TData>({ table }: Readonly<DataTablePaginati
                     </Select>
                 </div>
                 <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-                    Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+                    {isLoading ? (
+                        <Skeleton className="h-6 w-20" />
+                    ) : (
+                        `Page ${
+                            table.getState().pagination.pageIndex + 1
+                        } of ${table.getPageCount()}`
+                    )}
                 </div>
                 <div className="flex items-center space-x-2">
                     <Button

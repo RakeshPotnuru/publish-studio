@@ -3,7 +3,6 @@ import type { Types } from "mongoose";
 
 import { constants } from "../../config/constants";
 import type { Context } from "../../trpc";
-import type { IPagination } from "../../types/common.types";
 import ProjectHelpers from "./project.helpers";
 import ProjectService from "./project.service";
 import type { IProject, IProjectUpdate, TTags } from "./project.types";
@@ -166,7 +165,15 @@ export default class ProjectController extends ProjectService {
         };
     }
 
-    async getAllProjectsHandler(input: { pagination: IPagination }, ctx: Context) {
+    async getAllProjectsHandler(
+        input: {
+            pagination: {
+                page: number;
+                limit: number;
+            };
+        },
+        ctx: Context,
+    ) {
         const { projects, pagination } = await super.getAllProjectsByUserId(
             input.pagination,
             ctx.user?._id,

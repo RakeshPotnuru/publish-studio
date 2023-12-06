@@ -7,7 +7,7 @@ import { Icons } from "@/assets/icons";
 import { DataTableColumnHeader } from "@/components/ui/data-table";
 import { constants } from "@/config/constants";
 import type { IProject } from "@/lib/store/projects";
-import { shortenText } from "@/lib/text-shortner";
+import { shortenText } from "@/utils/text-shortner";
 import { RowActions } from "./row-actions";
 
 export const statuses = [
