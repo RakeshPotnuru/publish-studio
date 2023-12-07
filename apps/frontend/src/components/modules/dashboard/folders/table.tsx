@@ -18,32 +18,31 @@ import { useEffect, useMemo, useState } from "react";
 import { Icons } from "@/assets/icons";
 import { DataTablePagination } from "@/components/ui/data-table";
 import { FoldersLoader } from "@/components/ui/loaders/folders-loader";
-import { IPagination } from "@/types/common";
 import { Toolbar } from "./toolbar";
 
 interface FoldersTableProps<TData, TValue> {
+    refetch: () => void;
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     isLoading: boolean;
-    paginationData: IPagination;
-    fetchFolders: (page: number, limit: number) => Promise<void>;
+    pageCount: number;
+    pagination: PaginationState;
+    setPagination: React.Dispatch<React.SetStateAction<PaginationState>>;
 }
 
 export function FoldersTable<TData, TValue>({
     columns,
     data,
-    fetchFolders,
     isLoading,
-    paginationData,
+    pageCount,
+    refetch,
+    setPagination,
+    pagination: { pageIndex, pageSize },
 }: FoldersTableProps<TData, TValue>) {
     const [rowSelection, setRowSelection] = useState({});
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [sorting, setSorting] = useState<SortingState>([]);
-    const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
-        pageIndex: 0,
-        pageSize: 10,
-    });
 
     const pagination = useMemo(
         () => ({
@@ -76,12 +75,12 @@ export function FoldersTable<TData, TValue>({
         getFacetedUniqueValues: getFacetedUniqueValues(),
         manualPagination: true,
         onPaginationChange: setPagination,
-        pageCount: paginationData.total_pages,
+        pageCount,
     });
 
     useEffect(() => {
-        fetchFolders(pageIndex + 1, pageSize);
-    }, [fetchFolders, pageIndex, pageSize]);
+        refetch();
+    }, [refetch, pageIndex, pageSize]);
 
     return (
         <div className="space-y-4">
@@ -109,7 +108,7 @@ export function FoldersTable<TData, TValue>({
                                                 )}
                                             </div>
                                         ))}
-                                    <Icons.folder />
+                                    <Icons.Folder />
                                     {row
                                         .getVisibleCells()
                                         .filter(cell => cell.column.id === "name")

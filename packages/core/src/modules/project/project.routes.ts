@@ -10,30 +10,25 @@ const projectRouter = router({
     createProject: protectedProcedure
         .input(
             z.object({
-                project: z.object({
-                    folder_id: z.custom<Types.ObjectId>().optional(),
-                    title: z
-                        .string()
-                        .min(constants.project.title.MIN_LENGTH)
-                        .max(constants.project.title.MAX_LENGTH),
-                    description: z
-                        .string()
-                        .max(constants.project.description.MAX_LENGTH)
-                        .optional(),
-                    body: z
-                        .object({
-                            json: z.custom<JSON>().optional(),
-                            html: z.string().optional(),
-                            markdown: z.string().optional(),
-                        })
-                        .optional(),
-                    status: z
-                        .nativeEnum(constants.project.status)
-                        .optional()
-                        .default(constants.project.status.DRAFT),
-                    cover_image: z.string().optional(),
-                    scheduled_at: z.string().pipe(z.coerce.date()).optional(),
-                }),
+                folder_id: z.custom<Types.ObjectId>().optional(),
+                title: z
+                    .string()
+                    .min(constants.project.title.MIN_LENGTH)
+                    .max(constants.project.title.MAX_LENGTH),
+                description: z.string().max(constants.project.description.MAX_LENGTH).optional(),
+                body: z
+                    .object({
+                        json: z.custom<JSON>().optional(),
+                        html: z.string().optional(),
+                        markdown: z.string().optional(),
+                    })
+                    .optional(),
+                status: z
+                    .nativeEnum(constants.project.status)
+                    .optional()
+                    .default(constants.project.status.DRAFT),
+                cover_image: z.string().optional(),
+                scheduled_at: z.string().pipe(z.coerce.date()).optional(),
             }),
         )
         .mutation(({ input, ctx }) => new ProjectController().createProjectHandler(input, ctx)),
@@ -116,7 +111,21 @@ const projectRouter = router({
                 }),
             }),
         )
-        .mutation(({ input, ctx }) => new ProjectController().getAllProjectsHandler(input, ctx)),
+        .query(({ input, ctx }) => new ProjectController().getAllProjectsHandler(input, ctx)),
+
+    getProjectsByFolderId: protectedProcedure
+        .input(
+            z.object({
+                folder_id: z.custom<Types.ObjectId>(),
+                pagination: z.object({
+                    page: z.number().min(1).default(1),
+                    limit: z.number().min(1).default(10),
+                }),
+            }),
+        )
+        .query(({ input, ctx }) =>
+            new ProjectController().getProjectsByFolderIdHandler(input, ctx),
+        ),
 
     updateProject: protectedProcedure
         .input(

@@ -60,6 +60,7 @@ export default class ProjectService extends FolderService {
             const projects = (await Project.find({ user_id })
                 .skip((pagination.page - 1) * pagination.limit)
                 .limit(pagination.limit)
+                .sort({ created_at: -1 })
                 .exec()) as IProject[];
 
             return {
@@ -81,9 +82,33 @@ export default class ProjectService extends FolderService {
         }
     }
 
-    async getProjectsByFolderId(folder_id: Types.ObjectId) {
+    async getProjectsByFolderId(
+        pagination: {
+            page: number;
+            limit: number;
+        },
+        folder_id: Types.ObjectId,
+        user_id: Types.ObjectId | undefined,
+    ) {
         try {
-            return (await Project.find({ folder_id }).exec()) as IProject[];
+            const total_rows = await Project.countDocuments({ folder_id, user_id }).exec();
+            const total_pages = Math.ceil(total_rows / pagination.limit);
+
+            const projects = (await Project.find({ folder_id, user_id })
+                .skip((pagination.page - 1) * pagination.limit)
+                .limit(pagination.limit)
+                .sort({ created_at: -1 })
+                .exec()) as IProject[];
+
+            return {
+                projects,
+                pagination: {
+                    page: pagination.page,
+                    limit: pagination.limit,
+                    total_rows,
+                    total_pages,
+                },
+            } as IProjectsResponse;
         } catch (error) {
             console.log(error);
 

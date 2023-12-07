@@ -10,8 +10,8 @@ import { Row } from "@tanstack/react-table";
 import { useState } from "react";
 
 import { Icons } from "@/assets/icons";
-import { IFolder } from "./columns";
 import { EditFolderDialog } from "./edit-folder";
+import { IFolder } from "@/lib/store/folders";
 
 interface RowActionsProps<TData> {
     row: Row<TData & IFolder>;
@@ -29,7 +29,7 @@ export function RowActions<TData>({ row }: RowActionsProps<TData>) {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[160px]">
-                <EditFolderDialog name={row.original.name}>
+                <EditFolderDialog name={row.original.name} folderId={row.original._id}>
                     <DropdownMenuItem
                         onSelect={event => {
                             event.preventDefault();

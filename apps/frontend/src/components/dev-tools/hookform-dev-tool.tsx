@@ -1,5 +1,5 @@
 import { DevTool, type PLACEMENT } from "@hookform/devtools";
-import { Control } from "react-hook-form";
+import type { Control } from "react-hook-form";
 
 interface HookFormDevToolProps {
     control: Control<any>;

@@ -7,7 +7,7 @@ import type { IFolder } from "./folder.types";
 
 export default class FolderController extends FolderService {
     async createFolderHandler(input: IFolder, ctx: Context) {
-        const folder = await super.getFolderByName(input.name);
+        const folder = await super.getFolderByName(input.name, ctx.user?._id);
 
         if (folder) {
             throw new TRPCError({
@@ -52,17 +52,26 @@ export default class FolderController extends FolderService {
         };
     }
 
-    async updateFolderHandler(input: { id: Types.ObjectId; folder: IFolder }) {
-        const folder = await super.getFolderByName(input.folder.name);
+    async updateFolderHandler(input: { id: Types.ObjectId; folder: IFolder }, ctx: Context) {
+        const isFolderExist = await super.getFolderById(input.id, ctx.user?._id);
 
-        if (folder) {
+        if (!isFolderExist) {
+            throw new TRPCError({
+                code: "NOT_FOUND",
+                message: "Folder not found",
+            });
+        }
+
+        const isFolderNameExists = await super.getFolderByName(input.folder.name, ctx.user?._id);
+
+        if (isFolderNameExists) {
             throw new TRPCError({
                 code: "CONFLICT",
                 message: "Folder with that name already exists",
             });
         }
 
-        const updatedFolder = await super.updateFolder(input.id, input.folder);
+        const updatedFolder = await super.updateFolder(input.id, ctx.user?._id, input.folder);
 
         return {
             status: "success",
@@ -72,8 +81,8 @@ export default class FolderController extends FolderService {
         };
     }
 
-    async deleteFolderHandler(input: { id: Types.ObjectId }) {
-        const folder = await super.getFolderById(input.id);
+    async deleteFolderHandler(input: { id: Types.ObjectId }, ctx: Context) {
+        const folder = await super.getFolderById(input.id, ctx.user?._id);
 
         if (!folder) {
             throw new TRPCError({

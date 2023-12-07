@@ -12,20 +12,27 @@ import {
     FormItem,
     FormMessage,
     Input,
+    useToast,
 } from "@itsrakesh/ui";
+import { cn } from "@itsrakesh/utils";
+import mongoose, { Types } from "mongoose";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { Icons } from "@/assets/icons";
+import { ErrorBox } from "@/components/ui/error-box";
 import { constants } from "@/config/constants";
+import { trpc } from "@/utils/trpc";
 
 interface EditFolderDialogProps extends React.HTMLAttributes<HTMLDialogElement> {
     name: string;
+    folderId: Types.ObjectId;
 }
 
 const formSchema = z.object({
     name: z
         .string()
-        .nonempty("Please enter a name for your folder")
         .min(
             constants.project.title.MIN_LENGTH,
             `Name must contain at least ${constants.folder.name.MIN_LENGTH} characters`,
@@ -37,6 +44,26 @@ const formSchema = z.object({
 });
 
 export function EditFolderDialog({ children, ...props }: EditFolderDialogProps) {
+    const [error, setError] = useState<string | null>(null);
+    const [open, setOpen] = useState(false);
+
+    const { toast } = useToast();
+    const utils = trpc.useUtils();
+
+    const { mutateAsync: editFolder, isLoading } = trpc.updateFolder.useMutation({
+        onSuccess() {
+            toast({
+                variant: "success",
+                description: "Folder successfully updated",
+            });
+            utils.getAllFolders.refetch();
+            setOpen(false);
+        },
+        onError(error) {
+            setError(error.message);
+        },
+    });
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         mode: "onBlur",
@@ -45,46 +72,70 @@ export function EditFolderDialog({ children, ...props }: EditFolderDialogProps) 
         },
     });
 
-    const onSubmit = (data: z.infer<typeof formSchema>) => {
-        console.log(data);
+    const onSubmit = async (data: z.infer<typeof formSchema>) => {
+        try {
+            setError(null);
+            await editFolder({
+                id: new mongoose.Types.ObjectId(props.folderId),
+                folder: data,
+            });
+        } catch (error) {}
     };
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Edit folder</DialogTitle>
                 </DialogHeader>
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                        <FormField
-                            control={form.control}
-                            name="name"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormControl>
-                                        <Input
-                                            type="text"
-                                            placeholder="Enter a name for your folder"
-                                            disabled={form.formState.isSubmitting}
-                                            autoFocus
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <Button
-                            type="submit"
-                            className="w-full"
-                            disabled={form.formState.isSubmitting || !form.formState.isDirty}
-                        >
-                            Continue
-                        </Button>
-                    </form>
-                </Form>
+                <div
+                    className={cn("space-y-2", {
+                        "animate-shake": error,
+                    })}
+                >
+                    {error && <ErrorBox title="Could not create project" description={error} />}
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                            <FormField
+                                control={form.control}
+                                name="name"
+                                disabled={form.formState.isSubmitting || isLoading}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormControl>
+                                            <Input
+                                                type="text"
+                                                placeholder="Enter a name for your folder"
+                                                autoFocus
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <Button
+                                type="submit"
+                                className="w-full"
+                                disabled={
+                                    form.formState.isSubmitting ||
+                                    !form.formState.isDirty ||
+                                    isLoading
+                                }
+                            >
+                                {isLoading ? (
+                                    <>
+                                        <Icons.Loading className="mr-2 h-4 w-4 animate-spin" />
+                                        Please wait
+                                    </>
+                                ) : (
+                                    "Continue"
+                                )}
+                            </Button>
+                        </form>
+                    </Form>
+                </div>
             </DialogContent>
         </Dialog>
     );

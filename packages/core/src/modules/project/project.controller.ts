@@ -8,11 +8,11 @@ import ProjectService from "./project.service";
 import type { IProject, IProjectUpdate, TTags } from "./project.types";
 
 export default class ProjectController extends ProjectService {
-    async createProjectHandler(input: { project: IProject }, ctx: Context) {
-        const { project } = input;
+    async createProjectHandler(input: IProject, ctx: Context) {
+        const project = input;
 
         if (project.folder_id) {
-            const folder = await super.getFolderById(project.folder_id);
+            const folder = await super.getFolderById(project.folder_id, ctx.user?._id);
 
             if (!folder) {
                 throw new TRPCError({
@@ -182,6 +182,33 @@ export default class ProjectController extends ProjectService {
         return {
             status: "success",
             data: {
+                projects,
+                pagination,
+            },
+        };
+    }
+
+    async getProjectsByFolderIdHandler(
+        input: {
+            folder_id: Types.ObjectId;
+            pagination: {
+                page: number;
+                limit: number;
+            };
+        },
+        ctx: Context,
+    ) {
+        const { name } = await super.getFolderById(input.folder_id, ctx.user?._id);
+        const { projects, pagination } = await super.getProjectsByFolderId(
+            input.pagination,
+            input.folder_id,
+            ctx.user?._id,
+        );
+
+        return {
+            status: "success",
+            data: {
+                folder_name: name,
                 projects,
                 pagination,
             },

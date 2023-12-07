@@ -19,9 +19,9 @@ export default class FolderService {
         }
     }
 
-    async getFolderByName(name: string) {
+    async getFolderByName(name: string, user_id: Types.ObjectId | undefined) {
         try {
-            return (await Folder.findOne({ name }).exec()) as IFolder;
+            return (await Folder.findOne({ user_id, name }).exec()) as IFolder;
         } catch (error) {
             console.log(error);
 
@@ -32,12 +32,10 @@ export default class FolderService {
         }
     }
 
-    async getFolderById(id: Types.ObjectId) {
+    async getFolderById(id: Types.ObjectId, user_id: Types.ObjectId | undefined) {
         try {
-            return (await Folder.findById(id).exec()) as IFolder;
-        } catch (error) {
-            console.log(error);
-
+            return (await Folder.findOne({ user_id, _id: id }).exec()) as IFolder;
+        } catch {
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
                 message: "An error occurred while fetching the folder. Please try again later.",
@@ -77,9 +75,11 @@ export default class FolderService {
         }
     }
 
-    async updateFolder(id: Types.ObjectId, folder: IFolder) {
+    async updateFolder(id: Types.ObjectId, user_id: Types.ObjectId | undefined, folder: IFolder) {
         try {
-            return (await Folder.findByIdAndUpdate(id, folder, { new: true }).exec()) as IFolder;
+            return (await Folder.findOneAndUpdate({ user_id, _id: id }, folder, {
+                new: true,
+            }).exec()) as IFolder;
         } catch (error) {
             console.log(error);
 

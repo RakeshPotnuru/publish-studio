@@ -63,12 +63,12 @@ export function Sidebar({ className, ...props }: SidebarProps) {
                             <SidebarItem
                                 label="Appearance"
                                 link="/settings/appearance"
-                                icon={<Icons.appearance />}
+                                icon={<Icons.Appearance />}
                             />
                             <SidebarItem
                                 label="Integrations"
                                 link="/settings/integrations"
-                                icon={<Icons.integrations />}
+                                icon={<Icons.Integrations />}
                             />
                         </>
                     ) : (
@@ -77,7 +77,7 @@ export function Sidebar({ className, ...props }: SidebarProps) {
                             <SidebarItem
                                 label="Projects"
                                 link="/projects"
-                                icon={<Icons.projects />}
+                                icon={<Icons.Projects />}
                             />
                             <SidebarItem label="Folders" link="/folders" icon={<Icons.folders />} />
                             <SidebarItem label="Assets" link="/assets" icon={<Icons.assets />} />

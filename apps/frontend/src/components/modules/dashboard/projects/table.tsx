@@ -22,28 +22,28 @@ import { IPagination } from "@/types/common";
 import { Toolbar } from "./toolbar";
 
 interface ProjectsTableProps<TData, TValue> {
+    refetch: () => void;
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     isLoading: boolean;
-    paginationData: IPagination;
-    fetchProjects: (page: number, limit: number) => Promise<void>;
+    pageCount: number;
+    pagination: PaginationState;
+    setPagination: React.Dispatch<React.SetStateAction<PaginationState>>;
 }
 
 export function ProjectsTable<TData, TValue>({
     columns,
     data,
     isLoading,
-    paginationData,
-    fetchProjects,
+    pageCount,
+    refetch,
+    setPagination,
+    pagination: { pageIndex, pageSize },
 }: Readonly<ProjectsTableProps<TData, TValue>>) {
     const [rowSelection, setRowSelection] = useState({});
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [sorting, setSorting] = useState<SortingState>([]);
-    const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
-        pageIndex: 0,
-        pageSize: 10,
-    });
 
     const pagination = useMemo(
         () => ({
@@ -76,12 +76,12 @@ export function ProjectsTable<TData, TValue>({
         getFacetedUniqueValues: getFacetedUniqueValues(),
         manualPagination: true,
         onPaginationChange: setPagination,
-        pageCount: paginationData.total_pages,
+        pageCount,
     });
 
     useEffect(() => {
-        fetchProjects(pageIndex + 1, pageSize);
-    }, [fetchProjects, pageIndex, pageSize]);
+        refetch();
+    }, [refetch, pageIndex, pageSize]);
 
     return (
         <div className="space-y-4">
