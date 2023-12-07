@@ -11,7 +11,16 @@ import { trpc } from "../../utils/trpc";
 export function TRPCProvider({ children }: Readonly<{ children: React.ReactNode }>) {
     const [cookies, _] = useCookies(["ps_access_token"]);
 
-    const queryClient = new QueryClient({ defaultOptions: { queries: { staleTime: 5000 } } });
+    const queryClient = new QueryClient({
+        defaultOptions: {
+            queries: {
+                staleTime: 5000,
+                refetchOnWindowFocus: false,
+                refetchOnReconnect: false,
+                retry: false,
+            },
+        },
+    });
 
     const token = cookies.ps_access_token;
 

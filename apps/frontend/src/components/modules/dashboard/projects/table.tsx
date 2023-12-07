@@ -18,7 +18,6 @@ import { useEffect, useMemo, useState } from "react";
 
 import { DataTablePagination } from "@/components/ui/data-table";
 import { TableLoader } from "@/components/ui/loaders/table-loader";
-import { IPagination } from "@/types/common";
 import { Toolbar } from "./toolbar";
 
 interface ProjectsTableProps<TData, TValue> {

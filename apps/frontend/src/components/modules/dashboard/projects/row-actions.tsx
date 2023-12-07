@@ -5,13 +5,15 @@ import {
     DropdownMenuItem,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
+    useToast,
 } from "@itsrakesh/ui";
 import { Row } from "@tanstack/react-table";
 import Link from "next/link";
 import { useState } from "react";
 
 import { Icons } from "@/assets/icons";
-import { IProject } from "./columns";
+import { IProject } from "@/lib/store/projects";
+import { trpc } from "@/utils/trpc";
 import { MoveProject } from "./move-project";
 
 interface RowActionsProps<TData> {
@@ -21,6 +23,33 @@ interface RowActionsProps<TData> {
 export function RowActions<TData>({ row }: RowActionsProps<TData>) {
     const [askingForConfirmation, setAskingForConfirmation] = useState(false);
     const [openMoveProject, setOpenMoveProject] = useState(false);
+
+    const { toast } = useToast();
+    const utils = trpc.useUtils();
+
+    const { mutateAsync: deleteProject, isLoading } = trpc.deleteProject.useMutation({
+        onSuccess: () => {
+            toast({
+                variant: "success",
+                title: "Project deleted",
+                description: "Project deleted successfully",
+            });
+            utils.getAllProjects.invalidate();
+        },
+        onError: error => {
+            toast({
+                variant: "destructive",
+                title: "Error",
+                description: error.message,
+            });
+        },
+    });
+
+    const handleDelete = async () => {
+        try {
+            await deleteProject(row.original._id);
+        } catch (error) {}
+    };
 
     return (
         <>
@@ -54,8 +83,18 @@ export function RowActions<TData>({ row }: RowActionsProps<TData>) {
                     {askingForConfirmation ? (
                         <div className="space-x-1 py-1 pl-2 text-sm">
                             <span>Confirm?</span>
-                            <Button variant="destructive" size="icon" className="h-6 w-6">
-                                <Icons.check />
+                            <Button
+                                onClick={handleDelete}
+                                variant="destructive"
+                                size="icon"
+                                className="h-6 w-6"
+                                disabled={isLoading}
+                            >
+                                {isLoading ? (
+                                    <Icons.Loading className="animate-spin" />
+                                ) : (
+                                    <Icons.Check />
+                                )}
                             </Button>
                             <Button
                                 onClick={() => setAskingForConfirmation(false)}
@@ -63,7 +102,7 @@ export function RowActions<TData>({ row }: RowActionsProps<TData>) {
                                 size="icon"
                                 className="h-6 w-6"
                             >
-                                <Icons.close />
+                                <Icons.Close />
                             </Button>
                         </div>
                     ) : (

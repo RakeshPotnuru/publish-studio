@@ -56,7 +56,7 @@ export function EditFolderDialog({ children, ...props }: EditFolderDialogProps) 
                 variant: "success",
                 description: "Folder successfully updated",
             });
-            utils.getAllFolders.refetch();
+            utils.getAllFolders.invalidate();
             setOpen(false);
         },
         onError(error) {

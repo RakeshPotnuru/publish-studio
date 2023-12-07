@@ -235,8 +235,8 @@ export default class ProjectController extends ProjectService {
         };
     }
 
-    async deleteProjectHandler(input: { id: Types.ObjectId }) {
-        const project = await super.deleteProjectById(input.id);
+    async deleteProjectHandler(input: Types.ObjectId, ctx: Context) {
+        const project = await super.getProjectById(input, ctx.user?._id);
 
         if (!project) {
             throw new TRPCError({
@@ -245,10 +245,12 @@ export default class ProjectController extends ProjectService {
             });
         }
 
+        const deletedFolder = await super.deleteProjectById(input, ctx.user?._id);
+
         return {
             status: "success",
             data: {
-                project: project,
+                project: deletedFolder,
             },
         };
     }

@@ -54,6 +54,7 @@ export default class FolderService {
             const folders = (await Folder.find({ user_id })
                 .skip((pagination.page - 1) * pagination.limit)
                 .limit(pagination.limit)
+                .sort({ updated_at: -1 })
                 .exec()) as IFolder[];
 
             return {
@@ -97,10 +98,10 @@ export default class FolderService {
      * of the folder that needs to be deleted.
      * @returns the deleted folder as an IFolder object.
      */
-    async deleteFolder(id: Types.ObjectId) {
+    async deleteFolder(id: Types.ObjectId, user_id: Types.ObjectId | undefined) {
         try {
-            await Project.findOneAndUpdate({ folder_id: id }, { folder_id: null }).exec();
-            return (await Folder.findByIdAndDelete(id).exec()) as IFolder;
+            await Project.findOneAndUpdate({ user_id, folder_id: id }, { folder_id: null }).exec();
+            return (await Folder.findOneAndDelete({ user_id, _id: id }).exec()) as IFolder;
         } catch (error) {
             console.log(error);
 

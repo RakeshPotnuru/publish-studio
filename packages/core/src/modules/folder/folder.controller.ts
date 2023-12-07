@@ -81,8 +81,8 @@ export default class FolderController extends FolderService {
         };
     }
 
-    async deleteFolderHandler(input: { id: Types.ObjectId }, ctx: Context) {
-        const folder = await super.getFolderById(input.id, ctx.user?._id);
+    async deleteFolderHandler(input: Types.ObjectId, ctx: Context) {
+        const folder = await super.getFolderById(input, ctx.user?._id);
 
         if (!folder) {
             throw new TRPCError({
@@ -91,7 +91,7 @@ export default class FolderController extends FolderService {
             });
         }
 
-        const deletedFolder = await super.deleteFolder(input.id);
+        const deletedFolder = await super.deleteFolder(input, ctx.user?._id);
 
         return {
             status: "success",

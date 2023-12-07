@@ -108,7 +108,7 @@ export function MoveProject({ children, ...props }: MoveProjectProps) {
                                                             }}
                                                         >
                                                             {item.label}
-                                                            <Icons.check
+                                                            <Icons.Check
                                                                 className={cn(
                                                                     "ml-auto h-4 w-4",
                                                                     item.value === field.value

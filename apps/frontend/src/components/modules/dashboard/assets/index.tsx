@@ -21,7 +21,7 @@ export function Assets({ isWidget, onAdd, ...props }: AssetsProps) {
                 <Heading>My Assets</Heading>
                 <NewAssetDialog>
                     <Button>
-                        <Icons.plus className="mr-2 h-4 w-4" /> Upload
+                        <Icons.Plus className="mr-2 h-4 w-4" /> Upload
                     </Button>
                 </NewAssetDialog>
             </div>

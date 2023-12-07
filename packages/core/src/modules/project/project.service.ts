@@ -33,9 +33,9 @@ export default class ProjectService extends FolderService {
         }
     }
 
-    async getProjectById(id: Types.ObjectId) {
+    async getProjectById(id: Types.ObjectId, user_id?: Types.ObjectId) {
         try {
-            return (await Project.findById(id).exec()) as IProject;
+            return (await Project.findOne({ _id: id, user_id }).exec()) as IProject;
         } catch (error) {
             console.log(error);
 
@@ -60,7 +60,7 @@ export default class ProjectService extends FolderService {
             const projects = (await Project.find({ user_id })
                 .skip((pagination.page - 1) * pagination.limit)
                 .limit(pagination.limit)
-                .sort({ created_at: -1 })
+                .sort({ updated_at: -1 })
                 .exec()) as IProject[];
 
             return {
@@ -97,7 +97,7 @@ export default class ProjectService extends FolderService {
             const projects = (await Project.find({ folder_id, user_id })
                 .skip((pagination.page - 1) * pagination.limit)
                 .limit(pagination.limit)
-                .sort({ created_at: -1 })
+                .sort({ updated_at: -1 })
                 .exec()) as IProject[];
 
             return {
@@ -132,9 +132,9 @@ export default class ProjectService extends FolderService {
         }
     }
 
-    async deleteProjectById(id: Types.ObjectId) {
+    async deleteProjectById(id: Types.ObjectId, user_id: Types.ObjectId | undefined) {
         try {
-            return (await Project.findByIdAndDelete(id).exec()) as IProject;
+            return (await Project.findOneAndDelete({ _id: id, user_id }).exec()) as IProject;
         } catch (error) {
             console.log(error);
 

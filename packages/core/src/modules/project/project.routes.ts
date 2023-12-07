@@ -168,12 +168,8 @@ const projectRouter = router({
         .mutation(({ input }) => new ProjectController().updateProjectHandler(input)),
 
     deleteProject: protectedProcedure
-        .input(
-            z.object({
-                id: z.custom<Types.ObjectId>(),
-            }),
-        )
-        .mutation(({ input }) => new ProjectController().deleteProjectHandler(input)),
+        .input(z.custom<Types.ObjectId>())
+        .mutation(({ input, ctx }) => new ProjectController().deleteProjectHandler(input, ctx)),
 });
 
 export default projectRouter;

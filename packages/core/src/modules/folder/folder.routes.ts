@@ -43,11 +43,7 @@ const folderRouter = router({
         .mutation(({ input, ctx }) => new FolderController().updateFolderHandler(input, ctx)),
 
     deleteFolder: protectedProcedure
-        .input(
-            z.object({
-                id: z.custom<Types.ObjectId>(),
-            }),
-        )
+        .input(z.custom<Types.ObjectId>())
         .mutation(({ input, ctx }) => new FolderController().deleteFolderHandler(input, ctx)),
 });
 

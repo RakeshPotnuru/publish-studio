@@ -42,9 +42,6 @@ export function Navbar({ className, ...props }: NavbarProps) {
     const { user, setUser, setIsLoading } = useUserStore();
 
     const { isFetching } = trpc.getUser.useQuery(undefined, {
-        refetchOnWindowFocus: false,
-        refetchOnReconnect: false,
-        retry: false,
         onSuccess: data => {
             setUser({
                 _id: data.data.user._id,
