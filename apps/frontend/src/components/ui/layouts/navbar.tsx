@@ -86,7 +86,7 @@ export function Navbar({ className, ...props }: NavbarProps) {
             <div className="flex flex-row items-center space-x-1">
                 <NavItem icon={<Icons.Question className="h-5 w-5" />} tooltip="Help" />
                 <NavItem
-                    icon={<Icons.Notifications className="h-5 w-5" />}
+                    icon={<Icons.Notification className="h-5 w-5" />}
                     tooltip="Notifications"
                 />
                 <DropdownMenu>

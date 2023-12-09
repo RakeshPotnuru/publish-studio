@@ -11,7 +11,7 @@ export function FullscreenAction({ editor }: MenuProps) {
         <MenuAction
             editor={editor}
             command={() => toggleFullscreen("editor")}
-            icon={isFullscreen ? <Icons.fullscreenexit /> : <Icons.fullscreen />}
+            icon={isFullscreen ? <Icons.ExitFullscreen /> : <Icons.Fullscreen />}
             name="fullscreen"
             tooltip={isFullscreen ? "Exit Focus Mode" : "Enter Focus Mode"}
         />

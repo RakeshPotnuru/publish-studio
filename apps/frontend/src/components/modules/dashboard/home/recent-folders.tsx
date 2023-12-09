@@ -50,7 +50,7 @@ export function RecentFolders() {
                     <p>No folders in sight. Create one to keep things neat and tidy!</p>
                     <NewFolderDialog>
                         <Button variant="secondary">
-                            <Icons.Plus className="mr-2 h-4 w-4" /> New Folder
+                            <Icons.Add className="mr-2 h-4 w-4" /> New Folder
                         </Button>
                     </NewFolderDialog>
                 </div>

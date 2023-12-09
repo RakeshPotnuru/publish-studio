@@ -13,7 +13,7 @@ export function ImageAction({ editor }: MenuProps) {
             <MenuAction
                 editor={editor}
                 name="image"
-                icon={<Icons.image />}
+                icon={<Icons.Image />}
                 command={() => setOpen(true)}
                 tooltip="Insert Image"
             />

@@ -13,7 +13,7 @@ import { trpc } from "@/utils/trpc";
 
 interface VerifyEmailProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export function VerifyEmail({ ...props }: VerifyEmailProps) {
+export function VerifyEmail({}: VerifyEmailProps) {
     const [isSuccess, setIsSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
 

@@ -87,7 +87,7 @@ export function MoveProject({ children, ...props }: MoveProjectProps) {
                                                               item => item.value === field.value,
                                                           )?.label
                                                         : "Select folder"}
-                                                    <Icons.sort className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                                    <Icons.Sort className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                                 </Button>
                                             </FormControl>
                                         </PopoverTrigger>

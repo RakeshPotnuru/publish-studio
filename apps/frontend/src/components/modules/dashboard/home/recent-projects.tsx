@@ -50,7 +50,7 @@ export function RecentProjects() {
                     <p>No projects yet. Ready to begin?</p>
                     <NewProjectDialog>
                         <Button variant="secondary">
-                            <Icons.Plus className="mr-2 h-4 w-4" /> New Project
+                            <Icons.Add className="mr-2 h-4 w-4" /> New Project
                         </Button>
                     </NewProjectDialog>
                 </div>

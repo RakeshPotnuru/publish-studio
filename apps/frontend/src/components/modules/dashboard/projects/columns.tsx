@@ -14,19 +14,19 @@ export const statuses = [
     {
         label: "Draft",
         value: constants.project.status.DRAFT,
-        icon: Icons.draft,
+        icon: Icons.Draft,
         color: "text-warning",
     },
     {
         label: "Published",
         value: constants.project.status.PUBLISHED,
-        icon: Icons.published,
+        icon: Icons.Published,
         color: "text-success",
     },
     {
         label: "Scheduled",
         value: constants.project.status.SCHEDULED,
-        icon: Icons.schedule,
+        icon: Icons.Schedule,
         color: "text-info",
     },
 ];

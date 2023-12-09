@@ -8,7 +8,7 @@ export function NodeActions({ editor }: MenuProps) {
             <MenuAction
                 editor={editor}
                 name="blockquote"
-                icon={<Icons.blockquote />}
+                icon={<Icons.Blockquote />}
                 command={() => editor.chain().focus().toggleBlockquote().run()}
                 tooltip="Blockquote"
                 shortcut={{
@@ -19,7 +19,7 @@ export function NodeActions({ editor }: MenuProps) {
             <MenuAction
                 editor={editor}
                 name="codeblock"
-                icon={<Icons.codeblock />}
+                icon={<Icons.Codeblock />}
                 command={() => editor.chain().focus().toggleCodeBlock().run()}
                 tooltip="Code Block"
                 shortcut={{
@@ -30,7 +30,7 @@ export function NodeActions({ editor }: MenuProps) {
             <MenuAction
                 editor={editor}
                 name="bulletlist"
-                icon={<Icons.bulletlist />}
+                icon={<Icons.Bulletlist />}
                 command={() => editor.chain().focus().toggleBulletList().run()}
                 tooltip="Bullet List"
                 shortcut={{
@@ -41,7 +41,7 @@ export function NodeActions({ editor }: MenuProps) {
             <MenuAction
                 editor={editor}
                 name="orderedlist"
-                icon={<Icons.orderedlist />}
+                icon={<Icons.Orderedlist />}
                 command={() => editor.chain().focus().toggleOrderedList().run()}
                 tooltip="Ordered List"
                 shortcut={{
@@ -58,28 +58,28 @@ export function NodeActions({ editor }: MenuProps) {
                         .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
                         .run()
                 }
-                icon={<Icons.table />}
+                icon={<Icons.Table />}
                 name="table"
                 tooltip="Insert Table"
             />
             <MenuAction
                 editor={editor}
                 name="horizontalRule"
-                icon={<Icons.divider />}
+                icon={<Icons.HorizontalDivider />}
                 command={() => editor.chain().focus().setHorizontalRule().run()}
                 tooltip="Insert Divider"
             />
             <MenuAction
                 editor={editor}
                 name="hardbreak"
-                icon={<Icons.hardbreak />}
+                icon={<Icons.Hardbreak />}
                 command={() => editor.chain().focus().setHardBreak().run()}
                 tooltip="Insert Hard Break"
             />
             <MenuAction
                 editor={editor}
                 name="clearFormatting"
-                icon={<Icons.clearFormatting />}
+                icon={<Icons.ClearFormatting />}
                 command={() => editor.chain().focus().clearNodes().unsetAllMarks().run()}
                 tooltip="Clear Formatting"
             />

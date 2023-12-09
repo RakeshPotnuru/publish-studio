@@ -92,16 +92,23 @@ export default class FolderService {
     }
 
     /**
-     * The function deletes a folder by setting the folder_id to null in the associated project and
-     * then deleting the folder itself.
-     * @param id - The `id` parameter is of type `Types.ObjectId`. It represents the unique identifier
-     * of the folder that needs to be deleted.
-     * @returns the deleted folder as an IFolder object.
+     * The function `deleteFolders` deletes folders from a project and returns a promise that resolves
+     * to the result of the deletion.
+     * @param {Types.ObjectId[]} ids - An array of `Types.ObjectId` representing the IDs of the folders
+     * to be deleted.
+     * @param {Types.ObjectId | undefined} user_id - The `user_id` parameter is the ID of the user who
+     * owns the folders. It is of type `Types.ObjectId | undefined`, which means it can either be a
+     * valid `ObjectId` or `undefined`.
+     * @returns the result of the `Folder.deleteMany()` method, which is a promise that resolves to an
+     * object containing information about the deletion operation.
      */
-    async deleteFolder(id: Types.ObjectId, user_id: Types.ObjectId | undefined) {
+    async deleteFolders(ids: Types.ObjectId[], user_id: Types.ObjectId | undefined) {
         try {
-            await Project.findOneAndUpdate({ user_id, folder_id: id }, { folder_id: null }).exec();
-            return (await Folder.findOneAndDelete({ user_id, _id: id }).exec()) as IFolder;
+            await Project.updateMany(
+                { user_id, folder_id: { $in: ids } },
+                { folder_id: null },
+            ).exec();
+            return await Folder.deleteMany({ user_id, _id: { $in: ids } }).exec();
         } catch (error) {
             console.log(error);
 

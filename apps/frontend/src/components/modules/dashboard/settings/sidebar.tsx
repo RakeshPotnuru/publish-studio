@@ -49,11 +49,11 @@ export function Sidebar({ className, ...props }: SidebarProps) {
         >
             <ScrollArea className="h-max w-full">
                 <div className="space-y-4 p-4">
-                    <SidebarItem label="Appearance" link="appearance" icon={<Icons.appearance />} />
+                    <SidebarItem label="Appearance" link="appearance" icon={<Icons.Appearance />} />
                     <SidebarItem
                         label="Integrations"
                         link="integrations"
-                        icon={<Icons.integrations />}
+                        icon={<Icons.Integrations />}
                     />
                 </div>
             </ScrollArea>

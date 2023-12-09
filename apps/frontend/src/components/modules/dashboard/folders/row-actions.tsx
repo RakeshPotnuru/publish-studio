@@ -19,13 +19,13 @@ interface RowActionsProps<TData> {
     row: Row<TData & IFolder>;
 }
 
-export function RowActions<TData>({ row }: RowActionsProps<TData>) {
+export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
     const [askingForConfirmation, setAskingForConfirmation] = useState(false);
 
     const { toast } = useToast();
     const utils = trpc.useUtils();
 
-    const { mutateAsync: deleteFolder, isLoading } = trpc.deleteFolder.useMutation({
+    const { mutateAsync: deleteFolders, isLoading } = trpc.deleteFolders.useMutation({
         onSuccess: () => {
             toast({
                 variant: "success",
@@ -45,7 +45,7 @@ export function RowActions<TData>({ row }: RowActionsProps<TData>) {
 
     const handleDelete = async () => {
         try {
-            await deleteFolder(row.original._id);
+            await deleteFolders([row.original._id]);
         } catch (error) {}
     };
 
@@ -53,7 +53,7 @@ export function RowActions<TData>({ row }: RowActionsProps<TData>) {
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="data-[state=open]:bg-muted flex h-8 w-8 p-0">
-                    <Icons.rowactions className="h-4 w-4" />
+                    <Icons.RowActions className="h-4 w-4" />
                     <span className="sr-only">Open menu</span>
                 </Button>
             </DropdownMenuTrigger>
@@ -64,7 +64,7 @@ export function RowActions<TData>({ row }: RowActionsProps<TData>) {
                             event.preventDefault();
                         }}
                     >
-                        <Icons.edit className="mr-2 h-4 w-4" />
+                        <Icons.Edit className="mr-2 h-4 w-4" />
                         Rename
                     </DropdownMenuItem>
                 </EditFolderDialog>
@@ -97,9 +97,15 @@ export function RowActions<TData>({ row }: RowActionsProps<TData>) {
                 ) : (
                     <div
                         onClick={() => setAskingForConfirmation(true)}
+                        onKeyDown={event => {
+                            if (event.key === "Enter" || event.key === " ") {
+                                setAskingForConfirmation(true);
+                            }
+                        }}
+                        tabIndex={0}
                         className="hover:bg-accent hover:text-destructive text-destructive relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
                     >
-                        <Icons.delete className="mr-2 h-4 w-4" />
+                        <Icons.Delete className="mr-2 h-4 w-4" />
                         Delete
                     </div>
                 )}

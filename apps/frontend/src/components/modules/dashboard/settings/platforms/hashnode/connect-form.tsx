@@ -54,7 +54,7 @@ export function HashnodeConnectForm() {
                                                 variant="link"
                                                 className="text-foreground h-max p-0"
                                             >
-                                                <Icons.question />
+                                                <Icons.Question />
                                             </Button>
                                         </HoverCardTrigger>
                                         <HoverCardContent className="w-44" side="right">

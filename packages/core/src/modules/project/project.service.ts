@@ -132,9 +132,9 @@ export default class ProjectService extends FolderService {
         }
     }
 
-    async deleteProjectById(id: Types.ObjectId, user_id: Types.ObjectId | undefined) {
+    async deleteProjects(ids: Types.ObjectId[], user_id: Types.ObjectId | undefined) {
         try {
-            return (await Project.findOneAndDelete({ _id: id, user_id }).exec()) as IProject;
+            return await Project.deleteMany({ user_id, _id: { $in: ids } }).exec();
         } catch (error) {
             console.log(error);
 

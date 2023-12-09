@@ -41,7 +41,7 @@ export function Projects({ ...props }: ProjectsProps) {
                 <Heading>My Projects</Heading>
                 <NewProjectDialog>
                     <Button>
-                        <Icons.Plus className="mr-2 h-4 w-4" /> New Project
+                        <Icons.Add className="mr-2 h-4 w-4" /> New Project
                     </Button>
                 </NewProjectDialog>
             </div>

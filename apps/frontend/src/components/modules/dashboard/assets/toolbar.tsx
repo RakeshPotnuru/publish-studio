@@ -50,7 +50,7 @@ export function Toolbar<TData>({ table, isWidget, onAdd }: ToolbarProps<TData>) 
                         className="h-8 px-2 lg:px-3"
                     >
                         Reset
-                        <Icons.close className="ml-2 h-4 w-4" />
+                        <Icons.Close className="ml-2 h-4 w-4" />
                     </Button>
                 )}
             </div>
@@ -61,7 +61,7 @@ export function Toolbar<TData>({ table, isWidget, onAdd }: ToolbarProps<TData>) 
                             <div className="space-x-1 text-sm">
                                 <span>Confirm?</span>
                                 <Button variant="destructive" size="icon" className="h-8 w-8">
-                                    <Icons.check />
+                                    <Icons.Check />
                                 </Button>
                                 <Button
                                     onClick={() => setAskingForConfirmation(false)}
@@ -69,7 +69,7 @@ export function Toolbar<TData>({ table, isWidget, onAdd }: ToolbarProps<TData>) 
                                     size="icon"
                                     className="h-8 w-8"
                                 >
-                                    <Icons.close />
+                                    <Icons.Close />
                                 </Button>
                             </div>
                         ) : (
@@ -78,7 +78,7 @@ export function Toolbar<TData>({ table, isWidget, onAdd }: ToolbarProps<TData>) 
                                 variant="destructive"
                                 size="sm"
                             >
-                                <Icons.delete className="mr-2 h-4 w-4" />
+                                <Icons.Delete className="mr-2 h-4 w-4" />
                                 Delete ({table.getFilteredSelectedRowModel().rows.length})
                             </Button>
                         )}

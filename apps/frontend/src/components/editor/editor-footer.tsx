@@ -53,13 +53,13 @@ export function EditorFooter({ editor }: MenuProps & React.HTMLAttributes<HTMLDi
                         {isLoading ? (
                             <Tooltip content="Changes are syncing">
                                 <span>
-                                    <Icons.syncing className="text-warning hover:opacity-80" />
+                                    <Icons.Syncing className="text-warning hover:opacity-80" />
                                 </span>
                             </Tooltip>
                         ) : (
                             <Tooltip content="All changes saved">
                                 <span>
-                                    <Icons.synced className="text-success hover:opacity-80" />
+                                    <Icons.Synced className="text-success hover:opacity-80" />
                                 </span>
                             </Tooltip>
                         )}
@@ -67,14 +67,14 @@ export function EditorFooter({ editor }: MenuProps & React.HTMLAttributes<HTMLDi
                 ) : (
                     <Tooltip content="You are offline">
                         <span>
-                            <Icons.offline className="text-destructive hover:opacity-80" />
+                            <Icons.Offline className="text-destructive hover:opacity-80" />
                         </span>
                     </Tooltip>
                 )}
                 {editable ? (
                     <Tooltip content="Disable editing">
                         <span>
-                            <Icons.unlock
+                            <Icons.Unlock
                                 onClick={handleEditable}
                                 className="text-success cursor-pointer hover:opacity-80"
                             />
@@ -83,7 +83,7 @@ export function EditorFooter({ editor }: MenuProps & React.HTMLAttributes<HTMLDi
                 ) : (
                     <Tooltip content="Enable editing">
                         <span>
-                            <Icons.lock
+                            <Icons.Lock
                                 onClick={handleEditable}
                                 className="text-destructive cursor-pointer hover:opacity-80"
                             />

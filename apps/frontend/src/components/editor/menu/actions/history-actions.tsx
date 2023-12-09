@@ -8,7 +8,7 @@ export function HistoryActions({ editor }: MenuProps) {
             <MenuAction
                 editor={editor}
                 name="undo"
-                icon={<Icons.undo />}
+                icon={<Icons.Undo />}
                 command={() => editor.chain().focus().undo().run()}
                 tooltip="Undo"
                 shortcut={{
@@ -20,7 +20,7 @@ export function HistoryActions({ editor }: MenuProps) {
             <MenuAction
                 editor={editor}
                 name="redo"
-                icon={<Icons.redo />}
+                icon={<Icons.Redo />}
                 command={() => editor.chain().focus().redo().run()}
                 tooltip="Redo"
                 shortcut={{

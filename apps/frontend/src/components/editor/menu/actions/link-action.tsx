@@ -51,7 +51,7 @@ export function LinkAction({ editor, isBubbleMenu }: MenuProps) {
                             "rounded-none": isBubbleMenu,
                         })}
                     >
-                        <Icons.link />
+                        <Icons.Link />
                     </Button>
                 </Tooltip>
             ) : (
@@ -66,7 +66,7 @@ export function LinkAction({ editor, isBubbleMenu }: MenuProps) {
                                 "rounded-none": isBubbleMenu,
                             })}
                         >
-                            <Icons.link />
+                            <Icons.Link />
                         </Button>
                     </PopoverTrigger>
                 </Tooltip>

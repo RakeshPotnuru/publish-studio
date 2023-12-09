@@ -53,7 +53,7 @@ export function PlatformCard({
                         {connected && (
                             <Tooltip content="Connected" side="top">
                                 <span>
-                                    <Icons.connected className="text-success" />
+                                    <Icons.Connected className="text-success" />
                                 </span>
                             </Tooltip>
                         )}
@@ -77,7 +77,7 @@ export function PlatformCard({
                         <div className="space-x-1 text-sm">
                             <span>Confirm?</span>
                             <Button variant="destructive" size="icon" className="h-8 w-8">
-                                <Icons.check />
+                                <Icons.Check />
                             </Button>
                             <Button
                                 onClick={() => setAskingForConfirmation(false)}
@@ -85,7 +85,7 @@ export function PlatformCard({
                                 size="icon"
                                 className="h-8 w-8"
                             >
-                                <Icons.close />
+                                <Icons.Close />
                             </Button>
                         </div>
                     ) : (
@@ -100,7 +100,7 @@ export function PlatformCard({
                     <div>
                         <PlatformDialog mode="edit" platform={name} form={editForm}>
                             <Button size="icon" variant="outline" className="h-8 w-8">
-                                <Icons.edit />
+                                <Icons.Edit />
                                 <span className="sr-only">Edit your {name} account</span>
                             </Button>
                         </PlatformDialog>

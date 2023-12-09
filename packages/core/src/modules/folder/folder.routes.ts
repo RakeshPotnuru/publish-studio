@@ -42,9 +42,9 @@ const folderRouter = router({
         )
         .mutation(({ input, ctx }) => new FolderController().updateFolderHandler(input, ctx)),
 
-    deleteFolder: protectedProcedure
-        .input(z.custom<Types.ObjectId>())
-        .mutation(({ input, ctx }) => new FolderController().deleteFolderHandler(input, ctx)),
+    deleteFolders: protectedProcedure
+        .input(z.array(z.custom<Types.ObjectId>()))
+        .mutation(({ input, ctx }) => new FolderController().deleteFoldersHandler(input, ctx)),
 });
 
 export default folderRouter;

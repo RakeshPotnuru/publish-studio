@@ -81,22 +81,23 @@ export default class FolderController extends FolderService {
         };
     }
 
-    async deleteFolderHandler(input: Types.ObjectId, ctx: Context) {
-        const folder = await super.getFolderById(input, ctx.user?._id);
+    async deleteFoldersHandler(input: Types.ObjectId[], ctx: Context) {
+        const folder_ids: Types.ObjectId[] = [];
 
-        if (!folder) {
-            throw new TRPCError({
-                code: "NOT_FOUND",
-                message: "Folder not found",
-            });
+        for (const element of input) {
+            const folder = await super.getFolderById(element, ctx.user?._id);
+
+            if (folder) {
+                folder_ids.push(element);
+            }
         }
 
-        const deletedFolder = await super.deleteFolder(input, ctx.user?._id);
+        const deletedFolders = await super.deleteFolders(folder_ids, ctx.user?._id);
 
         return {
             status: "success",
             data: {
-                folder: deletedFolder,
+                folders: deletedFolders,
             },
         };
     }

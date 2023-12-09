@@ -235,22 +235,23 @@ export default class ProjectController extends ProjectService {
         };
     }
 
-    async deleteProjectHandler(input: Types.ObjectId, ctx: Context) {
-        const project = await super.getProjectById(input, ctx.user?._id);
+    async deleteProjectsHandler(input: Types.ObjectId[], ctx: Context) {
+        const project_ids: Types.ObjectId[] = [];
 
-        if (!project) {
-            throw new TRPCError({
-                code: "NOT_FOUND",
-                message: "Project not found",
-            });
+        for (const element of input) {
+            const project = await super.getProjectById(element, ctx.user?._id);
+
+            if (project) {
+                project_ids.push(element);
+            }
         }
 
-        const deletedFolder = await super.deleteProjectById(input, ctx.user?._id);
+        const deletedProjects = await super.deleteProjects(project_ids, ctx.user?._id);
 
         return {
             status: "success",
             data: {
-                project: deletedFolder,
+                projects: deletedProjects,
             },
         };
     }

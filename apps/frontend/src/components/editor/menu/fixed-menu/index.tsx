@@ -60,7 +60,7 @@ export function FixedMenu({
                     <MenuAction
                         editor={editor}
                         name="stopSpeechRecognition"
-                        icon={<Icons.mic className="animate-pulse" />}
+                        icon={<Icons.Mic className="animate-pulse" />}
                         command={() => {
                             editor.commands.stopSpeechRecognition();
                             setIsDictating(false);
@@ -71,7 +71,7 @@ export function FixedMenu({
                     <MenuAction
                         editor={editor}
                         name="startSpeechRecognition"
-                        icon={<Icons.micoff />}
+                        icon={<Icons.MicOff />}
                         command={() => {
                             editor.commands.startSpeechRecognition();
                             setIsDictating(true);

@@ -158,7 +158,7 @@ export function PublishPost({ children, ...props }: PublishPostProps) {
                                         type="button"
                                         variant="outline"
                                     >
-                                        <Icons.plus className="mr-2 h-4 w-4" />
+                                        <Icons.Add className="mr-2 h-4 w-4" />
                                         Select cover image
                                     </Button>
                                     {coverImage && (
@@ -276,7 +276,7 @@ export function PublishPost({ children, ...props }: PublishPostProps) {
                                             size="icon"
                                             disabled={!form.formState.isDirty}
                                         >
-                                            <Icons.save className="h-4 w-4" />
+                                            <Icons.Save className="h-4 w-4" />
                                         </Button>
                                     </Tooltip>
                                     <Button type="submit" disabled={!form.formState.isDirty}>
@@ -288,7 +288,7 @@ export function PublishPost({ children, ...props }: PublishPostProps) {
                                             variant="secondary"
                                             disabled={!form.formState.isDirty}
                                         >
-                                            Schedule <Icons.schedule className="ml-2 h-4 w-4" />
+                                            Schedule <Icons.Schedule className="ml-2 h-4 w-4" />
                                         </Button>
                                     </SchedulePost>
                                 </SheetFooter>
@@ -313,7 +313,7 @@ export function PublishPost({ children, ...props }: PublishPostProps) {
                         </p>
                         <Button asChild>
                             <Link href={siteConfig.pages.settings.integrations.link}>
-                                <Icons.connect className="mr-2 h-4 w-4" />
+                                <Icons.Connect className="mr-2 h-4 w-4" />
                                 Connect
                             </Link>
                         </Button>

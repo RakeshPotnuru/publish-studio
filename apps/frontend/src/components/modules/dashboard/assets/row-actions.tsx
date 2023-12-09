@@ -15,7 +15,7 @@ export function RowActions<TData>({ row }: RowActionsProps<TData>) {
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="data-[state=open]:bg-muted flex h-8 w-8 p-0">
-                    <Icons.rowactions className="h-4 w-4" />
+                    <Icons.RowActions className="h-4 w-4" />
                     <span className="sr-only">Open menu</span>
                 </Button>
             </DropdownMenuTrigger>
@@ -25,7 +25,7 @@ export function RowActions<TData>({ row }: RowActionsProps<TData>) {
                     <div className="space-x-1 py-1 pl-2 text-sm">
                         <span>Confirm?</span>
                         <Button variant="destructive" size="icon" className="h-6 w-6">
-                            <Icons.check />
+                            <Icons.Check />
                         </Button>
                         <Button
                             onClick={() => setAskingForConfirmation(false)}
@@ -33,7 +33,7 @@ export function RowActions<TData>({ row }: RowActionsProps<TData>) {
                             size="icon"
                             className="h-6 w-6"
                         >
-                            <Icons.close />
+                            <Icons.Close />
                         </Button>
                     </div>
                 ) : (
@@ -41,7 +41,7 @@ export function RowActions<TData>({ row }: RowActionsProps<TData>) {
                         onClick={() => setAskingForConfirmation(true)}
                         className="hover:bg-accent hover:text-destructive text-destructive relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
                     >
-                        <Icons.delete className="mr-2 h-4 w-4" />
+                        <Icons.Delete className="mr-2 h-4 w-4" />
                         Delete
                     </div>
                 )}

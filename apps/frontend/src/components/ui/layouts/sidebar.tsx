@@ -73,14 +73,14 @@ export function Sidebar({ className, ...props }: SidebarProps) {
                         </>
                     ) : (
                         <>
-                            <SidebarItem label="Dashboard" link="/" icon={<Icons.dashboard />} />
+                            <SidebarItem label="Dashboard" link="/" icon={<Icons.Dashboard />} />
                             <SidebarItem
                                 label="Projects"
                                 link="/projects"
                                 icon={<Icons.Projects />}
                             />
-                            <SidebarItem label="Folders" link="/folders" icon={<Icons.folders />} />
-                            <SidebarItem label="Assets" link="/assets" icon={<Icons.assets />} />
+                            <SidebarItem label="Folders" link="/folders" icon={<Icons.Folders />} />
+                            <SidebarItem label="Assets" link="/assets" icon={<Icons.Assets />} />
                         </>
                     )}
                 </div>

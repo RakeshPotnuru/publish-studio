@@ -8,7 +8,7 @@ export function MarkActions({ editor, isBubbleMenu }: MenuProps) {
             <MenuAction
                 editor={editor}
                 name="bold"
-                icon={<Icons.bold />}
+                icon={<Icons.Bold />}
                 command={() => editor.chain().focus().toggleBold().run()}
                 tooltip="Bold"
                 shortcut={{
@@ -20,7 +20,7 @@ export function MarkActions({ editor, isBubbleMenu }: MenuProps) {
             <MenuAction
                 editor={editor}
                 name="italic"
-                icon={<Icons.italic />}
+                icon={<Icons.Italic />}
                 command={() => editor.chain().focus().toggleItalic().run()}
                 tooltip="Italic"
                 shortcut={{
@@ -32,7 +32,7 @@ export function MarkActions({ editor, isBubbleMenu }: MenuProps) {
             <MenuAction
                 editor={editor}
                 name="underline"
-                icon={<Icons.underline />}
+                icon={<Icons.Underline />}
                 command={() => editor.chain().focus().toggleUnderline().run()}
                 tooltip="Underline"
                 shortcut={{
@@ -44,7 +44,7 @@ export function MarkActions({ editor, isBubbleMenu }: MenuProps) {
             <MenuAction
                 editor={editor}
                 name="strike"
-                icon={<Icons.strike />}
+                icon={<Icons.Strike />}
                 command={() => editor.chain().focus().toggleStrike().run()}
                 tooltip="Strike"
                 shortcut={{
@@ -56,7 +56,7 @@ export function MarkActions({ editor, isBubbleMenu }: MenuProps) {
             <MenuAction
                 editor={editor}
                 name="code"
-                icon={<Icons.code />}
+                icon={<Icons.Code />}
                 command={() => editor.chain().focus().toggleCode().run()}
                 tooltip="Code"
                 shortcut={{
