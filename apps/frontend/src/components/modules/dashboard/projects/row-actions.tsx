@@ -12,8 +12,11 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { Icons } from "@/assets/icons";
+import { constants } from "@/config/constants";
 import { IProject } from "@/lib/store/projects";
 import { trpc } from "@/utils/trpc";
+import mongoose from "mongoose";
+import { useParams } from "next/navigation";
 import { MoveProject } from "./move-project";
 
 interface RowActionsProps<TData> {
@@ -26,6 +29,7 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
 
     const { toast } = useToast();
     const utils = trpc.useUtils();
+    const { folderId } = useParams();
 
     const { mutateAsync: deleteProject, isLoading } = trpc.deleteProjects.useMutation({
         onSuccess: () => {
@@ -35,6 +39,7 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
                 description: "Project deleted successfully",
             });
             utils.getAllProjects.invalidate();
+            utils.getProjectsByFolderId.invalidate();
         },
         onError: error => {
             toast({
@@ -45,9 +50,53 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
         },
     });
 
+    const { mutateAsync: duplicateProject, isLoading: isDuplicating } =
+        trpc.createProject.useMutation({
+            onSuccess: () => {
+                toast({
+                    variant: "success",
+                    title: "Project duplicated",
+                    description: "Project created successfully",
+                });
+                utils.getAllProjects.invalidate();
+                utils.getProjectsByFolderId.invalidate();
+            },
+            onError: error => {
+                toast({
+                    variant: "destructive",
+                    title: "Error",
+                    description: error.message,
+                });
+            },
+        });
+
     const handleDelete = async () => {
         try {
             await deleteProject([row.original._id]);
+        } catch (error) {}
+    };
+
+    const cutTitle = (title: string) => {
+        const MAX_LENGTH = constants.project.title.MAX_LENGTH;
+
+        if (title.length > MAX_LENGTH) {
+            return title.slice(0, MAX_LENGTH);
+        }
+
+        return title;
+    };
+
+    const handleDuplicate = async () => {
+        let folder;
+        if (folderId) {
+            folder = new mongoose.Types.ObjectId(folderId.toString());
+        }
+
+        try {
+            await duplicateProject({
+                title: cutTitle(`Copy of ${row.original.title}`),
+                folder_id: folder,
+            });
         } catch (error) {}
     };
 
@@ -67,9 +116,18 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
                             Edit
                         </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
-                        <Icons.Duplicate className="mr-2 h-4 w-4" />
-                        Duplicate
+                    <DropdownMenuItem onClick={handleDuplicate} disabled={isDuplicating}>
+                        {isDuplicating ? (
+                            <>
+                                <Icons.Loading className="mr-2 h-4 w-4 animate-spin" />
+                                Please wait
+                            </>
+                        ) : (
+                            <>
+                                <Icons.Duplicate className="mr-2 h-4 w-4" />
+                                Duplicate
+                            </>
+                        )}
                     </DropdownMenuItem>
                     <DropdownMenuItem
                         onClick={() => {
@@ -122,7 +180,11 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
                     )}
                 </DropdownMenuContent>
             </DropdownMenu>
-            <MoveProject open={openMoveProject} onOpenChange={setOpenMoveProject} />
+            <MoveProject
+                open={openMoveProject}
+                onOpenChange={setOpenMoveProject}
+                projectId={row.original._id}
+            />
         </>
     );
 }

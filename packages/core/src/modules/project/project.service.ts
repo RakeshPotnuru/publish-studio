@@ -33,7 +33,7 @@ export default class ProjectService extends FolderService {
         }
     }
 
-    async getProjectById(id: Types.ObjectId, user_id?: Types.ObjectId) {
+    async getProjectById(id: Types.ObjectId, user_id: Types.ObjectId | undefined) {
         try {
             return (await Project.findOne({ _id: id, user_id }).exec()) as IProject;
         } catch (error) {
@@ -119,9 +119,16 @@ export default class ProjectService extends FolderService {
         }
     }
 
-    async updateProjectById(id: Types.ObjectId, project: IProjectUpdate) {
+    async updateProjectById(
+        id: Types.ObjectId,
+        project: IProjectUpdate,
+        user_id: Types.ObjectId | undefined,
+    ) {
         try {
-            return (await Project.findByIdAndUpdate(id, project, { new: true }).exec()) as IProject;
+            // return (await Project.findByIdAndUpdate(id, project, { new: true }).exec()) as IProject;
+            return (await Project.findOneAndUpdate({ _id: id, user_id }, project, {
+                new: true,
+            }).exec()) as IProject;
         } catch (error) {
             console.log(error);
 

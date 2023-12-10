@@ -136,7 +136,8 @@ const projectRouter = router({
                     title: z
                         .string()
                         .min(constants.project.title.MIN_LENGTH)
-                        .max(constants.project.title.MAX_LENGTH),
+                        .max(constants.project.title.MAX_LENGTH)
+                        .optional(),
                     description: z
                         .string()
                         .max(constants.project.description.MAX_LENGTH)
@@ -148,10 +149,7 @@ const projectRouter = router({
                             markdown: z.string().optional(),
                         })
                         .optional(),
-                    status: z
-                        .nativeEnum(constants.project.status)
-                        .optional()
-                        .default(constants.project.status.DRAFT),
+                    status: z.nativeEnum(constants.project.status).optional(),
                     cover_image: z.string().optional(),
                     platforms: z
                         .array(
@@ -165,7 +163,7 @@ const projectRouter = router({
                 }),
             }),
         )
-        .mutation(({ input }) => new ProjectController().updateProjectHandler(input)),
+        .mutation(({ input, ctx }) => new ProjectController().updateProjectHandler(input, ctx)),
 
     deleteProjects: protectedProcedure
         .input(z.array(z.custom<Types.ObjectId>()))

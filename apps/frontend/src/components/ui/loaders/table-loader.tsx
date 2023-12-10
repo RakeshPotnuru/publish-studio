@@ -8,9 +8,9 @@ export function TableLoader({ columns }: Readonly<TableLoaderProps>) {
     return (
         <div className="space-y-4">
             {Array.from({ length: 10 }).map((_, index) => (
-                <div key={index} className="flex items-center space-x-4">
+                <div key={`div-${index.toString()}`} className="flex items-center space-x-4">
                     {Array.from({ length: columns }).map((_, index) => (
-                        <Skeleton key={index} className="h-8 w-full" />
+                        <Skeleton key={`skeleton-${index.toString()}`} className="h-8 w-full" />
                     ))}
                 </div>
             ))}

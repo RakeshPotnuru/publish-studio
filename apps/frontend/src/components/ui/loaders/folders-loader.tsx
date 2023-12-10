@@ -12,7 +12,7 @@ export function FoldersLoader({ size, count = 10 }: Readonly<FoldersLoaderProps>
             {Array.from({ length: count }).map((_, index) => {
                 return (
                     <Skeleton
-                        key={index}
+                        key={`skeleton-${index.toString()}`}
                         className={cn("h-12 w-72", {
                             "h-8": size === "sm",
                         })}

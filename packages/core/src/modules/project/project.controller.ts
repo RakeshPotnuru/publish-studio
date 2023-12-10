@@ -42,7 +42,7 @@ export default class ProjectController extends ProjectService {
     }
 
     async publishPost(project_id: Types.ObjectId, user_id: Types.ObjectId, tags: TTags) {
-        const project = await super.getProjectById(project_id);
+        const project = await super.getProjectById(project_id, user_id);
 
         const publishResponse = await new ProjectHelpers().publishOnPlatforms(
             project,
@@ -50,14 +50,18 @@ export default class ProjectController extends ProjectService {
             tags,
         );
 
-        await super.updateProjectById(project_id, {
-            platforms: publishResponse,
-            status:
-                publishResponse.length > 0 &&
-                publishResponse.every(platform => platform.status === "success")
-                    ? constants.project.status.PUBLISHED
-                    : constants.project.status.DRAFT,
-        });
+        await super.updateProjectById(
+            project_id,
+            {
+                platforms: publishResponse,
+                status:
+                    publishResponse.length > 0 &&
+                    publishResponse.every(platform => platform.status === "success")
+                        ? constants.project.status.PUBLISHED
+                        : constants.project.status.DRAFT,
+            },
+            user_id,
+        );
 
         return {
             status: "success",
@@ -77,7 +81,7 @@ export default class ProjectController extends ProjectService {
         },
         ctx: Context,
     ) {
-        const project = await super.getProjectById(input.project_id);
+        const project = await super.getProjectById(input.project_id, ctx.user?._id);
 
         const updateResponse = await new ProjectHelpers().updateOnPlatforms(
             project,
@@ -92,14 +96,18 @@ export default class ProjectController extends ProjectService {
             });
         }
 
-        await super.updateProjectById(input.project_id, {
-            platforms: updateResponse,
-            status:
-                updateResponse.length > 0 &&
-                updateResponse.every(platform => platform.status === "success")
-                    ? constants.project.status.PUBLISHED
-                    : constants.project.status.DRAFT,
-        });
+        await super.updateProjectById(
+            input.project_id,
+            {
+                platforms: updateResponse,
+                status:
+                    updateResponse.length > 0 &&
+                    updateResponse.every(platform => platform.status === "success")
+                        ? constants.project.status.PUBLISHED
+                        : constants.project.status.DRAFT,
+            },
+            ctx.user?._id,
+        );
 
         return {
             status: "success",
@@ -122,7 +130,7 @@ export default class ProjectController extends ProjectService {
     ) {
         const { project_id, platforms, tags, scheduled_at } = input;
 
-        const project = await super.getProjectById(project_id);
+        const project = await super.getProjectById(project_id, ctx.user?._id);
 
         if (project.status === constants.project.status.PUBLISHED) {
             throw new TRPCError({
@@ -140,15 +148,19 @@ export default class ProjectController extends ProjectService {
             user_id: ctx.user?._id,
         });
 
-        await super.updateProjectById(project_id, {
-            platforms: platforms,
-            status: constants.project.status.SCHEDULED,
-            scheduled_at: scheduled_at,
-        });
+        await super.updateProjectById(
+            project_id,
+            {
+                platforms: platforms,
+                status: constants.project.status.SCHEDULED,
+                scheduled_at: scheduled_at,
+            },
+            ctx.user?._id,
+        );
     }
 
-    async getProjectHandler(input: { id: Types.ObjectId }) {
-        const project = await super.getProjectById(input.id);
+    async getProjectHandler(input: { id: Types.ObjectId }, ctx: Context) {
+        const project = await super.getProjectById(input.id, ctx.user?._id);
 
         if (!project) {
             throw new TRPCError({
@@ -215,8 +227,11 @@ export default class ProjectController extends ProjectService {
         };
     }
 
-    async updateProjectHandler(input: { id: Types.ObjectId; project: IProjectUpdate }) {
-        const project = await super.getProjectById(input.id);
+    async updateProjectHandler(
+        input: { id: Types.ObjectId; project: IProjectUpdate },
+        ctx: Context,
+    ) {
+        const project = await super.getProjectById(input.id, ctx.user?._id);
 
         if (!project) {
             throw new TRPCError({
@@ -225,7 +240,22 @@ export default class ProjectController extends ProjectService {
             });
         }
 
-        const updatedProject = await super.updateProjectById(input.id, input.project);
+        if (input.project.folder_id) {
+            const folder = await super.getFolderById(input.project.folder_id, ctx.user?._id);
+
+            if (!folder) {
+                throw new TRPCError({
+                    code: "NOT_FOUND",
+                    message: "Folder not found.",
+                });
+            }
+        }
+
+        const updatedProject = await super.updateProjectById(
+            input.id,
+            input.project,
+            ctx.user?._id,
+        );
 
         return {
             status: "success",

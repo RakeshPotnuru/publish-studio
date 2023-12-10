@@ -45,7 +45,7 @@ const formSchema = z.object({
         ),
 });
 
-export function NewProjectDialog({ children, folderId }: NewProjectDialogProps) {
+export function NewProjectDialog({ children, folderId }: Readonly<NewProjectDialogProps>) {
     const [error, setError] = useState<string | null>(null);
 
     const router = useRouter();
