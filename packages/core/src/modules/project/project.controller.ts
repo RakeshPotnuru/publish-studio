@@ -159,8 +159,8 @@ export default class ProjectController extends ProjectService {
         );
     }
 
-    async getProjectHandler(input: { id: Types.ObjectId }, ctx: Context) {
-        const project = await super.getProjectById(input.id, ctx.user?._id);
+    async getProjectByIdHandler(input: Types.ObjectId, ctx: Context) {
+        const project = await super.getProjectById(input, ctx.user?._id);
 
         if (!project) {
             throw new TRPCError({

@@ -1,5 +1,5 @@
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
-import { HiOutlineArrowNarrowRight } from "react-icons/hi";
+import { HiOutlineArrowNarrowLeft, HiOutlineArrowNarrowRight } from "react-icons/hi";
 import { MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from "react-icons/md";
 
 export const NavigationIcons = {
@@ -8,4 +8,5 @@ export const NavigationIcons = {
     LeftDoubleArrow: MdKeyboardDoubleArrowLeft,
     RightDoubleArrow: MdKeyboardDoubleArrowRight,
     Right: HiOutlineArrowNarrowRight,
+    Left: HiOutlineArrowNarrowLeft,
 };

@@ -120,7 +120,7 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
                         {isDuplicating ? (
                             <>
                                 <Icons.Loading className="mr-2 h-4 w-4 animate-spin" />
-                                Please wait
+                                <span className="animate-pulse">Please wait</span>
                             </>
                         ) : (
                             <>

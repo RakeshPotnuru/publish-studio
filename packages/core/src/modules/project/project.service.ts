@@ -5,7 +5,12 @@ import Folder from "../folder/folder.model";
 import FolderService from "../folder/folder.service";
 import User from "../user/user.model";
 import Project from "./project.model";
-import type { IProject, IProjectsResponse, IProjectUpdate } from "./project.types";
+import type {
+    IProject,
+    IProjectResponse,
+    IProjectsResponse,
+    IProjectUpdate,
+} from "./project.types";
 
 export default class ProjectService extends FolderService {
     async createProject(project: IProject) {
@@ -35,7 +40,7 @@ export default class ProjectService extends FolderService {
 
     async getProjectById(id: Types.ObjectId, user_id: Types.ObjectId | undefined) {
         try {
-            return (await Project.findOne({ _id: id, user_id }).exec()) as IProject;
+            return (await Project.findOne({ _id: id, user_id }).exec()) as IProjectResponse;
         } catch (error) {
             console.log(error);
 

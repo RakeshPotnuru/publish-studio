@@ -6,6 +6,7 @@ import { useEditor } from "@tiptap/react";
 import { memo, useState } from "react";
 
 import { useFullscreenStatus } from "@/hooks/useFullscreenStatus";
+import { IProject } from "@/lib/store/projects";
 import { SideButton } from "../modules/dashboard/projects/project";
 import { ProjectTools } from "../modules/dashboard/projects/tools";
 import { Heading } from "../ui/heading";
@@ -17,11 +18,13 @@ import { BubbleMenu } from "./menu/bubble-menu";
 import { FixedMenu } from "./menu/fixed-menu";
 import { ToC } from "./toc";
 
-interface EditorProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface EditorProps extends React.HTMLAttributes<HTMLDivElement> {
+    project: IProject;
+}
 
 const MemorizedToC = memo(ToC);
 
-export function Editor({ className, ...props }: EditorProps) {
+export function Editor({ className, project, ...props }: EditorProps) {
     const [items, setItems] = useState<TableOfContentDataItem[]>([]);
 
     const isFullscreen = useFullscreenStatus();

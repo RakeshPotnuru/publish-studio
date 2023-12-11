@@ -33,6 +33,10 @@ const projectRouter = router({
         )
         .mutation(({ input, ctx }) => new ProjectController().createProjectHandler(input, ctx)),
 
+    getProjectById: protectedProcedure
+        .input(z.custom<Types.ObjectId>())
+        .query(({ input, ctx }) => new ProjectController().getProjectByIdHandler(input, ctx)),
+
     schedulePost: protectedProcedure
         .input(
             z.object({
