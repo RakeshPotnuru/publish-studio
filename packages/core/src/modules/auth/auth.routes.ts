@@ -10,10 +10,12 @@ const authRouter = router({
             z.object({
                 first_name: z
                     .string()
+                    .regex(/^((?!\p{Extended_Pictographic}).)*$/u, "Emojis are not allowed")
                     .min(constants.user.firstName.MIN_LENGTH)
                     .max(constants.user.firstName.MAX_LENGTH),
                 last_name: z
                     .string()
+                    .regex(/^((?!\p{Extended_Pictographic}).)*$/u, "Emojis are not allowed")
                     .min(constants.user.lastName.MIN_LENGTH)
                     .max(constants.user.lastName.MAX_LENGTH),
                 email: z.string().email().toLowerCase(),

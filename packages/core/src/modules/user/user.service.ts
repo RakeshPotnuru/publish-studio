@@ -48,7 +48,7 @@ export default class UserService {
         }
     }
 
-    async updateUser(id: Types.ObjectId, user: IUserUpdate) {
+    async updateUser(id: Types.ObjectId | undefined, user: IUserUpdate) {
         try {
             return (await User.findByIdAndUpdate(id, user, { new: true }).exec()) as IUser;
         } catch (error) {

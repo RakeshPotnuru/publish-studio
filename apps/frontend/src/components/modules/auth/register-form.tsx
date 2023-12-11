@@ -33,6 +33,7 @@ const formSchema = z
         email: z.string().email({ message: "Please enter a valid email address" }),
         first_name: z
             .string()
+            .regex(/^((?!\p{Extended_Pictographic}).)*$/u, "Emojis are not allowed")
             .min(1, { message: "Please enter your first name" })
             .max(
                 constants.user.firstName.MAX_LENGTH,
@@ -40,6 +41,7 @@ const formSchema = z
             ),
         last_name: z
             .string()
+            .regex(/^((?!\p{Extended_Pictographic}).)*$/u, "Emojis are not allowed")
             .min(1, { message: "Please enter your last name" })
             .max(
                 constants.user.lastName.MAX_LENGTH,
