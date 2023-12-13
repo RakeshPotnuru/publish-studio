@@ -11,9 +11,16 @@ import PlatformController from "./platform.controller";
 import WordPressService from "./wordpress/wordpress.service";
 
 const platformRouter = router({
-    getAllPlatforms: protectedProcedure.query(({ ctx }) =>
-        new PlatformController().getAllPlatformsHandler(ctx),
-    ),
+    getAllPlatforms: protectedProcedure
+        .input(
+            z.object({
+                pagination: z.object({
+                    page: z.number().int().positive().default(1),
+                    limit: z.number().int().positive().default(10),
+                }),
+            }),
+        )
+        .query(({ input, ctx }) => new PlatformController().getAllPlatformsHandler(input, ctx)),
 
     connectHashnode: protectedProcedure
         .input(

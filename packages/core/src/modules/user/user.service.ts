@@ -37,7 +37,7 @@ export default class UserService {
 
     async getUserById(id: Types.ObjectId | undefined) {
         try {
-            return (await User.findById(id).populate("platforms").exec()) as IUser;
+            return (await User.findById(id).exec()) as IUser;
         } catch (error) {
             console.log(error);
 

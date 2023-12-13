@@ -1,10 +1,10 @@
 import { Icons } from "@/assets/icons";
-import { useFullscreenStatus } from "@/hooks/useFullscreenStatus";
+import { useFullscreenStatus } from "@/hooks/fullscreen-status";
 import { toggleFullscreen } from "@/utils/fullscreen-mode";
 import { MenuProps } from "../fixed-menu";
 import { MenuAction } from "../menu-action";
 
-export function FullscreenAction({ editor }: MenuProps) {
+export function FullscreenAction({ editor }: Readonly<MenuProps>) {
     const isFullscreen = useFullscreenStatus();
 
     return (

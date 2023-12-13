@@ -110,8 +110,8 @@ const projectRouter = router({
         .input(
             z.object({
                 pagination: z.object({
-                    page: z.number().min(1).default(1),
-                    limit: z.number().min(1).default(10),
+                    page: z.number().int().positive().default(1),
+                    limit: z.number().int().positive().default(10),
                 }),
             }),
         )
@@ -122,8 +122,8 @@ const projectRouter = router({
             z.object({
                 folder_id: z.custom<Types.ObjectId>(),
                 pagination: z.object({
-                    page: z.number().min(1).default(1),
-                    limit: z.number().min(1).default(10),
+                    page: z.number().int().positive().default(1),
+                    limit: z.number().int().positive().default(10),
                 }),
             }),
         )

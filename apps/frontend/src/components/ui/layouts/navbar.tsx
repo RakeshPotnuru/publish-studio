@@ -49,6 +49,7 @@ export function Navbar({ className, ...props }: NavbarProps) {
                 last_name: data.data.user.last_name,
                 email: data.data.user.email,
                 profile_pic: data.data.user.profile_pic,
+                platforms: data.data.user.platforms || [],
             });
             setIsLoading(false);
         },

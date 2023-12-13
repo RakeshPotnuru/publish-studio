@@ -7,7 +7,7 @@ import {
     SheetTrigger,
 } from "@itsrakesh/ui";
 
-import { MenuProps } from "@/components/editor/menu/fixed-menu";
+import { MenuProps } from "@/components/modules/dashboard/projects/editor/menu/fixed-menu";
 import { DownloadProject } from "./download-project";
 import { ImportMarkdown } from "./import-content";
 

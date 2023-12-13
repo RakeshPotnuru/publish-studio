@@ -2,16 +2,16 @@
 
 import { Button, Skeleton } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
-import { forwardRef } from "react";
-
-import { Icons } from "@/assets/icons";
-import { Editor } from "@/components/editor";
-import { ErrorBox } from "@/components/ui/error-box";
-import { siteConfig } from "@/config/site";
-import { trpc } from "@/utils/trpc";
 import mongoose from "mongoose";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { forwardRef } from "react";
+
+import { Icons } from "@/assets/icons";
+import { Editor } from "@/components/modules/dashboard/projects/editor";
+import { ErrorBox } from "@/components/ui/error-box";
+import { siteConfig } from "@/config/site";
+import { trpc } from "@/utils/trpc";
 import { PublishPost } from "./publish-post";
 
 interface ProjectProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -47,6 +47,25 @@ export function Project({ ...props }: ProjectProps) {
         last_edited: data.data.project.updated_at,
     };
 
+    const projectView = isFetching ? (
+        <div className="flex flex-row space-x-4">
+            <div className="w-3/4 space-y-4">
+                <Skeleton className="bg-background h-14 w-full rounded-full" />
+                <Skeleton className="bg-background h-screen w-full rounded-3xl" />
+            </div>
+            <Skeleton className="bg-background h-screen w-1/4 rounded-3xl" />
+        </div>
+    ) : (
+        project && (
+            <>
+                <Editor project={project} />
+                <PublishPost project={project}>
+                    <SideButton>Publish Post</SideButton>
+                </PublishPost>
+            </>
+        )
+    );
+
     return (
         <div {...props}>
             {error ? (
@@ -60,23 +79,8 @@ export function Project({ ...props }: ProjectProps) {
                         </Button>
                     </div>
                 </div>
-            ) : isFetching ? (
-                <div className="flex flex-row space-x-4">
-                    <div className="w-3/4 space-y-4">
-                        <Skeleton className="bg-background h-14 w-full rounded-full" />
-                        <Skeleton className="bg-background h-screen w-full rounded-3xl" />
-                    </div>
-                    <Skeleton className="bg-background h-screen w-1/4 rounded-3xl" />
-                </div>
             ) : (
-                project && (
-                    <>
-                        <Editor project={project} />
-                        <PublishPost>
-                            <SideButton>Publish Post</SideButton>
-                        </PublishPost>
-                    </>
-                )
+                projectView
             )}
         </div>
     );

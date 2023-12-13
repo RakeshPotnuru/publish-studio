@@ -13,7 +13,7 @@ export function CharactersLengthViewer({
     maxLength,
     length,
     recommendedLength,
-}: CharactersLengthViewerProps) {
+}: Readonly<CharactersLengthViewerProps>) {
     return (
         <div
             className={cn("bg-accent w-max rounded-full border px-2 py-1 text-xs", {

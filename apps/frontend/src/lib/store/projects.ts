@@ -2,6 +2,7 @@ import type { Types } from "mongoose";
 import { create } from "zustand";
 
 import { constants } from "@/config/constants";
+import { TPlatformName } from "@/types/common";
 
 type TProjectStatus = (typeof constants.project.status)[keyof typeof constants.project.status];
 
@@ -11,6 +12,14 @@ export interface IProject {
     status: TProjectStatus;
     created: Date;
     last_edited: Date;
+    body?: { json?: JSON };
+    platforms?: {
+        name: TPlatformName;
+        status?: "success" | "error";
+        published_url?: string;
+        id?: string;
+        _id: Types.ObjectId;
+    }[];
 }
 
 interface IProjectState {

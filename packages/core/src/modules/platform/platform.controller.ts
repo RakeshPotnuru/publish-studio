@@ -1,10 +1,17 @@
 import type { Context } from "../../trpc";
-import type { IPagination } from "../../types/common.types";
 import PlatformService from "./platform.service";
 
 export default class PlatformController extends PlatformService {
-    async getAllPlatformsHandler(input: { pagination: IPagination }, ctx: Context) {
-        const { platforms, pagination } = await this.getAllPlatformsByUserId(
+    async getAllPlatformsHandler(
+        input: {
+            pagination: {
+                page: number;
+                limit: number;
+            };
+        },
+        ctx: Context,
+    ) {
+        const { platforms, pagination } = await super.getAllPlatformsByUserId(
             input.pagination,
             ctx.user?._id,
         );

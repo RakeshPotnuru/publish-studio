@@ -1,11 +1,23 @@
 import type { Types } from "mongoose";
 
 export interface IDevTo {
+    _id?: Types.ObjectId;
     user_id?: Types.ObjectId;
     api_key: string;
     username?: string;
     profile_pic?: string;
     default_publish_status: boolean;
+}
+
+export interface IDevToResponse {
+    _id: Types.ObjectId;
+    user_id: Types.ObjectId;
+    api_key: string;
+    username: string;
+    profile_pic: string;
+    default_publish_status: boolean;
+    created_at: Date;
+    updated_at: Date;
 }
 
 export interface IDevToUserUpdate {

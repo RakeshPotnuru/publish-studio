@@ -1,47 +1,62 @@
-import { Button } from "@itsrakesh/ui";
+import { Button, Skeleton } from "@itsrakesh/ui";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
 import { Icons } from "@/assets/icons";
+import { AskForConfirmation } from "@/components/ui/ask-for-confirmation";
 import { Heading } from "@/components/ui/heading";
 import { Tooltip } from "@/components/ui/tooltip";
-import { useState } from "react";
 import { PlatformDialog } from "./platform-dialog";
 
-interface PlatformCardBaseProps {
+interface PlatformCardProps extends React.HTMLAttributes<HTMLDivElement> {
     name: string;
     icon: string;
-}
-
-interface ConnectedPlatformCardProps extends PlatformCardBaseProps {
-    connected: true;
-    username: string;
-    profile_url: string;
-    connectForm?: React.ReactNode;
-    editForm: React.ReactNode;
-}
-
-interface DisconnectedPlatformCardProps extends PlatformCardBaseProps {
-    connected: false;
+    isLoading: boolean;
+    connected: boolean;
     username?: string;
     profile_url?: string;
     connectForm: React.ReactNode;
     editForm?: React.ReactNode;
 }
 
-type PlatformCardProps = ConnectedPlatformCardProps | DisconnectedPlatformCardProps;
-
 export function PlatformCard({
     name,
     icon,
+    isLoading,
     connected,
     username,
     profile_url,
     connectForm,
     editForm,
     ...props
-}: PlatformCardProps & React.HTMLAttributes<HTMLDivElement>) {
+}: Readonly<PlatformCardProps>) {
     const [askingForConfirmation, setAskingForConfirmation] = useState(false);
+
+    const actionView = connected ? (
+        <div className="flex flex-row space-x-1">
+            <AskForConfirmation
+                askingForConfirmation={askingForConfirmation}
+                onOpen={() => setAskingForConfirmation(true)}
+                onCancel={() => setAskingForConfirmation(false)}
+                onClick={() => {}}
+            />
+            <div>
+                <PlatformDialog mode="edit" platform={name} form={editForm}>
+                    <Button size="icon" variant="outline" className="h-8 w-8">
+                        <Icons.Edit />
+                        <span className="sr-only">Edit your {name} account</span>
+                    </Button>
+                </PlatformDialog>
+            </div>
+        </div>
+    ) : (
+        <div>
+            <PlatformDialog mode="connect" platform={name} form={connectForm}>
+                <Button size="sm">Connect</Button>
+            </PlatformDialog>
+        </div>
+    );
 
     return (
         <div className="flex flex-row justify-between rounded-lg border p-4" {...props}>
@@ -50,69 +65,37 @@ export function PlatformCard({
                 <div className="flex flex-col justify-center">
                     <Heading level={3} className="flex flex-row items-center space-x-1">
                         <span>{name}</span>
-                        {connected && (
-                            <Tooltip content="Connected" side="top">
-                                <span>
-                                    <Icons.Connected className="text-success" />
-                                </span>
-                            </Tooltip>
+                        {isLoading ? (
+                            <Skeleton className="h-6 w-6" />
+                        ) : (
+                            connected && (
+                                <Tooltip content="Connected" side="top">
+                                    <span>
+                                        <Icons.Connected className="text-success" />
+                                    </span>
+                                </Tooltip>
+                            )
                         )}
                     </Heading>
-                    {connected && (
-                        <Button
-                            variant="link"
-                            className="text-muted-foreground h-max w-max p-0"
-                            asChild
-                        >
-                            <Link href={profile_url} target="_blank">
-                                @{username}
-                            </Link>
-                        </Button>
+                    {isLoading ? (
+                        <Skeleton className="h-4 w-24" />
+                    ) : (
+                        connected &&
+                        profile_url && (
+                            <Button
+                                variant="link"
+                                className="text-muted-foreground h-max w-max p-0"
+                                asChild
+                            >
+                                <Link href={profile_url} target="_blank">
+                                    @{username}
+                                </Link>
+                            </Button>
+                        )
                     )}
                 </div>
             </div>
-            {connected ? (
-                <div className="flex flex-row space-x-1">
-                    {askingForConfirmation ? (
-                        <div className="space-x-1 text-sm">
-                            <span>Confirm?</span>
-                            <Button variant="destructive" size="icon" className="h-8 w-8">
-                                <Icons.Check />
-                            </Button>
-                            <Button
-                                onClick={() => setAskingForConfirmation(false)}
-                                variant="outline"
-                                size="icon"
-                                className="h-8 w-8"
-                            >
-                                <Icons.Close />
-                            </Button>
-                        </div>
-                    ) : (
-                        <Button
-                            onClick={() => setAskingForConfirmation(true)}
-                            size="sm"
-                            variant="destructive"
-                        >
-                            Disconnect
-                        </Button>
-                    )}
-                    <div>
-                        <PlatformDialog mode="edit" platform={name} form={editForm}>
-                            <Button size="icon" variant="outline" className="h-8 w-8">
-                                <Icons.Edit />
-                                <span className="sr-only">Edit your {name} account</span>
-                            </Button>
-                        </PlatformDialog>
-                    </div>
-                </div>
-            ) : (
-                <div>
-                    <PlatformDialog mode="connect" platform={name} form={connectForm}>
-                        <Button size="sm">Connect</Button>
-                    </PlatformDialog>
-                </div>
-            )}
+            {isLoading ? <Skeleton className="h-8 w-20" /> : actionView}
         </div>
     );
 }

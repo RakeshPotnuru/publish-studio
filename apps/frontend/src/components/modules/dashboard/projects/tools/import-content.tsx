@@ -24,12 +24,12 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Icons } from "@/assets/icons";
-import { MenuProps } from "@/components/editor/menu/fixed-menu";
-import { deserialize } from "@/components/editor/transform-markdown";
+import { MenuProps } from "@/components/modules/dashboard/projects/editor/menu/fixed-menu";
+import { deserialize } from "@/components/modules/dashboard/projects/editor/transform-markdown";
 import { Heading } from "@/components/ui/heading";
 
 const mdFormSchema = z.object({
-    markdown: z.string().nonempty("Markdown is required."),
+    markdown: z.string().min(1, "Markdown is required."),
 });
 
 const urlFormSchema = z.object({

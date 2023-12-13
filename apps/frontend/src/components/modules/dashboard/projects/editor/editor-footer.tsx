@@ -1,16 +1,18 @@
 import { Separator } from "@itsrakesh/ui";
 import { useState } from "react";
 
-import { Icons } from "../../assets/icons";
-import { Tooltip } from "../ui/tooltip";
+import { Icons } from "../../../../../assets/icons";
+import { Tooltip } from "../../../../ui/tooltip";
 import type { MenuProps } from "./menu/fixed-menu";
 
-export function EditorFooter({ editor }: MenuProps & React.HTMLAttributes<HTMLDivElement>) {
+interface EditorFooterProps extends React.HTMLAttributes<HTMLDivElement> {
+    isLoading: boolean;
+}
+
+export function EditorFooter({ editor, isLoading }: MenuProps & EditorFooterProps) {
     const [editable, setEditable] = useState(editor.isEditable);
 
     const isOnline = navigator.onLine;
-    // TODO: temporary
-    const isLoading = false;
 
     const handleEditable = () => {
         editor.setEditable(!editable);

@@ -21,8 +21,8 @@ const folderRouter = router({
         .input(
             z.object({
                 pagination: z.object({
-                    page: z.number().min(1).default(1),
-                    limit: z.number().min(1).default(10),
+                    page: z.number().int().positive().default(1),
+                    limit: z.number().int().positive().default(10),
                 }),
             }),
         )

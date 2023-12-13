@@ -1,5 +1,5 @@
 import { Icons } from "@/assets/icons";
-import { MenuProps } from "@/components/editor/menu/fixed-menu";
+import { MenuProps } from "@/components/modules/dashboard/projects/editor/menu/fixed-menu";
 import { Heading } from "@/components/ui/heading";
 import { Button } from "@itsrakesh/ui";
 

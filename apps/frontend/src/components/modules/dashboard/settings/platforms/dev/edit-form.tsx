@@ -26,7 +26,7 @@ const formSchema = z.object({
     default_publish_status: z.string().optional(),
 });
 
-export function DevEditForm(props: z.infer<typeof formSchema>) {
+export function DevEditForm(props: Readonly<z.infer<typeof formSchema>>) {
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {

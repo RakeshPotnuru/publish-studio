@@ -1,17 +1,23 @@
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
-import type { IPagination } from "../../types/common.types";
 import Platform from "./platform.model";
-import type { IPlatform } from "./platform.types";
+import type { IPlatform, IPlatformsResponse } from "./platform.types";
 
 export default class PlatformService {
-    async getAllPlatformsByUserId(pagination: IPagination, user_id: Types.ObjectId | undefined) {
+    async getAllPlatformsByUserId(
+        pagination: {
+            page: number;
+            limit: number;
+        },
+        user_id: Types.ObjectId | undefined,
+    ) {
         try {
             const total_rows = await Platform.countDocuments({ user_id }).exec();
             const total_pages = Math.ceil(total_rows / pagination.limit);
 
             const platforms = (await Platform.find({ user_id })
+                .populate("data")
                 .skip((pagination.page - 1) * pagination.limit)
                 .limit(pagination.limit)
                 .exec()) as IPlatform[];
@@ -24,7 +30,7 @@ export default class PlatformService {
                     total_rows,
                     total_pages,
                 },
-            };
+            } as IPlatformsResponse;
         } catch (error) {
             console.log(error);
 

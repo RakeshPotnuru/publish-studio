@@ -127,6 +127,26 @@
     }
 }
 
+@keyframes slide-left {
+    0% {
+        transform: translateX(25%);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+@keyframes slide-right {
+    0% {
+        transform: translateX(-25%);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
 .tiptap p.is-editor-empty:first-child::before {
     color: #adb5bd;
     content: attr(data-placeholder);

@@ -1,3 +1,4 @@
+import { TPlatformName } from "@/types/common";
 import type { Types } from "mongoose";
 import { create } from "zustand";
 
@@ -7,6 +8,7 @@ interface IUser {
     first_name: string;
     last_name: string;
     profile_pic?: string;
+    platforms: TPlatformName[];
 }
 
 interface IUserState {

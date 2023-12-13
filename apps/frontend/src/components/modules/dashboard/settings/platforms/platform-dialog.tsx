@@ -6,7 +6,7 @@ interface ConnectDialogProps extends React.HTMLAttributes<HTMLDialogElement> {
     platform: string;
 }
 
-export function PlatformDialog({ mode, form, platform, children }: ConnectDialogProps) {
+export function PlatformDialog({ mode, form, platform, children }: Readonly<ConnectDialogProps>) {
     return (
         <Dialog>
             <DialogTrigger asChild>{children}</DialogTrigger>
