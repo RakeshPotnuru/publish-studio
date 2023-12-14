@@ -1,6 +1,9 @@
-import { Types } from "mongoose";
+import type { Types } from "mongoose";
 
-export type TMediumStatus = "public" | "draft" | "unlisted";
+import { constants } from "@/config/constants";
+
+export type TMediumStatus =
+    (typeof constants.mediumStatuses)[keyof typeof constants.mediumStatuses];
 
 export interface IMediumResponse {
     _id: Types.ObjectId;

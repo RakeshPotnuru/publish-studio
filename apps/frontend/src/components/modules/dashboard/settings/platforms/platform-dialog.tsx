@@ -4,11 +4,19 @@ interface ConnectDialogProps extends React.HTMLAttributes<HTMLDialogElement> {
     mode: "connect" | "edit";
     form: React.ReactNode;
     platform: string;
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
 }
 
-export function PlatformDialog({ mode, form, platform, children }: Readonly<ConnectDialogProps>) {
+export function PlatformDialog({
+    mode,
+    form,
+    platform,
+    children,
+    ...props
+}: Readonly<ConnectDialogProps>) {
     return (
-        <Dialog>
+        <Dialog {...props}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader>

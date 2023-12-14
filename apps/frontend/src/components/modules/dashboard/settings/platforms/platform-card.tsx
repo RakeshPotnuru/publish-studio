@@ -7,6 +7,7 @@ import { Icons } from "@/assets/icons";
 import { AskForConfirmation } from "@/components/ui/ask-for-confirmation";
 import { Heading } from "@/components/ui/heading";
 import { Tooltip } from "@/components/ui/tooltip";
+import { trpc } from "@/utils/trpc";
 import { PlatformDialog } from "./platform-dialog";
 
 interface PlatformCardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -18,6 +19,9 @@ interface PlatformCardProps extends React.HTMLAttributes<HTMLDivElement> {
     profile_url?: string;
     connectForm: React.ReactNode;
     editForm?: React.ReactNode;
+    isOpen: boolean;
+    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    onDisconnect: () => void;
 }
 
 export function PlatformCard({
@@ -29,9 +33,14 @@ export function PlatformCard({
     profile_url,
     connectForm,
     editForm,
+    isOpen,
+    setIsOpen,
+    onDisconnect,
     ...props
 }: Readonly<PlatformCardProps>) {
     const [askingForConfirmation, setAskingForConfirmation] = useState(false);
+
+    const utils = trpc.useUtils();
 
     const actionView = connected ? (
         <div className="flex flex-row space-x-1">
@@ -39,10 +48,20 @@ export function PlatformCard({
                 askingForConfirmation={askingForConfirmation}
                 onOpen={() => setAskingForConfirmation(true)}
                 onCancel={() => setAskingForConfirmation(false)}
-                onClick={() => {}}
+                onConfirm={() => {
+                    onDisconnect();
+                    setAskingForConfirmation(false);
+                    utils.getAllPlatforms.invalidate();
+                }}
             />
             <div>
-                <PlatformDialog mode="edit" platform={name} form={editForm}>
+                <PlatformDialog
+                    open={isOpen}
+                    onOpenChange={setIsOpen}
+                    mode="edit"
+                    platform={name}
+                    form={editForm}
+                >
                     <Button size="icon" variant="outline" className="h-8 w-8">
                         <Icons.Edit />
                         <span className="sr-only">Edit your {name} account</span>
@@ -52,7 +71,13 @@ export function PlatformCard({
         </div>
     ) : (
         <div>
-            <PlatformDialog mode="connect" platform={name} form={connectForm}>
+            <PlatformDialog
+                open={isOpen}
+                onOpenChange={setIsOpen}
+                mode="connect"
+                platform={name}
+                form={connectForm}
+            >
                 <Button size="sm">Connect</Button>
             </PlatformDialog>
         </div>

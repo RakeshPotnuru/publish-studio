@@ -143,8 +143,8 @@ export default class MediumService {
             console.log(error);
 
             throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: defaultConfig.defaultErrorMessage,
+                code: "UNAUTHORIZED",
+                message: "Invalid API key",
             });
         }
     }

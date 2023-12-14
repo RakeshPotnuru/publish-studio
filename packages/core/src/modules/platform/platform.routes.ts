@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { constants } from "../../config/constants";
 import { protectedProcedure, router } from "../../trpc";
 import DevToController from "./devto/devto.controller";
 import GhostController from "./ghost/ghost.controller";
@@ -70,7 +71,7 @@ const platformRouter = router({
         .input(
             z.object({
                 api_key: z.string(),
-                default_publish_status: z.custom<TMediumStatus>(),
+                default_publish_status: z.nativeEnum(constants.mediumStatuses),
                 notify_followers: z.boolean(),
             }),
         )

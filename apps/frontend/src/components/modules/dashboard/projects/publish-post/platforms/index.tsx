@@ -1,4 +1,5 @@
 import {
+    Button,
     Checkbox,
     FormControl,
     FormDescription,
@@ -7,12 +8,14 @@ import {
     FormLabel,
     FormMessage,
 } from "@itsrakesh/ui";
+import Link from "next/link";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 
 import { Images } from "@/assets/images";
 import { constants } from "@/config/constants";
-import { formSchema } from "..";
+import { siteConfig } from "@/config/site";
+import { formSchema } from "../form-schema";
 import { Dev } from "./dev";
 import { Hashnode } from "./hashnode";
 import { Medium } from "./medium";
@@ -59,7 +62,19 @@ export const PlatformsField = ({ form, connectedPlatforms }: PlatformsFieldProps
                 <FormItem className="w-full">
                     <div className="mb-4">
                         <FormLabel className="text-base">Platforms</FormLabel>
-                        <FormDescription>Select platforms to publish your post to.</FormDescription>
+                        <FormDescription>
+                            Select platforms to publish your post to.{" "}
+                            <Button
+                                type="button"
+                                variant="link"
+                                className="h-max p-0 text-xs"
+                                asChild
+                            >
+                                <Link href={siteConfig.pages.settings.integrations.link}>
+                                    Connect more
+                                </Link>
+                            </Button>
+                        </FormDescription>
                     </div>
                     {platformConfig
                         .filter(platform => connectedPlatforms.includes(platform.value))

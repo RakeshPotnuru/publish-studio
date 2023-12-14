@@ -19,12 +19,16 @@ import { z } from "zod";
 import { Icons } from "@/assets/icons";
 import { siteConfig } from "@/config/site";
 
+interface HashnodeConnectFormProps extends React.HTMLAttributes<HTMLDivElement> {
+    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 const formSchema = z.object({
-    api_key: z.string().nonempty("API key is required"),
-    username: z.string().nonempty("Username is required"),
+    api_key: z.string().min(1, "API key is required"),
+    username: z.string().min(1, "Username is required"),
 });
 
-export function HashnodeConnectForm() {
+export function HashnodeConnectForm({ setIsOpen, ...props }: Readonly<HashnodeConnectFormProps>) {
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {

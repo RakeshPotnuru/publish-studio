@@ -121,6 +121,12 @@ const errorCauses = {
     VERIFICATION_PENDING: "verification_pending",
 };
 
+enum mediumStatuses {
+    PUBLIC = "public",
+    UNLISTED = "unlisted",
+    DRAFT = "draft",
+}
+
 export const constants = {
     project,
     user,
@@ -130,4 +136,5 @@ export const constants = {
     emailTemplates,
     asset,
     errorCauses,
+    mediumStatuses,
 };
