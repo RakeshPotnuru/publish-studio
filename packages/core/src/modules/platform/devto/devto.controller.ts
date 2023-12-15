@@ -15,13 +15,6 @@ export default class DevToController extends DevToService {
         const user = await super.getDevUser(input.api_key);
 
         if (user.error) {
-            if (user.status === 401) {
-                throw new TRPCError({
-                    code: "UNAUTHORIZED",
-                    message: "Invalid API key",
-                });
-            }
-
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
                 message: defaultConfig.defaultErrorMessage,
@@ -39,22 +32,22 @@ export default class DevToController extends DevToService {
         return {
             status: "success",
             data: {
-                user: newPlatform,
+                platform: newPlatform,
             },
         };
     }
 
     async updatePlatformHandler(
-        input: { api_key?: string; default_publish_status?: boolean },
+        input: { api_key?: string; default_publish_status: boolean },
         ctx: Context,
     ) {
         if (input.api_key) {
             const user = await super.getDevUser(input.api_key);
 
-            if (!user) {
+            if (user.error) {
                 throw new TRPCError({
-                    code: "UNAUTHORIZED",
-                    message: "Invalid API key",
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: defaultConfig.defaultErrorMessage,
                 });
             }
 
@@ -73,7 +66,7 @@ export default class DevToController extends DevToService {
             return {
                 status: "success",
                 data: {
-                    user: updatedPlatform,
+                    platform: updatedPlatform,
                 },
             };
         }
@@ -88,15 +81,15 @@ export default class DevToController extends DevToService {
         return {
             status: "success",
             data: {
-                user: updatedPlatform,
+                platform: updatedPlatform,
             },
         };
     }
 
     async deletePlatformHandler(ctx: Context) {
-        const user = await super.getPlatform(ctx.user?._id);
+        const platform = await super.getPlatform(ctx.user?._id);
 
-        if (!user) {
+        if (!platform) {
             throw new TRPCError({
                 code: "NOT_FOUND",
                 message: "Account not found. Please connect your Dev.to account to continue.",

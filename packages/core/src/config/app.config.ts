@@ -50,7 +50,7 @@ const defaultConfig: ICustomConfig = {
     resetPasswordTokenPrivateKey: process.env.RESET_PASSWORD_TOKEN_PRIVATE_KEY,
     resetPasswordTokenPublicKey: process.env.RESET_PASSWORD_TOKEN_PUBLIC_KEY,
     defaultErrorMessage: "Something went wrong. Please try again later.",
-    hashnode_api_url: "https://api.hashnode.com",
+    hashnode_api_url: "https://gql.hashnode.com",
     devto_api_url: "https://dev.to/api",
     medium_api_url: "https://api.medium.com/v1",
     kickbox_api_url: "https://open.kickbox.com/v1/disposable",

@@ -26,8 +26,12 @@ const platformRouter = router({
     connectHashnode: protectedProcedure
         .input(
             z.object({
-                username: z.string(),
                 api_key: z.string(),
+                default_settings: z.object({
+                    enable_table_of_contents: z.boolean(),
+                    send_newsletter: z.boolean(),
+                    delisted: z.boolean(),
+                }),
             }),
         )
         .mutation(({ input, ctx }) => new HashnodeController().createPlatformHandler(input, ctx)),
@@ -35,8 +39,12 @@ const platformRouter = router({
     updateHashnode: protectedProcedure
         .input(
             z.object({
-                username: z.string(),
                 api_key: z.string().optional(),
+                default_settings: z.object({
+                    enable_table_of_contents: z.boolean(),
+                    send_newsletter: z.boolean(),
+                    delisted: z.boolean(),
+                }),
             }),
         )
         .mutation(({ input, ctx }) => new HashnodeController().updatePlatformHandler(input, ctx)),
@@ -58,7 +66,7 @@ const platformRouter = router({
         .input(
             z.object({
                 api_key: z.string().optional(),
-                default_publish_status: z.boolean().optional(),
+                default_publish_status: z.boolean(),
             }),
         )
         .mutation(({ input, ctx }) => new DevToController().updatePlatformHandler(input, ctx)),
@@ -81,14 +89,14 @@ const platformRouter = router({
         .input(
             z.object({
                 api_key: z.string().optional(),
-                default_publish_status: z.custom<TMediumStatus>().optional(),
-                notify_followers: z.boolean().optional(),
+                default_publish_status: z.custom<TMediumStatus>(),
+                notify_followers: z.boolean(),
             }),
         )
         .mutation(({ input, ctx }) => new MediumController().updateUserHandler(input, ctx)),
 
     disconnectMedium: protectedProcedure.query(({ ctx }) =>
-        new MediumController().deleteUserHandler(ctx),
+        new MediumController().deletePlatformHandler(ctx),
     ),
 
     connectGhost: protectedProcedure

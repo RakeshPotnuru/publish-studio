@@ -10,7 +10,7 @@ import { constants } from "@/config/constants";
 import { trpc } from "@/utils/trpc";
 import { useState } from "react";
 import { DevConnectForm, DevEditForm, IDevToResponse } from "./platforms/dev";
-import { IHashnodeResponse } from "./platforms/hashnode";
+import { HashnodeConnectForm, HashnodeEditForm, IHashnodeResponse } from "./platforms/hashnode";
 import { IMediumResponse, MediumConnectForm, MediumEditForm } from "./platforms/medium";
 import { PlatformCard } from "./platforms/platform-card";
 
@@ -23,9 +23,12 @@ export function Integrations({ ...props }: IntegrationsProps) {
         trpc.disconnectDevTo.useQuery(undefined, {
             enabled: false,
         });
-
     const { refetch: disconnectMedium, isFetching: isDisconnectingMedium } =
         trpc.disconnectMedium.useQuery(undefined, {
+            enabled: false,
+        });
+    const { refetch: disconnectHashnode, isFetching: isDisconnectingHashnode } =
+        trpc.disconnectHashnode.useQuery(undefined, {
             enabled: false,
         });
 
@@ -71,7 +74,7 @@ export function Integrations({ ...props }: IntegrationsProps) {
                             <DevEditForm
                                 setIsOpen={setIsOpen}
                                 default_publish_status={
-                                    devto?.default_publish_status.toString() || "false"
+                                    devto?.default_publish_status.toString() ?? "false"
                                 }
                             />
                         }
@@ -95,23 +98,40 @@ export function Integrations({ ...props }: IntegrationsProps) {
                                 default_publish_status={
                                     medium?.default_publish_status || constants.mediumStatuses.DRAFT
                                 }
-                                notify_followers={medium?.notify_followers.toString() || "false"}
+                                notify_followers={medium?.notify_followers.toString() ?? "false"}
                             />
                         }
                         connectForm={<MediumConnectForm setIsOpen={setIsOpen} />}
                     />
-                    {/* <PlatformCard
+                    <PlatformCard
+                        onDisconnect={async () => {
+                            await disconnectHashnode();
+                        }}
                         isOpen={isOpen}
                         setIsOpen={setIsOpen}
                         name="Hashnode"
                         icon={Images.hashnodeLogo}
-                        isLoading={isFetching}
+                        isLoading={isFetching || isDisconnectingHashnode}
                         connected={hashnode !== undefined}
                         username={hashnode?.username}
                         profile_url={`https://hashnode.com/@${hashnode?.username}`}
-                        editForm={<HashnodeEditForm username={hashnode?.username} />}
-                        connectForm={<HashnodeConnectForm />}
-                    /> */}
+                        editForm={
+                            <HashnodeEditForm
+                                setIsOpen={setIsOpen}
+                                default_settings={{
+                                    delisted:
+                                        hashnode?.default_settings.delisted.toString() ?? "false",
+                                    enable_table_of_contents:
+                                        hashnode?.default_settings.enable_table_of_contents.toString() ??
+                                        "false",
+                                    send_newsletter:
+                                        hashnode?.default_settings.send_newsletter.toString() ??
+                                        "false",
+                                }}
+                            />
+                        }
+                        connectForm={<HashnodeConnectForm setIsOpen={setIsOpen} />}
+                    />
                 </div>
             </div>
             <div className="space-y-4">

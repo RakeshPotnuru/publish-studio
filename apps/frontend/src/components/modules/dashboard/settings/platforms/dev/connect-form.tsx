@@ -75,7 +75,7 @@ export function DevConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFormP
     };
     return (
         <div
-            className={cn("space-y-2", {
+            className={cn("space-y-4", {
                 "animate-shake": error,
             })}
             {...props}

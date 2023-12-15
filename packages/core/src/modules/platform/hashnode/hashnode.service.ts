@@ -12,7 +12,6 @@ import type {
     IHashnode,
     IHashnodeCreatePostOutput,
     IHashnodeCreateStoryInput,
-    IHashnodeUpdate,
     IHashnodeUserOutput,
 } from "./hashnode.types";
 
@@ -74,7 +73,7 @@ export default class HashnodeService {
         }
     }
 
-    async updatePlatform(user: IHashnodeUpdate, user_id: Types.ObjectId | undefined) {
+    async updatePlatform(user: Partial<IHashnode>, user_id: Types.ObjectId | undefined) {
         try {
             return (await Hashnode.findOneAndUpdate({ user_id }, user, {
                 new: true,
@@ -127,33 +126,39 @@ export default class HashnodeService {
         }
     }
 
-    async getHashnodeUser(username: string) {
+    /* This method is used exactly twice before creating or updating user in `HashnodeController()` class
+    to fetch user Hashnode details and update them in database. That's why api key is being used directly. */
+    async getHashnodeUser(api_key: string) {
         try {
             const response = await axios.post(
                 defaultConfig.hashnode_api_url,
                 {
-                    query: `query user($username: String!) {
-                user(username: $username) {
-                    photo
-                    blogHandle
-                    publication {
-                        _id
-                        favicon
-                    }
-                }
-            }`,
-                    variables: {
-                        username,
-                    },
+                    query: `query Me {
+                                me {
+                                    id
+                                    username
+                                    profilePicture
+                                    publications(first: 1, filter: { roles: [OWNER] }) {
+                                        edges {
+                                            node {
+                                                id
+                                                url
+                                                favicon
+                                            }
+                                        }
+                                    }
+                                }
+                            }`,
                 },
                 {
                     headers: {
                         "Content-Type": "application/json",
+                        Authorization: api_key,
                     },
                 },
             );
 
-            return response.data.data.user as IHashnodeUserOutput;
+            return response.data as IHashnodeUserOutput;
         } catch (error) {
             console.log(error);
 
@@ -170,22 +175,22 @@ export default class HashnodeService {
 
             const response = await hashnode?.post("", {
                 query: `mutation createStory($input: CreateStoryInput!) {
-                    createStory(input: $input) {
-                        code
-                        success
-                        message
-                        post {
-                            title
-                            contentMarkdown
-                            tags {
-                                name
+                            createStory(input: $input) {
+                                code
+                                success
+                                message
+                                post {
+                                    title
+                                    contentMarkdown
+                                    tags {
+                                        name
+                                    }
+                                    slug
+                                    coverImage
+                                    brief
+                                }
                             }
-                            slug
-                            coverImage
-                            brief
-                        }
-                    }
-                }`,
+                        }`,
                 variables: {
                     input: post,
                 },
@@ -203,7 +208,7 @@ export default class HashnodeService {
     }
 
     async updatePost(
-        post: IHashnodeCreateStoryInput,
+        post: Partial<IHashnodeCreateStoryInput>,
         post_id: string,
         user_id: Types.ObjectId | undefined,
     ) {
@@ -211,26 +216,19 @@ export default class HashnodeService {
             const hashnode = await this.hashnode(user_id);
 
             const response = await hashnode?.post("", {
-                query: `mutation updateStory($postId: String!, $input: UpdateStoryInput!) {
-                    updateStory(postId: $postId, input: $input) {
-                        code
-                        success
-                        message
-                        post {
-                            title
-                            contentMarkdown
-                            tags {
-                                name
+                query: `mutation UpdatePost($input: UpdatePostInput!) {
+                            updatePost(input: $input) {
+                                post {
+                                    id
+                                    slug
+                                }
                             }
-                            slug
-                            coverImage
-                            brief
-                        }
-                    }
-                }`,
+                        }`,
                 variables: {
-                    postId: post_id,
-                    input: post,
+                    input: {
+                        id: post_id,
+                        ...post,
+                    },
                 },
             });
 

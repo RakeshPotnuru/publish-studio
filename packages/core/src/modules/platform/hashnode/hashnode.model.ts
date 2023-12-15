@@ -16,6 +16,11 @@ const HashnodeSchema = new Schema<IHashnode>(
             publication_id: { type: String, required: true },
             publication_logo: { type: String },
         },
+        default_settings: {
+            enable_table_of_contents: { type: Boolean, required: true, default: false },
+            send_newsletter: { type: Boolean, required: true, default: false },
+            delisted: { type: Boolean, required: true, default: false },
+        },
     },
     {
         timestamps: {

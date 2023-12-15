@@ -65,14 +65,14 @@ export default class ProjectHelpers {
                     user_id,
                 );
 
-                const blogHandle = hashnodeUser?.blog_handle ?? "unknown";
-                const postSlug = hashnodeResponse.data.post.data.createStory.post.slug ?? "unknown";
+                const blogHandle = hashnodeUser.blog_handle;
+                const postSlug = hashnodeResponse.data.post.data.publishPost.post.slug;
 
                 return {
                     name: constants.user.platforms.HASHNODE,
-                    status: hashnodeResponse.data.post?.errors ? "error" : "success",
-                    published_url: `https://${blogHandle}.hashnode.dev/${postSlug}`,
-                    id: hashnodeResponse.data.post.data.createStory.post._id,
+                    status: hashnodeResponse.data.post.errors ? "error" : "success",
+                    published_url: `${blogHandle}/${postSlug}`,
+                    id: hashnodeResponse.data.post.data.publishPost.post.id,
                 } as IPublishResponse;
             }
             case constants.user.platforms.MEDIUM: {

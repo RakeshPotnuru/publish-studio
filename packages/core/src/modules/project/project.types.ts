@@ -69,8 +69,7 @@ export type IProjectUpdate = Partial<IProject>;
 
 export interface THashnodeTag {
     name: string;
-    slug: string;
-    _id: string;
+    id: string;
 }
 
 export interface TTags {

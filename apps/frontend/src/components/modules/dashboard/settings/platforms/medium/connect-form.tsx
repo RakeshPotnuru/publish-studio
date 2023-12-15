@@ -50,7 +50,7 @@ export function MediumConnectForm({ setIsOpen, ...props }: Readonly<MediumConnec
             toast({
                 variant: "success",
                 title: "Connected",
-                description: "Your Dev account has been connected successfully.",
+                description: "Your Medium account has been connected successfully.",
             });
             utils.getAllPlatforms.invalidate();
             setIsOpen(false);
@@ -82,7 +82,7 @@ export function MediumConnectForm({ setIsOpen, ...props }: Readonly<MediumConnec
 
     return (
         <div
-            className={cn("space-y-2", {
+            className={cn("space-y-4", {
                 "animate-shake": error,
             })}
             {...props}

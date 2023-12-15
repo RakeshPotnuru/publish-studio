@@ -20,20 +20,13 @@ export default class MediumController extends MediumService {
         const user = await super.getMediumUser(input.api_key);
 
         if (user.errors) {
-            if (user.errors[0].code === 6000 || user.errors[0].code === 6003) {
-                throw new TRPCError({
-                    code: "UNAUTHORIZED",
-                    message: "Invalid API key",
-                });
-            }
-
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
                 message: defaultConfig.defaultErrorMessage,
             });
         }
 
-        const newUser = await super.createPlatform({
+        const newPlatform = await super.createPlatform({
             user_id: ctx.user?._id,
             api_key: input.api_key,
             username: user.username,
@@ -46,7 +39,7 @@ export default class MediumController extends MediumService {
         return {
             status: "success",
             data: {
-                user: newUser,
+                platform: newPlatform,
             },
         };
     }
@@ -54,24 +47,24 @@ export default class MediumController extends MediumService {
     async updateUserHandler(
         input: {
             api_key?: string;
-            default_publish_status?: TMediumStatus;
-            notify_followers?: boolean;
+            default_publish_status: TMediumStatus;
+            notify_followers: boolean;
         },
         ctx: Context,
     ) {
         if (input.api_key) {
             const user = await super.getMediumUser(input.api_key);
 
-            if (!user) {
+            if (user.errors) {
                 throw new TRPCError({
-                    code: "UNAUTHORIZED",
-                    message: "Invalid API key",
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: defaultConfig.defaultErrorMessage,
                 });
             }
 
             input.api_key = await encryptField(input.api_key);
 
-            const updatedUser = await super.updatePlatform(
+            const updatedPlatform = await super.updatePlatform(
                 {
                     api_key: input.api_key,
                     username: user.username,
@@ -86,12 +79,12 @@ export default class MediumController extends MediumService {
             return {
                 status: "success",
                 data: {
-                    user: updatedUser,
+                    platform: updatedPlatform,
                 },
             };
         }
 
-        const updatedUser = await super.updatePlatform(
+        const updatedPlatform = await super.updatePlatform(
             {
                 default_publish_status: input.default_publish_status,
                 notify_followers: input.notify_followers,
@@ -102,15 +95,15 @@ export default class MediumController extends MediumService {
         return {
             status: "success",
             data: {
-                user: updatedUser,
+                platform: updatedPlatform,
             },
         };
     }
 
-    async deleteUserHandler(ctx: Context) {
-        const user = await super.getPlatform(ctx.user?._id);
+    async deletePlatformHandler(ctx: Context) {
+        const platform = await super.getPlatform(ctx.user?._id);
 
-        if (!user) {
+        if (!platform) {
             throw new TRPCError({
                 code: "NOT_FOUND",
                 message: "Account not found. Please connect your Medium account to continue.",

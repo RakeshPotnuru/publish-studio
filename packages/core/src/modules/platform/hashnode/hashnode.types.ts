@@ -1,16 +1,23 @@
 import type { Types } from "mongoose";
 
+export interface IHashnodeDefaultSettings {
+    enable_table_of_contents: boolean;
+    send_newsletter: boolean;
+    delisted: boolean;
+}
+
 export interface IHashnode {
     _id?: Types.ObjectId;
     user_id?: Types.ObjectId;
     api_key: string;
     username: string;
     profile_pic?: string;
-    blog_handle?: string;
+    blog_handle: string;
     publication: {
         publication_id: string;
         publication_logo?: string;
     };
+    default_settings: IHashnodeDefaultSettings;
 }
 
 export interface IHashnodeResponse {
@@ -19,79 +26,78 @@ export interface IHashnodeResponse {
     api_key: string;
     username: string;
     profile_pic?: string;
-    blog_handle?: string;
+    blog_handle: string;
     publication: {
         publication_id: string;
         publication_logo?: string;
     };
+    default_settings: IHashnodeDefaultSettings;
     created_at: Date;
     updated_at: Date;
 }
 
-export interface IHashnodeUpdate {
-    _id?: Types.ObjectId;
-    user_id?: Types.ObjectId;
-    api_key?: string;
-    username: string;
-    profile_pic?: string;
-    blog_handle?: string;
-    publication: {
-        publication_id: string;
-        publication_logo?: string;
-    };
-}
-
 export interface IHashnodeUserOutput {
-    photo: string;
-    blogHandle: string;
-    publication: {
-        _id: string;
-        favicon: string;
-    };
-}
-
-export interface IHashnodeCreateStoryInput {
-    title: string;
-    isPartOfPublication: {
-        publicationId: string;
-    };
-    contentMarkdown?: string;
-    coverImageURL?: string;
-    isRepublished?: {
-        originalArticleURL?: string;
-    };
-    tags?: {
-        _id: string;
-        name: string;
-        slug: string;
-    }[];
-}
-
-export interface IHashnodeCreatePostOutput {
+    data: {
+        me: {
+            id: string;
+            username: string;
+            profilePicture: string;
+            publications: {
+                edges: {
+                    node: {
+                        id: string;
+                        url: string;
+                        favicon: string;
+                    };
+                }[];
+                totalDocuments: number;
+            };
+        };
+    } | null;
     errors: {
         message: string;
         locations: {
             line: number;
             column: number;
         }[];
+        path: string[];
         extensions: {
-            code: "UNAUTHENTICATED" | "INTERNAL_SERVER_ERROR";
+            code:
+                | "GRAPHQL_VALIDATION_FAILED"
+                | "UNAUTHENTICATED"
+                | "FORBIDDEN"
+                | "BAD_USER_INPUT"
+                | "NOT_FOUND";
+        };
+    }[];
+}
+
+export interface IHashnodeCreateStoryInput {
+    title: string;
+    publicationId: string;
+    contentMarkdown: string;
+    coverImageOptions?: {
+        coverImageURL?: string;
+    };
+    originalArticleURL?: string;
+    tags: { id: string; name: string }[];
+    settings: {
+        enableTableOfContent: boolean;
+        isNewsletterActivated: boolean;
+        delisted: boolean;
+    };
+}
+
+export interface IHashnodeCreatePostOutput {
+    errors: {
+        message: string;
+        extensions: {
+            stellate: {
+                code: "UNAUTHENTICATED" | "INVALID_QUERY";
+            };
         };
     }[];
     data: {
-        createStory: {
-            code: number;
-            success: boolean;
-            message: string;
-            post: {
-                _id: string;
-                title: string;
-                contentMarkdown: string;
-                tags: { name: string }[];
-                slug: string;
-                coverImage: string;
-                brief: string;
-            };
-        };
+        publishPost: { post: { id: string; slug: string } };
     };
 }

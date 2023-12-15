@@ -36,8 +36,8 @@ interface MediumEditFormProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const formSchema = z.object({
     api_key: z.string().optional(),
-    default_publish_status: z.nativeEnum(constants.mediumStatuses).optional(),
-    notify_followers: z.string().optional(),
+    default_publish_status: z.nativeEnum(constants.mediumStatuses),
+    notify_followers: z.string(),
 });
 
 export function MediumEditForm({
@@ -88,7 +88,7 @@ export function MediumEditForm({
 
     return (
         <div
-            className={cn("space-y-2", {
+            className={cn("space-y-4", {
                 "animate-shake": error,
             })}
             {...props}
