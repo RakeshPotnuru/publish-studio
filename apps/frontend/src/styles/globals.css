@@ -147,6 +147,16 @@
     }
 }
 
+@keyframes slide-down {
+    0% {
+        transform: translateY(-25%);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
 .tiptap p.is-editor-empty:first-child::before {
     color: #adb5bd;
     content: attr(data-placeholder);

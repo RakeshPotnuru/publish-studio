@@ -15,6 +15,7 @@ import { z } from "zod";
 import { Images } from "@/assets/images";
 import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
+import { TPlatformName } from "@/types/common";
 import { formSchema } from "../form-schema";
 import { Dev } from "./dev";
 import { Hashnode } from "./hashnode";
@@ -50,14 +51,16 @@ const platformConfig: IPlatformConfig[] = [
 
 interface PlatformsFieldProps {
     form: UseFormReturn<z.infer<typeof formSchema>>;
-    connectedPlatforms: (typeof constants.user.platforms)[keyof typeof constants.user.platforms][];
+    connectedPlatforms: TPlatformName[];
+    isLoading: boolean;
 }
 
-export const PlatformsField = ({ form, connectedPlatforms }: PlatformsFieldProps) => {
+export const PlatformsField = ({ form, connectedPlatforms, isLoading }: PlatformsFieldProps) => {
     return (
         <FormField
             control={form.control}
             name="platforms"
+            disabled={isLoading}
             render={() => (
                 <FormItem className="w-full">
                     <div className="mb-4">
@@ -83,6 +86,7 @@ export const PlatformsField = ({ form, connectedPlatforms }: PlatformsFieldProps
                                 key={platform.value}
                                 control={form.control}
                                 name="platforms"
+                                disabled={isLoading}
                                 render={({ field }) => {
                                     return (
                                         <div className="flex flex-col space-y-2 rounded-md border p-2">
@@ -109,6 +113,7 @@ export const PlatformsField = ({ form, connectedPlatforms }: PlatformsFieldProps
                                                                       ),
                                                                   );
                                                         }}
+                                                        disabled={isLoading}
                                                     />
                                                 </FormControl>
                                                 <FormLabel className="text-sm font-normal">

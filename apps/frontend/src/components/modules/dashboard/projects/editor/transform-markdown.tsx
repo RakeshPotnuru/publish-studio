@@ -110,9 +110,8 @@ const serializerMarks = {
         ) {
             const href = mark.attrs.canonicalSrc || mark.attrs.href;
 
-            return isPlainURL(mark, parent, index, -1)
-                ? ">"
-                : `](${state.esc(href)}${mark.attrs.title ? mark.attrs.title : ""})`;
+            const title = mark.attrs.title ? mark.attrs.title : "";
+            return isPlainURL(mark, parent, index, -1) ? ">" : `](${state.esc(href)}${title})`;
         },
     },
 };

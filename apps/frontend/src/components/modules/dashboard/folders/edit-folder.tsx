@@ -43,7 +43,7 @@ const formSchema = z.object({
         ),
 });
 
-export function EditFolderDialog({ children, ...props }: EditFolderDialogProps) {
+export function EditFolderDialog({ children, ...props }: Readonly<EditFolderDialogProps>) {
     const [error, setError] = useState<string | null>(null);
     const [open, setOpen] = useState(false);
 

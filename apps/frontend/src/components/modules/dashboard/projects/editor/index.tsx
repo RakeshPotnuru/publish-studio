@@ -1,12 +1,12 @@
 "use client";
 
+import { useToast } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import { TableOfContent, TableOfContentDataItem } from "@tiptap-pro/extension-table-of-content";
 import { useEditor } from "@tiptap/react";
 import { memo, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
-import { ErrorBox } from "@/components/ui/error-box";
 import { useFullscreenStatus } from "@/hooks/fullscreen-status";
 import { IProject } from "@/lib/store/projects";
 import { trpc } from "@/utils/trpc";
@@ -29,13 +29,17 @@ const MemorizedToC = memo(ToC);
 
 export function Editor({ className, project, ...props }: Readonly<EditorProps>) {
     const [items, setItems] = useState<TableOfContentDataItem[]>([]);
-    const [error, setError] = useState<string | null>(null);
 
     const isFullscreen = useFullscreenStatus();
+    const { toast } = useToast();
 
     const { mutateAsync: autoSaveProject, isLoading } = trpc.updateProject.useMutation({
         onError: error => {
-            setError(error.message);
+            toast({
+                variant: "destructive",
+                title: "Failed to save project",
+                description: error.message,
+            });
         },
     });
 
@@ -64,7 +68,7 @@ export function Editor({ className, project, ...props }: Readonly<EditorProps>) 
                 class: "bg-background min-h-screen rounded-3xl shadow-sm p-8 outline-none space-y-4",
             },
         },
-        autofocus: "end",
+        autofocus: true,
         onUpdate: ({ editor }) => {
             handleAutosave(editor.state.doc.toJSON());
         },
@@ -75,7 +79,6 @@ export function Editor({ className, project, ...props }: Readonly<EditorProps>) 
 
     return (
         <>
-            {error && <ErrorBox title="Error" description={error} />}
             <div className={cn("flex flex-row space-x-4", className)} {...props}>
                 <div
                     id="editor"

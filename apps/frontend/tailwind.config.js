@@ -114,6 +114,7 @@ module.exports = {
                 shake: "shake 0.82s cubic-bezier(.36,.07,.19,.97)",
                 "slide-left": "slide-left 0.2s ease-out",
                 "slide-right": "slide-right 0.2s ease-out",
+                "slide-down": "slide-down 0.3s ease-out",
             },
         },
     },

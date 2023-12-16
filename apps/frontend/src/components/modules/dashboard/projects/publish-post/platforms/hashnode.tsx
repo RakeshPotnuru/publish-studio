@@ -10,14 +10,13 @@ import {
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 
-import { constants } from "@/config/constants";
-import { formSchema } from "..";
+import { formSchema } from "../form-schema";
 
 interface HashnodeProps {
     form: UseFormReturn<z.infer<typeof formSchema>>;
 }
 
-export function Hashnode({ form }: HashnodeProps) {
+export function Hashnode({ form }: Readonly<HashnodeProps>) {
     return (
         <div>
             <FormField
@@ -25,10 +24,7 @@ export function Hashnode({ form }: HashnodeProps) {
                 name="tags.hashnode_tags"
                 render={({ field }) => (
                     <FormItem className="w-full">
-                        <FormLabel>
-                            Tags (Optionally enter comma seperated tags, max{" "}
-                            {constants.project.tags.hashnode.MAX_LENGTH}.)
-                        </FormLabel>
+                        <FormLabel>Tags</FormLabel>
                         <FormControl>
                             <Input
                                 type="text"

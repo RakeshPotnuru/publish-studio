@@ -37,6 +37,45 @@ const projectRouter = router({
         .input(z.custom<Types.ObjectId>())
         .query(({ input, ctx }) => new ProjectController().getProjectByIdHandler(input, ctx)),
 
+    updateProject: protectedProcedure
+        .input(
+            z.object({
+                id: z.custom<Types.ObjectId>(),
+                project: z.object({
+                    folder_id: z.custom<Types.ObjectId>().optional(),
+                    title: z
+                        .string()
+                        .min(constants.project.title.MIN_LENGTH)
+                        .max(constants.project.title.MAX_LENGTH)
+                        .optional(),
+                    description: z
+                        .string()
+                        .max(constants.project.description.MAX_LENGTH)
+                        .optional(),
+                    body: z
+                        .object({
+                            json: z.custom<JSON>().optional(),
+                            html: z.string().optional(),
+                            markdown: z.string().optional(),
+                        })
+                        .optional(),
+                    status: z.nativeEnum(constants.project.status).optional(),
+                    cover_image: z.string().optional(),
+                    platforms: z
+                        .array(
+                            z.object({
+                                name: z.nativeEnum(constants.user.platforms),
+                                published_url: z.string().optional(),
+                            }),
+                        )
+                        .optional(),
+                    canonical_url: z.string().optional(),
+                    scheduled_at: z.string().pipe(z.coerce.date()).optional(),
+                }),
+            }),
+        )
+        .mutation(({ input, ctx }) => new ProjectController().updateProjectHandler(input, ctx)),
+
     schedulePost: protectedProcedure
         .input(
             z.object({
@@ -130,44 +169,6 @@ const projectRouter = router({
         .query(({ input, ctx }) =>
             new ProjectController().getProjectsByFolderIdHandler(input, ctx),
         ),
-
-    updateProject: protectedProcedure
-        .input(
-            z.object({
-                id: z.custom<Types.ObjectId>(),
-                project: z.object({
-                    folder_id: z.custom<Types.ObjectId>().optional(),
-                    title: z
-                        .string()
-                        .min(constants.project.title.MIN_LENGTH)
-                        .max(constants.project.title.MAX_LENGTH)
-                        .optional(),
-                    description: z
-                        .string()
-                        .max(constants.project.description.MAX_LENGTH)
-                        .optional(),
-                    body: z
-                        .object({
-                            json: z.custom<JSON>().optional(),
-                            html: z.string().optional(),
-                            markdown: z.string().optional(),
-                        })
-                        .optional(),
-                    status: z.nativeEnum(constants.project.status).optional(),
-                    cover_image: z.string().optional(),
-                    platforms: z
-                        .array(
-                            z.object({
-                                name: z.nativeEnum(constants.user.platforms),
-                                published_url: z.string().optional(),
-                            }),
-                        )
-                        .optional(),
-                    scheduled_at: z.string().pipe(z.coerce.date()).optional(),
-                }),
-            }),
-        )
-        .mutation(({ input, ctx }) => new ProjectController().updateProjectHandler(input, ctx)),
 
     deleteProjects: protectedProcedure
         .input(z.array(z.custom<Types.ObjectId>()))

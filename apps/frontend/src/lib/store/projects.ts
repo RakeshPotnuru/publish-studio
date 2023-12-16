@@ -6,9 +6,22 @@ import { TPlatformName } from "@/types/common";
 
 type TProjectStatus = (typeof constants.project.status)[keyof typeof constants.project.status];
 
+export interface THashnodeTag {
+    name: string;
+    id: string;
+}
+
+export interface TTags {
+    hashnode_tags?: THashnodeTag[];
+    devto_tags?: string[];
+    medium_tags?: string[];
+    ghost_tags?: { name: string }[];
+}
+
 export interface IProject {
     _id: Types.ObjectId;
     title: string;
+    description?: string;
     status: TProjectStatus;
     created: Date;
     last_edited: Date;
@@ -20,6 +33,8 @@ export interface IProject {
         id?: string;
         _id: Types.ObjectId;
     }[];
+    tags?: TTags;
+    canonical_url?: string;
 }
 
 interface IProjectState {
