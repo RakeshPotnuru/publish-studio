@@ -5,7 +5,7 @@ import { constants } from "../../config/constants";
 import type { Context } from "../../trpc";
 import ProjectHelpers from "./project.helpers";
 import ProjectService from "./project.service";
-import type { IProject, IProjectUpdate, TTags } from "./project.types";
+import type { IProject, IProjectUpdate } from "./project.types";
 
 export default class ProjectController extends ProjectService {
     async createProjectHandler(input: IProject, ctx: Context) {
@@ -29,8 +29,6 @@ export default class ProjectController extends ProjectService {
             description: project.description,
             body: project.body,
             status: project.status,
-            cover_image: project.cover_image,
-            scheduled_at: project.scheduled_at,
         });
 
         return {
@@ -41,14 +39,10 @@ export default class ProjectController extends ProjectService {
         };
     }
 
-    async publishPost(project_id: Types.ObjectId, user_id: Types.ObjectId, tags: TTags) {
+    async publishPost(project_id: Types.ObjectId, user_id: Types.ObjectId) {
         const project = await super.getProjectById(project_id, user_id);
 
-        const publishResponse = await new ProjectHelpers().publishOnPlatforms(
-            project,
-            user_id,
-            tags,
-        );
+        const publishResponse = await new ProjectHelpers().publishOnPlatforms(project, user_id);
 
         await super.updateProjectById(
             project_id,
@@ -66,7 +60,7 @@ export default class ProjectController extends ProjectService {
         return {
             status: "success",
             data: {
-                publishResponse: publishResponse,
+                response: publishResponse,
             },
         };
     }
@@ -77,17 +71,12 @@ export default class ProjectController extends ProjectService {
             platforms: {
                 name: (typeof constants.user.platforms)[keyof typeof constants.user.platforms];
             }[];
-            tags: TTags;
         },
         ctx: Context,
     ) {
         const project = await super.getProjectById(input.project_id, ctx.user?._id);
 
-        const updateResponse = await new ProjectHelpers().updateOnPlatforms(
-            project,
-            ctx.user?._id,
-            input.tags,
-        );
+        const updateResponse = await new ProjectHelpers().updateOnPlatforms(project, ctx.user?._id);
 
         if (!updateResponse) {
             throw new TRPCError({
@@ -112,7 +101,7 @@ export default class ProjectController extends ProjectService {
         return {
             status: "success",
             data: {
-                updateResponse: updateResponse,
+                response: updateResponse,
             },
         };
     }
@@ -120,15 +109,11 @@ export default class ProjectController extends ProjectService {
     async schedulePostHandler(
         input: {
             project_id: Types.ObjectId;
-            platforms: {
-                name: (typeof constants.user.platforms)[keyof typeof constants.user.platforms];
-            }[];
-            tags?: TTags;
             scheduled_at: Date;
         },
         ctx: Context,
     ) {
-        const { project_id, platforms, tags, scheduled_at } = input;
+        const { project_id, scheduled_at } = input;
 
         const project = await super.getProjectById(project_id, ctx.user?._id);
 
@@ -139,11 +124,25 @@ export default class ProjectController extends ProjectService {
             });
         }
 
+        if (project.status === constants.project.status.SCHEDULED) {
+            throw new TRPCError({
+                code: "BAD_REQUEST",
+                message: "Project is already scheduled.",
+            });
+        }
+
+        await super.updateProjectById(
+            project_id,
+            {
+                scheduled_at: scheduled_at,
+            },
+            ctx.user?._id,
+        );
+
         const projectHelphers = new ProjectHelpers();
 
         await projectHelphers.schedulePost({
             project_id: project_id,
-            tags: tags,
             scheduled_at: scheduled_at,
             user_id: ctx.user?._id,
         });
@@ -151,12 +150,17 @@ export default class ProjectController extends ProjectService {
         await super.updateProjectById(
             project_id,
             {
-                platforms: platforms,
                 status: constants.project.status.SCHEDULED,
-                scheduled_at: scheduled_at,
             },
             ctx.user?._id,
         );
+
+        return {
+            status: "success",
+            data: {
+                message: "Project scheduled successfully.",
+            },
+        };
     }
 
     async getProjectByIdHandler(input: Types.ObjectId, ctx: Context) {
@@ -172,7 +176,7 @@ export default class ProjectController extends ProjectService {
         return {
             status: "success",
             data: {
-                project: project,
+                project,
             },
         };
     }

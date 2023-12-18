@@ -95,6 +95,10 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
         try {
             await duplicateProject({
                 title: cutTitle(`Copy of ${row.original.title}`),
+                description: row.original.description,
+                body: {
+                    json: row.original.body?.json,
+                },
                 folder_id: folder,
             });
         } catch (error) {}

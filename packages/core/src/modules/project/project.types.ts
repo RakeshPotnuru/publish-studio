@@ -27,6 +27,7 @@ export interface IProject {
         published_url?: string;
         id?: string;
     }[];
+    tags?: ITags;
     canonical_url?: string;
     scheduled_at?: Date;
     created_at?: Date;
@@ -54,6 +55,7 @@ export interface IProjectResponse {
         id?: string;
         _id: Types.ObjectId;
     }[];
+    tags?: ITags;
     canonical_url?: string;
     scheduled_at?: Date;
     created_at: Date;
@@ -67,13 +69,13 @@ export interface IProjectsResponse {
 
 export type IProjectUpdate = Partial<IProject>;
 
-export interface THashnodeTag {
+export interface IHashnodeTag {
     name: string;
     id: string;
 }
 
-export interface TTags {
-    hashnode_tags?: THashnodeTag[];
+export interface ITags {
+    hashnode_tags?: IHashnodeTag[];
     devto_tags?: string[];
     medium_tags?: string[];
     ghost_tags?: { name: string }[];
@@ -81,7 +83,6 @@ export interface TTags {
 
 export interface IPost {
     project_id: Types.ObjectId;
-    tags?: TTags;
     scheduled_at: Date;
     user_id: Types.ObjectId | undefined;
 }

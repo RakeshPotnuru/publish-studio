@@ -11,7 +11,7 @@ import HashnodeController from "../platform/hashnode/hashnode.controller";
 import MediumController from "../platform/medium/medium.controller";
 import type { TPlatformName } from "../platform/platform.types";
 import ProjectController from "./project.controller";
-import type { IPost, IProject, TTags } from "./project.types";
+import type { IPost, IProject } from "./project.types";
 
 interface IPublishResponse {
     name: TPlatformName;
@@ -32,18 +32,12 @@ export default class ProjectHelpers {
         );
     }
 
-    async publishOnPlatform(
-        platform: TPlatformName,
-        project: IProject,
-        user_id: Types.ObjectId,
-        tags?: TTags,
-    ) {
+    async publishOnPlatform(platform: TPlatformName, project: IProject, user_id: Types.ObjectId) {
         switch (platform) {
             case constants.user.platforms.DEVTO: {
                 const devResponse = await new DevToController().createPostHandler(
                     {
                         post: project,
-                        tags: tags,
                     },
                     user_id,
                 );
@@ -60,7 +54,6 @@ export default class ProjectHelpers {
                 const hashnodeResponse = await new HashnodeController().createPostHandler(
                     {
                         post: project,
-                        tags: tags,
                     },
                     user_id,
                 );
@@ -79,7 +72,6 @@ export default class ProjectHelpers {
                 const mediumResponse = await new MediumController().createPostHandler(
                     {
                         post: project,
-                        tags: tags,
                     },
                     user_id,
                 );
@@ -95,7 +87,6 @@ export default class ProjectHelpers {
                 const ghostResponse = await new GhostController().createPostHandler(
                     {
                         post: project,
-                        tags: tags,
                     },
                     user_id,
                 );
@@ -115,26 +106,24 @@ export default class ProjectHelpers {
         }
     }
 
-    async publishOnPlatforms(project: IProject, user_id: Types.ObjectId, tags?: TTags) {
+    async publishOnPlatforms(project: IProject, user_id: Types.ObjectId) {
         const publishResponse = [] as IPublishResponse[];
-
-        if (ProjectHelpers.shouldPublishOnPlatform(project, constants.user.platforms.DEVTO)) {
-            const response = await this.publishOnPlatform(
-                constants.user.platforms.DEVTO,
-                project,
-                user_id,
-                tags,
-            );
-
-            publishResponse.push(response);
-        }
 
         if (ProjectHelpers.shouldPublishOnPlatform(project, constants.user.platforms.HASHNODE)) {
             const response = await this.publishOnPlatform(
                 constants.user.platforms.HASHNODE,
                 project,
                 user_id,
-                tags,
+            );
+
+            publishResponse.push(response);
+        }
+
+        if (ProjectHelpers.shouldPublishOnPlatform(project, constants.user.platforms.DEVTO)) {
+            const response = await this.publishOnPlatform(
+                constants.user.platforms.DEVTO,
+                project,
+                user_id,
             );
 
             publishResponse.push(response);
@@ -145,7 +134,6 @@ export default class ProjectHelpers {
                 constants.user.platforms.MEDIUM,
                 project,
                 user_id,
-                tags,
             );
 
             publishResponse.push(response);
@@ -156,7 +144,6 @@ export default class ProjectHelpers {
                 constants.user.platforms.GHOST,
                 project,
                 user_id,
-                tags,
             );
 
             publishResponse.push(response);
@@ -181,7 +168,6 @@ export default class ProjectHelpers {
         platform: TPlatformName,
         project: IProject,
         user_id: Types.ObjectId | undefined,
-        tags: TTags,
     ) {
         switch (platform) {
             case constants.user.platforms.DEVTO: {
@@ -197,7 +183,6 @@ export default class ProjectHelpers {
                     {
                         post: project,
                         post_id: Number.parseInt(post_id),
-                        tags: tags,
                     },
                     user_id,
                 );
@@ -222,7 +207,6 @@ export default class ProjectHelpers {
                 const response = await new HashnodeController().updatePostHandler(
                     {
                         post: project,
-                        tags: tags,
                         post_id,
                     },
                     user_id,
@@ -248,7 +232,6 @@ export default class ProjectHelpers {
                 const response = await new GhostController().updatePostHandler(
                     {
                         post: project,
-                        tags: tags,
                         post_id,
                     },
                     user_id,
@@ -268,7 +251,7 @@ export default class ProjectHelpers {
         }
     }
 
-    async updateOnPlatforms(project: IProject, user_id: Types.ObjectId | undefined, tags: TTags) {
+    async updateOnPlatforms(project: IProject, user_id: Types.ObjectId | undefined) {
         const updateResponse = project.platforms;
 
         if (!updateResponse) {
@@ -276,17 +259,17 @@ export default class ProjectHelpers {
         }
 
         if (project.platforms?.find(platform => platform.name === constants.user.platforms.DEVTO)) {
-            await this.updateOnPlatform(constants.user.platforms.DEVTO, project, user_id, tags);
+            await this.updateOnPlatform(constants.user.platforms.DEVTO, project, user_id);
         }
 
         if (
             project.platforms?.find(platform => platform.name === constants.user.platforms.HASHNODE)
         ) {
-            await this.updateOnPlatform(constants.user.platforms.HASHNODE, project, user_id, tags);
+            await this.updateOnPlatform(constants.user.platforms.HASHNODE, project, user_id);
         }
 
         if (project.platforms?.find(platform => platform.name === constants.user.platforms.GHOST)) {
-            await this.updateOnPlatform(constants.user.platforms.GHOST, project, user_id, tags);
+            await this.updateOnPlatform(constants.user.platforms.GHOST, project, user_id);
         }
 
         return updateResponse;
@@ -330,7 +313,6 @@ export default class ProjectHelpers {
                     await new ProjectController().publishPost(
                         new Types.ObjectId(job.data.project_id as string),
                         new Types.ObjectId(job.data.user_id as string),
-                        job.data.tags as TTags,
                     );
 
                     console.log(

@@ -4,7 +4,6 @@ import { z } from "zod";
 import { constants } from "../../config/constants";
 import { proProtectedProcedure, protectedProcedure, router } from "../../trpc";
 import ProjectController from "./project.controller";
-import type { THashnodeTag } from "./project.types";
 
 const projectRouter = router({
     createProject: protectedProcedure
@@ -27,8 +26,6 @@ const projectRouter = router({
                     .nativeEnum(constants.project.status)
                     .optional()
                     .default(constants.project.status.DRAFT),
-                cover_image: z.string().optional(),
-                scheduled_at: z.string().pipe(z.coerce.date()).optional(),
             }),
         )
         .mutation(({ input, ctx }) => new ProjectController().createProjectHandler(input, ctx)),
@@ -69,6 +66,17 @@ const projectRouter = router({
                             }),
                         )
                         .optional(),
+                    tags: z
+                        .object({
+                            devto_tags: z.array(z.string()).optional(),
+                            // hashnode_tags: z.array(z.object({
+                            //     name: z.string(),
+                            //     slug: z.string(),
+                            //     id: z.string(),
+                            // })).optional(),
+                            medium_tags: z.array(z.string()).optional(),
+                        })
+                        .optional(),
                     canonical_url: z.string().optional(),
                     scheduled_at: z.string().pipe(z.coerce.date()).optional(),
                 }),
@@ -80,34 +88,7 @@ const projectRouter = router({
         .input(
             z.object({
                 project_id: z.custom<Types.ObjectId>(),
-                platforms: z
-                    .array(
-                        z.object({
-                            name: z.nativeEnum(constants.user.platforms),
-                        }),
-                    )
-                    .min(1),
-                tags: z
-                    .object({
-                        hashnode_tags: z
-                            .array(z.custom<THashnodeTag>())
-                            .max(constants.project.tags.hashnode.MAX_LENGTH)
-                            .optional(),
-                        devto_tags: z
-                            .array(z.string())
-                            .max(constants.project.tags.dev.MAX_LENGTH)
-                            .optional(),
-                        medium_tags: z
-                            .array(z.string())
-                            .max(constants.project.tags.medium.MAX_LENGTH)
-                            .optional(),
-                        ghost_tags: z
-                            .array(z.object({ name: z.string() }))
-                            .max(constants.project.tags.ghost.MAX_LENGTH)
-                            .optional(),
-                    })
-                    .optional(),
-                scheduled_at: z.string().pipe(z.coerce.date()),
+                scheduled_at: z.date(),
             }),
         )
         .mutation(({ input, ctx }) => new ProjectController().schedulePostHandler(input, ctx)),
@@ -123,24 +104,6 @@ const projectRouter = router({
                         }),
                     )
                     .min(1),
-                tags: z.object({
-                    hashnode_tags: z
-                        .array(z.custom<THashnodeTag>())
-                        .max(constants.project.tags.hashnode.MAX_LENGTH)
-                        .optional(),
-                    devto_tags: z
-                        .array(z.string())
-                        .max(constants.project.tags.dev.MAX_LENGTH)
-                        .optional(),
-                    medium_tags: z
-                        .array(z.string())
-                        .max(constants.project.tags.medium.MAX_LENGTH)
-                        .optional(),
-                    ghost_tags: z
-                        .array(z.object({ name: z.string() }))
-                        .max(constants.project.tags.ghost.MAX_LENGTH)
-                        .optional(),
-                }),
             }),
         )
         .mutation(({ input, ctx }) => new ProjectController().updatePostHandler(input, ctx)),

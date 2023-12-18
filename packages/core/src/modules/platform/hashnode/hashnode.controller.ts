@@ -4,7 +4,7 @@ import type { Types } from "mongoose";
 import defaultConfig from "../../../config/app.config";
 import type { Context } from "../../../trpc";
 import { encryptField } from "../../../utils/aws/kms";
-import type { IProject, TTags } from "../../project/project.types";
+import type { IProject } from "../../project/project.types";
 import HashnodeService from "./hashnode.service";
 import type { IHashnodeDefaultSettings } from "./hashnode.types";
 
@@ -160,7 +160,6 @@ export default class HashnodeController extends HashnodeService {
     async createPostHandler(
         input: {
             post: IProject;
-            tags?: TTags;
         },
         user_id: Types.ObjectId,
     ) {
@@ -173,9 +172,9 @@ export default class HashnodeController extends HashnodeService {
             });
         }
 
-        const { post, tags } = input;
+        const { post } = input;
 
-        if (!post.body?.markdown || !tags?.hashnode_tags) {
+        if (!post.body?.markdown) {
             throw new TRPCError({
                 code: "BAD_REQUEST",
                 message: "Invalid fields",
@@ -186,7 +185,7 @@ export default class HashnodeController extends HashnodeService {
             {
                 title: post.title,
                 contentMarkdown: post.body.markdown,
-                tags: tags.hashnode_tags,
+                tags: post.tags?.hashnode_tags ?? [],
                 publicationId: platform.publication.publication_id,
                 settings: {
                     delisted: platform.default_settings.delisted,
@@ -226,7 +225,6 @@ export default class HashnodeController extends HashnodeService {
     async updatePostHandler(
         input: {
             post: IProject;
-            tags?: TTags;
             post_id: string;
         },
         user_id: Types.ObjectId | undefined,
@@ -240,9 +238,9 @@ export default class HashnodeController extends HashnodeService {
             });
         }
 
-        const { post, tags, post_id } = input;
+        const { post, post_id } = input;
 
-        if (!post.body?.markdown || !tags?.hashnode_tags) {
+        if (!post.body?.markdown) {
             throw new TRPCError({
                 code: "BAD_REQUEST",
                 message: "Invalid fields",
@@ -253,7 +251,7 @@ export default class HashnodeController extends HashnodeService {
             {
                 title: post.title,
                 contentMarkdown: post.body.markdown,
-                tags: tags.hashnode_tags,
+                tags: post.tags?.hashnode_tags ?? [],
                 coverImageOptions: {
                     coverImageURL: post.cover_image,
                 },

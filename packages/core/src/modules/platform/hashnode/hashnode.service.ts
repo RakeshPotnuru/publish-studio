@@ -174,22 +174,13 @@ export default class HashnodeService {
             const hashnode = await this.hashnode(user_id);
 
             const response = await hashnode?.post("", {
-                query: `mutation createStory($input: CreateStoryInput!) {
-                            createStory(input: $input) {
-                                code
-                                success
-                                message
+                query: `mutation PublishPost($input: PublishPostInput!) {
+                            publishPost(input: $input) {
                                 post {
-                                    title
-                                    contentMarkdown
-                                    tags {
-                                        name
-                                    }
+                                    id
                                     slug
-                                    coverImage
-                                    brief
                                 }
-                            }
+                            } 
                         }`,
                 variables: {
                     input: post,

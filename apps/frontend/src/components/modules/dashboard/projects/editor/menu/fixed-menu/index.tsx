@@ -25,7 +25,6 @@ export function FixedMenu({
     ...props
 }: FixedMenuProps & React.HTMLAttributes<HTMLDivElement>) {
     const [isDictating, setIsDictating] = useState(false);
-    const [isMarkdown, setIsMarkdown] = useState(false);
 
     return (
         <div
@@ -83,7 +82,7 @@ export function FixedMenu({
                     <MenuAction
                         editor={editor}
                         name="showRichText"
-                        icon={<Icons.markdown />}
+                        icon={<Icons.Markdown />}
                         command={() => {
                             const content = deserialize(editor.schema, editor.getText());
                             editor.commands.setContent(content);
@@ -95,9 +94,9 @@ export function FixedMenu({
                     <MenuAction
                         editor={editor}
                         name="showMarkdown"
-                        icon={<Icons.markdown />}
+                        icon={<Icons.Markdown />}
                         command={() => {
-                            const content = serialize(editor.schema, editor.getJSON());
+                            const content = nhm.translate(editor.getHTML());
                             editor.commands.setContent(content);
                             setIsMarkdown(true);
                         }}

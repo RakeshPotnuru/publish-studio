@@ -35,25 +35,24 @@ const ProjectSchema = new Schema<IProject>(
                 id: String,
             },
         ],
-        scheduled_at: {
-            type: Date,
-            validate: [
+        tags: {
+            hashnode_tags: [
                 {
-                    validator: function (value: Date) {
-                        const currentDate = new Date();
-                        return value >= currentDate;
-                    },
-                    message: "Scheduled date must be in the future.",
-                },
-                {
-                    validator: function (value: Date) {
-                        const maxDate = new Date();
-                        maxDate.setDate(maxDate.getDate() + 30);
-                        return value <= maxDate;
-                    },
-                    message: "Scheduled date must be within 30 days from now.",
+                    name: { type: String },
+                    id: { type: String },
                 },
             ],
+            devto_tags: [{ type: String }],
+            medium_tags: [{ type: String }],
+            ghost_tags: [
+                {
+                    name: { type: String },
+                },
+            ],
+        },
+        canonical_url: String,
+        scheduled_at: {
+            type: Date,
         },
     },
     {

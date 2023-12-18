@@ -4,7 +4,7 @@ import type { Types } from "mongoose";
 import defaultConfig from "../../../config/app.config";
 import type { Context } from "../../../trpc";
 import { encryptField } from "../../../utils/aws/kms";
-import type { IProject, TTags } from "../../project/project.types";
+import type { IProject } from "../../project/project.types";
 import DevToService from "./devto.service";
 
 export default class DevToController extends DevToService {
@@ -106,7 +106,7 @@ export default class DevToController extends DevToService {
         };
     }
 
-    async createPostHandler(input: { post: IProject; tags?: TTags }, user_id: Types.ObjectId) {
+    async createPostHandler(input: { post: IProject }, user_id: Types.ObjectId) {
         const platform = await super.getPlatform(user_id);
 
         if (!platform) {
@@ -123,7 +123,7 @@ export default class DevToController extends DevToService {
                 description: input.post.description,
                 published: platform.default_publish_status,
                 canonical_url: input.post.canonical_url,
-                tags: input.tags?.devto_tags,
+                tags: input.post.tags?.devto_tags,
                 main_image: input.post.cover_image,
             },
             user_id,
@@ -159,7 +159,7 @@ export default class DevToController extends DevToService {
     }
 
     async updatePostHandler(
-        input: { post: IProject; post_id: number; tags: TTags },
+        input: { post: IProject; post_id: number },
         user_id: Types.ObjectId | undefined,
     ) {
         const platform = await super.getPlatform(user_id);
@@ -178,7 +178,7 @@ export default class DevToController extends DevToService {
                 description: input.post.description,
                 published: platform.default_publish_status,
                 canonical_url: input.post.canonical_url,
-                tags: input.tags.devto_tags,
+                tags: input.post.tags?.devto_tags,
                 main_image: input.post.cover_image,
             },
             input.post_id,

@@ -130,7 +130,6 @@ export default class ProjectService extends FolderService {
         user_id: Types.ObjectId | undefined,
     ) {
         try {
-            // return (await Project.findByIdAndUpdate(id, project, { new: true }).exec()) as IProject;
             return (await Project.findOneAndUpdate({ _id: id, user_id }, project, {
                 new: true,
             }).exec()) as IProject;

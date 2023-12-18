@@ -1,4 +1,5 @@
 import {
+    Badge,
     Button,
     Checkbox,
     FormControl,
@@ -12,13 +13,14 @@ import Link from "next/link";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 
+import { Icons } from "@/assets/icons";
 import { Images } from "@/assets/images";
 import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { TPlatformName } from "@/types/common";
+import { Types } from "mongoose";
 import { formSchema } from "../form-schema";
 import { Dev } from "./dev";
-import { Hashnode } from "./hashnode";
 import { Medium } from "./medium";
 
 interface IPlatformConfig {
@@ -45,7 +47,8 @@ const platformConfig: IPlatformConfig[] = [
         label: "Hashnode",
         value: constants.user.platforms.HASHNODE,
         logo: Images.hashnodeLogo,
-        component: (form: UseFormReturn<z.infer<typeof formSchema>>) => <Hashnode form={form} />,
+        // component: (form: UseFormReturn<z.infer<typeof formSchema>>) => <Hashnode form={form} />,
+        component: () => <></>,
     },
 ];
 
@@ -53,9 +56,21 @@ interface PlatformsFieldProps {
     form: UseFormReturn<z.infer<typeof formSchema>>;
     connectedPlatforms: TPlatformName[];
     isLoading: boolean;
+    publishedPlatforms?: {
+        name: TPlatformName;
+        published_url?: string;
+        id?: string;
+        status?: "success" | "error";
+        _id: Types.ObjectId;
+    }[];
 }
 
-export const PlatformsField = ({ form, connectedPlatforms, isLoading }: PlatformsFieldProps) => {
+export const PlatformsField = ({
+    form,
+    connectedPlatforms,
+    isLoading,
+    publishedPlatforms,
+}: PlatformsFieldProps) => {
     return (
         <FormField
             control={form.control}
@@ -90,36 +105,61 @@ export const PlatformsField = ({ form, connectedPlatforms, isLoading }: Platform
                                 render={({ field }) => {
                                     return (
                                         <div className="flex flex-col space-y-2 rounded-md border p-2">
-                                            <FormItem
-                                                key={platform.value}
-                                                className="flex items-center space-x-2 space-y-0"
-                                            >
-                                                <FormControl>
-                                                    <Checkbox
-                                                        checked={field.value.includes(
-                                                            platform.value,
-                                                        )}
-                                                        onCheckedChange={checked => {
-                                                            return checked
-                                                                ? field.onChange([
-                                                                      ...field.value,
-                                                                      platform.value,
-                                                                  ])
-                                                                : field.onChange(
-                                                                      field.value?.filter(
-                                                                          value =>
-                                                                              value !==
-                                                                              platform.value,
-                                                                      ),
-                                                                  );
-                                                        }}
-                                                        disabled={isLoading}
-                                                    />
-                                                </FormControl>
-                                                <FormLabel className="text-sm font-normal">
-                                                    {platform.label}
-                                                </FormLabel>
-                                            </FormItem>
+                                            <div className="flex flex-row justify-between">
+                                                <FormItem
+                                                    key={platform.value}
+                                                    className="flex items-center space-x-2 space-y-0"
+                                                >
+                                                    <FormControl>
+                                                        <Checkbox
+                                                            checked={field.value.includes(
+                                                                platform.value,
+                                                            )}
+                                                            onCheckedChange={checked => {
+                                                                return checked
+                                                                    ? field.onChange([
+                                                                          ...field.value,
+                                                                          platform.value,
+                                                                      ])
+                                                                    : field.onChange(
+                                                                          field.value?.filter(
+                                                                              value =>
+                                                                                  value !==
+                                                                                  platform.value,
+                                                                          ),
+                                                                      );
+                                                            }}
+                                                            disabled={isLoading}
+                                                        />
+                                                    </FormControl>
+                                                    <FormLabel className="text-sm font-normal">
+                                                        {platform.label}
+                                                    </FormLabel>
+                                                </FormItem>
+                                                {publishedPlatforms?.find(
+                                                    publishedPlatform =>
+                                                        publishedPlatform.name === platform.value,
+                                                )?.published_url && (
+                                                    <div className="flex items-center">
+                                                        <Badge variant="success">Published</Badge>{" "}
+                                                        <Button variant="link" size="sm" asChild>
+                                                            <Link
+                                                                href={
+                                                                    publishedPlatforms.find(
+                                                                        publishedPlatform =>
+                                                                            publishedPlatform.name ===
+                                                                            platform.value,
+                                                                    )?.published_url || ""
+                                                                }
+                                                                target="_blank"
+                                                            >
+                                                                Open{" "}
+                                                                <Icons.ExternalLink className="ml-1" />
+                                                            </Link>
+                                                        </Button>
+                                                    </div>
+                                                )}
+                                            </div>
                                             {field.value.includes(platform.value) &&
                                                 platform.component(form)}
                                         </div>

@@ -17,7 +17,9 @@ import { PlatformCard } from "./platforms/platform-card";
 interface IntegrationsProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function Integrations({ ...props }: IntegrationsProps) {
-    const [isOpen, setIsOpen] = useState(false);
+    const [isDevOpen, setIsDevOpen] = useState(false);
+    const [isMediumOpen, setIsMediumOpen] = useState(false);
+    const [isHashnodeOpen, setIsHashnodeOpen] = useState(false);
 
     const { refetch: disconnectDevTo, isFetching: isDisconnectingDevTo } =
         trpc.disconnectDevTo.useQuery(undefined, {
@@ -62,8 +64,8 @@ export function Integrations({ ...props }: IntegrationsProps) {
                         onDisconnect={async () => {
                             await disconnectDevTo();
                         }}
-                        isOpen={isOpen}
-                        setIsOpen={setIsOpen}
+                        isOpen={isDevOpen}
+                        setIsOpen={setIsDevOpen}
                         name="Dev"
                         icon={Images.devLogo}
                         isLoading={isFetching || isDisconnectingDevTo}
@@ -72,20 +74,20 @@ export function Integrations({ ...props }: IntegrationsProps) {
                         profile_url={`https://dev.to/@${devto?.username}`}
                         editForm={
                             <DevEditForm
-                                setIsOpen={setIsOpen}
+                                setIsOpen={setIsDevOpen}
                                 default_publish_status={
                                     devto?.default_publish_status.toString() ?? "false"
                                 }
                             />
                         }
-                        connectForm={<DevConnectForm setIsOpen={setIsOpen} />}
+                        connectForm={<DevConnectForm setIsOpen={setIsDevOpen} />}
                     />
                     <PlatformCard
                         onDisconnect={async () => {
                             await disconnectMedium();
                         }}
-                        isOpen={isOpen}
-                        setIsOpen={setIsOpen}
+                        isOpen={isMediumOpen}
+                        setIsOpen={setIsMediumOpen}
                         name="Medium"
                         icon={Images.mediumLogo}
                         isLoading={isFetching || isDisconnectingMedium}
@@ -94,21 +96,21 @@ export function Integrations({ ...props }: IntegrationsProps) {
                         profile_url={`https://medium.com/@${medium?.username}`}
                         editForm={
                             <MediumEditForm
-                                setIsOpen={setIsOpen}
+                                setIsOpen={setIsMediumOpen}
                                 default_publish_status={
                                     medium?.default_publish_status || constants.mediumStatuses.DRAFT
                                 }
                                 notify_followers={medium?.notify_followers.toString() ?? "false"}
                             />
                         }
-                        connectForm={<MediumConnectForm setIsOpen={setIsOpen} />}
+                        connectForm={<MediumConnectForm setIsOpen={setIsMediumOpen} />}
                     />
                     <PlatformCard
                         onDisconnect={async () => {
                             await disconnectHashnode();
                         }}
-                        isOpen={isOpen}
-                        setIsOpen={setIsOpen}
+                        isOpen={isHashnodeOpen}
+                        setIsOpen={setIsHashnodeOpen}
                         name="Hashnode"
                         icon={Images.hashnodeLogo}
                         isLoading={isFetching || isDisconnectingHashnode}
@@ -117,7 +119,7 @@ export function Integrations({ ...props }: IntegrationsProps) {
                         profile_url={`https://hashnode.com/@${hashnode?.username}`}
                         editForm={
                             <HashnodeEditForm
-                                setIsOpen={setIsOpen}
+                                setIsOpen={setIsHashnodeOpen}
                                 default_settings={{
                                     delisted:
                                         hashnode?.default_settings.delisted.toString() ?? "false",
@@ -130,7 +132,7 @@ export function Integrations({ ...props }: IntegrationsProps) {
                                 }}
                             />
                         }
-                        connectForm={<HashnodeConnectForm setIsOpen={setIsOpen} />}
+                        connectForm={<HashnodeConnectForm setIsOpen={setIsHashnodeOpen} />}
                     />
                 </div>
             </div>

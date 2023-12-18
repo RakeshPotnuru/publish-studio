@@ -22,9 +22,11 @@ import { PiDotsThreeBold } from "react-icons/pi";
 import { RiFoldersFill } from "react-icons/ri";
 import { RxMixerHorizontal } from "react-icons/rx";
 import { TbLoader } from "react-icons/tb";
+import { HiExternalLink } from "react-icons/hi";
 
 export const GeneralIcons = {
     Link: AiOutlineLink,
+    ExternalLink: HiExternalLink,
     Draft: MdEditDocument,
     Published: IoCheckmarkDoneCircleSharp,
     RowActions: PiDotsThreeBold,

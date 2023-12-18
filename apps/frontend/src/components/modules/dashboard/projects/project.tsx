@@ -12,7 +12,6 @@ import { Editor } from "@/components/modules/dashboard/projects/editor";
 import { ErrorBox } from "@/components/ui/error-box";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
-import { PublishPost } from "./publish-post";
 
 interface ProjectProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -56,14 +55,7 @@ export function Project({ ...props }: ProjectProps) {
             <Skeleton className="bg-background h-screen w-1/4 rounded-3xl" />
         </div>
     ) : (
-        project && (
-            <>
-                <Editor project={project} />
-                <PublishPost project={project}>
-                    <SideButton>Publish Post</SideButton>
-                </PublishPost>
-            </>
-        )
+        project && <Editor project={project} />
     );
 
     return (

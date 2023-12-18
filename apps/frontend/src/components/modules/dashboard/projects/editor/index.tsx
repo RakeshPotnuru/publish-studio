@@ -13,6 +13,7 @@ import { trpc } from "@/utils/trpc";
 import { Heading } from "../../../../ui/heading";
 import { Shell } from "../../../../ui/layouts/shell";
 import { SideButton } from "../project";
+import { PublishPost } from "../publish-post";
 import { ProjectTools } from "../tools";
 import { EditorBody } from "./editor-body";
 import { EditorFooter } from "./editor-footer";
@@ -44,14 +45,16 @@ export function Editor({ className, project, ...props }: Readonly<EditorProps>) 
     });
 
     const handleAutosave = useDebouncedCallback(async (content: JSON) => {
-        await autoSaveProject({
-            id: project._id,
-            project: {
-                body: {
-                    json: content,
+        try {
+            await autoSaveProject({
+                id: project._id,
+                project: {
+                    body: {
+                        json: content,
+                    },
                 },
-            },
-        });
+            });
+        } catch (error) {}
     }, 3000);
 
     const editor = useEditor({
@@ -99,6 +102,9 @@ export function Editor({ className, project, ...props }: Readonly<EditorProps>) 
             <ProjectTools editor={editor}>
                 <SideButton className="right-0 top-64 -mr-6 hover:-mr-4">Tools</SideButton>
             </ProjectTools>
+            <PublishPost editor={editor} project={project}>
+                <SideButton>Publish Post</SideButton>
+            </PublishPost>
         </>
     );
 }
