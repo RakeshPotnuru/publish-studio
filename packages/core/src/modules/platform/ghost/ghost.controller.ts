@@ -1,9 +1,11 @@
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
+import { constants } from "../../../config/constants";
 import type { Context } from "../../../trpc";
 import { encryptField } from "../../../utils/aws/kms";
-import type { IProject, TTags } from "../../project/project.types";
+import type { IPublishResponse } from "../../project/project.helpers";
+import type { IProject } from "../../project/project.types";
 import GhostService from "./ghost.service";
 import type { IGhost, TGhostUpdate } from "./ghost.types";
 
@@ -110,7 +112,7 @@ export default class GhostController extends GhostService {
         };
     }
 
-    async createPostHandler(input: { post: IProject; tags?: TTags }, user_id: Types.ObjectId) {
+    async createPostHandler(input: { post: IProject }, user_id: Types.ObjectId) {
         const platform = await super.getPlatform(user_id);
 
         if (!platform) {
@@ -126,21 +128,21 @@ export default class GhostController extends GhostService {
                 title: input.post.title,
                 canonical_url: input.post.canonical_url,
                 status: platform.default_publish_status,
-                tags: input.tags?.ghost_tags,
+                tags: input.post.tags?.ghost_tags,
             },
             user_id,
         );
 
         return {
-            status: "success",
-            data: {
-                post: newPost,
-            },
-        };
+            name: constants.user.platforms.GHOST,
+            status: newPost?.success ? "success" : "error",
+            published_url: newPost?.success ? newPost?.data.url : undefined,
+            id: newPost?.success ? newPost?.data.id : undefined,
+        } as IPublishResponse;
     }
 
     async updatePostHandler(
-        input: { post: IProject; tags?: TTags; post_id: string },
+        input: { post: IProject; post_id: string },
         user_id: Types.ObjectId | undefined,
     ) {
         const platform = await super.getPlatform(user_id);
@@ -158,7 +160,7 @@ export default class GhostController extends GhostService {
                 title: input.post.title,
                 canonical_url: input.post.canonical_url,
                 status: platform.default_publish_status,
-                tags: input.tags?.ghost_tags,
+                tags: input.post.tags?.ghost_tags,
                 updated_at: new Date(),
             },
             input.post_id,

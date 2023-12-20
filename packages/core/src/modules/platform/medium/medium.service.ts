@@ -161,12 +161,18 @@ export default class MediumService {
 
             return response?.data as IMediumCreatePostOutput;
         } catch (error) {
-            console.log(error);
-
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: defaultConfig.defaultErrorMessage,
-            });
+            return (
+                error as {
+                    response: {
+                        data: {
+                            errors: {
+                                message: string;
+                                code: 6003 | 6000 | 2004 | 6026 | 2002;
+                            }[];
+                        };
+                    };
+                }
+            ).response.data as IMediumCreatePostOutput;
         }
     }
 }

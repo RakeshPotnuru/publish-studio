@@ -2,8 +2,10 @@ import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
 import defaultConfig from "../../../config/app.config";
+import { constants } from "../../../config/constants";
 import type { Context } from "../../../trpc";
 import { encryptField } from "../../../utils/aws/kms";
+import type { IPublishResponse } from "../../project/project.helpers";
 import type { IProject } from "../../project/project.types";
 import DevToService from "./devto.service";
 
@@ -129,33 +131,12 @@ export default class DevToController extends DevToService {
             user_id,
         );
 
-        if (newPost.error) {
-            if (newPost.status === 422) {
-                throw new TRPCError({
-                    code: "BAD_REQUEST",
-                    message: "Invalid fields",
-                });
-            }
-
-            if (newPost.status === 401) {
-                throw new TRPCError({
-                    code: "UNAUTHORIZED",
-                    message: "Invalid API key",
-                });
-            }
-
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: defaultConfig.defaultErrorMessage,
-            });
-        }
-
         return {
-            status: "success",
-            data: {
-                post: newPost,
-            },
-        };
+            name: constants.user.platforms.DEVTO,
+            status: newPost.error ? "error" : "success",
+            published_url: newPost.url,
+            id: newPost.id?.toString(),
+        } as IPublishResponse;
     }
 
     async updatePostHandler(
@@ -184,34 +165,6 @@ export default class DevToController extends DevToService {
             input.post_id,
             user_id,
         );
-
-        if (updatedPost.error) {
-            if (updatedPost.status === 422) {
-                throw new TRPCError({
-                    code: "BAD_REQUEST",
-                    message: "Invalid fields",
-                });
-            }
-
-            if (updatedPost.status === 401) {
-                throw new TRPCError({
-                    code: "UNAUTHORIZED",
-                    message: "Invalid API key",
-                });
-            }
-
-            if (updatedPost.status === 404) {
-                throw new TRPCError({
-                    code: "NOT_FOUND",
-                    message: "Post not found",
-                });
-            }
-
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: defaultConfig.defaultErrorMessage,
-            });
-        }
 
         return {
             status: "success",

@@ -13,6 +13,7 @@ import type {
     IDevToCreatePostInput,
     IDevToCreatePostOutput,
     IDevToUpdatePost,
+    IDevToUpdatePostOutput,
     IDevToUserOutput,
     IDevToUserUpdate,
 } from "./devto.types";
@@ -159,13 +160,8 @@ export default class DevToService {
 
             return response?.data as IDevToCreatePostOutput;
         } catch (error) {
-            console.log(error);
-
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message:
-                    "An error occurred while publishing the post to Dev.to. Please try again later.",
-            });
+            return (error as { response: { data: { error: string; status: 401 | 422 } } }).response
+                .data as IDevToCreatePostOutput;
         }
     }
 
@@ -177,15 +173,10 @@ export default class DevToService {
                 article: post,
             });
 
-            return response?.data as IDevToCreatePostOutput;
+            return response?.data as IDevToUpdatePostOutput;
         } catch (error) {
-            console.log(error);
-
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message:
-                    "An error occurred while updating the post on Dev.to. Please try again later.",
-            });
+            return (error as { response: { data: { error: string; status: 401 | 422 | 404 } } })
+                .response.data as IDevToUpdatePostOutput;
         }
     }
 }

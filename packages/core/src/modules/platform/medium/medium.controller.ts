@@ -2,8 +2,10 @@ import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
 import defaultConfig from "../../../config/app.config";
+import { constants } from "../../../config/constants";
 import type { Context } from "../../../trpc";
 import { encryptField } from "../../../utils/aws/kms";
+import type { IPublishResponse } from "../../project/project.helpers";
 import type { IProject } from "../../project/project.types";
 import MediumService from "./medium.service";
 import type { TMediumStatus } from "./medium.types";
@@ -130,13 +132,6 @@ export default class MediumController extends MediumService {
             });
         }
 
-        if (!input.post.body?.markdown) {
-            throw new TRPCError({
-                code: "BAD_REQUEST",
-                message: "Invalid fields",
-            });
-        }
-
         const newPost = await super.publishPost(
             {
                 title: input.post.title,
@@ -150,32 +145,11 @@ export default class MediumController extends MediumService {
             user_id,
         );
 
-        if (newPost.errors) {
-            if (newPost.errors[0].code === 6000 || newPost.errors[0].code === 6003) {
-                throw new TRPCError({
-                    code: "UNAUTHORIZED",
-                    message: "Invalid API key",
-                });
-            }
-
-            if (newPost.errors[0].code === 2002) {
-                throw new TRPCError({
-                    code: "BAD_REQUEST",
-                    message: "Invalid fields",
-                });
-            }
-
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: defaultConfig.defaultErrorMessage,
-            });
-        }
-
         return {
-            status: "success",
-            data: {
-                post: newPost,
-            },
-        };
+            name: constants.user.platforms.MEDIUM,
+            status: newPost.errors ? "error" : "success",
+            published_url: newPost.errors ? undefined : newPost.data.url,
+            id: newPost.errors ? undefined : newPost.data.id,
+        } as IPublishResponse;
     }
 }

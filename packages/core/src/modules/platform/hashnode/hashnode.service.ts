@@ -189,12 +189,8 @@ export default class HashnodeService {
 
             return response?.data as IHashnodeCreatePostOutput;
         } catch (error) {
-            console.log(error);
-
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while publishing the post to Hashnode.",
-            });
+            return (error as { response: { data: { errors: { message: string }[] } } }).response
+                .data as IHashnodeCreatePostOutput;
         }
     }
 
@@ -225,12 +221,8 @@ export default class HashnodeService {
 
             return response?.data as IHashnodeCreatePostOutput;
         } catch (error) {
-            console.log(error);
-
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while updating the post on Hashnode.",
-            });
+            return (error as { response: { data: { errors: { message: string }[] } } }).response
+                .data as IHashnodeCreatePostOutput;
         }
     }
 }

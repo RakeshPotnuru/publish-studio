@@ -2,8 +2,10 @@ import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
 import defaultConfig from "../../../config/app.config";
+import { constants } from "../../../config/constants";
 import type { Context } from "../../../trpc";
 import { encryptField } from "../../../utils/aws/kms";
+import type { IPublishResponse } from "../../project/project.helpers";
 import type { IProject } from "../../project/project.types";
 import HashnodeService from "./hashnode.service";
 import type { IHashnodeDefaultSettings } from "./hashnode.types";
@@ -200,26 +202,17 @@ export default class HashnodeController extends HashnodeService {
             user_id,
         );
 
-        if (newPost.errors) {
-            if (newPost.errors[0].extensions.stellate.code === "UNAUTHENTICATED") {
-                throw new TRPCError({
-                    code: "UNAUTHORIZED",
-                    message: "Invalid API key",
-                });
-            }
+        const hashnodeUser = await new HashnodeController().getPlatform(user_id);
 
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: defaultConfig.defaultErrorMessage,
-            });
-        }
+        const blogHandle = hashnodeUser.blog_handle;
+        const postSlug = newPost.errors ? "" : newPost.data.publishPost.post.slug;
 
         return {
-            status: "success",
-            data: {
-                post: newPost,
-            },
-        };
+            name: constants.user.platforms.HASHNODE,
+            status: newPost.errors ? "error" : "success",
+            published_url: newPost.errors ? undefined : `${blogHandle}/${postSlug}`,
+            id: newPost.errors ? undefined : newPost.data.publishPost.post.id,
+        } as IPublishResponse;
     }
 
     async updatePostHandler(
@@ -260,20 +253,6 @@ export default class HashnodeController extends HashnodeService {
             post_id,
             user_id,
         );
-
-        if (updatedPost.errors) {
-            if (updatedPost.errors[0].extensions.stellate.code === "UNAUTHENTICATED") {
-                throw new TRPCError({
-                    code: "UNAUTHORIZED",
-                    message: "Invalid API key",
-                });
-            }
-
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: defaultConfig.defaultErrorMessage,
-            });
-        }
 
         return {
             status: "success",

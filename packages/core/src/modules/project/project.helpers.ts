@@ -13,7 +13,7 @@ import type { TPlatformName } from "../platform/platform.types";
 import ProjectController from "./project.controller";
 import type { IPost, IProject } from "./project.types";
 
-interface IPublishResponse {
+export interface IPublishResponse {
     name: TPlatformName;
     status: "success" | "error";
     published_url: string;
@@ -21,10 +21,7 @@ interface IPublishResponse {
 }
 
 export default class ProjectHelpers {
-    static shouldPublishOnPlatform(
-        project: IProject,
-        targetPlatform: (typeof constants.user.platforms)[keyof typeof constants.user.platforms],
-    ) {
+    static shouldPublishOnPlatform(project: IProject, targetPlatform: TPlatformName) {
         return (
             project.platforms?.find(platform => platform.name === targetPlatform) &&
             project.platforms.find(platform => platform.name === targetPlatform)?.status !==
@@ -35,70 +32,36 @@ export default class ProjectHelpers {
     async publishOnPlatform(platform: TPlatformName, project: IProject, user_id: Types.ObjectId) {
         switch (platform) {
             case constants.user.platforms.DEVTO: {
-                const devResponse = await new DevToController().createPostHandler(
+                return await new DevToController().createPostHandler(
                     {
                         post: project,
                     },
                     user_id,
                 );
-
-                return {
-                    name: constants.user.platforms.DEVTO,
-                    status: devResponse.data.post.error ? "error" : "success",
-                    published_url: devResponse.data.post.url,
-                    id: devResponse.data.post.id.toString(),
-                } as IPublishResponse;
             }
             case constants.user.platforms.HASHNODE: {
-                const hashnodeUser = await new HashnodeController().getPlatform(user_id);
-                const hashnodeResponse = await new HashnodeController().createPostHandler(
+                return await new HashnodeController().createPostHandler(
                     {
                         post: project,
                     },
                     user_id,
                 );
-
-                const blogHandle = hashnodeUser.blog_handle;
-                const postSlug = hashnodeResponse.data.post.data.publishPost.post.slug;
-
-                return {
-                    name: constants.user.platforms.HASHNODE,
-                    status: hashnodeResponse.data.post.errors ? "error" : "success",
-                    published_url: `${blogHandle}/${postSlug}`,
-                    id: hashnodeResponse.data.post.data.publishPost.post.id,
-                } as IPublishResponse;
             }
             case constants.user.platforms.MEDIUM: {
-                const mediumResponse = await new MediumController().createPostHandler(
+                return await new MediumController().createPostHandler(
                     {
                         post: project,
                     },
                     user_id,
                 );
-
-                return {
-                    name: constants.user.platforms.MEDIUM,
-                    status: mediumResponse.data.post.errors ? "error" : "success",
-                    published_url: mediumResponse.data.post.data.url,
-                    id: mediumResponse.data.post.data.id,
-                } as IPublishResponse;
             }
             case constants.user.platforms.GHOST: {
-                const ghostResponse = await new GhostController().createPostHandler(
+                return await new GhostController().createPostHandler(
                     {
                         post: project,
                     },
                     user_id,
                 );
-
-                return {
-                    name: constants.user.platforms.GHOST,
-                    status: ghostResponse.data.post?.success ? "success" : "error",
-                    published_url: ghostResponse.data.post?.success
-                        ? ghostResponse.data.post?.data.url
-                        : "",
-                    id: ghostResponse.data.post?.success ? ghostResponse.data.post?.data.id : "",
-                } as IPublishResponse;
             }
             default: {
                 return {} as IPublishResponse;
@@ -154,7 +117,7 @@ export default class ProjectHelpers {
 
     static updatePlatformStatus(
         updateResponse: IProject["platforms"],
-        targetPlatform: (typeof constants.user.platforms)[keyof typeof constants.user.platforms],
+        targetPlatform: TPlatformName,
         status: "success" | "error",
     ) {
         const platform = updateResponse?.find(platform => platform.name === targetPlatform);
@@ -323,11 +286,15 @@ export default class ProjectHelpers {
                 { connection: bullMQConnectionOptions },
             );
 
-            worker.on("completed", (job: Job) => {
+            worker.on("completed", job => {
+                void job.remove();
                 console.log(`✅ Completed scheduled post ${job.id ?? ""}`);
             });
 
-            worker.on("failed", () => {
+            worker.on("failed", job => {
+                void job?.remove();
+                console.log(job?.failedReason);
+
                 console.log("❌ Job Failed");
             });
 

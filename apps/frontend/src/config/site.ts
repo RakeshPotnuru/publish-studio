@@ -14,6 +14,10 @@ export const siteConfig = {
         devTags: "https://dev.to/tags",
         mediumTags: "https://medium.com/topics",
     },
+    twitter: {
+        site: "@publishstudio",
+        creator: "@rakesh_at_tweet",
+    },
     pages: {
         privacyPolicy: {
             title: "Privacy Policy",

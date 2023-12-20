@@ -14,6 +14,7 @@ export const metadata: Metadata = {
         default: siteConfig.title,
     },
     description: siteConfig.description,
+    metadataBase: new URL(siteConfig.url),
     openGraph: {
         title: siteConfig.title,
         description: siteConfig.description,
@@ -21,6 +22,13 @@ export const metadata: Metadata = {
         siteName: siteConfig.title,
         type: "website",
         locale: "en_US",
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: siteConfig.title,
+        description: siteConfig.description,
+        creator: siteConfig.twitter.creator,
+        site: siteConfig.twitter.site,
     },
     robots: {
         follow: false,

@@ -149,10 +149,12 @@ export function PublishPost({
                             : undefined,
                     },
                     body: {
-                        json: project.body?.json,
                         html: getBody().html,
                         markdown: getBody().markdown,
                     },
+                    platforms: data.platforms.map(platform => ({
+                        name: platform,
+                    })),
                     canonical_url: data.canonical_url,
                 },
             });
