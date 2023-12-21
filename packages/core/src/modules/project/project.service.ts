@@ -130,6 +130,28 @@ export default class ProjectService extends FolderService {
         user_id: Types.ObjectId | undefined,
     ) {
         try {
+            await Promise.all(
+                (project.platforms ?? []).map(async platform => {
+                    const filter = { _id: id, user_id, "platforms.name": platform.name };
+                    const update = {
+                        $set: {
+                            "platforms.$.status": platform.status,
+                            "platforms.$.published_url": platform.published_url,
+                            "platforms.$.id": platform.id,
+                        },
+                    };
+
+                    const result = await Project.findOneAndUpdate(filter, update).exec();
+
+                    if (!result) {
+                        await Project.updateOne(
+                            { _id: id, user_id },
+                            { $addToSet: { platforms: platform } },
+                        ).exec();
+                    }
+                }),
+            );
+
             return (await Project.findOneAndUpdate(
                 { _id: id, user_id },
                 {
@@ -141,7 +163,6 @@ export default class ProjectService extends FolderService {
                         cover_image: project.cover_image,
                         canonical_url: project.canonical_url,
                         scheduled_at: project.scheduled_at,
-                        platforms: project.platforms,
                         "body.json": project.body?.json,
                         "body.html": project.body?.html,
                         "body.markdown": project.body?.markdown,
