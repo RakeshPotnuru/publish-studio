@@ -30,16 +30,6 @@ export const metadata: Metadata = {
         creator: siteConfig.twitter.creator,
         site: siteConfig.twitter.site,
     },
-    robots: {
-        follow: false,
-        index: false,
-    },
-    icons: {
-        icon: "/favicon.ico",
-        shortcut: "/favicon-16x16.png",
-        apple: "/apple-touch-icon.png",
-    },
-    manifest: "/manifest.json",
     appLinks: {
         web: {
             url: siteConfig.url,
@@ -76,10 +66,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
                 <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
                 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-                <link rel="manifest" href="/manifest.json" />
-                <meta name="msapplication-TileColor" content="#ffffff" />
+                <meta name="msapplication-TileColor" content="#EB5757" />
                 <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
-                <meta name="theme-color" content="#ffffff" />
             </head>
             <body className="min-h-screen bg-slate-200 dark:bg-slate-700">
                 <Providers>

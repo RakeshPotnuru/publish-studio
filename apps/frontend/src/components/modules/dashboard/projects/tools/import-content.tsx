@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+    Badge,
     Button,
     Dialog,
     DialogContent,
@@ -9,6 +10,7 @@ import {
     DialogTrigger,
     Form,
     FormControl,
+    FormDescription,
     FormField,
     FormItem,
     FormMessage,
@@ -26,7 +28,10 @@ import { z } from "zod";
 import { Icons } from "@/assets/icons";
 import { MenuProps } from "@/components/modules/dashboard/projects/editor/menu/fixed-menu";
 import { deserialize } from "@/components/modules/dashboard/projects/editor/transform-markdown";
+import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
+import { ButtonLoader } from "@/components/ui/loaders/button-loader";
+import { cn } from "@itsrakesh/utils";
 
 const mdFormSchema = z.object({
     markdown: z.string().min(1, "Markdown is required."),
@@ -38,6 +43,8 @@ const urlFormSchema = z.object({
 
 export function ImportMarkdown({ editor }: MenuProps) {
     const [open, setOpen] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const mdForm = useForm<z.infer<typeof mdFormSchema>>({
         mode: "onBlur",
@@ -63,7 +70,27 @@ export function ImportMarkdown({ editor }: MenuProps) {
     };
 
     const onUrlSubmit = async (data: z.infer<typeof urlFormSchema>) => {
-        console.log(data);
+        try {
+            setError(null);
+            setIsLoading(true);
+
+            const response = await fetch(data.url, {
+                headers: {
+                    Accept: "text/html",
+                },
+            });
+            const htmlContent = await response.text();
+            editor.commands.setContent(htmlContent);
+            urlForm.reset();
+
+            setIsLoading(false);
+            setOpen(false);
+        } catch (error) {
+            setError(
+                "Content import unsuccessful. This may be due to various reasons, including content being restricted behind a paywall, requiring authentication, or containing sensitive information.",
+            );
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -82,11 +109,14 @@ export function ImportMarkdown({ editor }: MenuProps) {
                 </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Import Content</DialogTitle>
+                        <DialogTitle className="flex items-center space-x-2">
+                            <span>Import Content</span> <Badge variant="secondary">Beta</Badge>
+                        </DialogTitle>
                         <DialogDescription className="text-warning">
                             ⚠️ Warning: This action will replace the current content in the editor.
                         </DialogDescription>
                     </DialogHeader>
+
                     <Tabs defaultValue="markdown">
                         <TabsList className="grid grid-cols-2">
                             <TabsTrigger value="markdown">Markdown</TabsTrigger>
@@ -126,36 +156,51 @@ export function ImportMarkdown({ editor }: MenuProps) {
                             </Form>
                         </TabsContent>
                         <TabsContent value="url">
-                            <Form {...urlForm}>
-                                <form
-                                    onSubmit={urlForm.handleSubmit(onUrlSubmit)}
-                                    className="space-y-4"
-                                >
-                                    <FormField
-                                        control={urlForm.control}
-                                        name="url"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormControl>
-                                                    <Input
-                                                        className="w-full"
-                                                        placeholder="https://example.com/blog/123"
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <Button
-                                        type="submit"
-                                        className="w-full"
-                                        disabled={!urlForm.formState.isDirty}
+                            <div
+                                className={cn("space-y-2", {
+                                    "animate-shake": error,
+                                })}
+                            >
+                                {error && <ErrorBox title="Error" description={error} />}
+                                <Form {...urlForm}>
+                                    <form
+                                        onSubmit={urlForm.handleSubmit(onUrlSubmit)}
+                                        className="space-y-4"
                                     >
-                                        Submit
-                                    </Button>
-                                </form>
-                            </Form>
+                                        <FormField
+                                            control={urlForm.control}
+                                            name="url"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormControl>
+                                                        <Input
+                                                            className="w-full"
+                                                            placeholder="https://example.com/blog/123"
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                    <FormDescription>
+                                                        To avoid any copyright issues, please make
+                                                        sure you have the right to import this
+                                                        content. Also, double-check that the link is
+                                                        publicly accessible.
+                                                    </FormDescription>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <Button
+                                            type="submit"
+                                            className="w-full"
+                                            disabled={!urlForm.formState.isDirty || isLoading}
+                                        >
+                                            <ButtonLoader isLoading={isLoading}>
+                                                Submit
+                                            </ButtonLoader>
+                                        </Button>
+                                    </form>
+                                </Form>
+                            </div>
                         </TabsContent>
                     </Tabs>
                 </DialogContent>
