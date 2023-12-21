@@ -99,7 +99,7 @@ export function Editor({ className, project, ...props }: Readonly<EditorProps>) 
                     <MemorizedToC items={items} editor={editor} />
                 </Shell>
             </div>
-            <ProjectTools editor={editor}>
+            <ProjectTools editor={editor} project={project}>
                 <SideButton className="right-0 top-64 -mr-6 hover:-mr-4">Tools</SideButton>
             </ProjectTools>
             <PublishPost editor={editor} project={project}>
