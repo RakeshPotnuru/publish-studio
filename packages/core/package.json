@@ -29,6 +29,7 @@
         "@aws-sdk/client-s3": "^3.456.0",
         "@aws-sdk/client-sesv2": "^3.454.0",
         "@aws-sdk/s3-presigned-post": "^3.456.0",
+        "@google/generative-ai": "^0.1.3",
         "@trpc/server": "^10.44.1",
         "@ts-ghost/admin-api": "^3.0.10",
         "axios": "^1.6.2",

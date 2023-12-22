@@ -32,6 +32,7 @@ const ZodEnvironmentVariables = z.object({
     WHITELIST_ORIGINS: z.string().optional(),
     CLIENT_URL: z.string().url(),
     GOOGLE_OAUTH_CLIENT_ID: z.string(),
+    GOOGLE_GEMINI_API_KEY: z.string(),
     STRIPE_SECRET_KEY: z.string(),
     STRIPE_WEBHOOK_SECRET: z.string(),
     REDIS_HOST: z.string(),

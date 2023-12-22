@@ -9,7 +9,7 @@ import defaultConfig from "../../config/app.config";
 import { constants } from "../../config/constants";
 import type { Context } from "../../trpc";
 import { scheduleEmail, sendEmail } from "../../utils/aws/ses";
-import { verifyGoogleToken } from "../../utils/google";
+import { verifyGoogleToken } from "../../utils/google/auth";
 import { signJwt, verifyJwt } from "../../utils/jwt";
 import redisClient from "../../utils/redis";
 import type { ILoginInput, IRegisterInput, IResetPasswordInput } from "../auth/auth.types";
