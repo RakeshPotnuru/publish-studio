@@ -23,6 +23,7 @@ import { z } from "zod";
 
 import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
+import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
 
@@ -31,7 +32,7 @@ interface DevConnectFormProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const formSchema = z.object({
-    api_key: z.string().min(1, "API key is required"),
+    api_key: z.string({ required_error: "API key is required" }),
     default_publish_status: z.string().default("false"),
 });
 
@@ -41,7 +42,7 @@ export function DevConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFormP
     const { toast } = useToast();
     const utils = trpc.useUtils();
 
-    const { mutateAsync: connect, isLoading } = trpc.connectDevTo.useMutation({
+    const { mutateAsync: connect, isLoading: isConnecting } = trpc.connectDevTo.useMutation({
         onSuccess: () => {
             toast({
                 variant: "success",
@@ -56,7 +57,7 @@ export function DevConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFormP
         },
     });
 
-    const form = useForm({
+    const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             api_key: "",
@@ -68,11 +69,14 @@ export function DevConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFormP
         try {
             setError(null);
             await connect({
-                api_key: data.api_key,
+                ...data,
                 default_publish_status: data.default_publish_status === "true",
             });
         } catch (error) {}
     };
+
+    const isLoading = form.formState.isSubmitting || isConnecting;
+
     return (
         <div
             className={cn("space-y-4", {
@@ -86,7 +90,7 @@ export function DevConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFormP
                     <FormField
                         control={form.control}
                         name="api_key"
-                        disabled={form.formState.isSubmitting || isLoading}
+                        disabled={isLoading}
                         render={({ field }) => (
                             <FormItem>
                                 <div className="space-y-1">
@@ -140,7 +144,7 @@ export function DevConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFormP
                                 <FormControl>
                                     <Input
                                         type="password"
-                                        placeholder="API key"
+                                        placeholder="*******"
                                         autoComplete="off"
                                         autoFocus
                                         {...field}
@@ -153,7 +157,7 @@ export function DevConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFormP
                     <FormField
                         control={form.control}
                         name="default_publish_status"
-                        disabled={form.formState.isSubmitting || isLoading}
+                        disabled={isLoading}
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Set default publish status for Dev</FormLabel>
@@ -183,19 +187,10 @@ export function DevConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFormP
                     />
                     <Button
                         type="submit"
-                        disabled={
-                            form.formState.isSubmitting || !form.formState.isDirty || isLoading
-                        }
+                        disabled={!form.formState.isDirty || isLoading}
                         className="w-full"
                     >
-                        {isLoading ? (
-                            <>
-                                <Icons.Loading className="mr-2 h-4 w-4 animate-spin" />
-                                Please wait
-                            </>
-                        ) : (
-                            "Connect"
-                        )}
+                        <ButtonLoader isLoading={isLoading}>Connect</ButtonLoader>
                     </Button>
                 </form>
             </Form>

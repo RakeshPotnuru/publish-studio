@@ -21,13 +21,14 @@ import { TPlatformName } from "@/types/common";
 import { Types } from "mongoose";
 import { formSchema } from "../form-schema";
 import { Dev } from "./dev";
+import { Ghost } from "./ghost";
 import { Medium } from "./medium";
 
 interface IPlatformConfig {
     label: string;
     value: (typeof constants.user.platforms)[keyof typeof constants.user.platforms];
     logo: string;
-    component: (form: UseFormReturn<z.infer<typeof formSchema>>) => JSX.Element;
+    component: (form: UseFormReturn<z.infer<typeof formSchema>>, isLoading: boolean) => JSX.Element;
 }
 
 const platformConfig: IPlatformConfig[] = [
@@ -35,20 +36,32 @@ const platformConfig: IPlatformConfig[] = [
         label: "Dev.to",
         value: constants.user.platforms.DEVTO,
         logo: Images.devLogo,
-        component: (form: UseFormReturn<z.infer<typeof formSchema>>) => <Dev form={form} />,
+        component: (form: UseFormReturn<z.infer<typeof formSchema>>, isLoading) => (
+            <Dev form={form} isLoading={isLoading} />
+        ),
     },
     {
         label: "Medium",
         value: constants.user.platforms.MEDIUM,
         logo: Images.mediumLogo,
-        component: (form: UseFormReturn<z.infer<typeof formSchema>>) => <Medium form={form} />,
+        component: (form: UseFormReturn<z.infer<typeof formSchema>>, isLoading) => (
+            <Medium form={form} isLoading={isLoading} />
+        ),
     },
     {
         label: "Hashnode",
         value: constants.user.platforms.HASHNODE,
         logo: Images.hashnodeLogo,
-        // component: (form: UseFormReturn<z.infer<typeof formSchema>>) => <Hashnode form={form} />,
+        // component: (form: UseFormReturn<z.infer<typeof formSchema>>, isLoading) => <Hashnode form={form} isLoading={isLoading} />,
         component: () => <></>,
+    },
+    {
+        label: "Ghost",
+        value: constants.user.platforms.GHOST,
+        logo: Images.ghostLogo,
+        component: (form: UseFormReturn<z.infer<typeof formSchema>>, isLoading) => (
+            <Ghost form={form} isLoading={isLoading} />
+        ),
     },
 ];
 
@@ -161,7 +174,7 @@ export const PlatformsField = ({
                                                 )}
                                             </div>
                                             {field.value.includes(platform.value) &&
-                                                platform.component(form)}
+                                                platform.component(form, isLoading)}
                                         </div>
                                     );
                                 }}

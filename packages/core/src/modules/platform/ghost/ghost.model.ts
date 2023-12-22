@@ -10,7 +10,6 @@ const GhostSchema = new Schema<IGhost>(
         user_id: { type: Schema.Types.ObjectId, required: true, unique: true },
         api_url: { type: String, required: true, unique: true },
         admin_api_key: { type: String, required: true, unique: true },
-        ghost_version: { type: String, required: true },
         default_publish_status: { type: String, required: true, default: "draft" },
     },
     {

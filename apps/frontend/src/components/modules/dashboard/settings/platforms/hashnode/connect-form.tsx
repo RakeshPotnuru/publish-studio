@@ -23,6 +23,7 @@ import { z } from "zod";
 
 import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
+import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
 
@@ -31,7 +32,7 @@ interface HashnodeConnectFormProps extends React.HTMLAttributes<HTMLDivElement> 
 }
 
 const formSchema = z.object({
-    api_key: z.string().min(1, "API key is required"),
+    api_key: z.string({ required_error: "API key is required" }),
     default_settings: z.object({
         enable_table_of_contents: z.string().default("false"),
         send_newsletter: z.string().default("false"),
@@ -45,7 +46,7 @@ export function HashnodeConnectForm({ setIsOpen, ...props }: Readonly<HashnodeCo
     const { toast } = useToast();
     const utils = trpc.useUtils();
 
-    const { mutateAsync: connect, isLoading } = trpc.connectHashnode.useMutation({
+    const { mutateAsync: connect, isLoading: isConnecting } = trpc.connectHashnode.useMutation({
         onSuccess: () => {
             toast({
                 variant: "success",
@@ -60,7 +61,7 @@ export function HashnodeConnectForm({ setIsOpen, ...props }: Readonly<HashnodeCo
         },
     });
 
-    const form = useForm({
+    const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             api_key: "",
@@ -76,7 +77,7 @@ export function HashnodeConnectForm({ setIsOpen, ...props }: Readonly<HashnodeCo
         try {
             setError(null);
             await connect({
-                api_key: data.api_key,
+                ...data,
                 default_settings: {
                     enable_table_of_contents:
                         data.default_settings.enable_table_of_contents === "true",
@@ -87,6 +88,8 @@ export function HashnodeConnectForm({ setIsOpen, ...props }: Readonly<HashnodeCo
         } catch (error) {}
     };
 
+    const isLoading = form.formState.isSubmitting || isConnecting;
+
     return (
         <div
             className={cn("space-y-4", {
@@ -94,13 +97,13 @@ export function HashnodeConnectForm({ setIsOpen, ...props }: Readonly<HashnodeCo
             })}
             {...props}
         >
-            {error && <ErrorBox title="Could not connect Dev" description={error} />}
+            {error && <ErrorBox title="Could not connect Hashnode" description={error} />}
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                     <FormField
                         control={form.control}
                         name="api_key"
-                        disabled={form.formState.isSubmitting || isLoading}
+                        disabled={isLoading}
                         render={({ field }) => (
                             <FormItem>
                                 <div className="space-y-1">
@@ -167,7 +170,7 @@ export function HashnodeConnectForm({ setIsOpen, ...props }: Readonly<HashnodeCo
                     <FormField
                         control={form.control}
                         name="default_settings.send_newsletter"
-                        disabled={form.formState.isSubmitting || isLoading}
+                        disabled={isLoading}
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>
@@ -201,7 +204,7 @@ export function HashnodeConnectForm({ setIsOpen, ...props }: Readonly<HashnodeCo
                     <FormField
                         control={form.control}
                         name="default_settings.enable_table_of_contents"
-                        disabled={form.formState.isSubmitting || isLoading}
+                        disabled={isLoading}
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>
@@ -234,7 +237,7 @@ export function HashnodeConnectForm({ setIsOpen, ...props }: Readonly<HashnodeCo
                     <FormField
                         control={form.control}
                         name="default_settings.delisted"
-                        disabled={form.formState.isSubmitting || isLoading}
+                        disabled={isLoading}
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>
@@ -266,19 +269,10 @@ export function HashnodeConnectForm({ setIsOpen, ...props }: Readonly<HashnodeCo
                     />
                     <Button
                         type="submit"
-                        disabled={
-                            form.formState.isSubmitting || !form.formState.isDirty || isLoading
-                        }
+                        disabled={!form.formState.isDirty || isLoading}
                         className="w-full"
                     >
-                        {isLoading ? (
-                            <>
-                                <Icons.Loading className="mr-2 h-4 w-4 animate-spin" />
-                                Please wait
-                            </>
-                        ) : (
-                            "Connect"
-                        )}
+                        <ButtonLoader isLoading={isLoading}>Connect</ButtonLoader>
                     </Button>
                 </form>
             </Form>

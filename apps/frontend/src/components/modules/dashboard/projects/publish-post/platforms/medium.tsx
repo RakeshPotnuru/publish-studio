@@ -14,18 +14,20 @@ import { z } from "zod";
 
 import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
-import { formSchema } from "..";
+import { formSchema } from "../form-schema";
 
 interface MediumProps {
     form: UseFormReturn<z.infer<typeof formSchema>>;
+    isLoading: boolean;
 }
 
-export function Medium({ form }: MediumProps) {
+export function Medium({ form, isLoading }: MediumProps) {
     return (
         <div>
             <FormField
                 control={form.control}
                 name="tags.medium_tags"
+                disabled={isLoading}
                 render={({ field }) => (
                     <FormItem className="w-full">
                         <FormLabel>
@@ -33,12 +35,7 @@ export function Medium({ form }: MediumProps) {
                             {constants.project.tags.medium.MAX_LENGTH}.)
                         </FormLabel>
                         <FormControl>
-                            <Input
-                                type="text"
-                                placeholder="tag1,tag2,tag3"
-                                disabled={form.formState.isSubmitting}
-                                {...field}
-                            />
+                            <Input type="text" placeholder="tag1,tag2,tag3" {...field} />
                         </FormControl>
                         {field.value && field.value.length > 0 && (
                             <div className="mt-2 flex flex-wrap gap-1">

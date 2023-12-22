@@ -10,6 +10,7 @@ export const siteConfig = {
         devAPIKeyGuide: "https://docs.publishstudio.one/platforms/dev#api-key",
         mediumAPIKeyGuide: "https://docs.publishstudio.one/platforms/medium#api-key",
         hashnodeAPIKeyGuide: "https://docs.publishstudio.one/platforms/hashnode#api-key",
+        ghostAPIKeyGuide: "https://docs.publishstudio.one/platforms/ghost#api-key",
         apiKeysSecureStorage: "https://docs.publishstudio.one/platforms#secure-storage-of-api-keys",
         devTags: "https://dev.to/tags",
         mediumTags: "https://medium.com/topics",

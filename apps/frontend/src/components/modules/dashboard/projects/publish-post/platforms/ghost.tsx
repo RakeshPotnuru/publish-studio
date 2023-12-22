@@ -1,39 +1,30 @@
-import {
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-    Input,
-} from "@itsrakesh/ui";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from "@itsrakesh/ui";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 
+import { constants } from "@/config/constants";
 import { formSchema } from "../form-schema";
 
-interface HashnodeProps {
+interface DevProps {
     form: UseFormReturn<z.infer<typeof formSchema>>;
     isLoading: boolean;
 }
 
-export function Hashnode({ form, isLoading }: Readonly<HashnodeProps>) {
+export function Ghost({ form, isLoading }: DevProps) {
     return (
         <div>
-            {/* <FormField
+            <FormField
                 control={form.control}
-                name="tags.hashnode_tags"
+                name="tags.ghost_tags"
                 disabled={isLoading}
                 render={({ field }) => (
                     <FormItem className="w-full">
-                        <FormLabel>Tags</FormLabel>
+                        <FormLabel>
+                            Tags (Optionally enter comma seperated tags, max{" "}
+                            {constants.project.tags.ghost.MAX_LENGTH}.)
+                        </FormLabel>
                         <FormControl>
-                            <Input
-                                type="text"
-                                placeholder="tag1,tag2,tag3"
-                                
-                                {...field}
-                            />
+                            <Input type="text" placeholder="tag1,tag2,tag3" {...field} />
                         </FormControl>
                         {field.value && field.value.length > 0 && (
                             <div className="mt-2 flex flex-wrap gap-1">
@@ -47,11 +38,10 @@ export function Hashnode({ form, isLoading }: Readonly<HashnodeProps>) {
                                 ))}
                             </div>
                         )}
-                        <FormDescription></FormDescription>
                         <FormMessage />
                     </FormItem>
                 )}
-            /> */}
+            />
         </div>
     );
 }

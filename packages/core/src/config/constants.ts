@@ -127,6 +127,11 @@ enum mediumStatuses {
     DRAFT = "draft",
 }
 
+enum ghostStatuses {
+    PUBLISHED = "published",
+    DRAFT = "draft",
+}
+
 export const constants = {
     project,
     user,
@@ -137,4 +142,5 @@ export const constants = {
     asset,
     errorCauses,
     mediumStatuses,
+    ghostStatuses,
 };

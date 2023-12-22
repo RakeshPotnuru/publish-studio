@@ -7,7 +7,6 @@ import GhostController from "./ghost/ghost.controller";
 import type { TGhostStatus } from "./ghost/ghost.types";
 import HashnodeController from "./hashnode/hashnode.controller";
 import MediumController from "./medium/medium.controller";
-import type { TMediumStatus } from "./medium/medium.types";
 import PlatformController from "./platform.controller";
 import WordPressService from "./wordpress/wordpress.service";
 
@@ -66,7 +65,7 @@ const platformRouter = router({
         .input(
             z.object({
                 api_key: z.string().optional(),
-                default_publish_status: z.boolean(),
+                default_publish_status: z.boolean().optional(),
             }),
         )
         .mutation(({ input, ctx }) => new DevToController().updatePlatformHandler(input, ctx)),
@@ -89,11 +88,11 @@ const platformRouter = router({
         .input(
             z.object({
                 api_key: z.string().optional(),
-                default_publish_status: z.custom<TMediumStatus>(),
-                notify_followers: z.boolean(),
+                default_publish_status: z.nativeEnum(constants.mediumStatuses).optional(),
+                notify_followers: z.boolean().optional(),
             }),
         )
-        .mutation(({ input, ctx }) => new MediumController().updateUserHandler(input, ctx)),
+        .mutation(({ input, ctx }) => new MediumController().updatePlatformHandler(input, ctx)),
 
     disconnectMedium: protectedProcedure.query(({ ctx }) =>
         new MediumController().deletePlatformHandler(ctx),
@@ -104,8 +103,7 @@ const platformRouter = router({
             z.object({
                 api_url: z.string(),
                 admin_api_key: z.string(),
-                ghost_version: z.custom<`v5.${string}`>(),
-                default_publish_status: z.custom<TGhostStatus>(),
+                default_publish_status: z.nativeEnum(constants.ghostStatuses),
             }),
         )
         .mutation(({ input, ctx }) => new GhostController().createPlatformHandler(input, ctx)),
@@ -113,10 +111,9 @@ const platformRouter = router({
     updateGhost: protectedProcedure
         .input(
             z.object({
-                api_url: z.string(),
+                api_url: z.string().optional(),
                 admin_api_key: z.string().optional(),
-                ghost_version: z.custom<`v5.${string}`>(),
-                default_publish_status: z.custom<TGhostStatus>(),
+                default_publish_status: z.custom<TGhostStatus>().optional(),
             }),
         )
         .mutation(({ input, ctx }) => new GhostController().updatePlatformHandler(input, ctx)),

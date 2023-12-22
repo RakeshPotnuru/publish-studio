@@ -75,6 +75,13 @@ const projectRouter = router({
                             //     id: z.string(),
                             // })).optional(),
                             medium_tags: z.array(z.string()).optional(),
+                            ghost_tags: z
+                                .array(
+                                    z.object({
+                                        name: z.string(),
+                                    }),
+                                )
+                                .optional(),
                         })
                         .optional(),
                     canonical_url: z.string().optional(),

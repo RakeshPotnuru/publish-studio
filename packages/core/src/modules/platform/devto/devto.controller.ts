@@ -40,7 +40,7 @@ export default class DevToController extends DevToService {
     }
 
     async updatePlatformHandler(
-        input: { api_key?: string; default_publish_status: boolean },
+        input: { api_key?: string; default_publish_status?: boolean },
         ctx: Context,
     ) {
         if (input.api_key) {

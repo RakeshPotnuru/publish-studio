@@ -11,11 +11,7 @@ import type { IGhost, TGhostUpdate } from "./ghost.types";
 
 export default class GhostController extends GhostService {
     async createPlatformHandler(input: IGhost, ctx: Context) {
-        const site = await super.getGhostSite(
-            input.api_url,
-            input.ghost_version,
-            input.admin_api_key,
-        );
+        const site = await super.getGhostSite(input.api_url, input.admin_api_key);
 
         if (!site.success) {
             throw new TRPCError({
@@ -28,7 +24,6 @@ export default class GhostController extends GhostService {
             user_id: ctx.user?._id,
             api_url: input.api_url,
             admin_api_key: input.admin_api_key,
-            ghost_version: input.ghost_version,
             default_publish_status: input.default_publish_status,
         });
 
@@ -41,12 +36,8 @@ export default class GhostController extends GhostService {
     }
 
     async updatePlatformHandler(input: TGhostUpdate, ctx: Context) {
-        if (input.admin_api_key) {
-            const site = await super.getGhostSite(
-                input.api_url,
-                input.ghost_version,
-                input.admin_api_key,
-            );
+        if (input.admin_api_key && input.api_url) {
+            const site = await super.getGhostSite(input.api_url, input.admin_api_key);
 
             if (!site.success) {
                 throw new TRPCError({
@@ -61,7 +52,6 @@ export default class GhostController extends GhostService {
                 {
                     api_url: input.api_url,
                     admin_api_key: input.admin_api_key,
-                    ghost_version: input.ghost_version,
                     default_publish_status: input.default_publish_status,
                 },
                 ctx.user?._id,
@@ -77,8 +67,6 @@ export default class GhostController extends GhostService {
 
         const updatedPlatform = await super.updatePlatform(
             {
-                api_url: input.api_url,
-                ghost_version: input.ghost_version,
                 default_publish_status: input.default_publish_status,
             },
             ctx.user?._id,

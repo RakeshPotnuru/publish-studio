@@ -55,6 +55,15 @@ export const formSchema = z.object({
                 },
             )
             .optional(),
+        ghost_tags: z
+            .string()
+            .refine(
+                value => (value ?? "").split(",").length <= constants.project.tags.ghost.MAX_LENGTH,
+                {
+                    message: `Maximum ${constants.project.tags.ghost.MAX_LENGTH} tags allowed.`,
+                },
+            )
+            .optional(),
     }),
     canonical_url: z.string().optional(),
 });

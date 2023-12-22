@@ -12,6 +12,7 @@ import type { IGhost, IGhostPostInput, TGhostPostUpdate, TGhostUpdate } from "./
 
 export default class GhostService {
     private readonly PLATFORM = constants.user.platforms.GHOST;
+    private readonly GHOST_API_VERSION = "v5.72.1";
 
     private async ghost(user_id: Types.ObjectId | undefined) {
         try {
@@ -23,7 +24,7 @@ export default class GhostService {
 
             const decryptedAPIKey = await decryptField(platform.admin_api_key);
 
-            return new TSGhostAdminAPI(platform.api_url, decryptedAPIKey, platform.ghost_version);
+            return new TSGhostAdminAPI(platform.api_url, decryptedAPIKey, this.GHOST_API_VERSION);
         } catch (error) {
             console.log(error);
 
@@ -146,7 +147,7 @@ export default class GhostService {
 
     /* This method is used exactly twice before creating or updating site in `GhostController()` class
     to check if the site exists or not. That's why api key is being used directly. */
-    async getGhostSite(api_url: string, ghost_version: `v5.${string}`, admin_api_key?: string) {
+    async getGhostSite(api_url: string, admin_api_key?: string) {
         try {
             if (!admin_api_key) {
                 return {
@@ -154,7 +155,7 @@ export default class GhostService {
                 };
             }
 
-            const ghost = new TSGhostAdminAPI(api_url, admin_api_key, ghost_version);
+            const ghost = new TSGhostAdminAPI(api_url, admin_api_key, this.GHOST_API_VERSION);
 
             return await ghost.site.fetch();
         } catch (error) {

@@ -17,50 +17,46 @@ import {
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import Link from "next/link";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
+import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
+import { useState } from "react";
+import { TGhostStatus } from ".";
 
-interface HashnodeEditFormProps extends React.HTMLAttributes<HTMLDivElement> {
+interface DevEditFormProps extends React.HTMLAttributes<HTMLDivElement> {
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    default_settings: {
-        enable_table_of_contents: string;
-        send_newsletter: string;
-        delisted: string;
-    };
+    api_url: string;
+    default_publish_status: TGhostStatus;
 }
 
 const formSchema = z.object({
-    api_key: z.string().optional(),
-    default_settings: z.object({
-        enable_table_of_contents: z.string().default("false").optional(),
-        send_newsletter: z.string().default("false").optional(),
-        delisted: z.string().default("false").optional(),
-    }),
+    admin_api_key: z.string().optional(),
+    api_url: z.string().url().optional(),
+    default_publish_status: z.nativeEnum(constants.ghostStatuses).optional(),
 });
 
-export function HashnodeEditForm({
-    default_settings,
+export function GhostEditForm({
+    default_publish_status,
     setIsOpen,
     ...props
-}: Readonly<HashnodeEditFormProps>) {
+}: Readonly<DevEditFormProps>) {
     const [error, setError] = useState<string | null>(null);
 
     const { toast } = useToast();
     const utils = trpc.useUtils();
 
-    const { mutateAsync: edit, isLoading: isUpdating } = trpc.updateHashnode.useMutation({
+    const { mutateAsync: edit, isLoading: isUpdating } = trpc.updateGhost.useMutation({
         onSuccess: () => {
             toast({
                 variant: "success",
                 title: "Updated",
-                description: "Your Hashnode account has been updated successfully.",
+                description: "Your Ghost account has been updated successfully.",
             });
             utils.getAllPlatforms.invalidate();
             setIsOpen(false);
@@ -73,27 +69,15 @@ export function HashnodeEditForm({
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            api_key: "",
-            default_settings: {
-                enable_table_of_contents: default_settings.enable_table_of_contents,
-                send_newsletter: default_settings.send_newsletter,
-                delisted: default_settings.delisted,
-            },
+            api_url: props.api_url,
+            default_publish_status: default_publish_status,
         },
     });
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         try {
             setError(null);
-            await edit({
-                ...data,
-                default_settings: {
-                    enable_table_of_contents:
-                        data.default_settings.enable_table_of_contents === "true",
-                    send_newsletter: data.default_settings.send_newsletter === "true",
-                    delisted: data.default_settings.delisted === "true",
-                },
-            });
+            await edit(data);
         } catch (error) {}
     };
 
@@ -106,18 +90,18 @@ export function HashnodeEditForm({
             })}
             {...props}
         >
-            {error && <ErrorBox title="Could not update Hashnode" description={error} />}
+            {error && <ErrorBox title="Could not update Ghost" description={error} />}
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                     <FormField
                         control={form.control}
-                        name="api_key"
+                        name="admin_api_key"
                         disabled={isLoading}
                         render={({ field }) => (
                             <FormItem>
                                 <div className="space-y-1">
                                     <FormLabel className="flex flex-row space-x-1">
-                                        <span>API key</span>{" "}
+                                        <span>Admin API key</span>{" "}
                                         <HoverCard>
                                             <HoverCardTrigger asChild>
                                                 <Button
@@ -135,7 +119,7 @@ export function HashnodeEditForm({
                                                     asChild
                                                 >
                                                     <Link
-                                                        href={siteConfig.links.hashnodeAPIKeyGuide}
+                                                        href={siteConfig.links.ghostAPIKeyGuide}
                                                         target="_blank"
                                                     >
                                                         Learn
@@ -166,7 +150,7 @@ export function HashnodeEditForm({
                                 <FormControl>
                                     <Input
                                         type="password"
-                                        placeholder="********"
+                                        placeholder="*******"
                                         autoComplete="off"
                                         autoFocus
                                         {...field}
@@ -178,33 +162,49 @@ export function HashnodeEditForm({
                     />
                     <FormField
                         control={form.control}
-                        name="default_settings.send_newsletter"
+                        name="api_url"
                         disabled={isLoading}
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>
-                                    Would you like to send a newsletter to your subscribers after
-                                    publishing a post?
-                                </FormLabel>
+                                <div className="space-y-1">
+                                    <FormLabel className="flex flex-row space-x-1">
+                                        <span>API URL</span>{" "}
+                                        <HoverCard>
+                                            <HoverCardTrigger asChild>
+                                                <Button
+                                                    variant="link"
+                                                    className="text-foreground h-max p-0"
+                                                >
+                                                    <Icons.Question />
+                                                </Button>
+                                            </HoverCardTrigger>
+                                            <HoverCardContent className="w-44" side="right">
+                                                <Button
+                                                    type="button"
+                                                    variant="link"
+                                                    className="h-max p-0"
+                                                    asChild
+                                                >
+                                                    <Link
+                                                        href={siteConfig.links.ghostAPIKeyGuide}
+                                                        target="_blank"
+                                                    >
+                                                        Learn
+                                                    </Link>
+                                                </Button>{" "}
+                                                how to get your API URL.
+                                            </HoverCardContent>
+                                        </HoverCard>
+                                    </FormLabel>
+                                </div>
                                 <FormControl>
-                                    <RadioGroup
-                                        onValueChange={field.onChange}
-                                        defaultValue={field.value}
-                                        className="flex flex-row space-x-2"
-                                    >
-                                        <FormItem className="flex items-center space-x-3 space-y-0">
-                                            <FormControl>
-                                                <RadioGroupItem value="false" />
-                                            </FormControl>
-                                            <FormLabel className="font-normal">No</FormLabel>
-                                        </FormItem>
-                                        <FormItem className="flex items-center space-x-3 space-y-0">
-                                            <FormControl>
-                                                <RadioGroupItem value="true" />
-                                            </FormControl>
-                                            <FormLabel className="font-normal">Yes</FormLabel>
-                                        </FormItem>
-                                    </RadioGroup>
+                                    <Input
+                                        type="url"
+                                        placeholder="https://demo.ghost.io"
+                                        autoComplete="off"
+                                        autoFocus
+                                        {...field}
+                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -212,13 +212,11 @@ export function HashnodeEditForm({
                     />
                     <FormField
                         control={form.control}
-                        name="default_settings.enable_table_of_contents"
+                        name="default_publish_status"
                         disabled={isLoading}
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>
-                                    Would you like to enable table of contents for your posts?
-                                </FormLabel>
+                                <FormLabel>Set default publish status for Ghost</FormLabel>
                                 <FormControl>
                                     <RadioGroup
                                         onValueChange={field.onChange}
@@ -227,48 +225,19 @@ export function HashnodeEditForm({
                                     >
                                         <FormItem className="flex items-center space-x-3 space-y-0">
                                             <FormControl>
-                                                <RadioGroupItem value="false" />
+                                                <RadioGroupItem
+                                                    value={constants.ghostStatuses.DRAFT}
+                                                />
                                             </FormControl>
-                                            <FormLabel className="font-normal">No</FormLabel>
+                                            <FormLabel className="font-normal">Draft</FormLabel>
                                         </FormItem>
                                         <FormItem className="flex items-center space-x-3 space-y-0">
                                             <FormControl>
-                                                <RadioGroupItem value="true" />
+                                                <RadioGroupItem
+                                                    value={constants.ghostStatuses.PUBLISHED}
+                                                />
                                             </FormControl>
-                                            <FormLabel className="font-normal">Yes</FormLabel>
-                                        </FormItem>
-                                    </RadioGroup>
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="default_settings.delisted"
-                        disabled={isLoading}
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>
-                                    Would you like to hide your posts from Hashnode feed?
-                                </FormLabel>
-                                <FormControl>
-                                    <RadioGroup
-                                        onValueChange={field.onChange}
-                                        defaultValue={field.value}
-                                        className="flex flex-row space-x-2"
-                                    >
-                                        <FormItem className="flex items-center space-x-3 space-y-0">
-                                            <FormControl>
-                                                <RadioGroupItem value="false" />
-                                            </FormControl>
-                                            <FormLabel className="font-normal">No</FormLabel>
-                                        </FormItem>
-                                        <FormItem className="flex items-center space-x-3 space-y-0">
-                                            <FormControl>
-                                                <RadioGroupItem value="true" />
-                                            </FormControl>
-                                            <FormLabel className="font-normal">Yes</FormLabel>
+                                            <FormLabel className="font-normal">Published</FormLabel>
                                         </FormItem>
                                     </RadioGroup>
                                 </FormControl>

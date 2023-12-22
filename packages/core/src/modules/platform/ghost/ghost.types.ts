@@ -1,29 +1,28 @@
 import type { Types } from "mongoose";
 
-export type TGhostStatus = "published" | "draft";
+import type { constants } from "../../../config/constants";
+
+export type TGhostStatus = (typeof constants.ghostStatuses)[keyof typeof constants.ghostStatuses];
 
 export interface IGhost {
     _id?: Types.ObjectId;
     user_id?: Types.ObjectId;
     api_url: string;
     admin_api_key: string;
-    ghost_version: `v5.${string}`;
     default_publish_status: TGhostStatus;
 }
 
-export type TGhostUpdate =
-    | {
-          api_url: string;
-          admin_api_key: string;
-          ghost_version: `v5.${string}`;
-          default_publish_status: TGhostStatus;
-      }
-    | {
-          api_url: string;
-          ghost_version: `v5.${string}`;
-          default_publish_status: TGhostStatus;
-          admin_api_key?: string;
-      };
+export type TGhostUpdate = Partial<IGhost>;
+
+export interface IGhostResponse {
+    _id: Types.ObjectId;
+    user_id: Types.ObjectId;
+    api_url: string;
+    admin_api_key: string;
+    default_publish_status: TGhostStatus;
+    created_at: Date;
+    updated_at: Date;
+}
 
 export interface IGhostSiteOutput {
     result: {

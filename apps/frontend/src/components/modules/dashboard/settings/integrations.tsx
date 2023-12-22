@@ -10,6 +10,7 @@ import { constants } from "@/config/constants";
 import { trpc } from "@/utils/trpc";
 import { useState } from "react";
 import { DevConnectForm, DevEditForm, IDevToResponse } from "./platforms/dev";
+import { GhostConnectForm, GhostEditForm, IGhostResponse } from "./platforms/ghost";
 import { HashnodeConnectForm, HashnodeEditForm, IHashnodeResponse } from "./platforms/hashnode";
 import { IMediumResponse, MediumConnectForm, MediumEditForm } from "./platforms/medium";
 import { PlatformCard } from "./platforms/platform-card";
@@ -20,6 +21,7 @@ export function Integrations({ ...props }: IntegrationsProps) {
     const [isDevOpen, setIsDevOpen] = useState(false);
     const [isMediumOpen, setIsMediumOpen] = useState(false);
     const [isHashnodeOpen, setIsHashnodeOpen] = useState(false);
+    const [isGhostOpen, setIsGhostOpen] = useState(false);
 
     const { refetch: disconnectDevTo, isFetching: isDisconnectingDevTo } =
         trpc.disconnectDevTo.useQuery(undefined, {
@@ -31,6 +33,10 @@ export function Integrations({ ...props }: IntegrationsProps) {
         });
     const { refetch: disconnectHashnode, isFetching: isDisconnectingHashnode } =
         trpc.disconnectHashnode.useQuery(undefined, {
+            enabled: false,
+        });
+    const { refetch: disconnectGhost, isFetching: isDisconnectingGhost } =
+        trpc.disconnectGhost.useQuery(undefined, {
             enabled: false,
         });
 
@@ -47,6 +53,8 @@ export function Integrations({ ...props }: IntegrationsProps) {
     const hashnode = platforms?.find(
         platform => platform.name === constants.user.platforms.HASHNODE,
     )?.data as IHashnodeResponse | undefined;
+    const ghost = platforms?.find(platform => platform.name === constants.user.platforms.GHOST)
+        ?.data as IGhostResponse | undefined;
 
     return (
         <div className="space-y-8" {...props}>
@@ -133,6 +141,30 @@ export function Integrations({ ...props }: IntegrationsProps) {
                             />
                         }
                         connectForm={<HashnodeConnectForm setIsOpen={setIsHashnodeOpen} />}
+                    />
+                    <PlatformCard
+                        onDisconnect={async () => {
+                            await disconnectGhost();
+                        }}
+                        isOpen={isGhostOpen}
+                        setIsOpen={setIsGhostOpen}
+                        name="Ghost"
+                        icon={Images.ghostLogo}
+                        iconBg="bg-white"
+                        isLoading={isFetching || isDisconnectingGhost}
+                        connected={ghost !== undefined}
+                        username={ghost?.api_url.split("/")[2]}
+                        profile_url={ghost?.api_url}
+                        editForm={
+                            <GhostEditForm
+                                setIsOpen={setIsGhostOpen}
+                                default_publish_status={
+                                    ghost?.default_publish_status || constants.ghostStatuses.DRAFT
+                                }
+                                api_url={ghost?.api_url ?? ""}
+                            />
+                        }
+                        connectForm={<GhostConnectForm setIsOpen={setIsGhostOpen} />}
                     />
                 </div>
             </div>

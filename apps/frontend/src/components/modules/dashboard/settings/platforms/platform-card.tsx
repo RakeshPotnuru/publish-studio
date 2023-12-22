@@ -8,6 +8,7 @@ import { AskForConfirmation } from "@/components/ui/ask-for-confirmation";
 import { Heading } from "@/components/ui/heading";
 import { Tooltip } from "@/components/ui/tooltip";
 import { trpc } from "@/utils/trpc";
+import { cn } from "@itsrakesh/utils";
 import { PlatformDialog } from "./platform-dialog";
 
 interface PlatformCardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -22,6 +23,7 @@ interface PlatformCardProps extends React.HTMLAttributes<HTMLDivElement> {
     isOpen: boolean;
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
     onDisconnect: () => void;
+    iconBg?: string;
 }
 
 export function PlatformCard({
@@ -36,6 +38,7 @@ export function PlatformCard({
     isOpen,
     setIsOpen,
     onDisconnect,
+    iconBg,
     ...props
 }: Readonly<PlatformCardProps>) {
     const [askingForConfirmation, setAskingForConfirmation] = useState(false);
@@ -86,7 +89,13 @@ export function PlatformCard({
     return (
         <div className="flex flex-row justify-between rounded-lg border p-4" {...props}>
             <div className="flex flex-row space-x-2">
-                <Image src={icon} alt={name} width={50} height={50} className="rounded-lg" />
+                <Image
+                    src={icon}
+                    alt={name}
+                    width={50}
+                    height={50}
+                    className={cn("rounded-lg", iconBg)}
+                />
                 <div className="flex flex-col justify-center">
                     <Heading level={3} className="flex flex-row items-center space-x-1">
                         <span>{name}</span>

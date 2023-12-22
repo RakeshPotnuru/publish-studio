@@ -46,18 +46,18 @@ export default class MediumController extends MediumService {
         };
     }
 
-    async updateUserHandler(
+    async updatePlatformHandler(
         input: {
             api_key?: string;
-            default_publish_status: TMediumStatus;
-            notify_followers: boolean;
+            default_publish_status?: TMediumStatus;
+            notify_followers?: boolean;
         },
         ctx: Context,
     ) {
         if (input.api_key) {
-            const user = await super.getMediumUser(input.api_key);
+            const platform = await super.getMediumUser(input.api_key);
 
-            if (user.errors) {
+            if (platform.errors) {
                 throw new TRPCError({
                     code: "INTERNAL_SERVER_ERROR",
                     message: defaultConfig.defaultErrorMessage,
@@ -69,9 +69,9 @@ export default class MediumController extends MediumService {
             const updatedPlatform = await super.updatePlatform(
                 {
                     api_key: input.api_key,
-                    username: user.username,
-                    profile_pic: user.image_url,
-                    author_id: user.id,
+                    username: platform.username,
+                    profile_pic: platform.image_url,
+                    author_id: platform.id,
                     default_publish_status: input.default_publish_status,
                     notify_followers: input.notify_followers,
                 },

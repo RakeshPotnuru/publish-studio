@@ -15,15 +15,16 @@ import {
     RadioGroupItem,
     useToast,
 } from "@itsrakesh/ui";
+import { cn } from "@itsrakesh/utils";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
+import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
-import { cn } from "@itsrakesh/utils";
 import { useState } from "react";
 
 interface DevEditFormProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -46,7 +47,7 @@ export function DevEditForm({
     const { toast } = useToast();
     const utils = trpc.useUtils();
 
-    const { mutateAsync: edit, isLoading } = trpc.updateDevTo.useMutation({
+    const { mutateAsync: edit, isLoading: isUpdating } = trpc.updateDevTo.useMutation({
         onSuccess: () => {
             toast({
                 variant: "success",
@@ -73,11 +74,13 @@ export function DevEditForm({
         try {
             setError(null);
             await edit({
-                api_key: data.api_key,
+                ...data,
                 default_publish_status: data.default_publish_status === "true",
             });
         } catch (error) {}
     };
+
+    const isLoading = form.formState.isSubmitting || isUpdating;
 
     return (
         <div
@@ -86,13 +89,13 @@ export function DevEditForm({
             })}
             {...props}
         >
-            {error && <ErrorBox title="Could not connect Dev" description={error} />}
+            {error && <ErrorBox title="Could not update Dev" description={error} />}
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                     <FormField
                         control={form.control}
                         name="api_key"
-                        disabled={form.formState.isSubmitting || isLoading}
+                        disabled={isLoading}
                         render={({ field }) => (
                             <FormItem>
                                 <div className="space-y-1">
@@ -146,8 +149,7 @@ export function DevEditForm({
                                 <FormControl>
                                     <Input
                                         type="password"
-                                        placeholder="API key"
-                                        disabled={form.formState.isSubmitting}
+                                        placeholder="*******"
                                         autoComplete="off"
                                         autoFocus
                                         {...field}
@@ -160,7 +162,7 @@ export function DevEditForm({
                     <FormField
                         control={form.control}
                         name="default_publish_status"
-                        disabled={form.formState.isSubmitting || isLoading}
+                        disabled={isLoading}
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Update publish status for Dev</FormLabel>
@@ -190,17 +192,10 @@ export function DevEditForm({
                     />
                     <Button
                         type="submit"
-                        disabled={form.formState.isSubmitting || !form.formState.isDirty}
+                        disabled={!form.formState.isDirty || isLoading}
                         className="w-full"
                     >
-                        {isLoading ? (
-                            <>
-                                <Icons.Loading className="mr-2 h-4 w-4 animate-spin" />
-                                Please wait
-                            </>
-                        ) : (
-                            "Update"
-                        )}
+                        <ButtonLoader isLoading={isLoading}>Update</ButtonLoader>
                     </Button>
                 </form>
             </Form>

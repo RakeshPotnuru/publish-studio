@@ -111,6 +111,7 @@ export function PublishPost({
                 // hashnode_tags: "",
                 devto_tags: "",
                 medium_tags: "",
+                ghost_tags: "",
             },
             canonical_url: "",
         },
@@ -146,6 +147,13 @@ export function PublishPost({
                             : undefined,
                         medium_tags: data.tags.medium_tags?.split(",").length
                             ? data.tags.medium_tags?.split(",")
+                            : undefined,
+                        ghost_tags: data.tags.ghost_tags?.split(",").map(tag => {
+                            return { name: tag };
+                        }).length
+                            ? data.tags.ghost_tags?.split(",").map(tag => {
+                                  return { name: tag };
+                              })
                             : undefined,
                     },
                     body: {
@@ -186,6 +194,7 @@ export function PublishPost({
                     // hashnode_tags: project.tags?.hashnode_tags?.join(","),
                     devto_tags: project.tags?.devto_tags?.join(","),
                     medium_tags: project.tags?.medium_tags?.join(","),
+                    ghost_tags: project.tags?.ghost_tags?.map(tag => tag.name).join(","),
                 },
                 canonical_url: project.canonical_url,
             });

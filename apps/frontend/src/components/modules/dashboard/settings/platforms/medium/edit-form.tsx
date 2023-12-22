@@ -23,6 +23,7 @@ import { z } from "zod";
 
 import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
+import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
@@ -51,7 +52,7 @@ export function MediumEditForm({
     const { toast } = useToast();
     const utils = trpc.useUtils();
 
-    const { mutateAsync: edit, isLoading } = trpc.updateMedium.useMutation({
+    const { mutateAsync: edit, isLoading: isUpdating } = trpc.updateMedium.useMutation({
         onSuccess: () => {
             toast({
                 variant: "success",
@@ -86,6 +87,8 @@ export function MediumEditForm({
         } catch (error) {}
     };
 
+    const isLoading = isUpdating || form.formState.isSubmitting;
+
     return (
         <div
             className={cn("space-y-4", {
@@ -93,13 +96,13 @@ export function MediumEditForm({
             })}
             {...props}
         >
-            {error && <ErrorBox title="Could not connect Dev" description={error} />}
+            {error && <ErrorBox title="Could not update Medium" description={error} />}
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                     <FormField
                         control={form.control}
                         name="api_key"
-                        disabled={form.formState.isSubmitting || isLoading}
+                        disabled={isLoading}
                         render={({ field }) => (
                             <FormItem>
                                 <div className="space-y-1">
@@ -153,7 +156,7 @@ export function MediumEditForm({
                                 <FormControl>
                                     <Input
                                         type="password"
-                                        placeholder="API key"
+                                        placeholder="*******"
                                         autoComplete="off"
                                         autoFocus
                                         {...field}
@@ -166,7 +169,7 @@ export function MediumEditForm({
                     <FormField
                         control={form.control}
                         name="default_publish_status"
-                        disabled={form.formState.isSubmitting || isLoading}
+                        disabled={isLoading}
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Edit default publish status for Medium</FormLabel>
@@ -209,7 +212,7 @@ export function MediumEditForm({
                     <FormField
                         control={form.control}
                         name="notify_followers"
-                        disabled={form.formState.isSubmitting || isLoading}
+                        disabled={isLoading}
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>
@@ -242,19 +245,10 @@ export function MediumEditForm({
                     />
                     <Button
                         type="submit"
-                        disabled={
-                            form.formState.isSubmitting || !form.formState.isDirty || isLoading
-                        }
+                        disabled={!form.formState.isDirty || isLoading}
                         className="w-full"
                     >
-                        {isLoading ? (
-                            <>
-                                <Icons.Loading className="mr-2 h-4 w-4 animate-spin" />
-                                Please wait
-                            </>
-                        ) : (
-                            "Update"
-                        )}
+                        <ButtonLoader isLoading={isLoading}>Update</ButtonLoader>
                     </Button>
                 </form>
             </Form>
