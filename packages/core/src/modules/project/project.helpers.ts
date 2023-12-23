@@ -11,11 +11,11 @@ import HashnodeController from "../platform/hashnode/hashnode.controller";
 import MediumController from "../platform/medium/medium.controller";
 import type { TPlatformName } from "../platform/platform.types";
 import ProjectController from "./project.controller";
-import type { IPost, IProject } from "./project.types";
+import type { IPost, IProject, TPlatformPublishStatus } from "./project.types";
 
 export interface IPublishResponse {
     name: TPlatformName;
-    status: "success" | "error";
+    status: TPlatformPublishStatus;
     published_url: string;
     id: string;
 }
@@ -25,7 +25,15 @@ export default class ProjectHelpers {
         return (
             project.platforms?.find(platform => platform.name === targetPlatform) &&
             project.platforms.find(platform => platform.name === targetPlatform)?.status !==
-                "success"
+                constants.project.platformPublishStatuses.SUCCESS
+        );
+    }
+
+    static shouldUpdateOnPlatform(project: IProject, targetPlatform: TPlatformName) {
+        return (
+            project.platforms?.find(platform => platform.name === targetPlatform) &&
+            project.platforms.find(platform => platform.name === targetPlatform)?.status ===
+                constants.project.platformPublishStatuses.SUCCESS
         );
     }
 
@@ -118,7 +126,7 @@ export default class ProjectHelpers {
     static updatePlatformStatus(
         updateResponse: IProject["platforms"],
         targetPlatform: TPlatformName,
-        status: "success" | "error",
+        status: TPlatformPublishStatus,
     ) {
         const platform = updateResponse?.find(platform => platform.name === targetPlatform);
 
@@ -153,7 +161,9 @@ export default class ProjectHelpers {
                 ProjectHelpers.updatePlatformStatus(
                     project.platforms,
                     constants.user.platforms.DEVTO,
-                    response.data.post.error ? "error" : "success",
+                    response.data.post.error
+                        ? constants.project.platformPublishStatuses.ERROR
+                        : constants.project.platformPublishStatuses.SUCCESS,
                 );
 
                 break;
@@ -178,7 +188,9 @@ export default class ProjectHelpers {
                 ProjectHelpers.updatePlatformStatus(
                     project.platforms,
                     constants.user.platforms.HASHNODE,
-                    response.data.post?.errors ? "error" : "success",
+                    response.data.post?.errors
+                        ? constants.project.platformPublishStatuses.ERROR
+                        : constants.project.platformPublishStatuses.SUCCESS,
                 );
 
                 break;
@@ -203,7 +215,9 @@ export default class ProjectHelpers {
                 ProjectHelpers.updatePlatformStatus(
                     project.platforms,
                     constants.user.platforms.GHOST,
-                    response.data.post?.success ? "success" : "error",
+                    response.data.post?.success
+                        ? constants.project.platformPublishStatuses.SUCCESS
+                        : constants.project.platformPublishStatuses.ERROR,
                 );
 
                 break;
@@ -221,17 +235,15 @@ export default class ProjectHelpers {
             return;
         }
 
-        if (project.platforms?.find(platform => platform.name === constants.user.platforms.DEVTO)) {
+        if (ProjectHelpers.shouldUpdateOnPlatform(project, constants.user.platforms.DEVTO)) {
             await this.updateOnPlatform(constants.user.platforms.DEVTO, project, user_id);
         }
 
-        if (
-            project.platforms?.find(platform => platform.name === constants.user.platforms.HASHNODE)
-        ) {
+        if (ProjectHelpers.shouldUpdateOnPlatform(project, constants.user.platforms.HASHNODE)) {
             await this.updateOnPlatform(constants.user.platforms.HASHNODE, project, user_id);
         }
 
-        if (project.platforms?.find(platform => platform.name === constants.user.platforms.GHOST)) {
+        if (ProjectHelpers.shouldUpdateOnPlatform(project, constants.user.platforms.GHOST)) {
             await this.updateOnPlatform(constants.user.platforms.GHOST, project, user_id);
         }
 
@@ -292,7 +304,6 @@ export default class ProjectHelpers {
             });
 
             worker.on("failed", job => {
-                void job?.remove();
                 console.log(job?.failedReason);
 
                 console.log("❌ Job Failed");

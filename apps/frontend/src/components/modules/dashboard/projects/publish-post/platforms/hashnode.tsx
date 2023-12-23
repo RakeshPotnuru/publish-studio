@@ -18,9 +18,8 @@ interface HashnodeProps {
 }
 
 export function Hashnode({ form, isLoading }: Readonly<HashnodeProps>) {
-    return (
-        <div>
-            {/* <FormField
+    return {
+        /* <FormField
                 control={form.control}
                 name="tags.hashnode_tags"
                 disabled={isLoading}
@@ -51,7 +50,6 @@ export function Hashnode({ form, isLoading }: Readonly<HashnodeProps>) {
                         <FormMessage />
                     </FormItem>
                 )}
-            /> */}
-        </div>
-    );
+            /> */
+    };
 }

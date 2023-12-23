@@ -9,16 +9,19 @@ import {
     FormLabel,
     FormMessage,
 } from "@itsrakesh/ui";
+import type { Types } from "mongoose";
 import Link from "next/link";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 
 import { Icons } from "@/assets/icons";
 import { Images } from "@/assets/images";
+import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
+import { TPlatformPublishStatus } from "@/lib/store/projects";
 import { TPlatformName } from "@/types/common";
-import { Types } from "mongoose";
+import formatTimestamp from "@/utils/format-timestamp";
 import { formSchema } from "../form-schema";
 import { Dev } from "./dev";
 import { Ghost } from "./ghost";
@@ -73,9 +76,12 @@ interface PlatformsFieldProps {
         name: TPlatformName;
         published_url?: string;
         id?: string;
-        status?: "success" | "error";
+        status?: TPlatformPublishStatus;
         _id: Types.ObjectId;
     }[];
+    onSubmit: (data: z.infer<typeof formSchema>) => void;
+    onRefresh: () => void;
+    scheduledAt?: Date;
 }
 
 export const PlatformsField = ({
@@ -83,6 +89,9 @@ export const PlatformsField = ({
     connectedPlatforms,
     isLoading,
     publishedPlatforms,
+    onSubmit,
+    onRefresh,
+    scheduledAt,
 }: PlatformsFieldProps) => {
     return (
         <FormField
@@ -125,56 +134,145 @@ export const PlatformsField = ({
                                                 >
                                                     <FormControl>
                                                         <Checkbox
-                                                            checked={field.value.includes(
-                                                                platform.value,
+                                                            checked={field.value?.some(
+                                                                value =>
+                                                                    value.name === platform.value,
                                                             )}
                                                             onCheckedChange={checked => {
                                                                 return checked
                                                                     ? field.onChange([
                                                                           ...field.value,
-                                                                          platform.value,
+                                                                          {
+                                                                              name: platform.value,
+                                                                          },
                                                                       ])
                                                                     : field.onChange(
-                                                                          field.value?.filter(
+                                                                          field.value.filter(
                                                                               value =>
-                                                                                  value !==
+                                                                                  value.name !==
                                                                                   platform.value,
                                                                           ),
                                                                       );
                                                             }}
-                                                            disabled={isLoading}
+                                                            disabled={
+                                                                isLoading ||
+                                                                publishedPlatforms?.find(
+                                                                    publishedPlatform =>
+                                                                        publishedPlatform.name ===
+                                                                        platform.value,
+                                                                )?.status === "success"
+                                                            }
                                                         />
                                                     </FormControl>
                                                     <FormLabel className="text-sm font-normal">
                                                         {platform.label}
                                                     </FormLabel>
                                                 </FormItem>
+
+                                                {/* success */}
                                                 {publishedPlatforms?.find(
                                                     publishedPlatform =>
                                                         publishedPlatform.name === platform.value,
-                                                )?.published_url && (
-                                                    <div className="flex items-center">
-                                                        <Badge variant="success">Published</Badge>{" "}
-                                                        <Button variant="link" size="sm" asChild>
-                                                            <Link
-                                                                href={
-                                                                    publishedPlatforms.find(
-                                                                        publishedPlatform =>
-                                                                            publishedPlatform.name ===
-                                                                            platform.value,
-                                                                    )?.published_url || ""
-                                                                }
-                                                                target="_blank"
+                                                )?.status ===
+                                                    constants.project.platformPublishStatuses
+                                                        .SUCCESS &&
+                                                    publishedPlatforms?.find(
+                                                        publishedPlatform =>
+                                                            publishedPlatform.name ===
+                                                            platform.value,
+                                                    )?.published_url && (
+                                                        <div className="flex items-center space-x-2">
+                                                            <Badge variant="success">
+                                                                Published
+                                                            </Badge>
+                                                            <Button
+                                                                variant="link"
+                                                                size="sm"
+                                                                asChild
                                                             >
-                                                                Open{" "}
-                                                                <Icons.ExternalLink className="ml-1" />
-                                                            </Link>
+                                                                <Link
+                                                                    href={
+                                                                        publishedPlatforms.find(
+                                                                            publishedPlatform =>
+                                                                                publishedPlatform.name ===
+                                                                                platform.value,
+                                                                        )?.published_url ?? ""
+                                                                    }
+                                                                    target="_blank"
+                                                                >
+                                                                    View
+                                                                    <Icons.ExternalLink className="ml-1" />
+                                                                </Link>
+                                                            </Button>
+                                                        </div>
+                                                    )}
+
+                                                {/* error */}
+                                                {publishedPlatforms?.find(
+                                                    publishedPlatform =>
+                                                        publishedPlatform.name === platform.value,
+                                                )?.status ===
+                                                    constants.project.platformPublishStatuses
+                                                        .ERROR && (
+                                                    <div className="flex items-center space-x-2">
+                                                        <Badge variant="destructive">Failed</Badge>
+                                                        <Button
+                                                            onClick={() => {
+                                                                form.setValue("platforms", [
+                                                                    ...field.value.filter(
+                                                                        value =>
+                                                                            value.name !==
+                                                                            platform.value,
+                                                                    ),
+                                                                    {
+                                                                        name: platform.value,
+                                                                    },
+                                                                ]);
+                                                                form.handleSubmit(onSubmit);
+                                                            }}
+                                                            variant="ghost"
+                                                            size="sm"
+                                                            disabled={isLoading}
+                                                        >
+                                                            <ButtonLoader isLoading={isLoading}>
+                                                                Retry
+                                                            </ButtonLoader>
                                                         </Button>
                                                     </div>
                                                 )}
+
+                                                {/* pending */}
+                                                {publishedPlatforms?.find(
+                                                    publishedPlatform =>
+                                                        publishedPlatform.name === platform.value,
+                                                )?.status ===
+                                                    constants.project.platformPublishStatuses
+                                                        .PENDING && (
+                                                    <div className="flex items-center space-x-2">
+                                                        <Badge variant="warning">Pending</Badge>
+                                                        {scheduledAt &&
+                                                        new Date(scheduledAt) > new Date() ? (
+                                                            <p className="text-muted-foreground text-sm">
+                                                                {formatTimestamp(scheduledAt)}
+                                                            </p>
+                                                        ) : (
+                                                            <Button
+                                                                type="button"
+                                                                onClick={onRefresh}
+                                                                variant="ghost"
+                                                                size="sm"
+                                                            >
+                                                                <ButtonLoader isLoading={isLoading}>
+                                                                    Refresh
+                                                                </ButtonLoader>
+                                                            </Button>
+                                                        )}
+                                                    </div>
+                                                )}
                                             </div>
-                                            {field.value.includes(platform.value) &&
-                                                platform.component(form, isLoading)}
+                                            {field.value.some(
+                                                value => value.name === platform.value,
+                                            ) && platform.component(form, isLoading)}
                                         </div>
                                     );
                                 }}

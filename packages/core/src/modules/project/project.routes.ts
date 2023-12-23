@@ -2,7 +2,7 @@ import type { Types } from "mongoose";
 import { z } from "zod";
 
 import { constants } from "../../config/constants";
-import { proProtectedProcedure, protectedProcedure, router } from "../../trpc";
+import { protectedProcedure, router } from "../../trpc";
 import ProjectController from "./project.controller";
 
 const projectRouter = router({
@@ -58,14 +58,6 @@ const projectRouter = router({
                         .optional(),
                     status: z.nativeEnum(constants.project.status).optional(),
                     cover_image: z.string().optional(),
-                    platforms: z
-                        .array(
-                            z.object({
-                                name: z.nativeEnum(constants.user.platforms),
-                                published_url: z.string().optional(),
-                            }),
-                        )
-                        .optional(),
                     tags: z
                         .object({
                             devto_tags: z.array(z.string()).optional(),
@@ -96,11 +88,18 @@ const projectRouter = router({
             z.object({
                 project_id: z.custom<Types.ObjectId>(),
                 scheduled_at: z.date(),
+                platforms: z
+                    .array(
+                        z.object({
+                            name: z.nativeEnum(constants.user.platforms),
+                        }),
+                    )
+                    .min(1),
             }),
         )
         .mutation(({ input, ctx }) => new ProjectController().schedulePostHandler(input, ctx)),
 
-    updatePost: proProtectedProcedure
+    updatePost: protectedProcedure
         .input(
             z.object({
                 project_id: z.custom<Types.ObjectId>(),

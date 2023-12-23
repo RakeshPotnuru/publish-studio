@@ -110,20 +110,28 @@ export default class GhostController extends GhostService {
             });
         }
 
+        const tags = input.post.tags?.ghost_tags?.map(tag => {
+            return {
+                name: tag.name,
+            };
+        });
+
         const newPost = await super.publishPost(
             {
                 html: input.post.body?.html,
                 title: input.post.title,
                 canonical_url: input.post.canonical_url,
                 status: platform.default_publish_status,
-                tags: input.post.tags?.ghost_tags,
+                tags,
             },
             user_id,
         );
 
         return {
             name: constants.user.platforms.GHOST,
-            status: newPost?.success ? "success" : "error",
+            status: newPost?.success
+                ? constants.project.platformPublishStatuses.SUCCESS
+                : constants.project.platformPublishStatuses.ERROR,
             published_url: newPost?.success ? newPost?.data.url : undefined,
             id: newPost?.success ? newPost?.data.id : undefined,
         } as IPublishResponse;
@@ -142,13 +150,19 @@ export default class GhostController extends GhostService {
             });
         }
 
+        const tags = input.post.tags?.ghost_tags?.map(tag => {
+            return {
+                name: tag.name,
+            };
+        });
+
         const updatedPost = await super.updatePost(
             {
                 html: input.post.body?.html,
                 title: input.post.title,
                 canonical_url: input.post.canonical_url,
                 status: platform.default_publish_status,
-                tags: input.post.tags?.ghost_tags,
+                tags,
                 updated_at: new Date(),
             },
             input.post_id,

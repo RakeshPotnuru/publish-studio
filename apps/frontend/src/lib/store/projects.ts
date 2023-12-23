@@ -5,6 +5,8 @@ import { constants } from "@/config/constants";
 import { TPlatformName } from "@/types/common";
 
 type TProjectStatus = (typeof constants.project.status)[keyof typeof constants.project.status];
+export type TPlatformPublishStatus =
+    (typeof constants.project.platformPublishStatuses)[keyof typeof constants.project.platformPublishStatuses];
 
 export interface THashnodeTag {
     name: string;
@@ -28,13 +30,15 @@ export interface IProject {
     body?: { json?: JSON };
     platforms?: {
         name: TPlatformName;
-        status?: "success" | "error";
+        status?: TPlatformPublishStatus;
         published_url?: string;
         id?: string;
         _id: Types.ObjectId;
     }[];
     tags?: TTags;
     canonical_url?: string;
+    scheduled_at?: Date;
+    published_at?: Date;
 }
 
 interface IProjectState {

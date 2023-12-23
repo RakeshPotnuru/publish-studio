@@ -209,7 +209,9 @@ export default class HashnodeController extends HashnodeService {
 
         return {
             name: constants.user.platforms.HASHNODE,
-            status: newPost.errors ? "error" : "success",
+            status: newPost.errors
+                ? constants.project.platformPublishStatuses.ERROR
+                : constants.project.platformPublishStatuses.SUCCESS,
             published_url: newPost.errors ? undefined : `${blogHandle}/${postSlug}`,
             id: newPost.errors ? undefined : newPost.data.publishPost.post.id,
         } as IPublishResponse;
@@ -233,17 +235,10 @@ export default class HashnodeController extends HashnodeService {
 
         const { post, post_id } = input;
 
-        if (!post.body?.markdown) {
-            throw new TRPCError({
-                code: "BAD_REQUEST",
-                message: "Invalid fields",
-            });
-        }
-
         const updatedPost = await super.updatePost(
             {
                 title: post.title,
-                contentMarkdown: post.body.markdown,
+                contentMarkdown: post.body?.markdown,
                 tags: post.tags?.hashnode_tags ?? [],
                 coverImageOptions: {
                     coverImageURL: post.cover_image,

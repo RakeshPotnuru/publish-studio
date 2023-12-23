@@ -30,7 +30,7 @@ const ProjectSchema = new Schema<IProject>(
         platforms: [
             {
                 name: { type: String, enum: constants.user.platforms, required: true },
-                status: { type: String, enum: ["success", "error"] },
+                status: { type: String, enum: constants.project.platformPublishStatuses },
                 published_url: String,
                 id: String,
             },
@@ -52,6 +52,9 @@ const ProjectSchema = new Schema<IProject>(
         },
         canonical_url: String,
         scheduled_at: {
+            type: Date,
+        },
+        published_at: {
             type: Date,
         },
     },

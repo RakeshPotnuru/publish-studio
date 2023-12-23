@@ -6,6 +6,8 @@ import type { TPlatformName } from "../platform/platform.types";
 
 export type TProjectStatus =
     (typeof constants.project.status)[keyof typeof constants.project.status];
+export type TPlatformPublishStatus =
+    (typeof constants.project.platformPublishStatuses)[keyof typeof constants.project.platformPublishStatuses];
 
 export interface IProject {
     _id?: Types.ObjectId;
@@ -23,13 +25,14 @@ export interface IProject {
     assets?: Types.ObjectId[];
     platforms?: {
         name: TPlatformName;
-        status?: "success" | "error";
+        status?: TPlatformPublishStatus;
         published_url?: string;
         id?: string;
     }[];
     tags?: ITags;
     canonical_url?: string;
     scheduled_at?: Date;
+    published_at?: Date;
     created_at?: Date;
     updated_at?: Date;
 }
@@ -50,7 +53,7 @@ export interface IProjectResponse {
     assets?: Types.ObjectId[];
     platforms?: {
         name: TPlatformName;
-        status?: "success" | "error";
+        status?: TPlatformPublishStatus;
         published_url?: string;
         id?: string;
         _id: Types.ObjectId;
@@ -58,6 +61,7 @@ export interface IProjectResponse {
     tags?: ITags;
     canonical_url?: string;
     scheduled_at?: Date;
+    published_at?: Date;
     created_at: Date;
     updated_at: Date;
 }
@@ -78,7 +82,7 @@ export interface ITags {
     hashnode_tags?: IHashnodeTag[];
     devto_tags?: string[];
     medium_tags?: string[];
-    ghost_tags?: { name: string }[];
+    ghost_tags?: { name: string; _id?: Types.ObjectId }[];
 }
 
 export interface IPost {

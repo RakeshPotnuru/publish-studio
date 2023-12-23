@@ -31,7 +31,7 @@
         "@aws-sdk/s3-presigned-post": "^3.456.0",
         "@google/generative-ai": "^0.1.3",
         "@trpc/server": "^10.44.1",
-        "@ts-ghost/admin-api": "^3.0.10",
+        "@ts-ghost/admin-api": "^4.0.1",
         "axios": "^1.6.2",
         "bcryptjs": "^2.4.3",
         "bullmq": "^4.14.0",

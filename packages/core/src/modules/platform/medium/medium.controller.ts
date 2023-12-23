@@ -147,7 +147,9 @@ export default class MediumController extends MediumService {
 
         return {
             name: constants.user.platforms.MEDIUM,
-            status: newPost.errors ? "error" : "success",
+            status: newPost.errors
+                ? constants.project.platformPublishStatuses.ERROR
+                : constants.project.platformPublishStatuses.SUCCESS,
             published_url: newPost.errors ? undefined : newPost.data.url,
             id: newPost.errors ? undefined : newPost.data.id,
         } as IPublishResponse;

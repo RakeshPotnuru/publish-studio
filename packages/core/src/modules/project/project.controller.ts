@@ -3,6 +3,7 @@ import type { Types } from "mongoose";
 
 import { constants } from "../../config/constants";
 import type { Context } from "../../trpc";
+import type { TPlatformName } from "../platform/platform.types";
 import ProjectHelpers from "./project.helpers";
 import ProjectService from "./project.service";
 import type { IProject, IProjectUpdate } from "./project.types";
@@ -48,11 +49,13 @@ export default class ProjectController extends ProjectService {
             project_id,
             {
                 platforms: publishResponse,
-                status:
-                    publishResponse.length > 0 &&
-                    publishResponse.every(platform => platform.status === "success")
-                        ? constants.project.status.PUBLISHED
-                        : constants.project.status.DRAFT,
+                status: publishResponse.every(
+                    platform =>
+                        platform.status === constants.project.platformPublishStatuses.SUCCESS,
+                )
+                    ? constants.project.status.PUBLISHED
+                    : constants.project.status.DRAFT,
+                published_at: new Date(),
             },
             user_id,
         );
@@ -69,7 +72,7 @@ export default class ProjectController extends ProjectService {
         input: {
             project_id: Types.ObjectId;
             platforms: {
-                name: (typeof constants.user.platforms)[keyof typeof constants.user.platforms];
+                name: TPlatformName;
             }[];
         },
         ctx: Context,
@@ -91,7 +94,10 @@ export default class ProjectController extends ProjectService {
                 platforms: updateResponse,
                 status:
                     updateResponse.length > 0 &&
-                    updateResponse.every(platform => platform.status === "success")
+                    updateResponse.every(
+                        platform =>
+                            platform.status === constants.project.platformPublishStatuses.SUCCESS,
+                    )
                         ? constants.project.status.PUBLISHED
                         : constants.project.status.DRAFT,
             },
@@ -110,10 +116,11 @@ export default class ProjectController extends ProjectService {
         input: {
             project_id: Types.ObjectId;
             scheduled_at: Date;
+            platforms: { name: TPlatformName }[];
         },
         ctx: Context,
     ) {
-        const { project_id, scheduled_at } = input;
+        const { project_id, scheduled_at, platforms } = input;
 
         const project = await super.getProjectById(project_id, ctx.user?._id);
 
@@ -135,6 +142,10 @@ export default class ProjectController extends ProjectService {
             project_id,
             {
                 scheduled_at: scheduled_at,
+                platforms: platforms.map(platform => ({
+                    name: platform.name,
+                    status: constants.project.platformPublishStatuses.PENDING,
+                })),
             },
             ctx.user?._id,
         );

@@ -133,7 +133,9 @@ export default class DevToController extends DevToService {
 
         return {
             name: constants.user.platforms.DEVTO,
-            status: newPost.error ? "error" : "success",
+            status: newPost.error
+                ? constants.project.platformPublishStatuses.ERROR
+                : constants.project.platformPublishStatuses.SUCCESS,
             published_url: newPost.url,
             id: newPost.id?.toString(),
         } as IPublishResponse;

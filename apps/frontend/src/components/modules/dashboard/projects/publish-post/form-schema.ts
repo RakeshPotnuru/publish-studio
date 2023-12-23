@@ -1,5 +1,6 @@
-import { constants } from "@/config/constants";
 import { z } from "zod";
+
+import { constants } from "@/config/constants";
 
 export const formSchema = z.object({
     title: z
@@ -21,10 +22,8 @@ export const formSchema = z.object({
             `Description must not exceed ${constants.project.description.MAX_LENGTH} characters.`,
         ),
     platforms: z
-        .array(z.nativeEnum(constants.user.platforms))
-        .refine(value => value.some(item => item), {
-            message: "Please select at least one platform to publish to.",
-        }),
+        .array(z.object({ name: z.nativeEnum(constants.user.platforms) }))
+        .min(1, "Please select at least one platform."),
     tags: z.object({
         // hashnode_tags: z
         //     .string()

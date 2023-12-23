@@ -13,6 +13,12 @@ enum projectStatus {
     SCHEDULED = "scheduled",
 }
 
+enum platformPublishStatuses {
+    SUCCESS = "success",
+    ERROR = "error",
+    PENDING = "pending",
+}
+
 const project = {
     title: {
         MIN_LENGTH: 3,
@@ -44,6 +50,7 @@ const project = {
         },
     },
     status: projectStatus,
+    platformPublishStatuses,
 } as const;
 
 const folder = {

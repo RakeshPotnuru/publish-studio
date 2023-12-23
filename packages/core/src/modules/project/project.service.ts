@@ -163,6 +163,8 @@ export default class ProjectService extends FolderService {
                         cover_image: project.cover_image,
                         canonical_url: project.canonical_url,
                         scheduled_at: project.scheduled_at,
+                        status: project.status,
+                        assets: project.assets,
                         "body.json": project.body?.json,
                         "body.html": project.body?.html,
                         "body.markdown": project.body?.markdown,

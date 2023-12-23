@@ -18,6 +18,7 @@ import {
     SheetTitle,
     SheetTrigger,
     Textarea,
+    ToastAction,
     useToast,
 } from "@itsrakesh/ui";
 import Image from "next/image";
@@ -68,7 +69,7 @@ export function PublishPost({
                     title: "Project saved",
                     description: "Project saved successfully.",
                 });
-                utils.getProjectById.invalidate({ _id: project._id });
+                handleRefresh();
             },
             onError: error => {
                 toast({
@@ -87,8 +88,13 @@ export function PublishPost({
                     title: "Post added to queue",
                     description:
                         "Post added to queue successfully. You will be notified when published.",
+                    action: (
+                        <ToastAction onClick={handleRefresh} altText="Refresh">
+                            Refresh
+                        </ToastAction>
+                    ),
                 });
-                utils.getProjectById.invalidate({ _id: project._id });
+                handleRefresh();
             },
             onError: error => {
                 toast({
@@ -99,6 +105,24 @@ export function PublishPost({
             },
         },
     );
+
+    const { mutateAsync: updatePost, isLoading: isPostUpdating } = trpc.updatePost.useMutation({
+        onSuccess: () => {
+            toast({
+                variant: "success",
+                title: "Post updated",
+                description: "Post updated successfully.",
+            });
+            handleRefresh();
+        },
+        onError: error => {
+            toast({
+                variant: "destructive",
+                title: "Failed to update post",
+                description: error.message,
+            });
+        },
+    });
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -138,8 +162,7 @@ export function PublishPost({
             await saveProject({
                 id: project._id,
                 project: {
-                    title: data.title,
-                    description: data.description,
+                    ...data,
                     tags: {
                         // hashnode_tags: data.tags.hashnode_tags.split(","),
                         devto_tags: data.tags.devto_tags?.split(",").length
@@ -160,10 +183,6 @@ export function PublishPost({
                         html: getBody().html,
                         markdown: getBody().markdown,
                     },
-                    platforms: data.platforms.map(platform => ({
-                        name: platform,
-                    })),
-                    canonical_url: data.canonical_url,
                 },
             });
         } catch (error) {}
@@ -174,22 +193,46 @@ export function PublishPost({
             handleSave(data);
 
             await publishPost({
+                ...data,
                 project_id: project._id,
                 scheduled_at: new Date(),
             });
         } catch (error) {}
     };
 
-    const handleSchedule = async (data: z.infer<typeof formSchema>) => {
-        console.log(data);
+    const handleSchedule = async (data: z.infer<typeof formSchema>, date: Date) => {
+        try {
+            handleSave(data);
+
+            await publishPost({
+                ...data,
+                project_id: project._id,
+                scheduled_at: date,
+            });
+        } catch (error) {}
     };
+
+    const handleUpdate = async (data: z.infer<typeof formSchema>) => {
+        try {
+            await handleSave(data);
+
+            await updatePost({
+                ...data,
+                project_id: project._id,
+            });
+        } catch (error) {}
+    };
+
+    function handleRefresh() {
+        utils.getProjectById.invalidate();
+    }
 
     useEffect(() => {
         if (project) {
             form.reset({
                 title: project.title,
                 description: project.description,
-                platforms: project.platforms?.map(platform => platform.name),
+                platforms: project.platforms,
                 tags: {
                     // hashnode_tags: project.tags?.hashnode_tags?.join(","),
                     devto_tags: project.tags?.devto_tags?.join(","),
@@ -201,7 +244,8 @@ export function PublishPost({
         }
     }, [project, form]);
 
-    const isLoading = form.formState.isSubmitting || isProjectSaving || isPostPublishing;
+    const isLoading =
+        form.formState.isSubmitting || isProjectSaving || isPostPublishing || isPostUpdating;
 
     const publisPostView =
         user?.platforms && user.platforms.length > 0 ? (
@@ -313,6 +357,9 @@ export function PublishPost({
                                     connectedPlatforms={user.platforms}
                                     isLoading={isLoading}
                                     publishedPlatforms={project.platforms}
+                                    onSubmit={onSubmit}
+                                    onRefresh={handleRefresh}
+                                    scheduledAt={project.scheduled_at}
                                 />
                                 <FormField
                                     control={form.control}
@@ -354,10 +401,13 @@ export function PublishPost({
                             </Tooltip>
                             {project.status === constants.project.status.PUBLISHED ? (
                                 <Button
+                                    onClick={form.handleSubmit(handleUpdate)}
                                     type="button"
-                                    disabled={!form.formState.isDirty || isLoading}
+                                    disabled={
+                                        isLoading || project.last_edited === project.published_at
+                                    }
                                 >
-                                    <ButtonLoader isLoading={isPostPublishing}>
+                                    <ButtonLoader isLoading={isPostUpdating}>
                                         Update Post
                                     </ButtonLoader>
                                 </Button>
@@ -375,9 +425,12 @@ export function PublishPost({
                                     </ButtonLoader>
                                 </Button>
                             )}
-                            <SchedulePost>
+                            <SchedulePost
+                                onConfirm={date => {
+                                    handleSchedule(form.getValues(), date);
+                                }}
+                            >
                                 <Button
-                                    onClick={form.handleSubmit(handleSchedule)}
                                     type="button"
                                     variant="secondary"
                                     disabled={

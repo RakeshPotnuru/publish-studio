@@ -5,43 +5,41 @@ import { z } from "zod";
 import { constants } from "@/config/constants";
 import { formSchema } from "../form-schema";
 
-interface DevProps {
+interface GhostProps {
     form: UseFormReturn<z.infer<typeof formSchema>>;
     isLoading: boolean;
 }
 
-export function Ghost({ form, isLoading }: DevProps) {
+export function Ghost({ form, isLoading }: Readonly<GhostProps>) {
     return (
-        <div>
-            <FormField
-                control={form.control}
-                name="tags.ghost_tags"
-                disabled={isLoading}
-                render={({ field }) => (
-                    <FormItem className="w-full">
-                        <FormLabel>
-                            Tags (Optionally enter comma seperated tags, max{" "}
-                            {constants.project.tags.ghost.MAX_LENGTH}.)
-                        </FormLabel>
-                        <FormControl>
-                            <Input type="text" placeholder="tag1,tag2,tag3" {...field} />
-                        </FormControl>
-                        {field.value && field.value.length > 0 && (
-                            <div className="mt-2 flex flex-wrap gap-1">
-                                {field.value.split(",").map(tag => (
-                                    <div
-                                        key={tag}
-                                        className="bg-secondary rounded-md px-2 py-1 text-xs"
-                                    >
-                                        {tag}
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
-        </div>
+        <FormField
+            control={form.control}
+            name="tags.ghost_tags"
+            disabled={isLoading}
+            render={({ field }) => (
+                <FormItem className="w-full">
+                    <FormLabel>
+                        Tags (Optionally enter comma seperated tags, max{" "}
+                        {constants.project.tags.ghost.MAX_LENGTH}.)
+                    </FormLabel>
+                    <FormControl>
+                        <Input type="text" placeholder="tag1,tag2,tag3" {...field} />
+                    </FormControl>
+                    {field.value && field.value.length > 0 && (
+                        <div className="mt-2 flex flex-wrap gap-1">
+                            {field.value.split(",").map(tag => (
+                                <div
+                                    key={tag}
+                                    className="bg-secondary rounded-md px-2 py-1 text-xs"
+                                >
+                                    {tag}
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                    <FormMessage />
+                </FormItem>
+            )}
+        />
     );
 }

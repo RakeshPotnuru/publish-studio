@@ -5,12 +5,14 @@ import { useState } from "react";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
 
-interface SchedulePostProps extends React.HTMLAttributes<HTMLElement> {}
+interface SchedulePostProps extends React.HTMLAttributes<HTMLElement> {
+    onConfirm: (date: Date) => void;
+}
 
 const initialDate = new Date(new Date().getTime() + 60 * 60000);
 const minDate = new Date(new Date().getTime() + 5 * 60000);
 
-export function SchedulePost({ children }: SchedulePostProps) {
+export function SchedulePost({ children, onConfirm }: Readonly<SchedulePostProps>) {
     const [open, setOpen] = useState(false);
     const [date, setDate] = useState<Date | undefined>(initialDate);
 
@@ -63,10 +65,26 @@ export function SchedulePost({ children }: SchedulePostProps) {
                             )}
                         </div>
                         <div className="flex flex-row justify-end space-x-2">
-                            <Button size="sm" variant="outline" onClick={() => setOpen(false)}>
+                            <Button
+                                type="button"
+                                size="sm"
+                                variant="outline"
+                                onClick={() => setOpen(false)}
+                            >
                                 Cancel
                             </Button>
-                            <Button size="sm">Confirm</Button>
+                            <Button
+                                type="button"
+                                onClick={() => {
+                                    if (date && date > minDate) {
+                                        onConfirm(date);
+                                        setOpen(false);
+                                    }
+                                }}
+                                size="sm"
+                            >
+                                Confirm
+                            </Button>
                         </div>
                     </div>
                 </div>

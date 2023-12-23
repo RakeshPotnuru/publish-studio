@@ -280,8 +280,8 @@ importers:
         specifier: ^10.44.1
         version: 10.44.1
       '@ts-ghost/admin-api':
-        specifier: ^3.0.10
-        version: 3.0.10
+        specifier: ^4.0.1
+        version: 4.0.1
       axios:
         specifier: ^1.6.2
         version: 1.6.2
@@ -4877,18 +4877,18 @@ packages:
     resolution: {integrity: sha512-mF7B+K6LjuboX8I1RZgKE5GA/fJhsJ8tKGK2UBt3Bwik7hepEPb4NJgNr7vO6BK5IYwPdBLRLTctRw6XZx0sRg==}
     engines: {node: '>=18.0.0'}
 
-  /@ts-ghost/admin-api@3.0.10:
-    resolution: {integrity: sha512-rVgzk+wny6j6A+zBPEmvcUvLNmpJe0ioU3kuYv+UqCYQ/aWua7DCTwc8AfEPmh+9WbVFCO3lkbijBDu4jHAEWA==}
+  /@ts-ghost/admin-api@4.0.1:
+    resolution: {integrity: sha512-5SuZnugCjNhRMbj/0dd8ipeErCpFb5SicBf+fH0Ms0eaveSDmD0HQz8kevampyujFw9g3FE7O11PoUh3pZwCsw==}
     dependencies:
-      '@ts-ghost/core-api': 5.0.11
+      '@ts-ghost/core-api': 5.1.2
       validator: 13.11.0
       zod: 3.22.4
     dev: false
 
-  /@ts-ghost/core-api@5.0.11:
-    resolution: {integrity: sha512-eB/2Zz92pSJhT66SxA3xg6Z1Vf0JXCiz7cPY/XBs1NkBjU5TJ3jspARtmcJOqzod/2nnrTcJ8qUrNEYtf7EhOw==}
+  /@ts-ghost/core-api@5.1.2:
+    resolution: {integrity: sha512-YqLLGAJ8GxHx3GvotnZxmkDuT9ZjJo4DVLl30n5aXr/+1Y3O6PpNpwAa1ws67cshx0rbFmTAGN76goKbVfLDTg==}
     dependencies:
-      jose: 4.15.4
+      jose: 5.1.3
       zod: 3.22.4
     dev: false
 
@@ -8707,8 +8707,8 @@ packages:
     resolution: {integrity: sha512-gFqAIbuKyyso/3G2qhiO2OM6shY6EPP/R0+mkDbyspxKazh8BXDC5FiFsUjlczgdNz/vfra0da2y+aHrusLG/Q==}
     hasBin: true
 
-  /jose@4.15.4:
-    resolution: {integrity: sha512-W+oqK4H+r5sITxfxpSU+MMdr/YSWGvgZMQDIsNoBDGGy4i7GBPTtvFKibQzW06n3U3TqHjhvBJsirShsEJ6eeQ==}
+  /jose@5.1.3:
+    resolution: {integrity: sha512-GPExOkcMsCLBTi1YetY2LmkoY559fss0+0KVa6kOfb2YFe84nAM7Nm/XzuZozah4iHgmBGrCOHL5/cy670SBRw==}
     dev: false
 
   /js-string-escape@1.0.1:
