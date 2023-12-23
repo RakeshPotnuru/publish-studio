@@ -1,6 +1,6 @@
 import { BiSolidFileTxt } from "react-icons/bi";
 import { BsFileEarmarkImage, BsFileEarmarkPdfFill } from "react-icons/bs";
-import { FaMarkdown, FaFileCsv } from "react-icons/fa";
+import { FaFileCsv, FaMarkdown } from "react-icons/fa";
 import { IoMdImage } from "react-icons/io";
 
 export const FileIcons = {

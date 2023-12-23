@@ -8,9 +8,10 @@ import {
 } from "@itsrakesh/ui";
 
 import { MenuProps } from "@/components/modules/dashboard/projects/editor/menu/fixed-menu";
-import { DownloadProject } from "./download-project";
-import { ImportMarkdown } from "./import-content";
 import { IProject } from "@/lib/store/projects";
+import { DownloadProject } from "./download-project";
+import { GenerateOutline } from "./generate-outline";
+import { ImportMarkdown } from "./import-content";
 
 interface ProjectToolsProps extends React.HTMLAttributes<HTMLDivElement> {
     project: IProject;
@@ -30,9 +31,10 @@ export function ProjectTools({
                     <SheetTitle>Tools</SheetTitle>
                     <SheetDescription>Tools to help you manage your project.</SheetDescription>
                 </SheetHeader>
-                <div className="my-4 space-y-4">
+                <div className="my-4 space-y-6">
                     <ImportMarkdown editor={editor} />
                     <DownloadProject editor={editor} project={project} />
+                    <GenerateOutline editor={editor} project_id={project._id} />
                 </div>
             </SheetContent>
         </Sheet>

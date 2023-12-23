@@ -23,7 +23,7 @@ import {
 } from "@itsrakesh/ui";
 import Image from "next/image";
 import { NodeHtmlMarkdown } from "node-html-markdown";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -32,6 +32,7 @@ import { HookFormDevTool } from "@/components/dev-tools/hookform-dev-tool";
 import { ImageWidget } from "@/components/ui/image-widget";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { DotsLoader } from "@/components/ui/loaders/dots-loader";
+import { MagicButton } from "@/components/ui/magic-button";
 import { Tooltip } from "@/components/ui/tooltip";
 import { constants } from "@/config/constants";
 import { IProject } from "@/lib/store/projects";
@@ -60,6 +61,7 @@ export function PublishPost({
     const { user, isLoading: isUserLoading } = useUserStore();
     const { toast } = useToast();
     const utils = trpc.useUtils();
+    const tooltipRef = useRef<HTMLButtonElement>(null);
 
     const { mutateAsync: saveProject, isLoading: isProjectSaving } = trpc.updateProject.useMutation(
         {
@@ -123,6 +125,34 @@ export function PublishPost({
             });
         },
     });
+
+    const { mutateAsync: generateTitle, isLoading: isTitleGenerating } =
+        trpc.generateTitle.useMutation({
+            onSuccess: ({ data }) => {
+                form.setValue("title", data.title, { shouldDirty: true });
+            },
+            onError: error => {
+                toast({
+                    variant: "destructive",
+                    title: "Failed to generate title",
+                    description: error.message,
+                });
+            },
+        });
+
+    const { mutateAsync: generateDescription, isLoading: isDescriptionGenerating } =
+        trpc.generateDescription.useMutation({
+            onSuccess: ({ data }) => {
+                form.setValue("description", data.description, { shouldDirty: true });
+            },
+            onError: error => {
+                toast({
+                    variant: "destructive",
+                    title: "Failed to generate description",
+                    description: error.message,
+                });
+            },
+        });
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -223,6 +253,22 @@ export function PublishPost({
         } catch (error) {}
     };
 
+    const handleGenerateTitle = async () => {
+        try {
+            await generateTitle({
+                project_id: project._id,
+            });
+        } catch (error) {}
+    };
+
+    const handleGenerateDescription = async () => {
+        try {
+            await generateDescription({
+                project_id: project._id,
+            });
+        } catch (error) {}
+    };
+
     function handleRefresh() {
         utils.getProjectById.invalidate();
     }
@@ -279,13 +325,31 @@ export function PublishPost({
                                     render={({ field }) => (
                                         <FormItem className="w-full">
                                             <FormLabel>Title</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    type="text"
-                                                    placeholder="Post title"
-                                                    {...field}
-                                                />
-                                            </FormControl>
+                                            <div className="flex items-center space-x-1">
+                                                <Tooltip content="Generate title">
+                                                    <MagicButton
+                                                        ref={tooltipRef}
+                                                        type="button"
+                                                        onClick={handleGenerateTitle}
+                                                        size="icon"
+                                                        disabled={isTitleGenerating || isLoading}
+                                                    >
+                                                        <ButtonLoader
+                                                            isLoading={isTitleGenerating}
+                                                            isIcon
+                                                        >
+                                                            <Icons.Magic className="h-4 w-4" />
+                                                        </ButtonLoader>
+                                                    </MagicButton>
+                                                </Tooltip>
+                                                <FormControl>
+                                                    <Input
+                                                        type="text"
+                                                        placeholder="Post title"
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+                                            </div>
                                             {field.value && (
                                                 <CharactersLengthViewer
                                                     maxLength={constants.project.title.MAX_LENGTH}
@@ -315,12 +379,32 @@ export function PublishPost({
                                     render={({ field }) => (
                                         <FormItem className="w-full">
                                             <FormLabel>Description</FormLabel>
-                                            <FormControl>
-                                                <Textarea
-                                                    placeholder="Post description"
-                                                    {...field}
-                                                />
-                                            </FormControl>
+                                            <div className="flex items-start space-x-1">
+                                                <Tooltip content="Generate description">
+                                                    <MagicButton
+                                                        ref={tooltipRef}
+                                                        type="button"
+                                                        onClick={handleGenerateDescription}
+                                                        size="icon"
+                                                        disabled={
+                                                            isDescriptionGenerating || isLoading
+                                                        }
+                                                    >
+                                                        <ButtonLoader
+                                                            isLoading={isDescriptionGenerating}
+                                                            isIcon
+                                                        >
+                                                            <Icons.Magic className="h-4 w-4" />
+                                                        </ButtonLoader>
+                                                    </MagicButton>
+                                                </Tooltip>
+                                                <FormControl>
+                                                    <Textarea
+                                                        placeholder="Post description"
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+                                            </div>
                                             {field.value && (
                                                 <CharactersLengthViewer
                                                     maxLength={

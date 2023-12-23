@@ -3,9 +3,9 @@ import { format } from "date-fns";
 import { NodeHtmlMarkdown } from "node-html-markdown";
 
 import { Icons } from "@/assets/icons";
-import { MenuProps } from "@/components/modules/dashboard/projects/editor/menu/fixed-menu";
+import type { MenuProps } from "@/components/modules/dashboard/projects/editor/menu/fixed-menu";
 import { Heading } from "@/components/ui/heading";
-import { IProject } from "@/lib/store/projects";
+import type { IProject } from "@/lib/store/projects";
 
 interface DownloadProjectProps extends MenuProps {
     project: IProject;
