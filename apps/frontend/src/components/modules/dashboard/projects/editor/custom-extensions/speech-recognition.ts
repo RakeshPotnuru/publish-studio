@@ -25,14 +25,14 @@ declare module "@tiptap/core" {
     }
 }
 
-class SR_Node<O = any, S = any> extends Node<O, S> {
+class SRNode<O = any, S = any> extends Node<O, S> {
     recognition: any;
     static create<O = any, S = any>(config?: any) {
-        return Node.create(config) as SR_Node<O, S>;
+        return Node.create(config) as SRNode<O, S>;
     }
 }
 
-const SpeechRecognition = SR_Node.create<SpeechRecognitionOptions>({
+const SpeechRecognition = SRNode.create<SpeechRecognitionOptions>({
     name: "SpeechRecognition",
 
     addOptions() {

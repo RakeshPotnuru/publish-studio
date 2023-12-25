@@ -33,8 +33,8 @@ interface DevConnectFormProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const formSchema = z.object({
-    admin_api_key: z.string({ required_error: "Admin API key is required" }),
-    api_url: z.string({ required_error: "API URL is required" }).url({
+    admin_api_key: z.string().min(1, { message: "Admin API key is required" }),
+    api_url: z.string().min(1, { message: "API URL is required" }).url({
         message: "API URL must be a valid URL",
     }),
     default_publish_status: z

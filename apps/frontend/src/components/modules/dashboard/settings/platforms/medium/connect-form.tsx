@@ -23,17 +23,17 @@ import { z } from "zod";
 
 import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
+import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
-import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 
 interface MediumConnectFormProps extends React.HTMLAttributes<HTMLDivElement> {
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const formSchema = z.object({
-    api_key: z.string({ required_error: "API key is required" }),
+    api_key: z.string().min(1, { message: "API key is required" }),
     default_publish_status: z
         .nativeEnum(constants.mediumStatuses)
         .default(constants.mediumStatuses.DRAFT),

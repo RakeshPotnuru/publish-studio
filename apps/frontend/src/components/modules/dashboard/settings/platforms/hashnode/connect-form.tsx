@@ -32,7 +32,7 @@ interface HashnodeConnectFormProps extends React.HTMLAttributes<HTMLDivElement> 
 }
 
 const formSchema = z.object({
-    api_key: z.string({ required_error: "API key is required" }),
+    api_key: z.string().min(1, { message: "API key is required" }),
     default_settings: z.object({
         enable_table_of_contents: z.string().default("false"),
         send_newsletter: z.string().default("false"),

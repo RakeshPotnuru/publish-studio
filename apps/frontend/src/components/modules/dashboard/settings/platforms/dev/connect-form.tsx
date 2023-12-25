@@ -32,7 +32,7 @@ interface DevConnectFormProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const formSchema = z.object({
-    api_key: z.string({ required_error: "API key is required" }),
+    api_key: z.string().min(1, { message: "API key is required" }),
     default_publish_status: z.string().default("false"),
 });
 
