@@ -1,6 +1,7 @@
 import { Separator } from "@itsrakesh/ui";
 import { useState } from "react";
 
+import fleschReadingEaseScore, { IReadabilityScore } from "@/utils/flesch-reading-ease-score";
 import { Icons } from "../../../../../assets/icons";
 import { Tooltip } from "../../../../ui/tooltip";
 import type { MenuProps } from "./menu/fixed-menu";
@@ -39,6 +40,14 @@ export function EditorFooter({ editor, isLoading }: MenuProps & EditorFooterProp
         };
     };
 
+    const getReadabilityScore = (): IReadabilityScore | null => {
+        const text = editor.getText();
+        if (text.length === 0) return null;
+        return fleschReadingEaseScore(text);
+    };
+
+    const readabilityScore = getReadabilityScore();
+
     return (
         <div className="bg-background text-muted-foreground sticky bottom-0 flex flex-row items-center justify-between rounded-xl p-2 py-1 text-sm">
             <div className="flex flex-row items-center space-x-2">
@@ -48,6 +57,14 @@ export function EditorFooter({ editor, isLoading }: MenuProps & EditorFooterProp
                 </p>
                 <Separator orientation="vertical" className="h-3 bg-gray-500" />
                 <p>{getSelection().wordCount || editor.storage.characterCount.words()} words</p>
+                {readabilityScore && (
+                    <>
+                        <Separator orientation="vertical" className="h-3 bg-gray-500" />
+                        <Tooltip content={readabilityScore.notes}>
+                            <p>{readabilityScore.schoolLevel}</p>
+                        </Tooltip>
+                    </>
+                )}
             </div>
             <div className="flex flex-row items-center space-x-2">
                 {isOnline ? (
