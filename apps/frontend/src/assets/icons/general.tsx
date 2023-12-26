@@ -19,7 +19,13 @@ import { FaWandMagicSparkles } from "react-icons/fa6";
 import { GoDotFill } from "react-icons/go";
 import { HiExternalLink } from "react-icons/hi";
 import { IoCalendar, IoCheckmarkDoneCircleSharp } from "react-icons/io5";
-import { MdEditDocument, MdPermMedia, MdSettings, MdSpaceDashboard } from "react-icons/md";
+import {
+    MdEditDocument,
+    MdOutlineSupport,
+    MdPermMedia,
+    MdSettings,
+    MdSpaceDashboard,
+} from "react-icons/md";
 import { PiDotsThreeBold } from "react-icons/pi";
 import { RiFoldersFill } from "react-icons/ri";
 import { RxMixerHorizontal } from "react-icons/rx";
@@ -54,4 +60,5 @@ export const GeneralIcons = {
     Loading: TbLoader,
     LoadingDot: GoDotFill,
     Magic: FaWandMagicSparkles,
+    Support: MdOutlineSupport,
 };

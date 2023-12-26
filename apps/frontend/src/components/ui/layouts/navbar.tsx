@@ -11,6 +11,9 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
     Skeleton,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
@@ -25,12 +28,27 @@ import { Icons } from "../../../assets/icons";
 import { Images } from "../../../assets/images";
 import { Tooltip } from "../tooltip";
 
-const NavItem = ({ icon, tooltip }: { icon: React.ReactNode; tooltip: string }) => (
-    <Tooltip content={tooltip}>
-        <Button size="icon" variant="ghost" className="rounded-full">
-            {icon}
-        </Button>
-    </Tooltip>
+const NavItem = ({
+    icon,
+    tooltip,
+    children,
+}: {
+    icon: React.ReactNode;
+    tooltip: string;
+    children: React.ReactNode;
+}) => (
+    <DropdownMenu>
+        <Tooltip content={tooltip}>
+            <DropdownMenuTrigger asChild>
+                <Button size="icon" variant="ghost" className="rounded-full">
+                    {icon}
+                </Button>
+            </DropdownMenuTrigger>
+        </Tooltip>
+        <DropdownMenuContent className="w-48" forceMount>
+            {children}
+        </DropdownMenuContent>
+    </DropdownMenu>
 );
 
 interface NavbarProps extends React.HTMLAttributes<HTMLElement> {}
@@ -85,11 +103,28 @@ export function Navbar({ className, ...props }: NavbarProps) {
                 />
             </Link>
             <div className="flex flex-row items-center space-x-1">
-                <NavItem icon={<Icons.Question className="h-5 w-5" />} tooltip="Help" />
-                <NavItem
-                    icon={<Icons.Notification className="h-5 w-5" />}
-                    tooltip="Notifications"
-                />
+                <NavItem icon={<Icons.Question className="h-5 w-5" />} tooltip="Help">
+                    <DropdownMenuItem asChild>
+                        <Link href={siteConfig.links.support}>
+                            <Icons.Support className="mr-2 h-4 w-4" />
+                            Support
+                        </Link>
+                    </DropdownMenuItem>
+                </NavItem>
+                <Popover>
+                    <Tooltip content="Notifications">
+                        <PopoverTrigger asChild>
+                            <Button size="icon" variant="ghost" className="rounded-full">
+                                <Icons.Notification className="h-5 w-5" />
+                            </Button>
+                        </PopoverTrigger>
+                    </Tooltip>
+                    <PopoverContent className="w-96" forceMount>
+                        <div className="text-muted-foreground flex h-20 items-center justify-center text-sm">
+                            No new notifications
+                        </div>
+                    </PopoverContent>
+                </Popover>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="relative h-8 w-8 rounded-full">

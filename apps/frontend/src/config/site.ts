@@ -14,6 +14,7 @@ export const siteConfig = {
         apiKeysSecureStorage: "https://docs.publishstudio.one/platforms#secure-storage-of-api-keys",
         devTags: "https://dev.to/tags",
         mediumTags: "https://medium.com/topics",
+        support: "mailto:support@publishstudio.one",
     },
     twitter: {
         site: "@publishstudio",

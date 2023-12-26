@@ -11,7 +11,7 @@ const MagicButton = forwardRef<HTMLButtonElement, MagicButtonProps>(
                 ref={ref}
                 className={cn(
                     className,
-                    "bg-gradient-to-tr from-green-500 via-purple-500 to-blue-500 text-white",
+                    "from-primary bg-gradient-to-tr via-purple-500 to-blue-500 text-white",
                 )}
                 {...props}
             >
