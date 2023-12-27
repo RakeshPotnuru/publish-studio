@@ -19,6 +19,12 @@ enum platformPublishStatuses {
     PENDING = "pending",
 }
 
+enum sentiments {
+    POSITIVE = "positive",
+    NEGATIVE = "negative",
+    NEUTRAL = "neutral",
+}
+
 const project = {
     title: {
         MIN_LENGTH: 3,
@@ -51,6 +57,13 @@ const project = {
     },
     status: projectStatus,
     platformPublishStatuses,
+    tone_analysis: {
+        input: {
+            MIN_LENGTH: 10,
+            MAX_LENGTH: 10_000,
+        },
+        sentiments,
+    },
 } as const;
 
 const folder = {

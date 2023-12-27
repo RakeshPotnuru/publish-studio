@@ -2,6 +2,7 @@ import type { Types } from "mongoose";
 
 import type { constants } from "../../config/constants";
 import type { IPagination } from "../../types/common.types";
+import type { IEmotionScores, TSentimentLabel } from "../nlu/nlu.types";
 import type { TPlatformName } from "../platform/platform.types";
 
 export type TProjectStatus =
@@ -31,6 +32,10 @@ export interface IProject {
     }[];
     tags?: ITags;
     canonical_url?: string;
+    tone_analysis?: {
+        sentiment?: TSentimentLabel;
+        emotion?: IEmotionScores;
+    };
     scheduled_at?: Date;
     published_at?: Date;
     created_at?: Date;
@@ -62,6 +67,10 @@ export interface IProjectResponse {
     canonical_url?: string;
     scheduled_at?: Date;
     published_at?: Date;
+    tone_analysis?: {
+        sentiment?: TSentimentLabel;
+        emotion?: IEmotionScores;
+    };
     created_at: Date;
     updated_at: Date;
 }

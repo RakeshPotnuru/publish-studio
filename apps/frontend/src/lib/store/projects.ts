@@ -1,6 +1,10 @@
 import type { Types } from "mongoose";
 import { create } from "zustand";
 
+import {
+    IEmotionScores,
+    TSentimentLabel,
+} from "@/components/modules/dashboard/projects/tools/tone-analysis/analysis";
 import { constants } from "@/config/constants";
 import { TPlatformName } from "@/types/common";
 
@@ -37,6 +41,10 @@ export interface IProject {
     }[];
     tags?: TTags;
     canonical_url?: string;
+    tone_analysis?: {
+        sentiment?: TSentimentLabel;
+        emotion?: IEmotionScores;
+    };
     scheduled_at?: Date;
     published_at?: Date;
 }

@@ -12,6 +12,7 @@ import { IProject } from "@/lib/store/projects";
 import { DownloadProject } from "./download-project";
 import { GenerateOutline } from "./generate-outline";
 import { ImportMarkdown } from "./import-content";
+import { ToneAnalysis } from "./tone-analysis";
 
 interface ProjectToolsProps extends React.HTMLAttributes<HTMLDivElement> {
     project: IProject;
@@ -35,6 +36,7 @@ export function ProjectTools({
                     <ImportMarkdown editor={editor} />
                     <DownloadProject editor={editor} project={project} />
                     <GenerateOutline editor={editor} project_id={project._id} />
+                    <ToneAnalysis editor={editor} project={project} />
                 </div>
             </SheetContent>
         </Sheet>

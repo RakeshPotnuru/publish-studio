@@ -37,6 +37,8 @@ const ZodEnvironmentVariables = z.object({
     STRIPE_WEBHOOK_SECRET: z.string(),
     REDIS_HOST: z.string(),
     REDIS_PORT: z.string(),
+    IBM_WATSON_API_KEY: z.string(),
+    IBM_WATSON_SERVICE_URL: z.string().url(),
 });
 
 ZodEnvironmentVariables.parse(process.env);

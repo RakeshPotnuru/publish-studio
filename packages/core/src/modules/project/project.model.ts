@@ -51,6 +51,19 @@ const ProjectSchema = new Schema<IProject>(
             ],
         },
         canonical_url: String,
+        tone_analysis: {
+            sentiment: {
+                type: String,
+                enum: constants.project.tone_analysis.sentiments,
+            },
+            emotion: {
+                sadness: Number,
+                joy: Number,
+                fear: Number,
+                disgust: Number,
+                anger: Number,
+            },
+        },
         scheduled_at: {
             type: Date,
         },
