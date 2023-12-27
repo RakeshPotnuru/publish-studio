@@ -41,7 +41,7 @@ export function DataTableFacetedFilter<TData, TValue>({
         <Popover>
             <PopoverTrigger asChild>
                 <Button variant="outline" size="sm" className="h-8 border-dashed">
-                    <Icons.CircleAdd className="mr-2 h-4 w-4" />
+                    <Icons.CircleAdd className="mr-2 size-4" />
                     {title}
                     {selectedValues?.size > 0 && (
                         <>
@@ -103,19 +103,19 @@ export function DataTableFacetedFilter<TData, TValue>({
                                     >
                                         <div
                                             className={cn(
-                                                "border-primary mr-2 flex h-4 w-4 items-center justify-center rounded-sm border",
+                                                "border-primary mr-2 flex size-4 items-center justify-center rounded-sm border",
                                                 isSelected
                                                     ? "bg-primary text-primary-foreground"
                                                     : "opacity-50 [&_svg]:invisible",
                                             )}
                                         >
-                                            <Icons.Check className={cn("h-4 w-4")} />
+                                            <Icons.Check className={cn("size-4")} />
                                         </div>
                                         {option.icon && (
-                                            <option.icon className="text-muted-foreground mr-2 h-4 w-4" />
+                                            <option.icon className="text-muted-foreground mr-2 size-4" />
                                         )}
                                         <span>{option.label}</span>
-                                        <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
+                                        <span className="ml-auto flex size-4 items-center justify-center font-mono text-xs">
                                             {facets?.get(option.value)
                                                 ? facets.get(option.value)
                                                 : 0}

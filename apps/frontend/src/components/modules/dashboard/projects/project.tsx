@@ -66,7 +66,7 @@ export function Project({ ...props }: ProjectProps) {
                         <ErrorBox title="Error" description={error.message} />
                         <Button variant="link" asChild>
                             <Link href={siteConfig.pages.dashboard.link}>
-                                <Icons.Left className="mr-2 h-4 w-4" /> Back to Home
+                                <Icons.Left className="mr-2 size-4" /> Back to Home
                             </Link>
                         </Button>
                     </div>

@@ -78,7 +78,7 @@ export const columns: ColumnDef<IProject>[] = [
 
             return (
                 <div className={cn("flex w-[100px] items-center", status.color)}>
-                    {status.icon && <status.icon className="mr-2 h-4 w-4" />}
+                    {status.icon && <status.icon className="mr-2 size-4" />}
                     <span>{status.label}</span>
                 </div>
             );

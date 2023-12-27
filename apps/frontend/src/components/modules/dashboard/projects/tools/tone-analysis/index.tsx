@@ -103,7 +103,7 @@ export function ToneAnalysis({ editor, project }: Readonly<ToneAnalysisProps>) {
             >
                 <ButtonLoader isLoading={isLoading}>
                     <Icons.Magic className="mr-2 size-4" />
-                    {project.tone_analysis ? "Analyze Again" : "Analyze Content"}
+                    {data || project.tone_analysis ? "Analyze Again" : "Analyze Content"}
                 </ButtonLoader>
             </MagicButton>
         </div>

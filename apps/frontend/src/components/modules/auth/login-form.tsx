@@ -12,17 +12,17 @@ import {
     Input,
     useToast,
 } from "@itsrakesh/ui";
+import { cn } from "@itsrakesh/utils";
 import { jwtDecode } from "jwt-decode";
 import Link from "next/link";
 import React, { useState } from "react";
 import { useCookies } from "react-cookie";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { cn } from "@itsrakesh/utils";
 
-import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
+import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
@@ -169,14 +169,7 @@ export function LoginForm({ ...props }: LoginFormProps) {
                                 form.formState.isSubmitting || !form.formState.isDirty || isLoading
                             }
                         >
-                            {isLoading ? (
-                                <>
-                                    <Icons.Loading className="mr-2 h-4 w-4 animate-spin" />
-                                    Please wait
-                                </>
-                            ) : (
-                                "Continue"
-                            )}
+                            <ButtonLoader isLoading={isLoading}>Continue</ButtonLoader>
                         </Button>
                     </form>
                 </Form>

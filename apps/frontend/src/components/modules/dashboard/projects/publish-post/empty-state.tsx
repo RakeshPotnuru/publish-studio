@@ -13,7 +13,7 @@ export function EmptyState() {
             </p>
             <Button asChild>
                 <Link href={siteConfig.pages.settings.integrations.link}>
-                    <Icons.Connect className="mr-2 h-4 w-4" />
+                    <Icons.Connect className="mr-2 size-4" />
                     Connect
                 </Link>
             </Button>

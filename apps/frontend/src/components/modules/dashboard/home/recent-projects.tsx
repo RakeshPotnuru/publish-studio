@@ -34,14 +34,14 @@ export function RecentProjects() {
                             asChild
                         >
                             <Link href={`/projects/${project._id}`}>
-                                <Icons.Projects className="mr-2 h-4 w-4" />
+                                <Icons.Projects className="mr-2 size-4" />
                                 {shortenText(project.title, 24)}
                             </Link>
                         </Button>
                     ))}
                     <Button variant="outline" asChild>
                         <Link href="/folders">
-                            All projects <Icons.Right className="ml-2 h-4 w-4" />
+                            All projects <Icons.Right className="ml-2 size-4" />
                         </Link>
                     </Button>
                 </>
@@ -50,7 +50,7 @@ export function RecentProjects() {
                     <p>No projects yet. Ready to begin?</p>
                     <NewProjectDialog>
                         <Button variant="secondary">
-                            <Icons.Add className="mr-2 h-4 w-4" /> New Project
+                            <Icons.Add className="mr-2 size-4" /> New Project
                         </Button>
                     </NewProjectDialog>
                 </div>

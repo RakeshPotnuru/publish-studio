@@ -104,7 +104,7 @@ export function ImportMarkdown({ editor }: MenuProps) {
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
                     <Button size="sm" className="w-full">
-                        <Icons.Import className="mr-2 h-4 w-4" /> Import
+                        <Icons.Import className="mr-2 size-4" /> Import
                     </Button>
                 </DialogTrigger>
                 <DialogContent>

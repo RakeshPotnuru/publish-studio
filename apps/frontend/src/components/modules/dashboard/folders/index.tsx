@@ -33,7 +33,7 @@ export function Folders({ ...props }: ProjectsProps) {
                 <Heading>My Folders</Heading>
                 <NewFolderDialog>
                     <Button>
-                        <Icons.Add className="mr-2 h-4 w-4" /> New Folder
+                        <Icons.Add className="mr-2 size-4" /> New Folder
                     </Button>
                 </NewFolderDialog>
             </div>

@@ -29,11 +29,11 @@ export function DataTableColumnHeader<TData, TValue>({
     const isSorted = column.getIsSorted();
 
     if (isSorted === "desc") {
-        sortIcon = <Icons.SortDesc className="ml-2 h-4 w-4" />;
+        sortIcon = <Icons.SortDesc className="ml-2 size-4" />;
     } else if (isSorted === "asc") {
-        sortIcon = <Icons.SortAsc className="ml-2 h-4 w-4" />;
+        sortIcon = <Icons.SortAsc className="ml-2 size-4" />;
     } else {
-        sortIcon = <Icons.Sort className="ml-2 h-4 w-4" />;
+        sortIcon = <Icons.Sort className="ml-2 size-4" />;
     }
 
     return (
@@ -51,16 +51,16 @@ export function DataTableColumnHeader<TData, TValue>({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start">
                     <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
-                        <Icons.SortAsc className="text-muted-foreground/70 mr-2 h-3.5 w-3.5" />
+                        <Icons.SortAsc className="text-muted-foreground/70 mr-2 size-3.5" />
                         Asc
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
-                        <Icons.SortDesc className="text-muted-foreground/70 mr-2 h-3.5 w-3.5" />
+                        <Icons.SortDesc className="text-muted-foreground/70 mr-2 size-3.5" />
                         Desc
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
-                        <Icons.Hide className="text-muted-foreground/70 mr-2 h-3.5 w-3.5" />
+                        <Icons.Hide className="text-muted-foreground/70 mr-2 size-3.5" />
                         Hide
                     </DropdownMenuItem>
                 </DropdownMenuContent>

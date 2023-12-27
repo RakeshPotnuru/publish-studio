@@ -52,8 +52,8 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="data-[state=open]:bg-muted flex h-8 w-8 p-0">
-                    <Icons.RowActions className="h-4 w-4" />
+                <Button variant="ghost" className="data-[state=open]:bg-muted flex size-8 p-0">
+                    <Icons.RowActions className="size-4" />
                     <span className="sr-only">Open menu</span>
                 </Button>
             </DropdownMenuTrigger>
@@ -64,7 +64,7 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
                             event.preventDefault();
                         }}
                     >
-                        <Icons.Edit className="mr-2 h-4 w-4" />
+                        <Icons.Edit className="mr-2 size-4" />
                         Rename
                     </DropdownMenuItem>
                 </EditFolderDialog>
@@ -76,7 +76,7 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
                             onClick={handleDelete}
                             variant="destructive"
                             size="icon"
-                            className="h-6 w-6"
+                            className="size-6"
                             disabled={isLoading}
                         >
                             {isLoading ? (
@@ -89,7 +89,7 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
                             onClick={() => setAskingForConfirmation(false)}
                             variant="outline"
                             size="icon"
-                            className="h-6 w-6"
+                            className="size-6"
                         >
                             <Icons.Close />
                         </Button>
@@ -105,7 +105,7 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
                         tabIndex={0}
                         className="hover:bg-accent hover:text-destructive text-destructive relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
                     >
-                        <Icons.Delete className="mr-2 h-4 w-4" />
+                        <Icons.Delete className="mr-2 size-4" />
                         Delete
                     </div>
                 )}

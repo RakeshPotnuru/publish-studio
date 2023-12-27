@@ -16,9 +16,9 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
+import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
 import { useSearchParams } from "next/navigation";
@@ -220,14 +220,7 @@ export function ResetPasswordForm({ ...props }: ResetPasswordFormProps) {
                                     isEmailStepLoading
                                 }
                             >
-                                {isEmailStepLoading ? (
-                                    <>
-                                        <Icons.Loading className="mr-2 h-4 w-4 animate-spin" />
-                                        Please wait
-                                    </>
-                                ) : (
-                                    "Continue"
-                                )}
+                                <ButtonLoader isLoading={isEmailStepLoading}>Continue</ButtonLoader>
                             </Button>
                         </form>
                     </Form>
@@ -296,14 +289,9 @@ export function ResetPasswordForm({ ...props }: ResetPasswordFormProps) {
                                     isPasswordStepLoading
                                 }
                             >
-                                {isPasswordStepLoading ? (
-                                    <>
-                                        <Icons.Loading className="mr-2 h-4 w-4 animate-spin" />
-                                        Please wait
-                                    </>
-                                ) : (
-                                    "Continue"
-                                )}
+                                <ButtonLoader isLoading={isPasswordStepLoading}>
+                                    Continue
+                                </ButtonLoader>
                             </Button>
                         </form>
                     </Form>

@@ -124,7 +124,7 @@ export function NewAssetDialog({ children, ...props }: NewAssetDialogProps) {
                 >
                     {file ? (
                         <div className="flex items-center space-x-4">
-                            <Icons.ImageFile className="h-8 w-8" />
+                            <Icons.ImageFile className="size-8" />
                             <div className="flex flex-col">
                                 <p className="text-sm font-medium">{shortenText(file.name, 20)}</p>
                                 <p className="text-muted-foreground text-xs">
@@ -137,7 +137,7 @@ export function NewAssetDialog({ children, ...props }: NewAssetDialogProps) {
                                 variant="ghost"
                                 className="rounded-full"
                             >
-                                <Icons.Close className="h-4 w-4" />
+                                <Icons.Close className="size-4" />
                             </Button>
                         </div>
                     ) : (
@@ -157,7 +157,7 @@ export function NewAssetDialog({ children, ...props }: NewAssetDialogProps) {
                                 size="icon"
                                 className="rounded-full"
                             >
-                                <Icons.Add className="h-4 w-4" />
+                                <Icons.Add className="size-4" />
                             </Button>
                         </>
                     )}

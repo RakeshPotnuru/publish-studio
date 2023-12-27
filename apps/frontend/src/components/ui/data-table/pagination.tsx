@@ -63,39 +63,39 @@ export function DataTablePagination<TData>({
                 <div className="flex items-center space-x-2">
                     <Button
                         variant="outline"
-                        className="hidden h-8 w-8 p-0 lg:flex"
+                        className="hidden size-8 p-0 lg:flex"
                         onClick={() => table.setPageIndex(0)}
                         disabled={!table.getCanPreviousPage()}
                     >
                         <span className="sr-only">Go to first page</span>
-                        <Icons.LeftDoubleArrow className="h-4 w-4" />
+                        <Icons.LeftDoubleArrow className="size-4" />
                     </Button>
                     <Button
                         variant="outline"
-                        className="h-8 w-8 p-0"
+                        className="size-8 p-0"
                         onClick={() => table.previousPage()}
                         disabled={!table.getCanPreviousPage()}
                     >
                         <span className="sr-only">Go to previous page</span>
-                        <Icons.LeftChevron className="h-4 w-4" />
+                        <Icons.LeftChevron className="size-4" />
                     </Button>
                     <Button
                         variant="outline"
-                        className="h-8 w-8 p-0"
+                        className="size-8 p-0"
                         onClick={() => table.nextPage()}
                         disabled={!table.getCanNextPage()}
                     >
                         <span className="sr-only">Go to next page</span>
-                        <Icons.RightChevron className="h-4 w-4" />
+                        <Icons.RightChevron className="size-4" />
                     </Button>
                     <Button
                         variant="outline"
-                        className="hidden h-8 w-8 p-0 lg:flex"
+                        className="hidden size-8 p-0 lg:flex"
                         onClick={() => table.setPageIndex(table.getPageCount() - 1)}
                         disabled={!table.getCanNextPage()}
                     >
                         <span className="sr-only">Go to last page</span>
-                        <Icons.RightDoubleArrow className="h-4 w-4" />
+                        <Icons.RightDoubleArrow className="size-4" />
                     </Button>
                 </div>
             </div>

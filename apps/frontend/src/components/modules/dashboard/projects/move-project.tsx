@@ -135,7 +135,7 @@ export function MoveProject({ children, projectId, ...props }: Readonly<MoveProj
                                                                       item.value === field.value,
                                                               )?.label
                                                             : "Select folder"}
-                                                        <Icons.Sort className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                                        <Icons.Sort className="ml-2 size-4 shrink-0 opacity-50" />
                                                     </Button>
                                                 </FormControl>
                                             </PopoverTrigger>
@@ -184,7 +184,7 @@ export function MoveProject({ children, projectId, ...props }: Readonly<MoveProj
                                                                         {item.label}
                                                                         <Icons.Check
                                                                             className={cn(
-                                                                                "ml-auto h-4 w-4",
+                                                                                "ml-auto size-4",
                                                                                 item.value ===
                                                                                     field.value
                                                                                     ? "opacity-100"
@@ -217,7 +217,7 @@ export function MoveProject({ children, projectId, ...props }: Readonly<MoveProj
                                 <Button type="submit" disabled={isProjectMoving}>
                                     {isProjectMoving ? (
                                         <>
-                                            <Icons.Loading className="mr-2 h-4 w-4 animate-spin" />
+                                            <Icons.Loading className="mr-2 size-4 animate-spin" />
                                             Please wait
                                         </>
                                     ) : (

@@ -305,7 +305,7 @@ export function PublishPost({
                                     type="button"
                                     variant="outline"
                                 >
-                                    <Icons.Add className="mr-2 h-4 w-4" />
+                                    <Icons.Add className="mr-2 size-4" />
                                     Select cover image
                                 </Button>
                                 {coverImage && (
@@ -338,7 +338,7 @@ export function PublishPost({
                                                             isLoading={isTitleGenerating}
                                                             isIcon
                                                         >
-                                                            <Icons.Magic className="h-4 w-4" />
+                                                            <Icons.Magic className="size-4" />
                                                         </ButtonLoader>
                                                     </MagicButton>
                                                 </Tooltip>
@@ -394,7 +394,7 @@ export function PublishPost({
                                                             isLoading={isDescriptionGenerating}
                                                             isIcon
                                                         >
-                                                            <Icons.Magic className="h-4 w-4" />
+                                                            <Icons.Magic className="size-4" />
                                                         </ButtonLoader>
                                                     </MagicButton>
                                                 </Tooltip>
@@ -479,7 +479,7 @@ export function PublishPost({
                                     disabled={!form.formState.isDirty || isLoading}
                                 >
                                     <ButtonLoader isLoading={isProjectSaving} isIcon>
-                                        <Icons.Save className="h-4 w-4" />
+                                        <Icons.Save className="size-4" />
                                     </ButtonLoader>
                                 </Button>
                             </Tooltip>
@@ -528,7 +528,7 @@ export function PublishPost({
                                         "Published"
                                     ) : (
                                         <>
-                                            Schedule <Icons.Schedule className="ml-2 h-4 w-4" />
+                                            Schedule <Icons.Schedule className="ml-2 size-4" />
                                         </>
                                     )}
                                 </Button>

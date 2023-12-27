@@ -12,7 +12,7 @@ export function ButtonLoader({ isLoading, children, isIcon = false }: ButtonLoad
         <>
             <Icons.Loading
                 className={cn("animate-spin", {
-                    "mr-2 h-4 w-4": !isIcon,
+                    "mr-2 size-4": !isIcon,
                 })}
             />
             {!isIcon && "Please wait"}

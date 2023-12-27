@@ -65,7 +65,7 @@ export function PlatformCard({
                     platform={name}
                     form={editForm}
                 >
-                    <Button size="icon" variant="outline" className="h-8 w-8">
+                    <Button size="icon" variant="outline" className="size-8">
                         <Icons.Edit />
                         <span className="sr-only">Edit your {name} account</span>
                     </Button>
@@ -100,7 +100,7 @@ export function PlatformCard({
                     <Heading level={3} className="flex flex-row items-center space-x-1">
                         <span>{name}</span>
                         {isLoading ? (
-                            <Skeleton className="h-6 w-6" />
+                            <Skeleton className="size-6" />
                         ) : (
                             connected && (
                                 <Tooltip content="Connected" side="top">

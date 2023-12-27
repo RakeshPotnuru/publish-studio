@@ -98,28 +98,28 @@ export function DownloadProject({ editor, project }: Readonly<DownloadProjectPro
                     size="sm"
                     className="bg-pdf text-pdf-foreground hover:opacity-80"
                 >
-                    <Icons.Pdf className="mr-2 h-4 w-4" /> PDF
+                    <Icons.Pdf className="mr-2 size-4" /> PDF
                 </Button>
                 <Button
                     onClick={handleCSV}
                     size="sm"
                     className="bg-csv text-csv-foreground hover:opacity-80"
                 >
-                    <Icons.Csv className="mr-2 h-4 w-4" /> CSV
+                    <Icons.Csv className="mr-2 size-4" /> CSV
                 </Button>
                 <Button
                     onClick={handleTXT}
                     size="sm"
                     className="bg-txt text-txt-foreground hover:opacity-80"
                 >
-                    <Icons.Txt className="mr-2 h-4 w-4" /> TXT
+                    <Icons.Txt className="mr-2 size-4" /> TXT
                 </Button>
                 <Button
                     onClick={handleMD}
                     size="sm"
                     className="bg-markdown text-markdown-foreground hover:opacity-80"
                 >
-                    <Icons.Markdown className="mr-2 h-4 w-4" /> MD
+                    <Icons.Markdown className="mr-2 size-4" /> MD
                 </Button>
             </div>
         </div>

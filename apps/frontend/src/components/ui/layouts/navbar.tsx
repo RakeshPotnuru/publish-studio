@@ -103,10 +103,10 @@ export function Navbar({ className, ...props }: NavbarProps) {
                 />
             </Link>
             <div className="flex flex-row items-center space-x-1">
-                <NavItem icon={<Icons.Question className="h-5 w-5" />} tooltip="Help">
+                <NavItem icon={<Icons.Question className="size-5" />} tooltip="Help">
                     <DropdownMenuItem asChild>
                         <Link href={siteConfig.links.support}>
-                            <Icons.Support className="mr-2 h-4 w-4" />
+                            <Icons.Support className="mr-2 size-4" />
                             Support
                         </Link>
                     </DropdownMenuItem>
@@ -115,7 +115,7 @@ export function Navbar({ className, ...props }: NavbarProps) {
                     <Tooltip content="Notifications">
                         <PopoverTrigger asChild>
                             <Button size="icon" variant="ghost" className="rounded-full">
-                                <Icons.Notification className="h-5 w-5" />
+                                <Icons.Notification className="size-5" />
                             </Button>
                         </PopoverTrigger>
                     </Tooltip>
@@ -127,15 +127,15 @@ export function Navbar({ className, ...props }: NavbarProps) {
                 </Popover>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                            <Avatar className="h-9 w-9">
+                        <Button variant="ghost" className="relative size-8 rounded-full">
+                            <Avatar className="size-9">
                                 <AvatarImage
                                     src={user?.profile_pic}
                                     alt={`${user?.first_name} ${user?.last_name}`}
                                 />
                                 {isFetching ? (
                                     <AvatarFallback>
-                                        <Skeleton className="h-4 w-4 animate-ping rounded-full" />
+                                        <Skeleton className="size-4 animate-ping rounded-full" />
                                     </AvatarFallback>
                                 ) : (
                                     <AvatarFallback>
@@ -151,19 +151,19 @@ export function Navbar({ className, ...props }: NavbarProps) {
                         <DropdownMenuSeparator />
                         <DropdownMenuItem asChild>
                             <Link href="/profile">
-                                <Icons.Profile className="mr-2 h-4 w-4" />
+                                <Icons.Profile className="mr-2 size-4" />
                                 Profile
                             </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
                             <Link href="/settings">
-                                <Icons.Settings className="mr-2 h-4 w-4" />
+                                <Icons.Settings className="mr-2 size-4" />
                                 Settings
                             </Link>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={handleLogout}>
-                            <Icons.Logout className="mr-2 h-4 w-4" />
+                            <Icons.Logout className="mr-2 size-4" />
                             <span>Logout</span>
                         </DropdownMenuItem>
                     </DropdownMenuContent>
