@@ -63,7 +63,7 @@ export function ToneAnalysis({ editor, project }: Readonly<ToneAnalysisProps>) {
                             "text-destructive": !level,
                         })}
                     >
-                        {level ? level : "0"}
+                        {level ? level : "No grade"}
                     </span>
                     .
                 </p>
@@ -102,7 +102,8 @@ export function ToneAnalysis({ editor, project }: Readonly<ToneAnalysisProps>) {
                 disabled={isLoading || !level}
             >
                 <ButtonLoader isLoading={isLoading}>
-                    <Icons.Magic className="mr-2 size-4" /> Analyze Content
+                    <Icons.Magic className="mr-2 size-4" />
+                    {project.tone_analysis ? "Analyze Again" : "Analyze Content"}
                 </ButtonLoader>
             </MagicButton>
         </div>
