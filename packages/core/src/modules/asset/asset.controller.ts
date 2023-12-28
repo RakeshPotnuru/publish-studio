@@ -32,12 +32,50 @@ export default class AssetController extends AssetService {
 
         this.validateFile(file);
 
-        const post = await super.uploadImage(file, project_id, ctx);
+        const { asset, fields, url } = await super.uploadImage(file, project_id, ctx);
 
         return {
             status: "success",
             data: {
-                submitTo: post,
+                submitTo: {
+                    url,
+                    fields,
+                },
+                asset,
+            },
+        };
+    }
+
+    async getAllAssetsHandler(
+        input: {
+            pagination: {
+                page: number;
+                limit: number;
+            };
+        },
+        ctx: Context,
+    ) {
+        const { assets, pagination } = await super.getAllAssetsByUserId(
+            input.pagination,
+            ctx.user?._id,
+        );
+
+        return {
+            status: "success",
+            data: {
+                assets,
+                pagination,
+            },
+        };
+    }
+
+    async deleteAssetsHandler(input: Types.ObjectId[], ctx: Context) {
+        const deletedAssets = await super.deleteAssets(input, ctx.user?._id);
+
+        return {
+            status: "success",
+            data: {
+                assets: deletedAssets,
             },
         };
     }

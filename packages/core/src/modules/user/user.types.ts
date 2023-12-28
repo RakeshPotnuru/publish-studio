@@ -11,8 +11,6 @@ export interface IUser {
     password?: string;
     profile_pic?: string;
     user_type: (typeof constants.user.userTypes)[keyof typeof constants.user.userTypes];
-    projects?: Types.ObjectId[];
-    assets?: Types.ObjectId[];
     platforms?: TPlatformName[];
     is_verified: boolean;
     last_login: Date;

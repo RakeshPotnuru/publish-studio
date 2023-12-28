@@ -82,17 +82,7 @@ export default class FolderController extends FolderService {
     }
 
     async deleteFoldersHandler(input: Types.ObjectId[], ctx: Context) {
-        const folder_ids: Types.ObjectId[] = [];
-
-        for (const element of input) {
-            const folder = await super.getFolderById(element, ctx.user?._id);
-
-            if (folder) {
-                folder_ids.push(element);
-            }
-        }
-
-        const deletedFolders = await super.deleteFolders(folder_ids, ctx.user?._id);
+        const deletedFolders = await super.deleteFolders(input, ctx.user?._id);
 
         return {
             status: "success",

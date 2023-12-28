@@ -18,6 +18,21 @@ const assetRouter = router({
             }),
         )
         .mutation(({ input, ctx }) => new AssetController().uploadImageHandler(input, ctx)),
+
+    getAllAssets: protectedProcedure
+        .input(
+            z.object({
+                pagination: z.object({
+                    page: z.number().default(1),
+                    limit: z.number().default(10),
+                }),
+            }),
+        )
+        .query(({ input, ctx }) => new AssetController().getAllAssetsHandler(input, ctx)),
+
+    deleteAssets: protectedProcedure
+        .input(z.array(z.custom<Types.ObjectId>()))
+        .mutation(({ input, ctx }) => new AssetController().deleteAssetsHandler(input, ctx)),
 });
 
 export default assetRouter;

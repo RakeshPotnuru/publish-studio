@@ -168,7 +168,7 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
                             </Button>
                         </div>
                     ) : (
-                        <div
+                        <slot
                             onClick={() => setAskingForConfirmation(true)}
                             onKeyDown={event => {
                                 if (event.key === "Enter" || event.key === " ") {
@@ -180,7 +180,7 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
                         >
                             <Icons.Delete className="mr-2 size-4" />
                             Delete
-                        </div>
+                        </slot>
                     )}
                 </DropdownMenuContent>
             </DropdownMenu>

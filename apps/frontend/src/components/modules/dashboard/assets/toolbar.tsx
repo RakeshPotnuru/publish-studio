@@ -1,11 +1,14 @@
-import { Button, Input } from "@itsrakesh/ui";
+import { Button, Input, useToast } from "@itsrakesh/ui";
 import { Table } from "@tanstack/react-table";
 import { useState } from "react";
 
 import { Icons } from "@/assets/icons";
 import { DataTableViewOptions } from "@/components/ui/data-table";
 import { DataTableFacetedFilter } from "@/components/ui/data-table/faceted-filter";
+import { Tooltip } from "@/components/ui/tooltip";
 import { constants } from "@/config/constants";
+import type { IAsset } from "@/lib/store/assets";
+import { trpc } from "@/utils/trpc";
 
 interface ToolbarProps<TData> {
     table: Table<TData>;
@@ -17,6 +20,39 @@ export function Toolbar<TData>({ table, isWidget, onAdd }: ToolbarProps<TData>) 
     const [askingForConfirmation, setAskingForConfirmation] = useState(false);
 
     const isFiltered = table.getState().columnFilters.length > 0;
+
+    const { toast } = useToast();
+    const utils = trpc.useUtils();
+
+    const { mutateAsync: deleteAssets, isLoading } = trpc.deleteAssets.useMutation({
+        onSuccess: ({ data }) => {
+            const count = data.assets.deletedCount;
+
+            toast({
+                variant: "success",
+                title: `Asset${count > 1 ? "s" : ""} deleted`,
+                description: `${count} asset${count > 1 ? "s" : ""} deleted successfully`,
+            });
+
+            utils.getAllAssets.invalidate();
+            table.resetRowSelection();
+        },
+        onError: error => {
+            toast({
+                variant: "destructive",
+                title: "Error",
+                description: error.message,
+            });
+        },
+    });
+
+    const handleDelete = async () => {
+        try {
+            await deleteAssets(
+                table.getFilteredSelectedRowModel().rows.map(row => (row.original as IAsset)._id),
+            );
+        } catch (error) {}
+    };
 
     const handleAdd = (urls: string[]) => {
         if (onAdd && urls.length === 1) {
@@ -60,17 +96,31 @@ export function Toolbar<TData>({ table, isWidget, onAdd }: ToolbarProps<TData>) 
                         {askingForConfirmation ? (
                             <div className="space-x-1 text-sm">
                                 <span>Confirm?</span>
-                                <Button variant="destructive" size="icon" className="size-8">
-                                    <Icons.Check />
-                                </Button>
-                                <Button
-                                    onClick={() => setAskingForConfirmation(false)}
-                                    variant="outline"
-                                    size="icon"
-                                    className="size-8"
-                                >
-                                    <Icons.Close />
-                                </Button>
+                                <Tooltip content="Delete">
+                                    <Button
+                                        onClick={handleDelete}
+                                        variant="destructive"
+                                        size="icon"
+                                        className="size-8"
+                                        disabled={isLoading}
+                                    >
+                                        {isLoading ? (
+                                            <Icons.Loading className="animate-spin" />
+                                        ) : (
+                                            <Icons.Check />
+                                        )}
+                                    </Button>
+                                </Tooltip>
+                                <Tooltip content="Cancel">
+                                    <Button
+                                        onClick={() => setAskingForConfirmation(false)}
+                                        variant="outline"
+                                        size="icon"
+                                        className="size-8"
+                                    >
+                                        <Icons.Close />
+                                    </Button>
+                                </Tooltip>
                             </div>
                         ) : (
                             <Button

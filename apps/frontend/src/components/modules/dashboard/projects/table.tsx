@@ -82,6 +82,31 @@ export function ProjectsTable<TData, TValue>({
         refetch();
     }, [refetch, pageIndex, pageSize]);
 
+    const tableBodyView = table.getRowModel().rows?.length ? (
+        table.getRowModel().rows.map(row => (
+            <TableRow
+                key={row.id}
+                data-state={row.getIsSelected() && "selected"}
+                className="dark:hover:bg-zinc-800"
+            >
+                {row
+                    .getVisibleCells()
+                    .filter(cell => cell.column.id !== "_id")
+                    .map(cell => (
+                        <TableCell key={cell.id}>
+                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </TableCell>
+                    ))}
+            </TableRow>
+        ))
+    ) : (
+        <TableRow>
+            <TableCell colSpan={columns.length} className="h-24 text-center">
+                No results
+            </TableCell>
+        </TableRow>
+    );
+
     return (
         <div className="space-y-4">
             <Toolbar table={table} />
@@ -124,32 +149,8 @@ export function ProjectsTable<TData, TValue>({
                                     />
                                 </TableCell>
                             </TableRow>
-                        ) : table.getRowModel().rows?.length ? (
-                            table.getRowModel().rows.map(row => (
-                                <TableRow
-                                    key={row.id}
-                                    data-state={row.getIsSelected() && "selected"}
-                                    className="dark:hover:bg-zinc-800"
-                                >
-                                    {row
-                                        .getVisibleCells()
-                                        .filter(cell => cell.column.id !== "_id")
-                                        .map(cell => (
-                                            <TableCell key={cell.id}>
-                                                {flexRender(
-                                                    cell.column.columnDef.cell,
-                                                    cell.getContext(),
-                                                )}
-                                            </TableCell>
-                                        ))}
-                                </TableRow>
-                            ))
                         ) : (
-                            <TableRow>
-                                <TableCell colSpan={columns.length} className="h-24 text-center">
-                                    No results
-                                </TableCell>
-                            </TableRow>
+                            tableBodyView
                         )}
                     </TableBody>
                 </Table>

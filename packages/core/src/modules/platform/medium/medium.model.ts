@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import type { Document } from "mongoose";
 import mongoose, { Schema } from "mongoose";
 
+import { constants } from "../../../config/constants";
 import { encryptField } from "../../../utils/aws/kms";
 import type { IMedium } from "./medium.types";
 
@@ -12,7 +13,11 @@ const MediumSchema = new Schema<IMedium>(
         username: { type: String, unique: true },
         profile_pic: { type: String },
         author_id: { type: String, required: true },
-        default_publish_status: { type: String, required: true, default: "draft" },
+        default_publish_status: {
+            type: String,
+            required: true,
+            default: constants.mediumStatuses.DRAFT,
+        },
         notify_followers: { type: Boolean, required: true, default: false },
     },
     {

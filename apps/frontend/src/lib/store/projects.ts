@@ -2,7 +2,7 @@ import type { Types } from "mongoose";
 import { create } from "zustand";
 
 import {
-    IEmotionScores,
+    TEmotionScores,
     TSentimentLabel,
 } from "@/components/modules/dashboard/projects/tools/tone-analysis/analysis";
 import { constants } from "@/config/constants";
@@ -43,7 +43,7 @@ export interface IProject {
     canonical_url?: string;
     tone_analysis?: {
         sentiment?: TSentimentLabel;
-        emotion?: IEmotionScores;
+        emotion?: TEmotionScores;
     };
     scheduled_at?: Date;
     published_at?: Date;

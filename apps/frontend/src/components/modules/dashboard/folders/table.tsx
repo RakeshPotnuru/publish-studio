@@ -21,9 +21,9 @@ import { FoldersLoader } from "@/components/ui/loaders/folders-loader";
 import { Toolbar } from "./toolbar";
 
 interface FoldersTableProps<TData, TValue> {
-    refetch: () => void;
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
+    refetch: () => void;
     isLoading: boolean;
     pageCount: number;
     pagination: PaginationState;
@@ -38,7 +38,7 @@ export function FoldersTable<TData, TValue>({
     refetch,
     setPagination,
     pagination: { pageIndex, pageSize },
-}: FoldersTableProps<TData, TValue>) {
+}: Readonly<FoldersTableProps<TData, TValue>>) {
     const [rowSelection, setRowSelection] = useState({});
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);

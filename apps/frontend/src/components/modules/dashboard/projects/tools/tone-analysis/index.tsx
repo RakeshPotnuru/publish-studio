@@ -11,7 +11,7 @@ import { IProject } from "@/lib/store/projects";
 import fleschReadingEaseScore from "@/utils/flesch-reading-ease-score";
 import { trpc } from "@/utils/trpc";
 import type { MenuProps } from "../../editor/menu/fixed-menu";
-import { Analysis, IToneAnalysis } from "./analysis";
+import { Analysis, IToneAnalysis, TEmotionScores } from "./analysis";
 
 interface ToneAnalysisProps extends MenuProps {
     project: IProject;
@@ -77,8 +77,8 @@ export function ToneAnalysis({ editor, project }: Readonly<ToneAnalysisProps>) {
                         <p className="text-sm">
                             Analysis: <span className="capitalize">{sentiment}</span> and{" "}
                             <span className="capitalize">
-                                {Object.keys(emotion).reduce((acc: string, key: string) =>
-                                    emotion[acc] > emotion[key] ? acc : key,
+                                {(Object.keys(emotion) as Array<keyof TEmotionScores>).reduce(
+                                    (acc, key) => (emotion[acc]! > emotion[key]! ? acc : key),
                                 )}
                             </span>
                         </p>

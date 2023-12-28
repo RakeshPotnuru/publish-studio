@@ -25,7 +25,7 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
     const { toast } = useToast();
     const utils = trpc.useUtils();
 
-    const { mutateAsync: deleteFolders, isLoading } = trpc.deleteFolders.useMutation({
+    const { mutateAsync: deleteFolder, isLoading } = trpc.deleteFolders.useMutation({
         onSuccess: () => {
             toast({
                 variant: "success",
@@ -45,7 +45,7 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
 
     const handleDelete = async () => {
         try {
-            await deleteFolders([row.original._id]);
+            await deleteFolder([row.original._id]);
         } catch (error) {}
     };
 
@@ -95,19 +95,13 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
                         </Button>
                     </div>
                 ) : (
-                    <div
+                    <slot
                         onClick={() => setAskingForConfirmation(true)}
-                        onKeyDown={event => {
-                            if (event.key === "Enter" || event.key === " ") {
-                                setAskingForConfirmation(true);
-                            }
-                        }}
-                        tabIndex={0}
                         className="hover:bg-accent hover:text-destructive text-destructive relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
                     >
                         <Icons.Delete className="mr-2 size-4" />
                         Delete
-                    </div>
+                    </slot>
                 )}
             </DropdownMenuContent>
         </DropdownMenu>

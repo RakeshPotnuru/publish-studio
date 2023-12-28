@@ -6,12 +6,12 @@ import { Icons } from "@/assets/icons";
 import { DataTableViewOptions } from "@/components/ui/data-table";
 import { DataTableFacetedFilter } from "@/components/ui/data-table/faceted-filter";
 import { Tooltip } from "@/components/ui/tooltip";
-import { IProject } from "@/lib/store/projects";
+import type { IProject } from "@/lib/store/projects";
 import { trpc } from "@/utils/trpc";
 import { statuses } from "./columns";
 
 interface ToolbarProps<TData> {
-    table: Table<TData & IProject>;
+    table: Table<TData>;
 }
 
 export function Toolbar<TData>({ table }: Readonly<ToolbarProps<TData>>) {

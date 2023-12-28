@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import type { Document } from "mongoose";
 import mongoose, { Schema } from "mongoose";
 
+import { constants } from "../../../config/constants";
 import { encryptField } from "../../../utils/aws/kms";
 import type { IGhost } from "./ghost.types";
 
@@ -10,7 +11,11 @@ const GhostSchema = new Schema<IGhost>(
         user_id: { type: Schema.Types.ObjectId, required: true, unique: true },
         api_url: { type: String, required: true, unique: true },
         admin_api_key: { type: String, required: true, unique: true },
-        default_publish_status: { type: String, required: true, default: "draft" },
+        default_publish_status: {
+            type: String,
+            required: true,
+            default: constants.ghostStatuses.DRAFT,
+        },
     },
     {
         timestamps: {

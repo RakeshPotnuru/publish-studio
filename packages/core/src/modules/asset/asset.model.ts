@@ -11,6 +11,7 @@ const AssetSchema = new Schema<IAsset>(
         user_id: { type: Schema.Types.ObjectId, required: true },
         size: { type: Number, required: true },
         mimetype: { type: String, enum: constants.asset.ALLOWED_MIMETYPES, required: true },
+        key: { type: String, required: true },
     },
     {
         timestamps: {

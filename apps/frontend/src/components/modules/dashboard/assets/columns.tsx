@@ -4,20 +4,11 @@ import { format } from "date-fns";
 import Image from "next/image";
 
 import { DataTableColumnHeader } from "@/components/ui/data-table";
+import { IAsset } from "@/lib/store/assets";
 import { formatFileSize } from "@/utils/file-size";
 import { shortenText } from "@/utils/text-shortner";
 import { AssetDialog } from "./asset";
 import { RowActions } from "./row-actions";
-
-export interface IAsset {
-    _id: string;
-    name: string;
-    url: string;
-    size: number;
-    mime_type: string;
-    // TODO: use Date
-    created: string;
-}
 
 export const columns: ColumnDef<IAsset>[] = [
     {
@@ -96,7 +87,6 @@ export const columns: ColumnDef<IAsset>[] = [
     {
         accessorKey: "created",
         header: ({ column }) => <DataTableColumnHeader column={column} title="Created" />,
-        // TODO: remove new Date()
         cell: ({ row }) => <span>{format(new Date(row.getValue("created")), "PPPp")}</span>,
         filterFn: (row, id, value) => {
             return value.includes(row.getValue(id));

@@ -26,8 +26,6 @@ const UserSchema = new Schema<IUser>(
             required: true,
             default: constants.user.userTypes.FREE,
         },
-        projects: [{ type: Schema.Types.ObjectId, ref: "Project" }],
-        assets: [{ type: Schema.Types.ObjectId, ref: "Asset" }],
         platforms: [{ type: String, enum: constants.user.platforms }],
         is_verified: { type: Boolean, required: true, default: false },
         last_login: { type: Date, required: true, default: Date.now },

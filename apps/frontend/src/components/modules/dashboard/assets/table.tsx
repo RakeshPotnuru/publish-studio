@@ -2,6 +2,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import {
     ColumnDef,
     ColumnFiltersState,
+    PaginationState,
     SortingState,
     VisibilityState,
     flexRender,
@@ -13,28 +14,47 @@ import {
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { DataTablePagination } from "@/components/ui/data-table";
+import { TableLoader } from "@/components/ui/loaders/table-loader";
 import { Toolbar } from "./toolbar";
 
 interface AssetsTableProps<TData, TValue> {
-    columns: ColumnDef<TData, TValue>[];
-    data: TData[];
     isWidget?: boolean;
     onAdd?: (url: string) => void;
+    columns: ColumnDef<TData, TValue>[];
+    data: TData[];
+    refetch: () => void;
+    isLoading: boolean;
+    pageCount: number;
+    pagination: PaginationState;
+    setPagination: React.Dispatch<React.SetStateAction<PaginationState>>;
 }
 
 export function AssetsTable<TData, TValue>({
-    columns,
-    data,
     isWidget,
     onAdd,
-}: AssetsTableProps<TData, TValue>) {
+    columns,
+    data,
+    isLoading,
+    pageCount,
+    refetch,
+    setPagination,
+    pagination: { pageIndex, pageSize },
+}: Readonly<AssetsTableProps<TData, TValue>>) {
     const [rowSelection, setRowSelection] = useState({});
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [sorting, setSorting] = useState<SortingState>([]);
+
+    const pagination = useMemo(
+        () => ({
+            pageIndex,
+            pageSize,
+        }),
+        [pageIndex, pageSize],
+    );
 
     const table = useReactTable({
         data,
@@ -44,6 +64,7 @@ export function AssetsTable<TData, TValue>({
             columnVisibility,
             rowSelection,
             columnFilters,
+            pagination,
         },
         enableRowSelection: true,
         onRowSelectionChange: setRowSelection,
@@ -56,7 +77,39 @@ export function AssetsTable<TData, TValue>({
         getSortedRowModel: getSortedRowModel(),
         getFacetedRowModel: getFacetedRowModel(),
         getFacetedUniqueValues: getFacetedUniqueValues(),
+        manualPagination: true,
+        onPaginationChange: setPagination,
+        pageCount,
     });
+
+    useEffect(() => {
+        refetch();
+    }, [refetch, pageIndex, pageSize]);
+
+    const tableBodyView = table.getRowModel().rows?.length ? (
+        table.getRowModel().rows.map(row => (
+            <TableRow
+                key={row.id}
+                data-state={row.getIsSelected() && "selected"}
+                className="dark:hover:bg-zinc-800"
+            >
+                {row
+                    .getVisibleCells()
+                    .filter(cell => cell.column.id !== "_id")
+                    .map(cell => (
+                        <TableCell key={cell.id}>
+                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </TableCell>
+                    ))}
+            </TableRow>
+        ))
+    ) : (
+        <TableRow>
+            <TableCell colSpan={columns.length} className="h-24 text-center">
+                No results
+            </TableCell>
+        </TableRow>
+    );
 
     return (
         <div className="space-y-4">
@@ -84,37 +137,29 @@ export function AssetsTable<TData, TValue>({
                         ))}
                     </TableHeader>
                     <TableBody>
-                        {table.getRowModel().rows?.length ? (
-                            table.getRowModel().rows.map(row => (
-                                <TableRow
-                                    key={row.id}
-                                    data-state={row.getIsSelected() && "selected"}
-                                    className="dark:hover:bg-zinc-800"
-                                >
-                                    {row
-                                        .getVisibleCells()
-                                        .filter(cell => cell.column.id !== "_id")
-                                        .map(cell => (
-                                            <TableCell key={cell.id}>
-                                                {flexRender(
-                                                    cell.column.columnDef.cell,
-                                                    cell.getContext(),
-                                                )}
-                                            </TableCell>
-                                        ))}
-                                </TableRow>
-                            ))
-                        ) : (
+                        {isLoading ? (
                             <TableRow>
-                                <TableCell colSpan={columns.length} className="h-24 text-center">
-                                    No results
+                                <TableCell colSpan={columns.length}>
+                                    <TableLoader
+                                        columns={
+                                            table
+                                                .getAllColumns()
+                                                .filter(
+                                                    column =>
+                                                        typeof column.accessorFn !== "undefined" &&
+                                                        column.getCanHide(),
+                                                ).length
+                                        }
+                                    />
                                 </TableCell>
                             </TableRow>
+                        ) : (
+                            tableBodyView
                         )}
                     </TableBody>
                 </Table>
             </div>
-            <DataTablePagination table={table} />
+            <DataTablePagination table={table} isLoading={isLoading} />
         </div>
     );
 }

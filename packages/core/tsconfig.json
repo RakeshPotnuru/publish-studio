@@ -1,8 +1,8 @@
 {
     "compilerOptions": {
-        "module": "ESNext",
+        "module": "ES2022",
         "outDir": "dist",
-        "target": "es2017"
+        "target": "ES2017"
     },
     "extends": "@bravo68web/tsconfig/base.json",
     "include": ["src/**/*", "jest.config.ts"]

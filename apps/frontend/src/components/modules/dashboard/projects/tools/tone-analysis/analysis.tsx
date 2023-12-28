@@ -6,10 +6,10 @@ import { Bar } from "react-chartjs-2";
 
 import { constants } from "@/config/constants";
 
-type TSentimentLabel =
+export type TSentimentLabel =
     (typeof constants.project.tone_analysis.sentiments)[keyof typeof constants.project.tone_analysis.sentiments];
 
-type TEmotionScores = {
+export type TEmotionScores = {
     [key in "joy" | "anger" | "disgust" | "fear" | "sadness"]?: number;
 };
 

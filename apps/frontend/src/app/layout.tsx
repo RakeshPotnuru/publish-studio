@@ -4,7 +4,6 @@ import type { Metadata, Viewport } from "next";
 
 import { ThemeToggleButton } from "@/components/dev-tools/theme-toggle";
 import { Toaster } from "@/components/ui/toaster";
-import { env } from "@/config/env";
 import { siteConfig } from "@/config/site";
 import Providers from "@/lib/providers";
 
@@ -73,7 +72,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                 <Providers>
                     {children}
                     <Toaster />
-                    {env.NODE_ENV === "development" && <ThemeToggleButton />}
+                    {process.env.NODE_ENV === "development" && <ThemeToggleButton />}
                 </Providers>
             </body>
         </html>

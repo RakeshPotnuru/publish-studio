@@ -7,15 +7,22 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
+    useToast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
+import { useParams } from "next/navigation";
 import { useRef, useState } from "react";
 
 import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
+import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { constants } from "@/config/constants";
+import { TMimeType } from "@/lib/store/assets";
 import { formatFileSize } from "@/utils/file-size";
 import { shortenText } from "@/utils/text-shortner";
+import { trpc } from "@/utils/trpc";
+import axios from "axios";
+import mongoose from "mongoose";
 
 interface NewAssetDialogProps extends React.HTMLAttributes<HTMLDialogElement> {}
 
@@ -26,10 +33,25 @@ export function NewAssetDialog({ children, ...props }: NewAssetDialogProps) {
         title: string;
         description: string;
     } | null>(null);
+    const [open, setOpen] = useState(false);
 
     const fileRef = useRef<HTMLInputElement>(null);
+    const { toast } = useToast();
+    const utils = trpc.useUtils();
+    const { projectId } = useParams();
 
-    const handleDrag = (event: React.DragEvent<HTMLDivElement>) => {
+    const { mutateAsync: getPresignedURL, isLoading: isUrlLoading } = trpc.uploadImage.useMutation({
+        onError: error => {
+            setError({
+                title: "Upload failed",
+                description: error.message,
+            });
+        },
+    });
+
+    const { mutateAsync: deleteAsset, isLoading: isAssetLoading } = trpc.deleteAssets.useMutation();
+
+    const handleDrag = (event: React.DragEvent<HTMLSlotElement>) => {
         event.preventDefault();
         event.stopPropagation();
 
@@ -62,7 +84,7 @@ export function NewAssetDialog({ children, ...props }: NewAssetDialogProps) {
         }
     };
 
-    const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    const handleDrop = (event: React.DragEvent<HTMLSlotElement>) => {
         event.preventDefault();
         event.stopPropagation();
 
@@ -73,7 +95,6 @@ export function NewAssetDialog({ children, ...props }: NewAssetDialogProps) {
         validateFile(files[0]);
 
         setFile(files[0]);
-        console.log(files);
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,7 +105,6 @@ export function NewAssetDialog({ children, ...props }: NewAssetDialogProps) {
         validateFile(files[0]);
 
         setFile(files[0]);
-        console.log(files);
     };
 
     const handleRemove = () => {
@@ -92,8 +112,55 @@ export function NewAssetDialog({ children, ...props }: NewAssetDialogProps) {
         setError(null);
     };
 
+    const handleUpload = async () => {
+        if (!file) return;
+
+        let data;
+        try {
+            const { data: response } = await getPresignedURL({
+                file: {
+                    mimetype: file.type as TMimeType,
+                    size: file.size,
+                    originalname: file.name,
+                },
+                project_id: projectId
+                    ? new mongoose.Types.ObjectId(projectId.toString())
+                    : undefined,
+            });
+            data = response;
+        } catch (error) {
+            console.log(error);
+        }
+
+        if (!data) return;
+
+        try {
+            const formData = new FormData();
+            Object.entries(data.submitTo.fields).forEach(([field, value]) => {
+                formData.append(field, value);
+            });
+            formData.append("file", file);
+
+            await axios.post(data.submitTo.url, formData);
+
+            toast({
+                variant: "success",
+                title: "Image uploaded",
+                description: "Image has been uploaded successfully",
+            });
+
+            utils.getAllAssets.invalidate();
+            setOpen(false);
+        } catch (error) {
+            await deleteAsset([data.asset._id]);
+            console.log(error);
+        }
+    };
+
+    const isLoading = isUrlLoading || isAssetLoading;
+
     return (
-        <Dialog {...props}>
+        <Dialog open={open} onOpenChange={setOpen} {...props}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
@@ -108,13 +175,13 @@ export function NewAssetDialog({ children, ...props }: NewAssetDialogProps) {
                     </DialogDescription>
                 </DialogHeader>
                 {error && <ErrorBox title={error.title} description={error.description} />}
-                <div
+                <slot
                     onDragEnter={handleDrag}
                     onDragLeave={handleDrag}
                     onDragOver={handleDrag}
                     onDrop={handleDrop}
                     className={cn(
-                        "flex flex-col items-center space-y-4 rounded-lg border border-dashed p-10",
+                        "flex cursor-default flex-col items-center space-y-4 rounded-lg border border-dashed p-10",
                         {
                             "border-primary": isDragActive,
                             "border-destructive": error,
@@ -136,6 +203,7 @@ export function NewAssetDialog({ children, ...props }: NewAssetDialogProps) {
                                 size="icon"
                                 variant="ghost"
                                 className="rounded-full"
+                                disabled={isLoading}
                             >
                                 <Icons.Close className="size-4" />
                             </Button>
@@ -161,9 +229,11 @@ export function NewAssetDialog({ children, ...props }: NewAssetDialogProps) {
                             </Button>
                         </>
                     )}
-                </div>
+                </slot>
                 <DialogFooter>
-                    <Button disabled={!file}>Upload</Button>
+                    <Button onClick={handleUpload} disabled={!file || isLoading}>
+                        <ButtonLoader isLoading={isLoading}>Upload</ButtonLoader>
+                    </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

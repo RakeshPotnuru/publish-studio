@@ -6,6 +6,7 @@ interface AskForConfirmationProps {
     onOpen: () => void;
     onCancel: () => void;
     onConfirm: () => void;
+    isLoading?: boolean;
 }
 
 export function AskForConfirmation({
@@ -13,12 +14,19 @@ export function AskForConfirmation({
     onCancel,
     onOpen,
     onConfirm,
+    isLoading,
 }: AskForConfirmationProps) {
     return askingForConfirmation ? (
         <div className="animate-slide-left space-x-1 text-sm">
             <span>Confirm?</span>
-            <Button onClick={onConfirm} variant="destructive" size="icon" className="size-8">
-                <Icons.Check />
+            <Button
+                onClick={onConfirm}
+                variant="destructive"
+                size="icon"
+                className="size-8"
+                disabled={isLoading}
+            >
+                {isLoading ? <Icons.Loading className="animate-spin" /> : <Icons.Check />}
             </Button>
             <Button onClick={onCancel} variant="outline" size="icon" className="size-8">
                 <Icons.Close />
