@@ -13,6 +13,7 @@ const GhostSchema = new Schema<IGhost>(
         admin_api_key: { type: String, required: true, unique: true },
         default_publish_status: {
             type: String,
+            enum: constants.ghostStatuses,
             required: true,
             default: constants.ghostStatuses.DRAFT,
         },
@@ -46,4 +47,4 @@ GhostSchema.pre<TGhostDocument>("save", async function (next) {
     next();
 });
 
-export default mongoose.model("Ghost", GhostSchema);
+export default mongoose.model(constants.user.platforms.GHOST, GhostSchema);

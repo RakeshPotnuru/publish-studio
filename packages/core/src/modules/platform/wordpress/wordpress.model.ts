@@ -2,16 +2,23 @@ import { TRPCError } from "@trpc/server";
 import type { Document } from "mongoose";
 import mongoose, { Schema } from "mongoose";
 
+import { constants } from "../../../config/constants";
 import { encryptField } from "../../../utils/aws/kms";
 import type { IWordPress } from "./wordpress.types";
 
 const WordPressSchema = new Schema<IWordPress>(
     {
         user_id: { type: Schema.Types.ObjectId, required: true, unique: true },
-        site_url: { type: String, required: true, unique: true },
-        username: { type: String, required: true, unique: true },
-        password: { type: String, required: true },
-        default_publish_status: { type: String, required: true, default: "draft" },
+        blog_url: { type: String, required: true, unique: true },
+        blog_id: { type: String, required: true, unique: true },
+        token: { type: String, required: true, unique: true },
+        publicize: { type: Boolean, required: true, default: false },
+        default_publish_status: {
+            type: String,
+            enum: constants.wordpressStatuses,
+            required: true,
+            default: constants.wordpressStatuses.DRAFT,
+        },
     },
     {
         timestamps: {
@@ -26,10 +33,10 @@ type TWordPressDocument = IWordPress & Document;
 /* The code `WordPressSchema.pre<TWordPressDocument>("save", async function (next) { ... })` is a pre-save
 middleware to encrypt "password" before saving. */
 WordPressSchema.pre<TWordPressDocument>("save", async function (next) {
-    if (this.isModified("password")) {
+    if (this.isModified("code")) {
         try {
-            const encryptedPassword = await encryptField(this.password);
-            this.password = encryptedPassword;
+            const encryptedCode = await encryptField(this.token);
+            this.token = encryptedCode;
         } catch (error) {
             console.log(error);
 
@@ -42,4 +49,4 @@ WordPressSchema.pre<TWordPressDocument>("save", async function (next) {
     next();
 });
 
-export default mongoose.model("WordPress", WordPressSchema);
+export default mongoose.model(constants.user.platforms.WORDPRESS, WordPressSchema);

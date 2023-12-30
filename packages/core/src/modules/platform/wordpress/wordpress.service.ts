@@ -1,49 +1,20 @@
 import { TRPCError } from "@trpc/server";
+import axios from "axios";
 import type { Types } from "mongoose";
-import WPAPI from "wpapi";
 
 import defaultConfig from "../../../config/app.config";
 import { constants } from "../../../config/constants";
 import Platform from "../../../modules/platform/platform.model";
 import User from "../../../modules/user/user.model";
-import { decryptField } from "../../../utils/aws/kms";
-import Wordpress from "./wordpress.model";
-import type { IWordPress, TWordPressUpdate } from "./wordpress.types";
+import WordPress from "./wordpress.model";
+import type { IWordPress, IWordPressUserUpdate } from "./wordpress.types";
 
 export default class WordPressService {
     private readonly PLATFORM = constants.user.platforms.WORDPRESS;
 
-    private async wordpress(user_id: Types.ObjectId | undefined) {
-        try {
-            const platform = await this.getPlatform(user_id);
-
-            if (!platform) {
-                return;
-            }
-
-            const decryptedPassword = await decryptField(platform.password);
-
-            const wp = await WPAPI.discover(platform.site_url);
-
-            wp.auth({
-                username: platform.username,
-                password: decryptedPassword,
-            });
-
-            return wp;
-        } catch (error) {
-            console.log(error);
-
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: defaultConfig.defaultErrorMessage,
-            });
-        }
-    }
-
     async createPlatform(platform: IWordPress) {
         try {
-            const newPlatform = await Wordpress.create(platform);
+            const newPlatform = await WordPress.create(platform);
 
             await User.findByIdAndUpdate(platform.user_id, {
                 $push: {
@@ -68,9 +39,9 @@ export default class WordPressService {
         }
     }
 
-    async updatePlatform(platform: TWordPressUpdate, user_id: Types.ObjectId | undefined) {
+    async updatePlatform(platform: IWordPressUserUpdate, user_id: Types.ObjectId | undefined) {
         try {
-            const updatedPlatform = await Wordpress.findOneAndUpdate(
+            return (await WordPress.findOneAndUpdate(
                 {
                     user_id,
                 },
@@ -78,9 +49,7 @@ export default class WordPressService {
                 {
                     new: true,
                 },
-            );
-
-            return updatedPlatform as IWordPress;
+            ).exec()) as IWordPress;
         } catch (error) {
             console.log(error);
 
@@ -104,7 +73,7 @@ export default class WordPressService {
                 },
             }).exec();
 
-            return (await Wordpress.findOneAndDelete({ user_id }).exec()) as IWordPress;
+            return (await WordPress.findOneAndDelete({ user_id }).exec()) as IWordPress;
         } catch (error) {
             console.log(error);
 
@@ -118,39 +87,41 @@ export default class WordPressService {
 
     async getPlatform(user_id: Types.ObjectId | undefined) {
         try {
-            return (await Wordpress.findOne({ user_id }).exec()) as IWordPress;
+            return (await WordPress.findOne({
+                user_id,
+            }).exec()) as IWordPress;
         } catch (error) {
             console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while fetching the platform. Please try again later.",
+                message: "An error occurred while getting the platform.",
             });
         }
     }
 
-    async getWordPressSite(site_url: string, username: string, password: string) {
+    async getWordPressSite(code: string) {
         try {
-            if (!password) {
-                return;
-            }
-
-            const wp = await WPAPI.discover(site_url);
-
-            wp.auth({
-                username: username,
-                password: password,
+            const response = await axios.post(`${defaultConfig.wordpress_api_url}/oauth2/token`, {
+                client_id: process.env.WORDPRESS_CLIENT_ID,
+                client_secret: process.env.WORDPRESS_CLIENT_SECRET,
+                code,
+                grant_type: "authorization_code",
+                redirect_uri: defaultConfig.wordpress_redirect_uri,
             });
 
-            console.log({ wp });
-            return wp;
+            return response.data as {
+                access_token: string;
+                blog_id: string;
+                blog_url: string;
+                token_type: string;
+            };
         } catch (error) {
             console.log(error);
 
             throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message:
-                    "An error occurred while fetching the WordPress site. Make sure all the details are correct and try again.",
+                code: "UNAUTHORIZED",
+                message: "Invalid code.",
             });
         }
     }

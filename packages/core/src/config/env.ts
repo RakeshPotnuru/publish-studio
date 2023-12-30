@@ -39,6 +39,8 @@ const ZodEnvironmentVariables = z.object({
     REDIS_PORT: z.string(),
     IBM_WATSON_API_KEY: z.string(),
     IBM_WATSON_SERVICE_URL: z.string().url(),
+    WORDPRESS_CLIENT_ID: z.string(),
+    WORDPRESS_CLIENT_SECRET: z.string(),
 });
 
 ZodEnvironmentVariables.parse(process.env);

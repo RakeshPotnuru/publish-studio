@@ -15,6 +15,7 @@ const MediumSchema = new Schema<IMedium>(
         author_id: { type: String, required: true },
         default_publish_status: {
             type: String,
+            enum: constants.mediumStatuses,
             required: true,
             default: constants.mediumStatuses.DRAFT,
         },
@@ -49,4 +50,4 @@ MediumSchema.pre<TMediumDocument>("save", async function (next) {
     next();
 });
 
-export default mongoose.model("Medium", MediumSchema);
+export default mongoose.model(constants.user.platforms.MEDIUM, MediumSchema);

@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import type { Document } from "mongoose";
 import mongoose, { Schema } from "mongoose";
 
+import { constants } from "../../../config/constants";
 import { encryptField } from "../../../utils/aws/kms";
 import type { IHashnode } from "./hashnode.types";
 
@@ -51,4 +52,4 @@ HashnodeSchema.pre<THashnodeDocument>("save", async function (next) {
     next();
 });
 
-export default mongoose.model("Hashnode", HashnodeSchema);
+export default mongoose.model(constants.user.platforms.HASHNODE, HashnodeSchema);

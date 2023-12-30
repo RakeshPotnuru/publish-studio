@@ -1,7 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
-import defaultConfig from "../../../config/app.config";
 import { constants } from "../../../config/constants";
 import type { Context } from "../../../trpc";
 import { encryptField } from "../../../utils/aws/kms";
@@ -15,13 +14,6 @@ export default class DevToController extends DevToService {
         ctx: Context,
     ) {
         const user = await super.getDevUser(input.api_key);
-
-        if (user.error) {
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: defaultConfig.defaultErrorMessage,
-            });
-        }
 
         const newPlatform = await super.createPlatform({
             user_id: ctx.user?._id,
@@ -45,13 +37,6 @@ export default class DevToController extends DevToService {
     ) {
         if (input.api_key) {
             const user = await super.getDevUser(input.api_key);
-
-            if (user.error) {
-                throw new TRPCError({
-                    code: "INTERNAL_SERVER_ERROR",
-                    message: defaultConfig.defaultErrorMessage,
-                });
-            }
 
             input.api_key = await encryptField(input.api_key);
 

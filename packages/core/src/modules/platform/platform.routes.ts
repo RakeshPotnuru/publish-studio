@@ -8,7 +8,7 @@ import type { TGhostStatus } from "./ghost/ghost.types";
 import HashnodeController from "./hashnode/hashnode.controller";
 import MediumController from "./medium/medium.controller";
 import PlatformController from "./platform.controller";
-import WordPressService from "./wordpress/wordpress.service";
+import WordPressController from "./wordpress/wordpress.controller";
 
 const platformRouter = router({
     getAllPlatforms: protectedProcedure
@@ -123,17 +123,21 @@ const platformRouter = router({
     ),
 
     connectWordPress: protectedProcedure
+        .input(z.string())
+        .mutation(({ input, ctx }) => new WordPressController().createPlatformHandler(input, ctx)),
+
+    updateWordPress: protectedProcedure
         .input(
             z.object({
-                api_url: z.string(),
-                username: z.string(),
-                password: z.string(),
-                // default_publish_status: z.custom<TGhostStatus>(),
+                publicize: z.boolean(),
+                default_publish_status: z.nativeEnum(constants.wordpressStatuses),
             }),
         )
-        .mutation(({ input }) =>
-            new WordPressService().getWordPressSite(input.api_url, input.username, input.password),
-        ),
+        .mutation(({ input, ctx }) => new WordPressController().updatePlatformHandler(input, ctx)),
+
+    disconnectWordPress: protectedProcedure.query(({ ctx }) =>
+        new WordPressController().deletePlatformHandler(ctx),
+    ),
 });
 
 export default platformRouter;

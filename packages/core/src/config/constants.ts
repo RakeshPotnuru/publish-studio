@@ -152,6 +152,13 @@ enum ghostStatuses {
     DRAFT = "draft",
 }
 
+enum wordpressStatuses {
+    PUBLISH = "publish",
+    PRIVATE = "private",
+    DRAFT = "draft",
+    PENDING = "pending",
+}
+
 export const constants = {
     project,
     user,
@@ -163,4 +170,5 @@ export const constants = {
     errorCauses,
     mediumStatuses,
     ghostStatuses,
+    wordpressStatuses,
 };

@@ -15,7 +15,7 @@ import type {
     IDevToUpdatePost,
     IDevToUpdatePostOutput,
     IDevToUserOutput,
-    IDevToUserUpdate,
+    TDevToUserUpdate,
 } from "./devto.types";
 
 export default class DevToService {
@@ -49,18 +49,18 @@ export default class DevToService {
         }
     }
 
-    async createPlatform(user: IDevTo) {
+    async createPlatform(platform: IDevTo) {
         try {
-            const newPlatform = await DevTo.create(user);
+            const newPlatform = await DevTo.create(platform);
 
-            await User.findByIdAndUpdate(user.user_id, {
+            await User.findByIdAndUpdate(platform.user_id, {
                 $push: {
                     platforms: this.PLATFORM,
                 },
             }).exec();
 
             await Platform.create({
-                user_id: user.user_id,
+                user_id: platform.user_id,
                 name: this.PLATFORM,
                 data: newPlatform._id,
             });
@@ -76,9 +76,9 @@ export default class DevToService {
         }
     }
 
-    async updatePlatform(user: IDevToUserUpdate, user_id: Types.ObjectId | undefined) {
+    async updatePlatform(platform: TDevToUserUpdate, user_id: Types.ObjectId | undefined) {
         try {
-            return (await DevTo.findOneAndUpdate({ user_id }, user, {
+            return (await DevTo.findOneAndUpdate({ user_id }, platform, {
                 new: true,
             }).exec()) as IDevTo;
         } catch (error) {

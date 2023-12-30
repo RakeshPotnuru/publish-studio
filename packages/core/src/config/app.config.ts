@@ -19,6 +19,8 @@ interface ICustomConfig {
     hashnode_api_url: string;
     devto_api_url: string;
     medium_api_url: string;
+    wordpress_api_url: string;
+    wordpress_redirect_uri: string;
     kickbox_api_url: string;
     client_url: string;
     app_name: string;
@@ -53,6 +55,8 @@ const defaultConfig: ICustomConfig = {
     hashnode_api_url: "https://gql.hashnode.com",
     devto_api_url: "https://dev.to/api",
     medium_api_url: "https://api.medium.com/v1",
+    wordpress_api_url: "https://public-api.wordpress.com",
+    wordpress_redirect_uri: `${process.env.CLIENT_URL}/settings/integrations`,
     kickbox_api_url: "https://open.kickbox.com/v1/disposable",
     client_url: process.env.CLIENT_URL || "http://localhost:3000",
     app_name: "Publish Studio",

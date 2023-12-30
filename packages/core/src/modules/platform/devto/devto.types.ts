@@ -20,16 +20,9 @@ export interface IDevToResponse {
     updated_at: Date;
 }
 
-export interface IDevToUserUpdate {
-    api_key?: string;
-    username?: string;
-    profile_pic?: string;
-    default_publish_status?: boolean;
-}
+export type TDevToUserUpdate = Partial<IDevTo>;
 
 export interface IDevToUserOutput {
-    error: string;
-    status: 401 | 422;
     username: string;
     profile_image: string;
 }
