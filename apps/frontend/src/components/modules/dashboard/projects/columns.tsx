@@ -1,7 +1,7 @@
 import { Checkbox } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import { ColumnDef } from "@tanstack/react-table";
-import { format } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 
 import { Icons } from "@/assets/icons";
 import { DataTableColumnHeader } from "@/components/ui/data-table";
@@ -90,7 +90,14 @@ export const columns: ColumnDef<IProject>[] = [
     {
         accessorKey: "created",
         header: ({ column }) => <DataTableColumnHeader column={column} title="Created" />,
-        cell: ({ row }) => <span>{format(new Date(row.getValue("created")), "PPPp")}</span>,
+        cell: ({ row }) => (
+            <span>
+                {formatDistanceToNow(row.getValue("created"), {
+                    addSuffix: true,
+                    includeSeconds: true,
+                })}
+            </span>
+        ),
         filterFn: (row, id, value) => {
             return value.includes(row.getValue(id));
         },
@@ -98,7 +105,14 @@ export const columns: ColumnDef<IProject>[] = [
     {
         accessorKey: "last_edited",
         header: ({ column }) => <DataTableColumnHeader column={column} title="Last Edited" />,
-        cell: ({ row }) => <span>{format(new Date(row.getValue("last_edited")), "PPPp")}</span>,
+        cell: ({ row }) => (
+            <span>
+                {formatDistanceToNow(row.getValue("last_edited"), {
+                    addSuffix: true,
+                    includeSeconds: true,
+                })}
+            </span>
+        ),
         filterFn: (row, id, value) => {
             return value.includes(row.getValue(id));
         },

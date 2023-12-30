@@ -1,10 +1,10 @@
 import { Badge, Checkbox } from "@itsrakesh/ui";
 import { ColumnDef } from "@tanstack/react-table";
-import { format } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import Image from "next/image";
 
 import { DataTableColumnHeader } from "@/components/ui/data-table";
-import { IAsset } from "@/lib/store/assets";
+import type { IAsset } from "@/lib/store/assets";
 import { formatFileSize } from "@/utils/file-size";
 import { shortenText } from "@/utils/text-shortner";
 import { AssetDialog } from "./asset";
@@ -88,7 +88,14 @@ export const columns: ColumnDef<IAsset>[] = [
     {
         accessorKey: "created",
         header: ({ column }) => <DataTableColumnHeader column={column} title="Created" />,
-        cell: ({ row }) => <span>{format(new Date(row.getValue("created")), "PPPp")}</span>,
+        cell: ({ row }) => (
+            <span>
+                {formatDistanceToNow(row.getValue("created"), {
+                    addSuffix: true,
+                    includeSeconds: true,
+                })}
+            </span>
+        ),
         filterFn: (row, id, value) => {
             return value.includes(row.getValue(id));
         },
