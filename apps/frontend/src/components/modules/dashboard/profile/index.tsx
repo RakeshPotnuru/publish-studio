@@ -2,6 +2,9 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage,
     Button,
     Form,
     FormControl,
@@ -11,6 +14,7 @@ import {
     FormMessage,
     Input,
     Separator,
+    Skeleton,
     useToast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
@@ -21,6 +25,8 @@ import { z } from "zod";
 import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
+import { ImageWidget } from "@/components/ui/image-widget";
+import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { Tooltip } from "@/components/ui/tooltip";
 import { constants } from "@/config/constants";
 import useUserStore from "@/lib/store/user";
@@ -41,14 +47,16 @@ const formSchema = z.object({
         .min(1, "Last Name cannot be empty")
         .max(constants.user.lastName.MAX_LENGTH)
         .optional(),
+    profile_pic: z.string().url().optional(),
     // email: z.string().min(1, "Email cannot be empty").email().optional(),
 });
 
 export function Profile({ ...props }: ProfileProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [open, setOpen] = useState(false);
 
-    const { user, isLoading } = useUserStore();
+    const { user, isLoading: isUserLoading } = useUserStore();
     const utils = trpc.useUtils();
     const { toast } = useToast();
 
@@ -71,11 +79,14 @@ export function Profile({ ...props }: ProfileProps) {
         resolver: zodResolver(formSchema),
         mode: "onBlur",
         defaultValues: {
-            first_name: isLoading ? "Loading..." : "",
-            last_name: isLoading ? "Loading..." : "",
-            email: isLoading ? "Loading..." : "",
+            first_name: isUserLoading ? "Loading..." : "",
+            last_name: isUserLoading ? "Loading..." : "",
+            email: isUserLoading ? "Loading..." : "",
+            profile_pic: isUserLoading ? "Loading..." : "",
         },
     });
+
+    const watchProfilePic = form.watch("profile_pic");
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         try {
@@ -89,9 +100,12 @@ export function Profile({ ...props }: ProfileProps) {
                 first_name: user.first_name,
                 last_name: user.last_name,
                 email: user.email,
+                profile_pic: user.profile_pic,
             });
         }
     }, [user, form]);
+
+    const isLoading = isUserLoading || isUpdating || form.formState.isSubmitting;
 
     return (
         <div
@@ -111,20 +125,9 @@ export function Profile({ ...props }: ProfileProps) {
                                 </Button>
                                 <Button
                                     type="submit"
-                                    disabled={
-                                        form.formState.isSubmitting ||
-                                        !form.formState.isDirty ||
-                                        isUpdating
-                                    }
+                                    disabled={isLoading || !form.formState.isDirty}
                                 >
-                                    {isUpdating ? (
-                                        <>
-                                            <Icons.Loading className="mr-2 size-4 animate-spin" />
-                                            Please wait
-                                        </>
-                                    ) : (
-                                        "Save"
-                                    )}
+                                    <ButtonLoader isLoading={isUpdating}>Save</ButtonLoader>
                                 </Button>
                             </div>
                         ) : (
@@ -142,6 +145,46 @@ export function Profile({ ...props }: ProfileProps) {
                     <Separator />
                     {error && <ErrorBox title="Update failed" description={error} />}
                     <div className="space-y-8">
+                        <Avatar>
+                            {isEditing && (
+                                <>
+                                    <Button
+                                        type="button"
+                                        variant="secondary"
+                                        size="icon"
+                                        onClick={() => setOpen(true)}
+                                        className="absolute right-0 top-0 opacity-80 hover:opacity-100"
+                                    >
+                                        <Icons.Edit size={20} />
+                                    </Button>
+                                    <ImageWidget
+                                        open={open}
+                                        onOpenChange={setOpen}
+                                        isWidget={true}
+                                        onAdd={url => {
+                                            form.setValue("profile_pic", url, {
+                                                shouldDirty: true,
+                                            });
+                                            setOpen(false);
+                                        }}
+                                    />
+                                </>
+                            )}
+                            <AvatarImage
+                                src={watchProfilePic ?? user?.profile_pic}
+                                alt={`${user?.first_name} ${user?.last_name}`}
+                            />
+                            {isLoading ? (
+                                <AvatarFallback>
+                                    <Skeleton className="size-4 animate-ping rounded-full" />
+                                </AvatarFallback>
+                            ) : (
+                                <AvatarFallback>
+                                    {user?.first_name.charAt(0)}
+                                    {user?.last_name.charAt(0)}
+                                </AvatarFallback>
+                            )}
+                        </Avatar>
                         <FormField
                             control={form.control}
                             name="email"
@@ -165,7 +208,7 @@ export function Profile({ ...props }: ProfileProps) {
                             <FormField
                                 control={form.control}
                                 name="first_name"
-                                disabled={!isEditing || isLoading || isUpdating}
+                                disabled={!isEditing || isLoading}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>First Name</FormLabel>
@@ -184,7 +227,7 @@ export function Profile({ ...props }: ProfileProps) {
                             <FormField
                                 control={form.control}
                                 name="last_name"
-                                disabled={!isEditing || isLoading || isUpdating}
+                                disabled={!isEditing || isLoading}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Last Name</FormLabel>

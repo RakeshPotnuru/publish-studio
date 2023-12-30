@@ -24,7 +24,7 @@ interface ImageWidgetProps extends React.HTMLAttributes<HTMLDialogElement> {
 
 export type TProvider = "unsplash" | "pexels" | "assets";
 
-export function ImageWidget({ isWidget, onAdd, ...props }: ImageWidgetProps) {
+export function ImageWidget({ isWidget, onAdd, ...props }: Readonly<ImageWidgetProps>) {
     const [provider, setProvider] = useState<TProvider>();
 
     return (

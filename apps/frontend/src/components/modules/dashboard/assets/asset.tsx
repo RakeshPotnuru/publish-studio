@@ -6,13 +6,13 @@ interface AssetProps extends React.HTMLAttributes<HTMLDialogElement> {
     name: string;
 }
 
-export function AssetDialog({ children, url, name, ...props }: AssetProps) {
+export function AssetDialog({ children, url, name, ...props }: Readonly<AssetProps>) {
     return (
         <Dialog {...props}>
             <DialogTrigger>{children}</DialogTrigger>
             <DialogContent>
                 <div className="m-4">
-                    <Image src={url} alt={name} width={500} height={400} />
+                    <Image src={url} alt={name} width={500} height={400} unoptimized />
                 </div>
             </DialogContent>
         </Dialog>

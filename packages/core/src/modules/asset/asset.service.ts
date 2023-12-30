@@ -22,7 +22,9 @@ export default class AssetService extends ProjectService {
 
             const uuid = uuidv4();
 
-            const filePath = `${user?._id.toString() ?? "default"}/${uuid}_${originalname}`;
+            const filePath = `${
+                user?._id.toString() ?? "default"
+            }/${uuid}_${originalname.replaceAll(/\s/g, "_")}`;
 
             const params: PresignedPostOptions = {
                 Bucket: process.env.AWS_BUCKET_NAME,
@@ -39,7 +41,7 @@ export default class AssetService extends ProjectService {
 
             const post = await createPresignedPost(s3, params);
 
-            const hostedUrl = `${post.url}/${filePath}`;
+            const hostedUrl = `${post.url}${filePath}`;
 
             const newAsset = await Asset.create({
                 original_file_name: originalname,

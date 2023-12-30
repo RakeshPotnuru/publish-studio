@@ -5,7 +5,7 @@ import { ImageWidget } from "@/components/ui/image-widget";
 import { MenuProps } from "../fixed-menu";
 import { MenuAction } from "../menu-action";
 
-export function ImageAction({ editor }: MenuProps) {
+export function ImageAction({ editor }: Readonly<MenuProps>) {
     const [open, setOpen] = useState(false);
 
     return (
