@@ -116,33 +116,21 @@ export default class GhostService {
     }
 
     async publishPost(post: IGhostPostInput, user_id: Types.ObjectId | undefined) {
-        try {
-            const ghost = await this.ghost(user_id);
+        const ghost = await this.ghost(user_id);
 
-            return await ghost?.posts.add({ ...post }, { source: "html" });
-        } catch (error) {
-            console.log(error);
-
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while publishing the post. Please try again later.",
-            });
-        }
+        return await ghost?.posts.add({ ...post }, { source: "html" });
     }
 
     async updatePost(post: TGhostPostUpdate, post_id: string, user_id: Types.ObjectId | undefined) {
-        // try {
         const ghost = await this.ghost(user_id);
 
         return await ghost?.posts.edit(post_id, { ...post }, { source: "html" });
-        // } catch (error) {
-        //     console.log(error);
+    }
 
-        //     throw new TRPCError({
-        //         code: "INTERNAL_SERVER_ERROR",
-        //         message: "An error occurred while updating the post. Please try again later.",
-        //     });
-        // }
+    async getPost(post_id: string, user_id: Types.ObjectId | undefined) {
+        const ghost = await this.ghost(user_id);
+
+        return await ghost?.posts.read({ id: post_id }).fetch();
     }
 
     /* This method is used exactly twice before creating or updating site in `GhostController()` class

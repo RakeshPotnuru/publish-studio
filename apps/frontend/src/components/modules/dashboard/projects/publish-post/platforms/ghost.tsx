@@ -27,9 +27,9 @@ export function Ghost({ form, isLoading }: Readonly<GhostProps>) {
                     </FormControl>
                     {field.value && field.value.length > 0 && (
                         <div className="mt-2 flex flex-wrap gap-1">
-                            {field.value.split(",").map(tag => (
+                            {field.value.split(",").map((tag, index) => (
                                 <div
-                                    key={tag}
+                                    key={`${tag}-${index + 1}`}
                                     className="bg-secondary rounded-md px-2 py-1 text-xs"
                                 >
                                     {tag}

@@ -195,15 +195,13 @@ export function PublishPost({
                     ...data,
                     tags: {
                         // hashnode_tags: data.tags.hashnode_tags.split(","),
-                        devto_tags: data.tags.devto_tags?.split(",").length
+                        devto_tags: data.tags.devto_tags?.split(",").shift()?.length
                             ? data.tags.devto_tags?.split(",")
                             : undefined,
-                        medium_tags: data.tags.medium_tags?.split(",").length
+                        medium_tags: data.tags.medium_tags?.split(",").shift()?.length
                             ? data.tags.medium_tags?.split(",")
                             : undefined,
-                        ghost_tags: data.tags.ghost_tags?.split(",").map(tag => {
-                            return { name: tag };
-                        }).length
+                        ghost_tags: data.tags.ghost_tags?.split(",").shift()?.length
                             ? data.tags.ghost_tags?.split(",").map(tag => {
                                   return { name: tag };
                               })
@@ -483,8 +481,8 @@ export function PublishPost({
                                     </ButtonLoader>
                                 </Button>
                             </Tooltip>
-                            {project.status === constants.project.status.PUBLISHED ? (
-                                <Button
+                            {project.status === constants.project.status.PUBLISHED && (
+                                <MagicButton
                                     onClick={form.handleSubmit(handleUpdate)}
                                     type="button"
                                     disabled={
@@ -494,8 +492,10 @@ export function PublishPost({
                                     <ButtonLoader isLoading={isPostUpdating}>
                                         Update Post
                                     </ButtonLoader>
-                                </Button>
-                            ) : (
+                                </MagicButton>
+                            )}
+                            {/* Hide when post is published to all user connected platforms */}
+                            {user.platforms.length !== project.platforms?.length && (
                                 <Button
                                     type="submit"
                                     disabled={
@@ -509,30 +509,27 @@ export function PublishPost({
                                     </ButtonLoader>
                                 </Button>
                             )}
-                            <SchedulePost
-                                onConfirm={date => {
-                                    handleSchedule(form.getValues(), date);
-                                }}
-                            >
-                                <Button
-                                    type="button"
-                                    variant="secondary"
-                                    disabled={
-                                        !form.formState.isDirty ||
-                                        isLoading ||
-                                        project.status === constants.project.status.SCHEDULED ||
-                                        project.status === constants.project.status.PUBLISHED
-                                    }
+                            {project.status !== constants.project.status.PUBLISHED && (
+                                <SchedulePost
+                                    onConfirm={date => {
+                                        handleSchedule(form.getValues(), date);
+                                    }}
                                 >
-                                    {project.status === constants.project.status.PUBLISHED ? (
-                                        "Published"
-                                    ) : (
-                                        <>
+                                    <Button
+                                        type="button"
+                                        variant="secondary"
+                                        disabled={
+                                            !form.formState.isDirty ||
+                                            isLoading ||
+                                            project.status === constants.project.status.SCHEDULED
+                                        }
+                                    >
+                                        <ButtonLoader isLoading={isPostPublishing}>
                                             Schedule <Icons.Schedule className="ml-2 size-4" />
-                                        </>
-                                    )}
-                                </Button>
-                            </SchedulePost>
+                                        </ButtonLoader>
+                                    </Button>
+                                </SchedulePost>
+                            )}
                         </SheetFooter>
                     </form>
                 </Form>

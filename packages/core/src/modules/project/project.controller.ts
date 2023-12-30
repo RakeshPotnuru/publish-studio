@@ -124,7 +124,17 @@ export default class ProjectController extends ProjectService {
 
         const project = await super.getProjectById(project_id, ctx.user?._id);
 
-        if (project.status === constants.project.status.PUBLISHED) {
+        /* This code block is checking if the number of platforms that the user has is equal to the
+        number of platforms that the project has with a status of "SUCCESS". If they are equal, it
+        means that the project has already been published on all platforms, so it throws a
+        `TRPCError` with a code of "BAD_REQUEST" and a message stating that the project is already
+        published. */
+        if (
+            ctx.user?.platforms?.length ===
+            project.platforms?.filter(
+                platform => platform.status === constants.project.platformPublishStatuses.SUCCESS,
+            ).length
+        ) {
             throw new TRPCError({
                 code: "BAD_REQUEST",
                 message: "Project is already published.",
@@ -144,7 +154,16 @@ export default class ProjectController extends ProjectService {
                 scheduled_at: scheduled_at,
                 platforms: platforms.map(platform => ({
                     name: platform.name,
-                    status: constants.project.platformPublishStatuses.PENDING,
+                    status:
+                        project.platforms?.find(
+                            projectPlatform => projectPlatform.name === platform.name,
+                        )?.status ?? constants.project.platformPublishStatuses.PENDING,
+                    id: project.platforms?.find(
+                        projectPlatform => projectPlatform.name === platform.name,
+                    )?.id,
+                    published_url: project.platforms?.find(
+                        projectPlatform => projectPlatform.name === platform.name,
+                    )?.published_url,
                 })),
             },
             ctx.user?._id,

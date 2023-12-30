@@ -110,11 +110,13 @@ export default class GhostController extends GhostService {
             });
         }
 
-        const tags = input.post.tags?.ghost_tags?.map(tag => {
-            return {
-                name: tag.name,
-            };
-        });
+        const tags =
+            input.post.tags?.ghost_tags &&
+            input.post.tags?.ghost_tags.map(tag => {
+                return {
+                    name: tag.name,
+                };
+            });
 
         const newPost = await super.publishPost(
             {
@@ -122,7 +124,7 @@ export default class GhostController extends GhostService {
                 title: input.post.title,
                 canonical_url: input.post.canonical_url,
                 status: platform.default_publish_status,
-                tags,
+                tags: tags ?? undefined,
             },
             user_id,
         );
@@ -150,24 +152,41 @@ export default class GhostController extends GhostService {
             });
         }
 
-        const tags = input.post.tags?.ghost_tags?.map(tag => {
-            return {
-                name: tag.name,
-            };
-        });
+        const tags =
+            input.post.tags?.ghost_tags &&
+            input.post.tags?.ghost_tags.map(tag => {
+                return {
+                    name: tag.name,
+                };
+            });
 
-        const updatedPost = await super.updatePost(
-            {
-                html: input.post.body?.html,
-                title: input.post.title,
-                canonical_url: input.post.canonical_url,
-                status: platform.default_publish_status,
-                tags,
-                updated_at: new Date(),
-            },
-            input.post_id,
-            user_id,
-        );
+        const post = await super.getPost(input.post_id, user_id);
+
+        const updatedPost = await (post?.success
+            ? super.updatePost(
+                  {
+                      html: input.post.body?.html,
+                      title: input.post.title,
+                      canonical_url: input.post.canonical_url,
+                      status: platform.default_publish_status,
+                      tags: tags ?? undefined,
+                      updated_at: new Date(post.data.updated_at ?? Date.now()),
+                  },
+                  input.post_id,
+                  user_id,
+              )
+            : super.updatePost(
+                  {
+                      html: input.post.body?.html,
+                      title: input.post.title,
+                      canonical_url: input.post.canonical_url,
+                      status: platform.default_publish_status,
+                      tags: tags ?? undefined,
+                      updated_at: new Date(),
+                  },
+                  input.post_id,
+                  user_id,
+              ));
 
         return {
             status: "success",

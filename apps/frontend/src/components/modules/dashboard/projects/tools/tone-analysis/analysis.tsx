@@ -59,7 +59,7 @@ const generateChartData = (emotion: TEmotionScores): ChartData<"bar"> => {
     };
 };
 
-export function Analysis({ toneAnalysis, children }: AnalysisProps) {
+export function Analysis({ toneAnalysis, children }: Readonly<AnalysisProps>) {
     const { theme } = useTheme();
 
     const { sentiment, emotion } = toneAnalysis;
@@ -135,23 +135,25 @@ export function Analysis({ toneAnalysis, children }: AnalysisProps) {
                             {emotions.find(({ value }) => value === sortedValues[0][0])?.label}
                         </span>{" "}
                         and lower levels of{" "}
-                        {sortedValues.slice(1).map(([key, value], index, array) => (
-                            <>
-                                <span
-                                    key={key}
-                                    className={cn(
-                                        emotions.find(({ value }) => value === key)?.className,
-                                    )}
-                                >
-                                    {emotions.find(({ value }) => value === key)?.label}
+                        {sortedValues.slice(1).map(([key], index, array) => {
+                            const emotion = emotions.find(({ value }) => value === key);
+                            const label = emotion?.label;
+                            const className = emotion?.className;
+
+                            let separator = "";
+                            if (index < array.length - 2) {
+                                separator = ", ";
+                            } else if (index === array.length - 2) {
+                                separator = ", and ";
+                            }
+
+                            return (
+                                <span key={key}>
+                                    <span className={cn(className)}>{label}</span>
+                                    {separator}
                                 </span>
-                                {index < array.length - 2
-                                    ? ", "
-                                    : index === array.length - 2
-                                    ? ", and "
-                                    : ""}
-                            </>
-                        ))}
+                            );
+                        })}
                         .
                     </p>
                 </div>

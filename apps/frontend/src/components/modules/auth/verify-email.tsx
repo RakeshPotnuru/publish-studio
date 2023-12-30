@@ -11,9 +11,7 @@ import { DotsLoader } from "@/components/ui/loaders/dots-loader";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
 
-interface VerifyEmailProps extends React.HTMLAttributes<HTMLDivElement> {}
-
-export function VerifyEmail({}: VerifyEmailProps) {
+export function VerifyEmail() {
     const [isSuccess, setIsSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
 

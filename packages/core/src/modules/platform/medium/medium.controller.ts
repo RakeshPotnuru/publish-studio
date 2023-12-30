@@ -144,6 +144,7 @@ export default class MediumController extends MediumService {
             user.author_id,
             user_id,
         );
+        console.log(newPost);
 
         return {
             name: constants.user.platforms.MEDIUM,
