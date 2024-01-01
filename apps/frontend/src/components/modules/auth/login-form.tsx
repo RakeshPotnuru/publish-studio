@@ -62,7 +62,7 @@ export function LoginForm({ ...props }: LoginFormProps) {
             setCookie("ps_access_token", data.access_token, {
                 path: "/",
                 expires: new Date(decoded.exp * 1000),
-                sameSite: true,
+                sameSite: "lax",
             });
 
             setTimeout(() => {

@@ -56,7 +56,7 @@ const defaultConfig: ICustomConfig = {
     devto_api_url: "https://dev.to/api",
     medium_api_url: "https://api.medium.com/v1",
     wordpress_api_url: "https://public-api.wordpress.com",
-    wordpress_redirect_uri: `${process.env.CLIENT_URL}/settings/integrations`,
+    wordpress_redirect_uri: `${process.env.CLIENT_URL}/settings/integrations/connect-wp`,
     kickbox_api_url: "https://open.kickbox.com/v1/disposable",
     client_url: process.env.CLIENT_URL || "http://localhost:3000",
     app_name: "Publish Studio",

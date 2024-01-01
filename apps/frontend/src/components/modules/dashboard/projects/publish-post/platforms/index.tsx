@@ -26,6 +26,7 @@ import { formSchema } from "../form-schema";
 import { Dev } from "./dev";
 import { Ghost } from "./ghost";
 import { Medium } from "./medium";
+import { WordPress } from "./wordpress";
 
 interface IPlatformConfig {
     label: string;
@@ -64,6 +65,14 @@ const platformConfig: IPlatformConfig[] = [
         logo: Images.ghostLogo,
         component: (form: UseFormReturn<z.infer<typeof formSchema>>, isLoading) => (
             <Ghost form={form} isLoading={isLoading} />
+        ),
+    },
+    {
+        label: "WordPress",
+        value: constants.user.platforms.WORDPRESS,
+        logo: Images.wordpressLogo,
+        component: (form: UseFormReturn<z.infer<typeof formSchema>>, isLoading) => (
+            <WordPress form={form} isLoading={isLoading} />
         ),
     },
 ];

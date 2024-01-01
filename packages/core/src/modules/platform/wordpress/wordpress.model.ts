@@ -31,18 +31,18 @@ const WordPressSchema = new Schema<IWordPress>(
 type TWordPressDocument = IWordPress & Document;
 
 /* The code `WordPressSchema.pre<TWordPressDocument>("save", async function (next) { ... })` is a pre-save
-middleware to encrypt "password" before saving. */
+middleware to encrypt "token" before saving. */
 WordPressSchema.pre<TWordPressDocument>("save", async function (next) {
-    if (this.isModified("code")) {
+    if (this.isModified("token")) {
         try {
-            const encryptedCode = await encryptField(this.token);
-            this.token = encryptedCode;
+            const encryptedToken = await encryptField(this.token);
+            this.token = encryptedToken;
         } catch (error) {
             console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while encrypting the password.",
+                message: "An error occurred while encrypting the token.",
             });
         }
     }

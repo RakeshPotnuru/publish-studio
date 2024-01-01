@@ -14,7 +14,11 @@ export const siteConfig = {
         apiKeysSecureStorage: "https://docs.publishstudio.one/platforms#secure-storage-of-api-keys",
         devTags: "https://dev.to/tags",
         mediumTags: "https://medium.com/topics",
+        ghostTags: "https://ghost.org/help/tags/",
+        wordpressTags: "https://wordpress.com/support/posts/tags/",
         support: "mailto:support@publishstudio.one",
+        wordpressAuthorize: "https://public-api.wordpress.com/oauth2/authorize",
+        wordpressConnectedApps: "https://wordpress.com/me/security/connected-applications",
     },
     twitter: {
         site: "@publishstudio",

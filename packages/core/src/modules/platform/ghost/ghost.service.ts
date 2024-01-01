@@ -8,7 +8,13 @@ import Platform from "../../../modules/platform/platform.model";
 import User from "../../../modules/user/user.model";
 import { decryptField } from "../../../utils/aws/kms";
 import Ghost from "./ghost.model";
-import type { IGhost, IGhostPostInput, TGhostPostUpdate, TGhostUpdate } from "./ghost.types";
+import type {
+    IGhost,
+    IGhostPostInput,
+    IGhostUpdatePostOutput,
+    TGhostPostUpdate,
+    TGhostUpdate,
+} from "./ghost.types";
 
 export default class GhostService {
     private readonly PLATFORM = constants.user.platforms.GHOST;
@@ -121,10 +127,24 @@ export default class GhostService {
         return await ghost?.posts.add({ ...post }, { source: "html" });
     }
 
-    async updatePost(post: TGhostPostUpdate, post_id: string, user_id: Types.ObjectId | undefined) {
+    async updatePost(
+        post: TGhostPostUpdate,
+        post_id: string,
+        user_id: Types.ObjectId | undefined,
+    ): Promise<IGhostUpdatePostOutput> {
         const ghost = await this.ghost(user_id);
 
-        return await ghost?.posts.edit(post_id, { ...post }, { source: "html" });
+        const response = await ghost?.posts.edit(post_id, { ...post }, { source: "html" });
+
+        if (!response?.success) {
+            return {
+                isError: true,
+            };
+        }
+
+        return {
+            isError: false,
+        };
     }
 
     async getPost(post_id: string, user_id: Types.ObjectId | undefined) {

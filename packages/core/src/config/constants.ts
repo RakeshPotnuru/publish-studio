@@ -54,6 +54,9 @@ const project = {
         ghost: {
             MAX_LENGTH: 5,
         },
+        wordpress: {
+            MAX_LENGTH: 5,
+        },
     },
     status: projectStatus,
     platformPublishStatuses,

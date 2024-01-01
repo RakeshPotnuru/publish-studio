@@ -30,7 +30,7 @@ export function Medium({ form, isLoading }: Readonly<MediumProps>) {
             render={({ field }) => (
                 <FormItem className="w-full">
                     <FormLabel>
-                        Tags (Optionally enter comma seperated tags, max{" "}
+                        Tags (Optionally enter comma separated tags, max{" "}
                         {constants.project.tags.medium.MAX_LENGTH}.)
                     </FormLabel>
                     <FormControl>

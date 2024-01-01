@@ -48,3 +48,7 @@ export interface IGhostPostInput {
 }
 
 export type TGhostPostUpdate = Partial<IGhostPostInput> & { updated_at: Date };
+
+export interface IGhostUpdatePostOutput {
+    isError: boolean;
+}

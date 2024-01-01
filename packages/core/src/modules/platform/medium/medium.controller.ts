@@ -122,7 +122,10 @@ export default class MediumController extends MediumService {
         };
     }
 
-    async createPostHandler(input: { post: IProject }, user_id: Types.ObjectId) {
+    async createPostHandler(
+        input: { post: IProject },
+        user_id: Types.ObjectId,
+    ): Promise<IPublishResponse> {
         const user = await super.getPlatform(user_id);
 
         if (!user) {
@@ -144,15 +147,19 @@ export default class MediumController extends MediumService {
             user.author_id,
             user_id,
         );
-        console.log(newPost);
+
+        if (newPost.isError || !newPost.data) {
+            return {
+                name: constants.user.platforms.MEDIUM,
+                status: constants.project.platformPublishStatuses.ERROR,
+            };
+        }
 
         return {
             name: constants.user.platforms.MEDIUM,
-            status: newPost.errors
-                ? constants.project.platformPublishStatuses.ERROR
-                : constants.project.platformPublishStatuses.SUCCESS,
-            published_url: newPost.errors ? undefined : newPost.data.url,
-            id: newPost.errors ? undefined : newPost.data.id,
-        } as IPublishResponse;
+            status: constants.project.platformPublishStatuses.SUCCESS,
+            published_url: newPost.data.url,
+            id: newPost.data.id,
+        };
     }
 }

@@ -59,15 +59,14 @@ export interface IMediumCreatePostInput {
     notifyFollowers?: boolean;
 }
 
-export interface IMediumCreatePostOutput {
-    errors: {
-        message: string;
-        code: 6003 | 6000 | 2004 | 6026 | 2002;
-    }[];
-    data: {
-        title: string;
-        tags: string[];
+export interface IOutput {
+    isError: boolean;
+    data?: {
         url: string;
         id: string;
     };
 }
+
+export type TMediumCreatePostOutput = IOutput extends { isError: false }
+    ? { url: string; id: string }
+    : IOutput;

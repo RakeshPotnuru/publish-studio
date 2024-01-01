@@ -54,13 +54,16 @@ const project = {
         ghost: {
             MAX_LENGTH: 5,
         },
+        wordpress: {
+            MAX_LENGTH: 5,
+        },
     },
     status: projectStatus,
     platformPublishStatuses,
     tone_analysis: {
         input: {
             MIN_LENGTH: 10,
-            MAX_LENGTH: 10000,
+            MAX_LENGTH: 10_000,
         },
         sentiments,
     },
@@ -152,6 +155,13 @@ enum ghostStatuses {
     DRAFT = "draft",
 }
 
+enum wordpressStatuses {
+    PUBLISH = "publish",
+    PRIVATE = "private",
+    DRAFT = "draft",
+    PENDING = "pending",
+}
+
 export const constants = {
     project,
     user,
@@ -163,4 +173,5 @@ export const constants = {
     errorCauses,
     mediumStatuses,
     ghostStatuses,
+    wordpressStatuses,
 };

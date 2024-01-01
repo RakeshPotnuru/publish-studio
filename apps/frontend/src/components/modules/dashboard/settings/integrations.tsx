@@ -9,11 +9,11 @@ import { Heading } from "@/components/ui/heading";
 import { constants } from "@/config/constants";
 import { trpc } from "@/utils/trpc";
 import { useState } from "react";
-import { DevConnectForm, DevEditForm, IDevToResponse } from "./platforms/dev";
-import { GhostConnectForm, GhostEditForm, IGhostResponse } from "./platforms/ghost";
-import { HashnodeConnectForm, HashnodeEditForm, IHashnodeResponse } from "./platforms/hashnode";
-import { IMediumResponse, MediumConnectForm, MediumEditForm } from "./platforms/medium";
-import { PlatformCard } from "./platforms/platform-card";
+import { DevTo, IDevToResponse } from "./platforms/dev";
+import { Ghost, IGhostResponse } from "./platforms/ghost";
+import { Hashnode, IHashnodeResponse } from "./platforms/hashnode";
+import { IMediumResponse, Medium } from "./platforms/medium";
+import { IWordPressResponse, WordPress } from "./platforms/wordpress";
 
 interface IntegrationsProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -22,23 +22,7 @@ export function Integrations({ ...props }: IntegrationsProps) {
     const [isMediumOpen, setIsMediumOpen] = useState(false);
     const [isHashnodeOpen, setIsHashnodeOpen] = useState(false);
     const [isGhostOpen, setIsGhostOpen] = useState(false);
-
-    const { refetch: disconnectDevTo, isFetching: isDisconnectingDevTo } =
-        trpc.disconnectDevTo.useQuery(undefined, {
-            enabled: false,
-        });
-    const { refetch: disconnectMedium, isFetching: isDisconnectingMedium } =
-        trpc.disconnectMedium.useQuery(undefined, {
-            enabled: false,
-        });
-    const { refetch: disconnectHashnode, isFetching: isDisconnectingHashnode } =
-        trpc.disconnectHashnode.useQuery(undefined, {
-            enabled: false,
-        });
-    const { refetch: disconnectGhost, isFetching: isDisconnectingGhost } =
-        trpc.disconnectGhost.useQuery(undefined, {
-            enabled: false,
-        });
+    const [isWordPressOpen, setIsWordPressOpen] = useState(false);
 
     const { data, isFetching, error } = trpc.getAllPlatforms.useQuery({
         pagination: { page: 1, limit: 10 },
@@ -47,14 +31,17 @@ export function Integrations({ ...props }: IntegrationsProps) {
     const platforms = data?.data.platforms;
 
     const devto = platforms?.find(platform => platform.name === constants.user.platforms.DEVTO)
-        ?.data as IDevToResponse | undefined;
+        ?.data as IDevToResponse;
     const medium = platforms?.find(platform => platform.name === constants.user.platforms.MEDIUM)
-        ?.data as IMediumResponse | undefined;
+        ?.data as IMediumResponse;
     const hashnode = platforms?.find(
         platform => platform.name === constants.user.platforms.HASHNODE,
-    )?.data as IHashnodeResponse | undefined;
+    )?.data as IHashnodeResponse;
     const ghost = platforms?.find(platform => platform.name === constants.user.platforms.GHOST)
-        ?.data as IGhostResponse | undefined;
+        ?.data as IGhostResponse;
+    const wordpress = platforms?.find(
+        platform => platform.name === constants.user.platforms.WORDPRESS,
+    )?.data as IWordPressResponse;
 
     return (
         <div className="space-y-8" {...props}>
@@ -68,103 +55,35 @@ export function Integrations({ ...props }: IntegrationsProps) {
                 <Heading level={2}>Platforms</Heading>
                 {error && <ErrorBox title="Error" description={error.message} />}
                 <div className="grid grid-cols-2 gap-4">
-                    <PlatformCard
-                        onDisconnect={async () => {
-                            await disconnectDevTo();
-                        }}
+                    <DevTo
+                        isLoading={isFetching}
                         isOpen={isDevOpen}
                         setIsOpen={setIsDevOpen}
-                        name="Dev"
-                        icon={Images.devLogo}
-                        isLoading={isFetching || isDisconnectingDevTo}
-                        connected={devto !== undefined}
-                        username={devto?.username}
-                        profile_url={`https://dev.to/@${devto?.username}`}
-                        editForm={
-                            <DevEditForm
-                                setIsOpen={setIsDevOpen}
-                                default_publish_status={
-                                    devto?.default_publish_status.toString() ?? "false"
-                                }
-                            />
-                        }
-                        connectForm={<DevConnectForm setIsOpen={setIsDevOpen} />}
+                        data={devto}
                     />
-                    <PlatformCard
-                        onDisconnect={async () => {
-                            await disconnectMedium();
-                        }}
-                        isOpen={isMediumOpen}
-                        setIsOpen={setIsMediumOpen}
-                        name="Medium"
-                        icon={Images.mediumLogo}
-                        isLoading={isFetching || isDisconnectingMedium}
-                        connected={medium !== undefined}
-                        username={medium?.username}
-                        profile_url={`https://medium.com/@${medium?.username}`}
-                        editForm={
-                            <MediumEditForm
-                                setIsOpen={setIsMediumOpen}
-                                default_publish_status={
-                                    medium?.default_publish_status || constants.mediumStatuses.DRAFT
-                                }
-                                notify_followers={medium?.notify_followers.toString() ?? "false"}
-                            />
-                        }
-                        connectForm={<MediumConnectForm setIsOpen={setIsMediumOpen} />}
-                    />
-                    <PlatformCard
-                        onDisconnect={async () => {
-                            await disconnectHashnode();
-                        }}
-                        isOpen={isHashnodeOpen}
-                        setIsOpen={setIsHashnodeOpen}
-                        name="Hashnode"
-                        icon={Images.hashnodeLogo}
-                        isLoading={isFetching || isDisconnectingHashnode}
-                        connected={hashnode !== undefined}
-                        username={hashnode?.username}
-                        profile_url={`https://hashnode.com/@${hashnode?.username}`}
-                        editForm={
-                            <HashnodeEditForm
-                                setIsOpen={setIsHashnodeOpen}
-                                default_settings={{
-                                    delisted:
-                                        hashnode?.default_settings.delisted.toString() ?? "false",
-                                    enable_table_of_contents:
-                                        hashnode?.default_settings.enable_table_of_contents.toString() ??
-                                        "false",
-                                    send_newsletter:
-                                        hashnode?.default_settings.send_newsletter.toString() ??
-                                        "false",
-                                }}
-                            />
-                        }
-                        connectForm={<HashnodeConnectForm setIsOpen={setIsHashnodeOpen} />}
-                    />
-                    <PlatformCard
-                        onDisconnect={async () => {
-                            await disconnectGhost();
-                        }}
+                    <Ghost
+                        isLoading={isFetching}
                         isOpen={isGhostOpen}
                         setIsOpen={setIsGhostOpen}
-                        name="Ghost"
-                        icon={Images.ghostLogo}
-                        iconBg="bg-white"
-                        isLoading={isFetching || isDisconnectingGhost}
-                        connected={ghost !== undefined}
-                        username={ghost?.api_url.split("/")[2]}
-                        profile_url={ghost?.api_url}
-                        editForm={
-                            <GhostEditForm
-                                setIsOpen={setIsGhostOpen}
-                                default_publish_status={
-                                    ghost?.default_publish_status || constants.ghostStatuses.DRAFT
-                                }
-                                api_url={ghost?.api_url ?? ""}
-                            />
-                        }
-                        connectForm={<GhostConnectForm setIsOpen={setIsGhostOpen} />}
+                        data={ghost}
+                    />
+                    <Hashnode
+                        isLoading={isFetching}
+                        isOpen={isHashnodeOpen}
+                        setIsOpen={setIsHashnodeOpen}
+                        data={hashnode}
+                    />
+                    <Medium
+                        isLoading={isFetching}
+                        isOpen={isMediumOpen}
+                        setIsOpen={setIsMediumOpen}
+                        data={medium}
+                    />
+                    <WordPress
+                        isLoading={isFetching}
+                        isOpen={isWordPressOpen}
+                        setIsOpen={setIsWordPressOpen}
+                        data={wordpress}
                     />
                 </div>
             </div>

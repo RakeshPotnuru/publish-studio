@@ -92,6 +92,7 @@ export interface ITags {
     devto_tags?: string[];
     medium_tags?: string[];
     ghost_tags?: { name: string; _id?: Types.ObjectId }[];
+    wordpress_tags?: string[];
 }
 
 export interface IPost {

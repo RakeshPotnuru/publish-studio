@@ -93,7 +93,10 @@ export default class DevToController extends DevToService {
         };
     }
 
-    async createPostHandler(input: { post: IProject }, user_id: Types.ObjectId) {
+    async createPostHandler(
+        input: { post: IProject },
+        user_id: Types.ObjectId,
+    ): Promise<IPublishResponse> {
         const platform = await super.getPlatform(user_id);
 
         if (!platform) {
@@ -116,18 +119,23 @@ export default class DevToController extends DevToService {
             user_id,
         );
 
+        if (newPost.isError || !newPost.url || !newPost.id) {
+            return {
+                name: constants.user.platforms.DEVTO,
+                status: constants.project.platformPublishStatuses.ERROR,
+            };
+        }
+
         return {
             name: constants.user.platforms.DEVTO,
-            status: newPost.error
-                ? constants.project.platformPublishStatuses.ERROR
-                : constants.project.platformPublishStatuses.SUCCESS,
+            status: constants.project.platformPublishStatuses.SUCCESS,
             published_url: newPost.url,
-            id: newPost.id?.toString(),
-        } as IPublishResponse;
+            id: newPost.id.toString(),
+        };
     }
 
     async updatePostHandler(
-        input: { post: IProject; post_id: number },
+        input: { post: IProject; post_id: string },
         user_id: Types.ObjectId | undefined,
     ) {
         const platform = await super.getPlatform(user_id);
@@ -149,7 +157,7 @@ export default class DevToController extends DevToService {
                 tags: input.post.tags?.devto_tags,
                 main_image: input.post.cover_image,
             },
-            input.post_id,
+            Number.parseInt(input.post_id),
             user_id,
         );
 

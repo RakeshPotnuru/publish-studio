@@ -11,10 +11,10 @@ import DevTo from "./devto.model";
 import type {
     IDevTo,
     IDevToCreatePostInput,
-    IDevToCreatePostOutput,
     IDevToUpdatePost,
     IDevToUpdatePostOutput,
     IDevToUserOutput,
+    TDevToCreatePostOutput,
     TDevToUserUpdate,
 } from "./devto.types";
 
@@ -150,7 +150,10 @@ export default class DevToService {
         }
     }
 
-    async publishPost(post: IDevToCreatePostInput, user_id: Types.ObjectId | undefined) {
+    async publishPost(
+        post: IDevToCreatePostInput,
+        user_id: Types.ObjectId | undefined,
+    ): Promise<TDevToCreatePostOutput> {
         try {
             const devTo = await this.devTo(user_id);
 
@@ -158,14 +161,19 @@ export default class DevToService {
                 article: post,
             });
 
-            return response?.data as IDevToCreatePostOutput;
+            return response?.data as TDevToCreatePostOutput;
         } catch (error) {
-            return (error as { response: { data: { error: string; status: 401 | 422 } } }).response
-                .data as IDevToCreatePostOutput;
+            console.log(error);
+
+            return { isError: true };
         }
     }
 
-    async updatePost(post: IDevToUpdatePost, post_id: number, user_id: Types.ObjectId | undefined) {
+    async updatePost(
+        post: IDevToUpdatePost,
+        post_id: number,
+        user_id: Types.ObjectId | undefined,
+    ): Promise<IDevToUpdatePostOutput> {
         try {
             const devTo = await this.devTo(user_id);
 
@@ -175,8 +183,9 @@ export default class DevToService {
 
             return response?.data as IDevToUpdatePostOutput;
         } catch (error) {
-            return (error as { response: { data: { error: string; status: 401 | 422 | 404 } } })
-                .response.data as IDevToUpdatePostOutput;
+            console.log(error);
+
+            return { isError: true };
         }
     }
 }

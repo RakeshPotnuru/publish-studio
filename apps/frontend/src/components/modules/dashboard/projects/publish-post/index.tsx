@@ -166,6 +166,7 @@ export function PublishPost({
                 devto_tags: "",
                 medium_tags: "",
                 ghost_tags: "",
+                wordpress_tags: "",
             },
             canonical_url: "",
         },
@@ -205,6 +206,9 @@ export function PublishPost({
                             ? data.tags.ghost_tags?.split(",").map(tag => {
                                   return { name: tag };
                               })
+                            : undefined,
+                        wordpress_tags: data.tags.wordpress_tags?.split(",").shift()?.length
+                            ? data.tags.wordpress_tags?.split(",")
                             : undefined,
                     },
                     body: {
@@ -282,6 +286,7 @@ export function PublishPost({
                     devto_tags: project.tags?.devto_tags?.join(","),
                     medium_tags: project.tags?.medium_tags?.join(","),
                     ghost_tags: project.tags?.ghost_tags?.map(tag => tag.name).join(","),
+                    wordpress_tags: project.tags?.wordpress_tags?.join(","),
                 },
                 canonical_url: project.canonical_url,
             });
@@ -291,7 +296,7 @@ export function PublishPost({
     const isLoading =
         form.formState.isSubmitting || isProjectSaving || isPostPublishing || isPostUpdating;
 
-    const publisPostView =
+    const publishPostView =
         user?.platforms && user.platforms.length > 0 ? (
             <>
                 <Form {...form}>
@@ -563,7 +568,7 @@ export function PublishPost({
                         <DotsLoader />
                     </div>
                 ) : (
-                    publisPostView
+                    publishPostView
                 )}
             </SheetContent>
         </Sheet>

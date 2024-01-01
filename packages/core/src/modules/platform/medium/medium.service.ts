@@ -11,9 +11,9 @@ import Medium from "./medium.model";
 import type {
     IMedium,
     IMediumCreatePostInput,
-    IMediumCreatePostOutput,
     IMediumUserOutput,
     IMediumUserUpdate,
+    TMediumCreatePostOutput,
 } from "./medium.types";
 
 export default class MediumService {
@@ -153,26 +153,17 @@ export default class MediumService {
         post: IMediumCreatePostInput,
         author_id: string,
         user_id: Types.ObjectId | undefined,
-    ) {
+    ): Promise<TMediumCreatePostOutput> {
         try {
             const medium = await this.medium(user_id);
 
             const response = await medium?.post("/users/" + author_id + "/posts", post);
 
-            return response?.data as IMediumCreatePostOutput;
+            return response?.data as TMediumCreatePostOutput;
         } catch (error) {
-            return (
-                error as {
-                    response: {
-                        data: {
-                            errors: {
-                                message: string;
-                                code: 6003 | 6000 | 2004 | 6026 | 2002;
-                            }[];
-                        };
-                    };
-                }
-            ).response.data as IMediumCreatePostOutput;
+            console.log(error);
+
+            return { isError: true };
         }
     }
 }

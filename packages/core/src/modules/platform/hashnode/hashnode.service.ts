@@ -10,9 +10,10 @@ import User from "../../user/user.model";
 import Hashnode from "./hashnode.model";
 import type {
     IHashnode,
-    IHashnodeCreatePostOutput,
     IHashnodeCreateStoryInput,
+    IHashnodeUpdatePostOutput,
     IHashnodeUserOutput,
+    THashnodeCreatePostOutput,
 } from "./hashnode.types";
 
 export default class HashnodeService {
@@ -169,7 +170,10 @@ export default class HashnodeService {
         }
     }
 
-    async publishPost(post: IHashnodeCreateStoryInput, user_id: Types.ObjectId | undefined) {
+    async publishPost(
+        post: IHashnodeCreateStoryInput,
+        user_id: Types.ObjectId | undefined,
+    ): Promise<THashnodeCreatePostOutput> {
         try {
             const hashnode = await this.hashnode(user_id);
 
@@ -187,10 +191,11 @@ export default class HashnodeService {
                 },
             });
 
-            return response?.data as IHashnodeCreatePostOutput;
+            return response?.data as THashnodeCreatePostOutput;
         } catch (error) {
-            return (error as { response: { data: { errors: { message: string }[] } } }).response
-                .data as IHashnodeCreatePostOutput;
+            console.log(error);
+
+            return { isError: true };
         }
     }
 
@@ -198,7 +203,7 @@ export default class HashnodeService {
         post: Partial<IHashnodeCreateStoryInput>,
         post_id: string,
         user_id: Types.ObjectId | undefined,
-    ) {
+    ): Promise<IHashnodeUpdatePostOutput> {
         try {
             const hashnode = await this.hashnode(user_id);
 
@@ -219,10 +224,11 @@ export default class HashnodeService {
                 },
             });
 
-            return response?.data as IHashnodeCreatePostOutput;
+            return response?.data as IHashnodeUpdatePostOutput;
         } catch (error) {
-            return (error as { response: { data: { errors: { message: string }[] } } }).response
-                .data as IHashnodeCreatePostOutput;
+            console.log(error);
+
+            return { isError: true };
         }
     }
 }

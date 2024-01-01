@@ -30,7 +30,7 @@ export function Dev({ form, isLoading }: Readonly<DevProps>) {
             render={({ field }) => (
                 <FormItem className="w-full">
                     <FormLabel>
-                        Tags (Optionally enter comma seperated tags, max{" "}
+                        Tags (Optionally enter comma separated tags, max{" "}
                         {constants.project.tags.dev.MAX_LENGTH}.)
                     </FormLabel>
                     <FormControl>

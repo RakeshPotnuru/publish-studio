@@ -6,4 +6,5 @@ export const Images = {
     ghostLogo: "/images/platforms/ghost-logo.webp",
     unsplashLogo: "/images/platforms/unsplash-logo.webp",
     pexelsLogo: "/images/platforms/pexels-logo.webp",
+    wordpressLogo: "/images/platforms/wordpress-logo.webp",
 };

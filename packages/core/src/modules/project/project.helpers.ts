@@ -10,14 +10,15 @@ import GhostController from "../platform/ghost/ghost.controller";
 import HashnodeController from "../platform/hashnode/hashnode.controller";
 import MediumController from "../platform/medium/medium.controller";
 import type { TPlatformName } from "../platform/platform.types";
+import WordPressController from "../platform/wordpress/wordpress.controller";
 import ProjectController from "./project.controller";
 import type { IPost, IProject, TPlatformPublishStatus } from "./project.types";
 
 export interface IPublishResponse {
     name: TPlatformName;
     status: TPlatformPublishStatus;
-    published_url: string;
-    id: string;
+    published_url?: string;
+    id?: string;
 }
 
 export default class ProjectHelpers {
@@ -37,44 +38,81 @@ export default class ProjectHelpers {
         );
     }
 
-    async publishOnPlatform(platform: TPlatformName, project: IProject, user_id: Types.ObjectId) {
+    static updatePlatformStatus(
+        updateResponse: IProject["platforms"],
+        targetPlatform: TPlatformName,
+        status: TPlatformPublishStatus,
+    ) {
+        const platform = updateResponse?.find(platform => platform.name === targetPlatform);
+
+        if (platform) {
+            platform.status = status;
+        }
+    }
+
+    static getPlatformCreateController(
+        platform: TPlatformName,
+    ):
+        | DevToController
+        | HashnodeController
+        | MediumController
+        | GhostController
+        | WordPressController
+        | undefined {
         switch (platform) {
             case constants.user.platforms.DEVTO: {
-                return await new DevToController().createPostHandler(
-                    {
-                        post: project,
-                    },
-                    user_id,
-                );
+                return new DevToController();
             }
             case constants.user.platforms.HASHNODE: {
-                return await new HashnodeController().createPostHandler(
-                    {
-                        post: project,
-                    },
-                    user_id,
-                );
+                return new HashnodeController();
             }
             case constants.user.platforms.MEDIUM: {
-                return await new MediumController().createPostHandler(
-                    {
-                        post: project,
-                    },
-                    user_id,
-                );
+                return new MediumController();
             }
             case constants.user.platforms.GHOST: {
-                return await new GhostController().createPostHandler(
-                    {
-                        post: project,
-                    },
-                    user_id,
-                );
+                return new GhostController();
             }
+            case constants.user.platforms.WORDPRESS: {
+                return new WordPressController();
+            }
+
             default: {
-                return {} as IPublishResponse;
+                return;
             }
         }
+    }
+
+    static getPlatformUpdateController(
+        platform: TPlatformName,
+    ): DevToController | HashnodeController | GhostController | WordPressController | undefined {
+        switch (platform) {
+            case constants.user.platforms.DEVTO: {
+                return new DevToController();
+            }
+            case constants.user.platforms.HASHNODE: {
+                return new HashnodeController();
+            }
+            case constants.user.platforms.GHOST: {
+                return new GhostController();
+            }
+            case constants.user.platforms.WORDPRESS: {
+                return new WordPressController();
+            }
+
+            default: {
+                return;
+            }
+        }
+    }
+
+    async publishOnPlatform(platform: TPlatformName, project: IProject, user_id: Types.ObjectId) {
+        const controller = ProjectHelpers.getPlatformCreateController(platform);
+
+        if (!controller) {
+            return {} as IPublishResponse;
+        }
+
+        return await controller.createPostHandler({ post: project }, user_id);
     }
 
     async publishOnPlatforms(project: IProject, user_id: Types.ObjectId) {
@@ -120,112 +158,45 @@ export default class ProjectHelpers {
             publishResponse.push(response);
         }
 
+        if (ProjectHelpers.shouldPublishOnPlatform(project, constants.user.platforms.WORDPRESS)) {
+            const response = await this.publishOnPlatform(
+                constants.user.platforms.WORDPRESS,
+                project,
+                user_id,
+            );
+
+            publishResponse.push(response);
+        }
+
         return publishResponse;
     }
 
-    static updatePlatformStatus(
-        updateResponse: IProject["platforms"],
-        targetPlatform: TPlatformName,
-        status: TPlatformPublishStatus,
-    ) {
-        const platform = updateResponse?.find(platform => platform.name === targetPlatform);
-
-        if (platform) {
-            platform.status = status;
-        }
-    }
-
     async updateOnPlatform(
-        platform: TPlatformName,
+        targetPlatform: TPlatformName,
         project: IProject,
         user_id: Types.ObjectId | undefined,
     ) {
-        switch (platform) {
-            case constants.user.platforms.DEVTO: {
-                const post_id = project.platforms?.find(
-                    platform => platform.name === constants.user.platforms.DEVTO,
-                )?.id;
+        const post_id = project.platforms?.find(platform => platform.name === targetPlatform)?.id;
 
-                if (!post_id) {
-                    return;
-                }
-
-                const response = await new DevToController().updatePostHandler(
-                    {
-                        post: project,
-                        post_id: Number.parseInt(post_id),
-                    },
-                    user_id,
-                );
-
-                ProjectHelpers.updatePlatformStatus(
-                    project.platforms,
-                    constants.user.platforms.DEVTO,
-                    response.data.post.error
-                        ? constants.project.platformPublishStatuses.ERROR
-                        : constants.project.platformPublishStatuses.SUCCESS,
-                );
-
-                break;
-            }
-            case constants.user.platforms.HASHNODE: {
-                const post_id = project.platforms?.find(
-                    platform => platform.name === constants.user.platforms.HASHNODE,
-                )?.id;
-
-                if (!post_id) {
-                    return;
-                }
-
-                const response = await new HashnodeController().updatePostHandler(
-                    {
-                        post: project,
-                        post_id,
-                    },
-                    user_id,
-                );
-
-                ProjectHelpers.updatePlatformStatus(
-                    project.platforms,
-                    constants.user.platforms.HASHNODE,
-                    response.data.post?.errors
-                        ? constants.project.platformPublishStatuses.ERROR
-                        : constants.project.platformPublishStatuses.SUCCESS,
-                );
-
-                break;
-            }
-            case constants.user.platforms.GHOST: {
-                const post_id = project.platforms?.find(
-                    platform => platform.name === constants.user.platforms.GHOST,
-                )?.id;
-
-                if (!post_id) {
-                    return;
-                }
-
-                const response = await new GhostController().updatePostHandler(
-                    {
-                        post: project,
-                        post_id,
-                    },
-                    user_id,
-                );
-
-                ProjectHelpers.updatePlatformStatus(
-                    project.platforms,
-                    constants.user.platforms.GHOST,
-                    response.data.post?.success
-                        ? constants.project.platformPublishStatuses.SUCCESS
-                        : constants.project.platformPublishStatuses.ERROR,
-                );
-
-                break;
-            }
-            default: {
-                break;
-            }
+        if (!post_id) {
+            return;
         }
+
+        const controller = ProjectHelpers.getPlatformUpdateController(targetPlatform);
+
+        if (!controller) {
+            return;
+        }
+
+        const response = await controller.updatePostHandler({ post: project, post_id }, user_id);
+
+        ProjectHelpers.updatePlatformStatus(
+            project.platforms,
+            targetPlatform,
+            response.data.post.isError
+                ? constants.project.platformPublishStatuses.ERROR
+                : constants.project.platformPublishStatuses.SUCCESS,
+        );
     }
 
     async updateOnPlatforms(project: IProject, user_id: Types.ObjectId | undefined) {
@@ -245,6 +216,10 @@ export default class ProjectHelpers {
 
         if (ProjectHelpers.shouldUpdateOnPlatform(project, constants.user.platforms.GHOST)) {
             await this.updateOnPlatform(constants.user.platforms.GHOST, project, user_id);
+        }
+
+        if (ProjectHelpers.shouldUpdateOnPlatform(project, constants.user.platforms.WORDPRESS)) {
+            await this.updateOnPlatform(constants.user.platforms.WORDPRESS, project, user_id);
         }
 
         return updateResponse;

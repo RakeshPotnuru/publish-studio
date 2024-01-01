@@ -63,10 +63,20 @@ export const formSchema = z.object({
                 },
             )
             .optional(),
+        wordpress_tags: z
+            .string()
+            .refine(
+                value =>
+                    (value ?? "").split(",").length <= constants.project.tags.wordpress.MAX_LENGTH,
+                {
+                    message: `Maximum ${constants.project.tags.wordpress.MAX_LENGTH} tags allowed.`,
+                },
+            )
+            .optional(),
     }),
     canonical_url: z.string().optional(),
 });
 // .refine(data => !data.platforms.includes(constants.user.platforms.HASHNODE), {
-//     message: "Please select atleast one tag",
+//     message: "Please select at least one tag",
 //     path: ["tags.hashnode_tags"],
 // });

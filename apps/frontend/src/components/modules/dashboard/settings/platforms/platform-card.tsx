@@ -65,7 +65,7 @@ export function PlatformCard({
                     platform={name}
                     form={editForm}
                 >
-                    <Button size="icon" variant="outline" className="size-8">
+                    <Button size="icon" variant="outline" className="h-8 w-8">
                         <Icons.Edit />
                         <span className="sr-only">Edit your {name} account</span>
                     </Button>

@@ -49,6 +49,7 @@ const ProjectSchema = new Schema<IProject>(
                     name: { type: String },
                 },
             ],
+            wordpress_tags: [{ type: String }],
         },
         canonical_url: String,
         tone_analysis: {

@@ -11,8 +11,8 @@ export interface IWordPress {
     blog_url: string;
     blog_id: string;
     token: string;
-    publicize?: boolean;
-    default_publish_status?: TWordPressStatus;
+    publicize: boolean;
+    default_publish_status: TWordPressStatus;
 }
 
 export interface IWordPressResponse {
@@ -34,7 +34,7 @@ export interface IWordPressUserUpdate {
 
 export interface IWordPressCreatePostInput {
     title: string;
-    content: string;
+    content?: string;
     tags?: string[];
     status: TWordPressStatus;
     publicize: boolean;
@@ -43,7 +43,16 @@ export interface IWordPressCreatePostInput {
 
 export type IWordPressUpdatePost = Partial<IWordPressCreatePostInput>;
 
-export interface IWordPressCreatePostOutput {
-    ID: number;
-    URL: string;
+export interface IOutput {
+    isError: boolean;
+    ID?: number;
+    URL?: string;
+}
+
+export type IWordPressCreatePostOutput = IOutput extends { isError: false }
+    ? { ID: number; URL: string }
+    : IOutput;
+
+export interface IWordPressUpdatePostOutput {
+    isError: boolean;
 }

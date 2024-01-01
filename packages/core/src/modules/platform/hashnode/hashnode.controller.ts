@@ -164,7 +164,7 @@ export default class HashnodeController extends HashnodeService {
             post: IProject;
         },
         user_id: Types.ObjectId,
-    ) {
+    ): Promise<IPublishResponse> {
         const platform = await super.getPlatform(user_id);
 
         if (!platform) {
@@ -202,19 +202,24 @@ export default class HashnodeController extends HashnodeService {
             user_id,
         );
 
+        if (newPost.isError || !newPost.data) {
+            return {
+                name: constants.user.platforms.HASHNODE,
+                status: constants.project.platformPublishStatuses.ERROR,
+            };
+        }
+
         const hashnodeUser = await new HashnodeController().getPlatform(user_id);
 
         const blogHandle = hashnodeUser.blog_handle;
-        const postSlug = newPost.errors ? "" : newPost.data.publishPost.post.slug;
+        const postSlug = newPost.data.publishPost.post.slug;
 
         return {
             name: constants.user.platforms.HASHNODE,
-            status: newPost.errors
-                ? constants.project.platformPublishStatuses.ERROR
-                : constants.project.platformPublishStatuses.SUCCESS,
-            published_url: newPost.errors ? undefined : `${blogHandle}/${postSlug}`,
-            id: newPost.errors ? undefined : newPost.data.publishPost.post.id,
-        } as IPublishResponse;
+            status: constants.project.platformPublishStatuses.SUCCESS,
+            published_url: `${blogHandle}/${postSlug}`,
+            id: newPost.data.publishPost.post.id,
+        };
     }
 
     async updatePostHandler(

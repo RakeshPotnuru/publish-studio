@@ -1,6 +1,10 @@
 import { TRPCError } from "@trpc/server";
+import type { Types } from "mongoose";
 
+import { constants } from "../../../config/constants";
 import type { Context } from "../../../trpc";
+import type { IPublishResponse } from "../../project/project.helpers";
+import type { IProject } from "../../project/project.types";
 import WordPressService from "./wordpress.service";
 import type { IWordPressUserUpdate } from "./wordpress.types";
 
@@ -13,6 +17,8 @@ export default class WordPressController extends WordPressService {
             blog_url: site.blog_url,
             blog_id: site.blog_id,
             token: site.access_token,
+            publicize: false,
+            default_publish_status: constants.wordpressStatuses.DRAFT,
         });
 
         return {
@@ -49,7 +55,82 @@ export default class WordPressController extends WordPressService {
         return {
             status: "success",
             data: {
-                message: "Platform disconnected successfully.",
+                message:
+                    "Platform disconnected successfully. Also, please disconnect from your connected accounts in your WordPress account.",
+            },
+        };
+    }
+
+    async createPostHandler(
+        input: { post: IProject },
+        user_id: Types.ObjectId,
+    ): Promise<IPublishResponse> {
+        const platform = await super.getPlatform(user_id);
+
+        if (!platform) {
+            throw new TRPCError({
+                code: "NOT_FOUND",
+                message: "Platform not found. Please connect your WordPress account to continue.",
+            });
+        }
+
+        const newPost = await super.publishPost(
+            {
+                title: `<h1>${input.post.title}</h1>`,
+                content: input.post.body?.html,
+                status: platform.default_publish_status,
+                publicize: platform.publicize,
+                excerpt: input.post.description,
+                tags: input.post.tags?.wordpress_tags,
+            },
+            user_id,
+        );
+
+        if (newPost.isError || !newPost.URL || !newPost.ID) {
+            return {
+                name: constants.user.platforms.WORDPRESS,
+                status: constants.project.platformPublishStatuses.ERROR,
+            };
+        }
+
+        return {
+            name: constants.user.platforms.WORDPRESS,
+            status: constants.project.platformPublishStatuses.SUCCESS,
+            published_url: newPost.URL,
+            id: newPost.ID.toString(),
+        };
+    }
+
+    async updatePostHandler(
+        input: { post: IProject; post_id: string },
+        user_id: Types.ObjectId | undefined,
+    ) {
+        const platform = await super.getPlatform(user_id);
+
+        if (!platform) {
+            throw new TRPCError({
+                code: "NOT_FOUND",
+                message: "Platform not found. Please connect your WordPress account to continue.",
+            });
+        }
+
+        const updatedPost = await super.updatePost(
+            {
+                title: `<h1>${input.post.title}</h1>`,
+                content: input.post.body?.html,
+                status: platform.default_publish_status,
+                publicize: platform.publicize,
+                excerpt: input.post.description,
+                tags: input.post.tags?.wordpress_tags,
+            },
+            input.post_id,
+            user_id,
+        );
+
+        return {
+            status: "success",
+            data: {
+                post: updatedPost,
             },
         };
     }

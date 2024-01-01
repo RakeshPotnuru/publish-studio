@@ -16,22 +16,22 @@ import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { formSchema } from "../form-schema";
 
-interface GhostProps {
+interface WordPressProps {
     form: UseFormReturn<z.infer<typeof formSchema>>;
     isLoading: boolean;
 }
 
-export function Ghost({ form, isLoading }: Readonly<GhostProps>) {
+export function WordPress({ form, isLoading }: Readonly<WordPressProps>) {
     return (
         <FormField
             control={form.control}
-            name="tags.ghost_tags"
+            name="tags.wordpress_tags"
             disabled={isLoading}
             render={({ field }) => (
                 <FormItem className="w-full">
                     <FormLabel>
                         Tags (Optionally enter comma separated tags, max{" "}
-                        {constants.project.tags.ghost.MAX_LENGTH}.)
+                        {constants.project.tags.wordpress.MAX_LENGTH}.)
                     </FormLabel>
                     <FormControl>
                         <Input type="text" placeholder="tag1,tag2,tag3" {...field} />
@@ -50,11 +50,11 @@ export function Ghost({ form, isLoading }: Readonly<GhostProps>) {
                     )}
                     <FormDescription>
                         <Button variant="link" size="sm" className="h-max p-0" asChild>
-                            <Link href={siteConfig.links.ghostTags} target="blank">
+                            <Link href={siteConfig.links.wordpressTags} target="blank">
                                 Learn more
                             </Link>
                         </Button>{" "}
-                        about Ghost tags.
+                        about WordPress tags.
                     </FormDescription>
                     <FormMessage />
                 </FormItem>

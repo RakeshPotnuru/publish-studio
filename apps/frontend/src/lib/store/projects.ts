@@ -22,6 +22,7 @@ export interface TTags {
     devto_tags?: string[];
     medium_tags?: string[];
     ghost_tags?: { name: string }[];
+    wordpress_tags?: string[];
 }
 
 export interface IProject {

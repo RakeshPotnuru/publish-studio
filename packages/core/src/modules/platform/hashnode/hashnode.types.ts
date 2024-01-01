@@ -88,16 +88,17 @@ export interface IHashnodeCreateStoryInput {
     };
 }
 
-export interface IHashnodeCreatePostOutput {
-    errors: {
-        message: string;
-        extensions: {
-            stellate: {
-                code: "UNAUTHENTICATED" | "INVALID_QUERY";
-            };
-        };
-    }[];
-    data: {
+export interface IOutput {
+    isError: boolean;
+    data?: {
         publishPost: { post: { id: string; slug: string } };
     };
+}
+
+export type THashnodeCreatePostOutput = IOutput extends { isError: false }
+    ? { id: string; url: string }
+    : IOutput;
+
+export interface IHashnodeUpdatePostOutput {
+    isError: boolean;
 }
