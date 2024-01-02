@@ -134,7 +134,6 @@ export default class GenerativeAIService extends ProjectService {
             });
 
             const response = result.response;
-            console.log(response.text());
 
             return response.text();
         } catch (error) {
@@ -144,6 +143,50 @@ export default class GenerativeAIService extends ProjectService {
                 code: "INTERNAL_SERVER_ERROR",
                 message:
                     "Something went wrong while generating an outline. Please try again later.",
+            });
+        }
+    }
+
+    async generateCategories(text: string) {
+        const parts = [
+            { text: "Given a sentence, return an array of 5 categories related to that sentence" },
+            {
+                text: "sentence: Break down the steps to deploy a MERN application to AWS Elastic Beanstalk, employing Continuous Integration and Continuous Delivery (CI/CD) for seamless deployment and updates.",
+            },
+            {
+                text: "categories: [Continuous integration,Continuous delivery,DevOps,Build automation,Release management]",
+            },
+            {
+                text: "sentence: Explore the foundational principles of web design, from minimalist masterpieces to engaging interfaces. Understand the key components of a great website and discover how to craft user-centric online experiences.",
+            },
+            {
+                text: "categories: [UI design,Visual design,Website design,User experience,User interface]",
+            },
+            { text: "sentence: What is Blockchain? How does it work? Why do we need it?" },
+            { text: "categories: [Blockchain,Bitcoin,Ethereum,Decentralized,Smart contracts]" },
+            { text: "sentence: Adding Authentication to full stack MERN web application" },
+            { text: "categories: [Authentication,Authorization,Nodejs,Expressjs,MongoDB]" },
+            { text: `sentence: ${text}` },
+        ];
+
+        try {
+            const result = await ai.generateContent({
+                contents: [{ role: "user", parts }],
+                generationConfig: this.default_generation_config,
+                safetySettings: this.SAFETY_SETTINGS,
+            });
+
+            const response = result.response;
+            console.log(response.text());
+
+            return response.text();
+        } catch (error) {
+            console.log(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message:
+                    "Something went wrong while generating categories. Please try again later.",
             });
         }
     }

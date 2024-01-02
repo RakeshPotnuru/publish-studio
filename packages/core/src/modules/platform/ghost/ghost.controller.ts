@@ -4,8 +4,7 @@ import type { Types } from "mongoose";
 import { constants } from "../../../config/constants";
 import type { Context } from "../../../trpc";
 import { encryptField } from "../../../utils/aws/kms";
-import type { IPublishResponse } from "../../project/project.helpers";
-import type { IProject } from "../../project/project.types";
+import type { IProject, IProjectPlatform } from "../../project/project.types";
 import GhostService from "./ghost.service";
 import type { IGhost, TGhostUpdate } from "./ghost.types";
 
@@ -121,7 +120,7 @@ export default class GhostController extends GhostService {
         const newPost = await super.publishPost(
             {
                 html: input.post.body?.html,
-                title: input.post.title,
+                title: input.post.title ?? input.post.name,
                 canonical_url: input.post.canonical_url,
                 status: platform.default_publish_status,
                 tags: tags ?? undefined,
@@ -136,7 +135,7 @@ export default class GhostController extends GhostService {
                 : constants.project.platformPublishStatuses.ERROR,
             published_url: newPost?.success ? newPost?.data.url : undefined,
             id: newPost?.success ? newPost?.data.id : undefined,
-        } as IPublishResponse;
+        } as IProjectPlatform;
     }
 
     async updatePostHandler(

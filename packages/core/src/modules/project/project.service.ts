@@ -6,13 +6,14 @@ import FolderService from "../folder/folder.service";
 import Project from "./project.model";
 import type {
     IProject,
+    IProjectCreate,
     IProjectResponse,
     IProjectsResponse,
     IProjectUpdate,
 } from "./project.types";
 
 export default class ProjectService extends FolderService {
-    async createProject(project: IProject) {
+    async createProject(project: IProjectCreate): Promise<IProjectResponse> {
         try {
             const newProject = await Project.create(project);
 
@@ -22,7 +23,7 @@ export default class ProjectService extends FolderService {
                 }).exec();
             }
 
-            return newProject as IProject;
+            return newProject;
         } catch (error) {
             console.log(error);
 

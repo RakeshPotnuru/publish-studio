@@ -12,14 +12,7 @@ import MediumController from "../platform/medium/medium.controller";
 import type { TPlatformName } from "../platform/platform.types";
 import WordPressController from "../platform/wordpress/wordpress.controller";
 import ProjectController from "./project.controller";
-import type { IPost, IProject, TPlatformPublishStatus } from "./project.types";
-
-export interface IPublishResponse {
-    name: TPlatformName;
-    status: TPlatformPublishStatus;
-    published_url?: string;
-    id?: string;
-}
+import type { IPost, IProject, IProjectPlatform, TPlatformPublishStatus } from "./project.types";
 
 export default class ProjectHelpers {
     static shouldPublishOnPlatform(project: IProject, targetPlatform: TPlatformName) {
@@ -109,14 +102,14 @@ export default class ProjectHelpers {
         const controller = ProjectHelpers.getPlatformCreateController(platform);
 
         if (!controller) {
-            return {} as IPublishResponse;
+            return {} as IProjectPlatform;
         }
 
-        return await controller.createPostHandler({ post: project }, user_id);
+        return (await controller.createPostHandler({ post: project }, user_id)) as IProjectPlatform;
     }
 
     async publishOnPlatforms(project: IProject, user_id: Types.ObjectId) {
-        const publishResponse = [] as IPublishResponse[];
+        const publishResponse = [] as IProjectPlatform[];
 
         if (ProjectHelpers.shouldPublishOnPlatform(project, constants.user.platforms.HASHNODE)) {
             const response = await this.publishOnPlatform(

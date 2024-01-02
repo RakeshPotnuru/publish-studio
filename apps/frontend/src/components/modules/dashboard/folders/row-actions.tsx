@@ -13,6 +13,7 @@ import { useState } from "react";
 import type { IFolder } from "@publish-studio/core";
 
 import { Icons } from "@/assets/icons";
+import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { trpc } from "@/utils/trpc";
 import { EditFolderDialog } from "./edit-folder";
 
@@ -68,20 +69,18 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
                             onClick={handleDelete}
                             variant="destructive"
                             size="icon"
-                            className="size-6"
+                            className="h-6 w-6"
                             disabled={isLoading}
                         >
-                            {isLoading ? (
-                                <Icons.Loading className="animate-spin" />
-                            ) : (
+                            <ButtonLoader isLoading={isLoading} isIcon>
                                 <Icons.Check />
-                            )}
+                            </ButtonLoader>
                         </Button>
                         <Button
                             onClick={() => setAskingForConfirmation(false)}
                             variant="outline"
                             size="icon"
-                            className="size-6"
+                            className="h-6 w-6"
                         >
                             <Icons.Close />
                         </Button>

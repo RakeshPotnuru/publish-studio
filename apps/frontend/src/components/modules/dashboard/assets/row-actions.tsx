@@ -54,7 +54,7 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
                             onClick={handleDelete}
                             variant="destructive"
                             size="icon"
-                            className="size-6"
+                            className="h-6 w-6"
                             disabled={isLoading}
                         >
                             {isLoading ? (
@@ -67,7 +67,7 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
                             onClick={() => setAskingForConfirmation(false)}
                             variant="outline"
                             size="icon"
-                            className="size-6"
+                            className="h-6 w-6"
                         >
                             <Icons.Close />
                         </Button>

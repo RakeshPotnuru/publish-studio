@@ -4,11 +4,10 @@ import type { Types } from "mongoose";
 import { constants } from "../../config/constants";
 import type { Context } from "../../trpc";
 import GenerativeAIController from "../generative-ai/generative-ai.controller";
-import NLUController from "../nlu/nlu.controller";
 import type { TPlatformName } from "../platform/platform.types";
 import ProjectHelpers from "./project.helpers";
 import ProjectService from "./project.service";
-import type { IProject, IProjectUpdate } from "./project.types";
+import type { IProject, IProjectPlatform, IProjectUpdate } from "./project.types";
 
 export default class ProjectController extends ProjectService {
     async createProjectHandler(input: IProject, ctx: Context) {
@@ -25,40 +24,53 @@ export default class ProjectController extends ProjectService {
             }
         }
 
+        const newProject = await super.createProject({
+            user_id: ctx.user?._id,
+            folder_id: project.folder_id,
+            name: project.name,
+            body: project.body,
+            status: project.status,
+        });
+
         const genAI = new GenerativeAIController();
-        const nlu = new NLUController();
 
         let generated_title: string | undefined;
         let generated_description: string | undefined;
         let topics: string[] | undefined;
 
         if (!project.title) {
-            generated_title = await genAI.generateTitle(project.name);
+            const { data } = await genAI.generateTitleHandler({ project_id: newProject._id }, ctx);
+            generated_title = data.title;
         }
 
         if (!project.description) {
-            generated_description = await genAI.generateDescription(project.name);
+            const { data } = await genAI.generateDescriptionHandler(
+                { project_id: newProject._id },
+                ctx,
+            );
+            generated_description = data.description;
         }
 
         const text =
-            generated_description ?? project.description ?? generated_title ?? project.title;
+            generated_description ??
+            project.description ??
+            generated_title ??
+            project.title ??
+            project.name;
         if (text) {
-            const { concepts } = await nlu.getConcepts(text);
-            topics = concepts?.map(concept => concept.text) as string[];
+            const { data } = await genAI.generateCategoriesHandler({ text });
+            topics = data.categories;
         }
 
-        const newProject = await super.createProject({
-            user_id: ctx.user?._id,
-            folder_id: project.folder_id,
-            name: project.name,
-            title: project.name || generated_title?.slice(0, constants.project.title.MAX_LENGTH),
-            description:
-                project.name ||
-                generated_description?.slice(0, constants.project.description.MAX_LENGTH),
-            body: project.body,
-            status: project.status,
-            topics,
-        });
+        await super.updateProjectById(
+            newProject._id,
+            {
+                title: generated_title ?? project.title,
+                description: generated_description ?? project.description,
+                topics: topics ?? project.topics,
+            },
+            ctx.user?._id,
+        );
 
         return {
             success: true,
@@ -144,7 +156,7 @@ export default class ProjectController extends ProjectService {
         input: {
             project_id: Types.ObjectId;
             scheduled_at: Date;
-            platforms: { name: TPlatformName }[];
+            platforms: IProjectPlatform[];
         },
         ctx: Context,
     ) {
@@ -197,9 +209,9 @@ export default class ProjectController extends ProjectService {
             ctx.user?._id,
         );
 
-        const projectHelphers = new ProjectHelpers();
+        const projectHelpers = new ProjectHelpers();
 
-        await projectHelphers.schedulePost({
+        await projectHelpers.schedulePost({
             project_id: project_id,
             scheduled_at: scheduled_at,
             user_id: ctx.user?._id,

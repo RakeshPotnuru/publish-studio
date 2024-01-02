@@ -15,7 +15,7 @@ export default class GenerativeAIController extends GenerativeAIService {
             });
         }
 
-        const output = await super.generateTitle(project.title);
+        const output = await super.generateTitle(project.name);
 
         const regex = /Title: (.*?)(?:Topic:|$)/;
         const match = new RegExp(regex).exec(output);
@@ -42,7 +42,7 @@ export default class GenerativeAIController extends GenerativeAIService {
             });
         }
 
-        const output = await super.generateDescription(project.title);
+        const output = await super.generateDescription(project.title ?? project.name);
 
         const regex = /Description: (.*?)(?:Title:|$)/;
         const match = new RegExp(regex).exec(output);
@@ -69,8 +69,27 @@ export default class GenerativeAIController extends GenerativeAIService {
             });
         }
 
-        const output = await super.generateOutline(project.title);
+        const output = await super.generateOutline(project.title ?? project.name);
 
         return { status: "success", data: { outline: output } };
+    }
+
+    async generateCategoriesHandler(input: { text: string }) {
+        const output = await super.generateCategories(input.text);
+
+        // eslint-disable-next-line unicorn/better-regex
+        const regex = /categories: \[(.*?)\]/;
+        const match = new RegExp(regex).exec(output);
+
+        if (!match) {
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "Unable to generate categories. Try changing the project name.",
+            });
+        }
+
+        const categories = match[1].trim().split(",");
+
+        return { status: "success", data: { categories } };
     }
 }

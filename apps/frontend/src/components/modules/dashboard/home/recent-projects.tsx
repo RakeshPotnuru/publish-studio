@@ -35,7 +35,7 @@ export function RecentProjects() {
                         >
                             <Link href={`/projects/${project._id}`}>
                                 <Icons.Projects className="mr-2 size-4" />
-                                {shortenText(project.title, 24)}
+                                {shortenText(project.name, 24)}
                             </Link>
                         </Button>
                     ))}

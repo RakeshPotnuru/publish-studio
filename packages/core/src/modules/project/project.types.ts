@@ -10,9 +10,17 @@ export type TProjectStatus =
 export type TPlatformPublishStatus =
     (typeof constants.project.platformPublishStatuses)[keyof typeof constants.project.platformPublishStatuses];
 
-export interface IProject {
+export interface IProjectPlatform {
+    name: TPlatformName;
+    status?: TPlatformPublishStatus;
+    published_url?: string;
+    id?: string;
     _id?: Types.ObjectId;
-    user_id?: Types.ObjectId;
+}
+
+export interface IProject {
+    _id: Types.ObjectId;
+    user_id: Types.ObjectId;
     folder_id?: Types.ObjectId;
     name: string;
     title?: string;
@@ -25,12 +33,7 @@ export interface IProject {
     status: TProjectStatus;
     cover_image?: string;
     assets?: Types.ObjectId[];
-    platforms?: {
-        name: TPlatformName;
-        status?: TPlatformPublishStatus;
-        published_url?: string;
-        id?: string;
-    }[];
+    platforms?: IProjectPlatform[];
     tags?: ITags;
     canonical_url?: string;
     tone_analysis?: {
@@ -40,14 +43,14 @@ export interface IProject {
     topics?: string[];
     scheduled_at?: Date;
     published_at?: Date;
-    created_at?: Date;
-    updated_at?: Date;
+    created_at: Date;
+    updated_at: Date;
 }
 
 export interface IProjectResponse {
     _id: Types.ObjectId;
     name: string;
-    title: string;
+    title?: string;
     user_id: Types.ObjectId;
     folder_id?: Types.ObjectId;
     description?: string;
@@ -59,13 +62,7 @@ export interface IProjectResponse {
     status: TProjectStatus;
     cover_image?: string;
     assets?: Types.ObjectId[];
-    platforms?: {
-        name: TPlatformName;
-        status?: TPlatformPublishStatus;
-        published_url?: string;
-        id?: string;
-        _id: Types.ObjectId;
-    }[];
+    platforms?: IProjectPlatform[];
     tags?: ITags;
     canonical_url?: string;
     scheduled_at?: Date;
@@ -77,6 +74,20 @@ export interface IProjectResponse {
     topics?: string[];
     created_at: Date;
     updated_at: Date;
+}
+
+export interface IProjectCreate {
+    name: string;
+    title?: string;
+    description?: string;
+    body?: {
+        json?: JSON;
+        html?: string;
+        markdown?: string;
+    };
+    status?: TProjectStatus;
+    folder_id?: Types.ObjectId;
+    user_id?: Types.ObjectId;
 }
 
 export interface IProjectsResponse {

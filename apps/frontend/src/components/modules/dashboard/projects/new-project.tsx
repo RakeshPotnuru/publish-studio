@@ -16,7 +16,6 @@ import {
     toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
-import { type Types } from "mongoose";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -27,9 +26,10 @@ import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
+import { IFolder } from "@publish-studio/core";
 
 interface NewProjectDialogProps extends React.HTMLAttributes<HTMLDialogElement> {
-    folderId?: Types.ObjectId;
+    folderId?: IFolder["_id"];
 }
 
 const formSchema = z.object({
@@ -41,7 +41,7 @@ const formSchema = z.object({
         )
         .max(
             constants.project.name.MAX_LENGTH,
-            `Title must not exceed ${constants.project.name.MAX_LENGTH} characters`,
+            `Name must not exceed ${constants.project.name.MAX_LENGTH} characters`,
         ),
 });
 
