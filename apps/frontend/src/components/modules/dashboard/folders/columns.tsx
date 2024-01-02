@@ -2,9 +2,10 @@ import { Checkbox } from "@itsrakesh/ui";
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 
+import type { IFolder } from "@publish-studio/core";
+
 import { siteConfig } from "@/config/site";
-import type { IFolder } from "@/lib/store/folders";
-import { shortenText } from "@/utils/text-shortner";
+import { shortenText } from "@/utils/text-shortener";
 import { RowActions } from "./row-actions";
 
 export const columns: ColumnDef<IFolder>[] = [
@@ -32,8 +33,8 @@ export const columns: ColumnDef<IFolder>[] = [
         accessorKey: "name",
         header: "Name",
         cell: ({ row }) => (
-            <Link href={`${siteConfig.pages.folders.link}/${row.getValue("_id")}`}>
-                <span title={row.getValue("name")}>{shortenText(row.getValue("name"), 18)}</span>
+            <Link href={`${siteConfig.pages.folders.link}/${row.original._id}`}>
+                <span title={row.original.name}>{shortenText(row.original.name, 18)}</span>
             </Link>
         ),
     },

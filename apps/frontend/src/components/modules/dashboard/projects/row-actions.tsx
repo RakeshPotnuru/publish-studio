@@ -5,18 +5,19 @@ import {
     DropdownMenuItem,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-    useToast,
+    toast,
 } from "@itsrakesh/ui";
 import { Row } from "@tanstack/react-table";
+import mongoose from "mongoose";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { useState } from "react";
+
+import type { IProject } from "@publish-studio/core";
 
 import { Icons } from "@/assets/icons";
 import { constants } from "@/config/constants";
-import { IProject } from "@/lib/store/projects";
 import { trpc } from "@/utils/trpc";
-import mongoose from "mongoose";
-import { useParams } from "next/navigation";
 import { MoveProject } from "./move-project";
 
 interface RowActionsProps<TData> {
@@ -27,46 +28,29 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
     const [askingForConfirmation, setAskingForConfirmation] = useState(false);
     const [openMoveProject, setOpenMoveProject] = useState(false);
 
-    const { toast } = useToast();
-    const utils = trpc.useUtils();
     const { folderId } = useParams();
+    const utils = trpc.useUtils();
 
     const { mutateAsync: deleteProject, isLoading } = trpc.deleteProjects.useMutation({
         onSuccess: () => {
-            toast({
-                variant: "success",
-                title: "Project deleted",
-                description: "Project deleted successfully",
-            });
+            toast.success("Project deleted successfully");
             utils.getAllProjects.invalidate();
             utils.getProjectsByFolderId.invalidate();
         },
         onError: error => {
-            toast({
-                variant: "destructive",
-                title: "Error",
-                description: error.message,
-            });
+            toast.error(error.message);
         },
     });
 
     const { mutateAsync: duplicateProject, isLoading: isDuplicating } =
         trpc.createProject.useMutation({
             onSuccess: () => {
-                toast({
-                    variant: "success",
-                    title: "Project duplicated",
-                    description: "Project created successfully",
-                });
+                toast.success("Project created successfully");
                 utils.getAllProjects.invalidate();
                 utils.getProjectsByFolderId.invalidate();
             },
             onError: error => {
-                toast({
-                    variant: "destructive",
-                    title: "Error",
-                    description: error.message,
-                });
+                toast.error(error.message);
             },
         });
 
@@ -94,7 +78,8 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
 
         try {
             await duplicateProject({
-                title: cutTitle(`Copy of ${row.original.title}`),
+                name: cutTitle(`Copy of ${row.original.name}`),
+                title: row.original.title,
                 description: row.original.description,
                 body: {
                     json: row.original.body?.json,

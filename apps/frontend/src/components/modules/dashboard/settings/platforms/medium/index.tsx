@@ -1,45 +1,38 @@
-import type { Types } from "mongoose";
+import { toast } from "@itsrakesh/ui";
 
-import { constants } from "@/config/constants";
+import type { IMedium } from "@publish-studio/core";
+
 import { Images } from "@/assets/images";
+import { constants } from "@/config/constants";
 import { trpc } from "@/utils/trpc";
 import { PlatformCard } from "../platform-card";
 import { MediumConnectForm } from "./connect-form";
 import { MediumEditForm } from "./edit-form";
 
-export type TMediumStatus =
-    (typeof constants.mediumStatuses)[keyof typeof constants.mediumStatuses];
-
-export interface IMediumResponse {
-    _id: Types.ObjectId;
-    user_id: Types.ObjectId;
-    api_key: string;
-    username: string;
-    profile_pic: string;
-    author_id: string;
-    default_publish_status: TMediumStatus;
-    notify_followers: boolean;
-    created_at: Date;
-    updated_at: Date;
-}
-
 interface MediumToProps {
-    data?: IMediumResponse;
+    data?: IMedium;
     isLoading: boolean;
     isOpen: boolean;
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function Medium({ data, isOpen, isLoading, setIsOpen }: Readonly<MediumToProps>) {
-    const { refetch: disconnectMedium, isFetching: isDisconnectingMedium } =
-        trpc.disconnectMedium.useQuery(undefined, {
-            enabled: false,
-        });
+    const {
+        refetch: disconnectMedium,
+        isFetching: isDisconnectingMedium,
+        error: disconnectError,
+    } = trpc.disconnectMedium.useQuery(undefined, {
+        enabled: false,
+    });
 
     return (
         <PlatformCard
             onDisconnect={async () => {
-                await disconnectMedium();
+                try {
+                    await disconnectMedium();
+                } catch (error) {
+                    toast.error(disconnectError?.message ?? "Something went wrong.");
+                }
             }}
             isOpen={isOpen}
             setIsOpen={setIsOpen}
@@ -53,7 +46,7 @@ export function Medium({ data, isOpen, isLoading, setIsOpen }: Readonly<MediumTo
                 <MediumEditForm
                     setIsOpen={setIsOpen}
                     default_publish_status={
-                        data?.default_publish_status || constants.mediumStatuses.DRAFT
+                        data?.default_publish_status ?? constants.mediumStatuses.DRAFT
                     }
                     notify_followers={data?.notify_followers.toString() ?? "false"}
                 />

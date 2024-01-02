@@ -3,10 +3,11 @@ import { ColumnDef } from "@tanstack/react-table";
 import { formatDistanceToNow } from "date-fns";
 import Image from "next/image";
 
+import type { IAsset } from "@publish-studio/core";
+
 import { DataTableColumnHeader } from "@/components/ui/data-table";
-import type { IAsset } from "@/lib/store/assets";
 import { formatFileSize } from "@/utils/file-size";
-import { shortenText } from "@/utils/text-shortner";
+import { shortenText } from "@/utils/text-shortener";
 import { AssetDialog } from "./asset";
 import { RowActions } from "./row-actions";
 
@@ -42,10 +43,10 @@ export const columns: ColumnDef<IAsset>[] = [
         accessorKey: "url",
         header: "Preview",
         cell: ({ row }) => (
-            <AssetDialog name={row.original.name} url={row.original.url}>
+            <AssetDialog name={row.original.original_file_name} url={row.original.hosted_url}>
                 <Image
-                    src={row.original.url}
-                    alt={row.getValue("name")}
+                    src={row.original.hosted_url}
+                    alt={row.original.original_file_name}
                     width={50}
                     height={50}
                     loading="lazy"
@@ -63,7 +64,7 @@ export const columns: ColumnDef<IAsset>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
         cell: ({ row }) => (
             <span title={row.getValue("name")}>
-                {shortenText(row.original.name.split(".").reverse().pop() ?? "", 50)}
+                {shortenText(row.original.original_file_name.split(".").reverse().pop() ?? "", 50)}
             </span>
         ),
         filterFn: (row, id, value) => {
@@ -73,14 +74,12 @@ export const columns: ColumnDef<IAsset>[] = [
     {
         accessorKey: "size",
         header: ({ column }) => <DataTableColumnHeader column={column} title="Size" />,
-        cell: ({ row }) => formatFileSize(row.getValue("size")),
+        cell: ({ row }) => formatFileSize(row.original.size),
     },
     {
-        accessorKey: "mime_type",
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Mime Type" />,
-        cell: ({ row }) => (
-            <Badge variant="secondary">{row.original.mime_type.split("/")[1]}</Badge>
-        ),
+        accessorKey: "file_type",
+        header: ({ column }) => <DataTableColumnHeader column={column} title="File Type" />,
+        cell: ({ row }) => <Badge variant="secondary">{row.original.mimetype.split("/")[1]}</Badge>,
         filterFn: (row, id, value) => {
             return value.includes(row.getValue(id));
         },
@@ -90,7 +89,7 @@ export const columns: ColumnDef<IAsset>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Created" />,
         cell: ({ row }) => (
             <span>
-                {formatDistanceToNow(row.getValue("created"), {
+                {formatDistanceToNow(row.original.created_at, {
                     addSuffix: true,
                     includeSeconds: true,
                 })}

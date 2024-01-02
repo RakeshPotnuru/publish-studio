@@ -22,7 +22,7 @@ import {
     PopoverTrigger,
     ScrollArea,
     Skeleton,
-    useToast,
+    toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import type { Types } from "mongoose";
@@ -48,7 +48,6 @@ export function MoveProject({ children, projectId, ...props }: Readonly<MoveProj
     const [open, setOpen] = useState(false);
     const [moveError, setMoveError] = useState<string | null>(null);
 
-    const { toast } = useToast();
     const utils = trpc.useUtils();
 
     const { data, isLoading, error } = trpc.getAllFolders.useQuery({
@@ -61,11 +60,7 @@ export function MoveProject({ children, projectId, ...props }: Readonly<MoveProj
     const { mutateAsync: moveProject, isLoading: isProjectMoving } = trpc.updateProject.useMutation(
         {
             onSuccess: () => {
-                toast({
-                    variant: "success",
-                    title: "Success",
-                    description: "Project moved successfully.",
-                });
+                toast.success("Project moved successfully.");
                 utils.getProjectsByFolderId.invalidate();
                 props.onOpenChange(false);
             },

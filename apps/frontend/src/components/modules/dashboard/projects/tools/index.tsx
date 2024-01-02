@@ -7,8 +7,9 @@ import {
     SheetTrigger,
 } from "@itsrakesh/ui";
 
+import type { IProject } from "@publish-studio/core";
+
 import { MenuProps } from "@/components/modules/dashboard/projects/editor/menu/fixed-menu";
-import { IProject } from "@/lib/store/projects";
 import { DownloadProject } from "./download-project";
 import { GenerateOutline } from "./generate-outline";
 import { ImportMarkdown } from "./import-content";

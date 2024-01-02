@@ -1,10 +1,11 @@
-import { Button, Input, useToast } from "@itsrakesh/ui";
+import { Button, Input, toast } from "@itsrakesh/ui";
 import { Table } from "@tanstack/react-table";
 import { useState } from "react";
 
+import type { IFolder } from "@publish-studio/core";
+
 import { Icons } from "@/assets/icons";
 import { Tooltip } from "@/components/ui/tooltip";
-import { IFolder } from "@/lib/store/folders";
 import { trpc } from "@/utils/trpc";
 
 interface ToolbarProps<TData> {
@@ -16,28 +17,19 @@ export function Toolbar<TData>({ table }: Readonly<ToolbarProps<TData>>) {
 
     const isFiltered = table.getState().columnFilters.length > 0;
 
-    const { toast } = useToast();
     const utils = trpc.useUtils();
 
     const { mutateAsync: deleteFolders, isLoading } = trpc.deleteFolders.useMutation({
         onSuccess: ({ data }) => {
             const count = data.folders.deletedCount;
 
-            toast({
-                variant: "success",
-                title: `Folder${count > 1 ? "s" : ""} deleted`,
-                description: `${count} folder${count > 1 ? "s" : ""} deleted successfully`,
-            });
+            toast.success(`${count} folder${count > 1 ? "s" : ""} deleted successfully`);
 
             utils.getAllFolders.invalidate();
             table.resetRowSelection();
         },
         onError: error => {
-            toast({
-                variant: "destructive",
-                title: "Error",
-                description: error.message,
-            });
+            toast.error(error.message);
         },
     });
 

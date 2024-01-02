@@ -19,4 +19,6 @@ export interface IUser {
     stripe_customer_id?: string;
 }
 
+export type IUserResponse = Omit<IUser, "password" | "google_sub">;
+
 export type IUserUpdate = Partial<IUser>;

@@ -161,6 +161,7 @@ export default class ProjectService extends FolderService {
                         status: project.status,
                         assets: project.assets,
                         tone_analysis: project.tone_analysis,
+                        topics: project.topics,
                         "body.json": project.body?.json,
                         "body.html": project.body?.html,
                         "body.markdown": project.body?.markdown,

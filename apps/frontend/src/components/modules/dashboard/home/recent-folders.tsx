@@ -5,7 +5,7 @@ import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
 import { FoldersLoader } from "@/components/ui/loaders/folders-loader";
-import { shortenText } from "@/utils/text-shortner";
+import { shortenText } from "@/utils/text-shortener";
 import { trpc } from "@/utils/trpc";
 import { NewFolderDialog } from "../folders/new-folder";
 

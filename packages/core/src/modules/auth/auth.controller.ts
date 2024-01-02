@@ -157,7 +157,7 @@ export default class AuthController extends UserService {
                 last_name: user.last_name,
             },
             from_address: process.env.AWS_SES_PERSONAL_FROM_EMAIL,
-            scheduled_at: new Date(Date.now() + 60 * 60 * 1000), // one hour from now
+            scheduled_at: new Date(Date.now() + 5 * 60 * 1000), // 5 minutes from now
         });
 
         return {

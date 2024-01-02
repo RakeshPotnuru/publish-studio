@@ -5,13 +5,14 @@ import {
     DropdownMenuItem,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-    useToast,
+    toast,
 } from "@itsrakesh/ui";
 import { Row } from "@tanstack/react-table";
 import { useState } from "react";
 
+import type { IFolder } from "@publish-studio/core";
+
 import { Icons } from "@/assets/icons";
-import type { IFolder } from "@/lib/store/folders";
 import { trpc } from "@/utils/trpc";
 import { EditFolderDialog } from "./edit-folder";
 
@@ -22,24 +23,15 @@ interface RowActionsProps<TData> {
 export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
     const [askingForConfirmation, setAskingForConfirmation] = useState(false);
 
-    const { toast } = useToast();
     const utils = trpc.useUtils();
 
     const { mutateAsync: deleteFolder, isLoading } = trpc.deleteFolders.useMutation({
         onSuccess: () => {
-            toast({
-                variant: "success",
-                title: "Folder deleted",
-                description: "Folder deleted successfully",
-            });
+            toast.success("Folder deleted successfully");
             utils.getAllFolders.invalidate();
         },
         onError: error => {
-            toast({
-                variant: "destructive",
-                title: "Error",
-                description: error.message,
-            });
+            toast.error(error.message);
         },
     });
 

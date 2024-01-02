@@ -3,13 +3,14 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuTrigger,
-    useToast,
+    toast,
 } from "@itsrakesh/ui";
 import { Row } from "@tanstack/react-table";
 import { useState } from "react";
 
+import type { IAsset } from "@publish-studio/core";
+
 import { Icons } from "@/assets/icons";
-import { IAsset } from "@/lib/store/assets";
 import { trpc } from "@/utils/trpc";
 
 interface RowActionsProps<TData> {
@@ -19,24 +20,15 @@ interface RowActionsProps<TData> {
 export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
     const [askingForConfirmation, setAskingForConfirmation] = useState(false);
 
-    const { toast } = useToast();
     const utils = trpc.useUtils();
 
     const { mutateAsync: deleteAsset, isLoading } = trpc.deleteAssets.useMutation({
         onSuccess: () => {
-            toast({
-                variant: "success",
-                title: "Asset deleted",
-                description: "Asset deleted successfully",
-            });
+            toast.success("Asset deleted successfully");
             utils.getAllAssets.invalidate();
         },
         onError: error => {
-            toast({
-                variant: "destructive",
-                title: "Error",
-                description: error.message,
-            });
+            toast.error(error.message);
         },
     });
 

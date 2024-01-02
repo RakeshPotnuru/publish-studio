@@ -7,7 +7,6 @@ import { useState } from "react";
 import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
-import { IAsset } from "@/lib/store/assets";
 import { trpc } from "@/utils/trpc";
 import { columns } from "./columns";
 import { NewAssetDialog } from "./new-asset";
@@ -31,15 +30,6 @@ export function Assets({ isWidget, onAdd, ...props }: Readonly<AssetsProps>) {
         },
     });
 
-    const assets: IAsset[] =
-        data?.data.assets.map(asset => ({
-            ...asset,
-            name: asset.original_file_name,
-            url: asset.hosted_url,
-            mime_type: asset.mimetype,
-            created: asset.created_at,
-        })) ?? [];
-
     return (
         <div className="space-y-8" {...props}>
             <div className="flex items-center justify-between">
@@ -57,7 +47,7 @@ export function Assets({ isWidget, onAdd, ...props }: Readonly<AssetsProps>) {
                     isWidget={isWidget}
                     onAdd={onAdd}
                     columns={columns}
-                    data={assets}
+                    data={data?.data.assets ?? []}
                     refetch={refetch}
                     pageCount={data?.data.pagination.total_pages ?? 0}
                     pagination={{

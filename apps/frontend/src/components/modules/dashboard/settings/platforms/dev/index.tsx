@@ -1,39 +1,36 @@
-import type { Types } from "mongoose";
+import type { IDevTo } from "@publish-studio/core";
 
 import { Images } from "@/assets/images";
 import { trpc } from "@/utils/trpc";
+import { toast } from "@itsrakesh/ui";
 import { PlatformCard } from "../platform-card";
 import { DevConnectForm } from "./connect-form";
 import { DevEditForm } from "./edit-form";
 
-export interface IDevToResponse {
-    _id: Types.ObjectId;
-    user_id: Types.ObjectId;
-    api_key: string;
-    username: string;
-    profile_pic: string;
-    default_publish_status: boolean;
-    created_at: Date;
-    updated_at: Date;
-}
-
 interface DevToProps {
-    data?: IDevToResponse;
+    data?: IDevTo;
     isLoading: boolean;
     isOpen: boolean;
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function DevTo({ data, isOpen, isLoading, setIsOpen }: Readonly<DevToProps>) {
-    const { refetch: disconnectDevTo, isFetching: isDisconnectingDevTo } =
-        trpc.disconnectDevTo.useQuery(undefined, {
-            enabled: false,
-        });
+    const {
+        refetch: disconnectDevTo,
+        isFetching: isDisconnectingDevTo,
+        error: disconnectError,
+    } = trpc.disconnectDevTo.useQuery(undefined, {
+        enabled: false,
+    });
 
     return (
         <PlatformCard
             onDisconnect={async () => {
-                await disconnectDevTo();
+                try {
+                    await disconnectDevTo();
+                } catch (error) {
+                    toast.error(disconnectError?.message ?? "Something went wrong.");
+                }
             }}
             isOpen={isOpen}
             setIsOpen={setIsOpen}

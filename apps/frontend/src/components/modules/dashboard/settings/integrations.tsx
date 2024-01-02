@@ -2,18 +2,20 @@
 
 import { Button } from "@itsrakesh/ui";
 import Image from "next/image";
+import { useState } from "react";
+
+import type { IDevTo, IGhost, IHashnode, IMedium, IWordPress } from "@publish-studio/core";
 
 import { Images } from "@/assets/images";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
 import { constants } from "@/config/constants";
 import { trpc } from "@/utils/trpc";
-import { useState } from "react";
-import { DevTo, IDevToResponse } from "./platforms/dev";
-import { Ghost, IGhostResponse } from "./platforms/ghost";
-import { Hashnode, IHashnodeResponse } from "./platforms/hashnode";
-import { IMediumResponse, Medium } from "./platforms/medium";
-import { IWordPressResponse, WordPress } from "./platforms/wordpress";
+import { DevTo } from "./platforms/dev";
+import { Ghost } from "./platforms/ghost";
+import { Hashnode } from "./platforms/hashnode";
+import { Medium } from "./platforms/medium";
+import { WordPress } from "./platforms/wordpress";
 
 interface IntegrationsProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -31,17 +33,17 @@ export function Integrations({ ...props }: IntegrationsProps) {
     const platforms = data?.data.platforms;
 
     const devto = platforms?.find(platform => platform.name === constants.user.platforms.DEVTO)
-        ?.data as IDevToResponse;
+        ?.data as IDevTo;
     const medium = platforms?.find(platform => platform.name === constants.user.platforms.MEDIUM)
-        ?.data as IMediumResponse;
+        ?.data as IMedium;
     const hashnode = platforms?.find(
         platform => platform.name === constants.user.platforms.HASHNODE,
-    )?.data as IHashnodeResponse;
+    )?.data as IHashnode;
     const ghost = platforms?.find(platform => platform.name === constants.user.platforms.GHOST)
-        ?.data as IGhostResponse;
+        ?.data as IGhost;
     const wordpress = platforms?.find(
         platform => platform.name === constants.user.platforms.WORDPRESS,
-    )?.data as IWordPressResponse;
+    )?.data as IWordPress;
 
     return (
         <div className="space-y-8" {...props}>

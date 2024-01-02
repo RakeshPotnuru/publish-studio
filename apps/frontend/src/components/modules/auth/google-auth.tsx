@@ -1,4 +1,4 @@
-import { useToast } from "@itsrakesh/ui";
+import { toast } from "@itsrakesh/ui";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { ErrorBox } from "@/components/ui/error-box";
@@ -9,16 +9,12 @@ import { useTheme } from "next-themes";
 export function GoogleAuth() {
     const [error, setError] = useState<string | null>(null);
 
-    const { toast } = useToast();
     const { theme } = useTheme();
     const authButtonRef = useRef<HTMLDivElement>(null);
 
     const { mutateAsync: connectGoogle, isLoading } = trpc.connectGoogle.useMutation({
         onSuccess({ data }) {
-            toast({
-                variant: "success",
-                description: `Authenticated as ${data.user.email}`,
-            });
+            toast.success(`Authenticated as ${data.user.email}`);
 
             if (!data.access_token) {
                 return;

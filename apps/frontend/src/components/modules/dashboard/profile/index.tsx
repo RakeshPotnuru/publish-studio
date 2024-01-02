@@ -15,7 +15,7 @@ import {
     Input,
     Separator,
     Skeleton,
-    useToast,
+    toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import { useEffect, useState } from "react";
@@ -48,7 +48,6 @@ const formSchema = z.object({
         .max(constants.user.lastName.MAX_LENGTH)
         .optional(),
     profile_pic: z.string().url().optional(),
-    // email: z.string().min(1, "Email cannot be empty").email().optional(),
 });
 
 export function Profile({ ...props }: ProfileProps) {
@@ -58,15 +57,10 @@ export function Profile({ ...props }: ProfileProps) {
 
     const { user, isLoading: isUserLoading } = useUserStore();
     const utils = trpc.useUtils();
-    const { toast } = useToast();
 
     const { mutateAsync: editProfile, isLoading: isUpdating } = trpc.updateUser.useMutation({
         onSuccess: () => {
-            toast({
-                variant: "success",
-                title: "Profile Updated",
-                description: "Your profile has been updated successfully.",
-            });
+            toast.success("Your profile has been updated successfully.");
             setIsEditing(false);
             utils.getUser.invalidate();
         },

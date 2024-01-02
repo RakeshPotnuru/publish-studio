@@ -13,7 +13,7 @@ import {
     Input,
     RadioGroup,
     RadioGroupItem,
-    useToast,
+    toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import Link from "next/link";
@@ -44,16 +44,11 @@ export function DevEditForm({
 }: Readonly<DevEditFormProps>) {
     const [error, setError] = useState<string | null>(null);
 
-    const { toast } = useToast();
     const utils = trpc.useUtils();
 
     const { mutateAsync: edit, isLoading: isUpdating } = trpc.updateDevTo.useMutation({
         onSuccess: () => {
-            toast({
-                variant: "success",
-                title: "Updated",
-                description: "Your Dev account has been updated successfully.",
-            });
+            toast.success("Your Dev account has been updated successfully.");
             utils.getAllPlatforms.invalidate();
             setIsOpen(false);
         },

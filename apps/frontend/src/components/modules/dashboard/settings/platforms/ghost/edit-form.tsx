@@ -13,7 +13,7 @@ import {
     Input,
     RadioGroup,
     RadioGroupItem,
-    useToast,
+    toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import Link from "next/link";
@@ -48,16 +48,11 @@ export function GhostEditForm({
 }: Readonly<DevEditFormProps>) {
     const [error, setError] = useState<string | null>(null);
 
-    const { toast } = useToast();
     const utils = trpc.useUtils();
 
     const { mutateAsync: edit, isLoading: isUpdating } = trpc.updateGhost.useMutation({
         onSuccess: () => {
-            toast({
-                variant: "success",
-                title: "Updated",
-                description: "Your Ghost account has been updated successfully.",
-            });
+            toast.success("Your Ghost account has been updated successfully.");
             utils.getAllPlatforms.invalidate();
             setIsOpen(false);
         },

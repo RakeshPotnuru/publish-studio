@@ -7,9 +7,14 @@ const ProjectSchema = new Schema<IProject>(
     {
         user_id: { type: Schema.Types.ObjectId, required: true },
         folder_id: { type: Schema.Types.ObjectId },
-        title: {
+        name: {
             type: String,
             required: true,
+            minlength: constants.project.name.MIN_LENGTH,
+            maxlength: constants.project.name.MAX_LENGTH,
+        },
+        title: {
+            type: String,
             minlength: constants.project.title.MIN_LENGTH,
             maxlength: constants.project.title.MAX_LENGTH,
         },
@@ -65,6 +70,7 @@ const ProjectSchema = new Schema<IProject>(
                 anger: Number,
             },
         },
+        topics: [{ type: String }],
         scheduled_at: {
             type: Date,
         },

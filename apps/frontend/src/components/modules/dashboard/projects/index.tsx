@@ -1,13 +1,12 @@
 "use client";
 
 import { Button } from "@itsrakesh/ui";
+import { PaginationState } from "@tanstack/react-table";
 
 import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
-import { IProject } from "@/lib/store/projects";
 import { trpc } from "@/utils/trpc";
-import { PaginationState } from "@tanstack/react-table";
 import { useState } from "react";
 import { columns } from "./columns";
 import { NewProjectDialog } from "./new-project";
@@ -28,13 +27,6 @@ export function Projects({ ...props }: ProjectsProps) {
         },
     });
 
-    const projects: IProject[] =
-        data?.data.projects.map(project => ({
-            ...project,
-            created: project.created_at,
-            last_edited: project.updated_at,
-        })) ?? [];
-
     return (
         <div className="space-y-8" {...props}>
             <div className="flex items-center justify-between">
@@ -50,7 +42,7 @@ export function Projects({ ...props }: ProjectsProps) {
             ) : (
                 <ProjectsTable
                     columns={columns}
-                    data={projects}
+                    data={data?.data.projects ?? []}
                     refetch={refetch}
                     pageCount={data?.data.pagination.total_pages ?? 0}
                     pagination={{

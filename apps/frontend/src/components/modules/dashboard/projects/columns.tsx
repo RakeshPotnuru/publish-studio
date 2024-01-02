@@ -3,11 +3,12 @@ import { cn } from "@itsrakesh/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import { formatDistanceToNow } from "date-fns";
 
+import type { IProject } from "@publish-studio/core";
+
 import { Icons } from "@/assets/icons";
 import { DataTableColumnHeader } from "@/components/ui/data-table";
 import { constants } from "@/config/constants";
-import type { IProject } from "@/lib/store/projects";
-import { shortenText } from "@/utils/text-shortner";
+import { shortenText } from "@/utils/text-shortener";
 import { RowActions } from "./row-actions";
 
 export const statuses = [
@@ -60,17 +61,17 @@ export const columns: ColumnDef<IProject>[] = [
         enableHiding: false,
     },
     {
-        accessorKey: "title",
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Title" />,
+        accessorKey: "name",
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
         cell: ({ row }) => (
-            <span title={row.getValue("title")}>{shortenText(row.getValue("title"), 50)}</span>
+            <span title={row.getValue("name")}>{shortenText(row.original.name, 50)}</span>
         ),
     },
     {
         accessorKey: "status",
         header: "Status",
         cell: ({ row }) => {
-            const status = statuses.find(status => status.value === row.getValue("status"));
+            const status = statuses.find(status => status.value === row.original.status);
 
             if (!status) {
                 return null;
@@ -92,7 +93,7 @@ export const columns: ColumnDef<IProject>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Created" />,
         cell: ({ row }) => (
             <span>
-                {formatDistanceToNow(row.getValue("created"), {
+                {formatDistanceToNow(row.original.created_at, {
                     addSuffix: true,
                     includeSeconds: true,
                 })}
@@ -107,7 +108,7 @@ export const columns: ColumnDef<IProject>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Last Edited" />,
         cell: ({ row }) => (
             <span>
-                {formatDistanceToNow(row.getValue("last_edited"), {
+                {formatDistanceToNow(row.original.updated_at, {
                     addSuffix: true,
                     includeSeconds: true,
                 })}

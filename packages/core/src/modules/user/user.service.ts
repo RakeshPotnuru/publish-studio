@@ -6,7 +6,7 @@ import { signJwt } from "../../utils/jwt";
 import redisClient from "../../utils/redis";
 import type { IRegisterInput } from "../auth/auth.types";
 import User from "./user.model";
-import type { IUser, IUserUpdate } from "./user.types";
+import type { IUser, IUserResponse, IUserUpdate } from "./user.types";
 
 export default class UserService {
     async createUser(user: IRegisterInput) {
@@ -35,9 +35,9 @@ export default class UserService {
         }
     }
 
-    async getUserById(id: Types.ObjectId | undefined) {
+    async getUserById(id: Types.ObjectId | undefined): Promise<IUserResponse | null> {
         try {
-            return (await User.findById(id).exec()) as IUser;
+            return await User.findById(id).select("-password -google_sub").exec();
         } catch (error) {
             console.log(error);
 

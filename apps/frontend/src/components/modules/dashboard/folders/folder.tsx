@@ -7,7 +7,6 @@ import { useState } from "react";
 import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
-import { IProject } from "@/lib/store/projects";
 import { trpc } from "@/utils/trpc";
 import { Button, Skeleton } from "@itsrakesh/ui";
 import { PaginationState } from "@tanstack/react-table";
@@ -34,13 +33,6 @@ export function Folder({ ...props }: FolderProps) {
         folder_id: folderId,
     });
 
-    const projects: IProject[] =
-        data?.data.projects.map(project => ({
-            ...project,
-            created: project.created_at,
-            last_edited: project.updated_at,
-        })) ?? [];
-
     return (
         <div className="space-y-8" {...props}>
             <div className="flex items-center justify-between">
@@ -58,7 +50,7 @@ export function Folder({ ...props }: FolderProps) {
             ) : (
                 <ProjectsTable
                     columns={columns}
-                    data={projects}
+                    data={data?.data.projects ?? []}
                     refetch={refetch}
                     pageCount={data?.data.pagination.total_pages ?? 0}
                     pagination={{

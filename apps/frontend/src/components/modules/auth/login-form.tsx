@@ -10,7 +10,7 @@ import {
     FormLabel,
     FormMessage,
     Input,
-    useToast,
+    toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import { jwtDecode } from "jwt-decode";
@@ -43,13 +43,9 @@ export function LoginForm({ ...props }: LoginFormProps) {
 
     const [_, setCookie] = useCookies(["ps_access_token"]);
 
-    const { toast } = useToast();
-
     const { mutateAsync: login, isLoading } = trpc.login.useMutation({
         onSuccess({ data }) {
-            toast({
-                variant: "success",
-                title: "Logged in successfully",
+            toast.success("Logged in successfully", {
                 description: `Welcome back, ${data.user.first_name} ${data.user.last_name}!`,
             });
 

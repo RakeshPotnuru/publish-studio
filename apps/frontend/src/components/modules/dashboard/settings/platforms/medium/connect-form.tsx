@@ -13,7 +13,7 @@ import {
     Input,
     RadioGroup,
     RadioGroupItem,
-    useToast,
+    toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import Link from "next/link";
@@ -43,16 +43,11 @@ const formSchema = z.object({
 export function MediumConnectForm({ setIsOpen, ...props }: Readonly<MediumConnectFormProps>) {
     const [error, setError] = useState<string | null>(null);
 
-    const { toast } = useToast();
     const utils = trpc.useUtils();
 
     const { mutateAsync: connect, isLoading: isConnecting } = trpc.connectMedium.useMutation({
         onSuccess: () => {
-            toast({
-                variant: "success",
-                title: "Connected",
-                description: "Your Medium account has been connected successfully.",
-            });
+            toast.success("Your Medium account has been connected successfully.");
             utils.getAllPlatforms.invalidate();
             setIsOpen(false);
         },

@@ -18,14 +18,15 @@ import {
     SheetTitle,
     SheetTrigger,
     Textarea,
-    ToastAction,
-    useToast,
+    toast,
 } from "@itsrakesh/ui";
 import Image from "next/image";
 import { NodeHtmlMarkdown } from "node-html-markdown";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+
+import type { IProject } from "@publish-studio/core";
 
 import { Icons } from "@/assets/icons";
 import { HookFormDevTool } from "@/components/dev-tools/hookform-dev-tool";
@@ -35,7 +36,6 @@ import { DotsLoader } from "@/components/ui/loaders/dots-loader";
 import { MagicButton } from "@/components/ui/magic-button";
 import { Tooltip } from "@/components/ui/tooltip";
 import { constants } from "@/config/constants";
-import { IProject } from "@/lib/store/projects";
 import useUserStore from "@/lib/store/user";
 import { trpc } from "@/utils/trpc";
 import { MenuProps } from "../editor/menu/fixed-menu";
@@ -59,26 +59,17 @@ export function PublishPost({
     const [openImageWidget, setOpenImageWidget] = useState<boolean>(false);
 
     const { user, isLoading: isUserLoading } = useUserStore();
-    const { toast } = useToast();
     const utils = trpc.useUtils();
     const tooltipRef = useRef<HTMLButtonElement>(null);
 
     const { mutateAsync: saveProject, isLoading: isProjectSaving } = trpc.updateProject.useMutation(
         {
             onSuccess: () => {
-                toast({
-                    variant: "success",
-                    title: "Project saved",
-                    description: "Project saved successfully.",
-                });
+                toast.success("Project saved successfully.");
                 handleRefresh();
             },
             onError: error => {
-                toast({
-                    variant: "destructive",
-                    title: "Failed to save project",
-                    description: error.message,
-                });
+                toast.error(error.message);
             },
         },
     );
@@ -86,43 +77,29 @@ export function PublishPost({
     const { mutateAsync: publishPost, isLoading: isPostPublishing } = trpc.schedulePost.useMutation(
         {
             onSuccess: () => {
-                toast({
-                    title: "Post added to queue",
-                    description:
-                        "Post added to queue successfully. You will be notified when published.",
-                    action: (
-                        <ToastAction onClick={handleRefresh} altText="Refresh">
-                            Refresh
-                        </ToastAction>
-                    ),
+                toast("Post added to queue successfully. You will be notified when published.", {
+                    action: {
+                        label: "Refresh",
+                        onClick: () => {
+                            handleRefresh();
+                        },
+                    },
                 });
                 handleRefresh();
             },
             onError: error => {
-                toast({
-                    variant: "destructive",
-                    title: "Failed to publish project",
-                    description: error.message,
-                });
+                toast.error(error.message);
             },
         },
     );
 
     const { mutateAsync: updatePost, isLoading: isPostUpdating } = trpc.updatePost.useMutation({
         onSuccess: () => {
-            toast({
-                variant: "success",
-                title: "Post updated",
-                description: "Post updated successfully.",
-            });
+            toast.success("Post updated successfully.");
             handleRefresh();
         },
         onError: error => {
-            toast({
-                variant: "destructive",
-                title: "Failed to update post",
-                description: error.message,
-            });
+            toast.error(error.message);
         },
     });
 
@@ -132,11 +109,7 @@ export function PublishPost({
                 form.setValue("title", data.title, { shouldDirty: true });
             },
             onError: error => {
-                toast({
-                    variant: "destructive",
-                    title: "Failed to generate title",
-                    description: error.message,
-                });
+                toast.error(error.message);
             },
         });
 
@@ -146,11 +119,7 @@ export function PublishPost({
                 form.setValue("description", data.description, { shouldDirty: true });
             },
             onError: error => {
-                toast({
-                    variant: "destructive",
-                    title: "Failed to generate description",
-                    description: error.message,
-                });
+                toast.error(error.message);
             },
         });
 
@@ -491,7 +460,7 @@ export function PublishPost({
                                     onClick={form.handleSubmit(handleUpdate)}
                                     type="button"
                                     disabled={
-                                        isLoading || project.last_edited === project.published_at
+                                        isLoading || project.updated_at === project.published_at
                                     }
                                 >
                                     <ButtonLoader isLoading={isPostUpdating}>

@@ -10,10 +10,15 @@ const projectRouter = router({
         .input(
             z.object({
                 folder_id: z.custom<Types.ObjectId>().optional(),
+                name: z
+                    .string()
+                    .min(constants.project.name.MIN_LENGTH)
+                    .max(constants.project.name.MAX_LENGTH),
                 title: z
                     .string()
                     .min(constants.project.title.MIN_LENGTH)
-                    .max(constants.project.title.MAX_LENGTH),
+                    .max(constants.project.title.MAX_LENGTH)
+                    .optional(),
                 description: z.string().max(constants.project.description.MAX_LENGTH).optional(),
                 body: z
                     .object({
@@ -40,6 +45,11 @@ const projectRouter = router({
                 id: z.custom<Types.ObjectId>(),
                 project: z.object({
                     folder_id: z.custom<Types.ObjectId>().optional(),
+                    name: z
+                        .string()
+                        .min(constants.project.name.MIN_LENGTH)
+                        .max(constants.project.name.MAX_LENGTH)
+                        .optional(),
                     title: z
                         .string()
                         .min(constants.project.title.MIN_LENGTH)

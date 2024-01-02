@@ -13,35 +13,35 @@ import {
     FormItem,
     FormMessage,
     Input,
-    useToast,
+    toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
+import { type Types } from "mongoose";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
+import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
-import { type Types } from "mongoose";
 
 interface NewProjectDialogProps extends React.HTMLAttributes<HTMLDialogElement> {
     folderId?: Types.ObjectId;
 }
 
 const formSchema = z.object({
-    title: z
+    name: z
         .string()
         .min(
             constants.project.title.MIN_LENGTH,
-            `Title must contain at least ${constants.project.title.MIN_LENGTH} characters`,
+            `Name must contain at least ${constants.project.name.MIN_LENGTH} characters`,
         )
         .max(
-            constants.project.title.MAX_LENGTH,
-            `Title must not exceed ${constants.project.title.MAX_LENGTH} characters`,
+            constants.project.name.MAX_LENGTH,
+            `Title must not exceed ${constants.project.name.MAX_LENGTH} characters`,
         ),
 });
 
@@ -49,14 +49,10 @@ export function NewProjectDialog({ children, folderId }: Readonly<NewProjectDial
     const [error, setError] = useState<string | null>(null);
 
     const router = useRouter();
-    const { toast } = useToast();
 
     const { mutateAsync: createProject, isLoading } = trpc.createProject.useMutation({
         onSuccess({ data }) {
-            toast({
-                variant: "success",
-                description: "Project successfully created",
-            });
+            toast.success("Project created successfully.");
 
             router.push(`${siteConfig.pages.projects.link}/${data.project._id}`);
         },
@@ -69,7 +65,7 @@ export function NewProjectDialog({ children, folderId }: Readonly<NewProjectDial
         resolver: zodResolver(formSchema),
         mode: "onBlur",
         defaultValues: {
-            title: "",
+            name: "",
         },
     });
 
@@ -100,21 +96,21 @@ export function NewProjectDialog({ children, folderId }: Readonly<NewProjectDial
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                             <FormField
                                 control={form.control}
-                                name="title"
+                                name="name"
                                 disabled={form.formState.isSubmitting || isLoading}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormControl>
                                             <Input
                                                 type="text"
-                                                placeholder="Enter a title for your project"
+                                                placeholder="Enter a name for your project"
                                                 autoFocus
                                                 {...field}
                                             />
                                         </FormControl>
                                         <FormDescription>
-                                            This will be used as the title of the post when you
-                                            publish. You can change it later.
+                                            Your project name provides important context for
+                                            generative AI. So make it descriptive, but not too long.
                                         </FormDescription>
                                         <FormMessage />
                                     </FormItem>
@@ -130,14 +126,7 @@ export function NewProjectDialog({ children, folderId }: Readonly<NewProjectDial
                                     isLoading
                                 }
                             >
-                                {isLoading ? (
-                                    <>
-                                        <Icons.Loading className="mr-2 size-4 animate-spin" />
-                                        Please wait
-                                    </>
-                                ) : (
-                                    "Continue"
-                                )}
+                                <ButtonLoader isLoading={isLoading}>Continue</ButtonLoader>
                             </Button>
                         </form>
                     </Form>

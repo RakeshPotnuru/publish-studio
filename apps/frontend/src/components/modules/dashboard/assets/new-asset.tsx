@@ -7,22 +7,23 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-    useToast,
+    toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
+import axios from "axios";
+import mongoose from "mongoose";
 import { useParams } from "next/navigation";
 import { useRef, useState } from "react";
+
+import type { IAsset } from "@publish-studio/core";
 
 import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { constants } from "@/config/constants";
-import { TMimeType } from "@/lib/store/assets";
 import { formatFileSize } from "@/utils/file-size";
-import { shortenText } from "@/utils/text-shortner";
+import { shortenText } from "@/utils/text-shortener";
 import { trpc } from "@/utils/trpc";
-import axios from "axios";
-import mongoose from "mongoose";
 
 interface NewAssetDialogProps extends React.HTMLAttributes<HTMLDialogElement> {}
 
@@ -36,7 +37,6 @@ export function NewAssetDialog({ children, ...props }: NewAssetDialogProps) {
     const [open, setOpen] = useState(false);
 
     const fileRef = useRef<HTMLInputElement>(null);
-    const { toast } = useToast();
     const utils = trpc.useUtils();
     const { projectId } = useParams();
 
@@ -119,7 +119,7 @@ export function NewAssetDialog({ children, ...props }: NewAssetDialogProps) {
         try {
             const { data: response } = await getPresignedURL({
                 file: {
-                    mimetype: file.type as TMimeType,
+                    mimetype: file.type as IAsset["mimetype"],
                     size: file.size,
                     originalname: file.name,
                 },
@@ -143,17 +143,12 @@ export function NewAssetDialog({ children, ...props }: NewAssetDialogProps) {
 
             await axios.post(data.submitTo.url, formData);
 
-            toast({
-                variant: "success",
-                title: "Image uploaded",
-                description: "Image has been uploaded successfully",
-            });
+            toast.success("Image has been uploaded successfully");
 
             utils.getAllAssets.invalidate();
             setOpen(false);
         } catch (error) {
             await deleteAsset([data.asset._id]);
-            console.log(error);
         }
     };
 

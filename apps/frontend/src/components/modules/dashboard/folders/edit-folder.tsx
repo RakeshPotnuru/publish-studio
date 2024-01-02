@@ -12,7 +12,7 @@ import {
     FormItem,
     FormMessage,
     Input,
-    useToast,
+    toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import mongoose, { Types } from "mongoose";
@@ -47,15 +47,11 @@ export function EditFolderDialog({ children, ...props }: Readonly<EditFolderDial
     const [error, setError] = useState<string | null>(null);
     const [open, setOpen] = useState(false);
 
-    const { toast } = useToast();
     const utils = trpc.useUtils();
 
     const { mutateAsync: editFolder, isLoading } = trpc.updateFolder.useMutation({
         onSuccess() {
-            toast({
-                variant: "success",
-                description: "Folder successfully updated",
-            });
+            toast.success("Folder successfully updated");
             utils.getAllFolders.invalidate();
             setOpen(false);
         },

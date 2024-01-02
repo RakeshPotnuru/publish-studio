@@ -1,13 +1,14 @@
-import { Button, Input, useToast } from "@itsrakesh/ui";
+import { Button, Input, toast } from "@itsrakesh/ui";
 import { Table } from "@tanstack/react-table";
 import { useState } from "react";
+
+import type { IAsset } from "@publish-studio/core";
 
 import { Icons } from "@/assets/icons";
 import { DataTableViewOptions } from "@/components/ui/data-table";
 import { DataTableFacetedFilter } from "@/components/ui/data-table/faceted-filter";
 import { Tooltip } from "@/components/ui/tooltip";
 import { constants } from "@/config/constants";
-import type { IAsset } from "@/lib/store/assets";
 import { trpc } from "@/utils/trpc";
 
 interface ToolbarProps<TData> {
@@ -16,33 +17,24 @@ interface ToolbarProps<TData> {
     onAdd?: (url: string) => void;
 }
 
-export function Toolbar<TData>({ table, isWidget, onAdd }: ToolbarProps<TData>) {
+export function Toolbar<TData>({ table, isWidget, onAdd }: Readonly<ToolbarProps<TData>>) {
     const [askingForConfirmation, setAskingForConfirmation] = useState(false);
 
     const isFiltered = table.getState().columnFilters.length > 0;
 
-    const { toast } = useToast();
     const utils = trpc.useUtils();
 
     const { mutateAsync: deleteAssets, isLoading } = trpc.deleteAssets.useMutation({
         onSuccess: ({ data }) => {
             const count = data.assets.deletedCount;
 
-            toast({
-                variant: "success",
-                title: `Asset${count > 1 ? "s" : ""} deleted`,
-                description: `${count} asset${count > 1 ? "s" : ""} deleted successfully`,
-            });
+            toast.success(`${count} asset${count > 1 ? "s" : ""} deleted successfully`);
 
             utils.getAllAssets.invalidate();
             table.resetRowSelection();
         },
         onError: error => {
-            toast({
-                variant: "destructive",
-                title: "Error",
-                description: error.message,
-            });
+            toast.error(error.message);
         },
     });
 
@@ -69,9 +61,9 @@ export function Toolbar<TData>({ table, isWidget, onAdd }: ToolbarProps<TData>) 
                     onChange={event => table.getColumn("name")?.setFilterValue(event.target.value)}
                     className="h-8 w-[150px] lg:w-[250px]"
                 />
-                {table.getColumn("mime_type") && (
+                {table.getColumn("file_type") && (
                     <DataTableFacetedFilter
-                        column={table.getColumn("mime_type")}
+                        column={table.getColumn("file_type")}
                         title="Type"
                         options={Object.values(constants.asset.ALLOWED_MIMETYPES).map(mimetype => ({
                             label: mimetype.split("/")[1],

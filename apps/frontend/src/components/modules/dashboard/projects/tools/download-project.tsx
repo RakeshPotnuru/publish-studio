@@ -2,10 +2,11 @@ import { Button } from "@itsrakesh/ui";
 import { format } from "date-fns";
 import { NodeHtmlMarkdown } from "node-html-markdown";
 
+import type { IProject } from "@publish-studio/core";
+
 import { Icons } from "@/assets/icons";
 import type { MenuProps } from "@/components/modules/dashboard/projects/editor/menu/fixed-menu";
 import { Heading } from "@/components/ui/heading";
-import type { IProject } from "@/lib/store/projects";
 
 interface DownloadProjectProps extends MenuProps {
     project: IProject;
@@ -19,7 +20,7 @@ export function DownloadProject({ editor, project }: Readonly<DownloadProjectPro
 
         const csvContent = [
             "title, created_at, content",
-            `${project.title}, ${format(new Date(project.created), "PPPp")}, ${nhm.translate(
+            `${project.title}, ${format(new Date(project.created_at), "PPPp")}, ${nhm.translate(
                 editor.getHTML(),
             )}`,
         ].join("\n");
@@ -43,7 +44,7 @@ export function DownloadProject({ editor, project }: Readonly<DownloadProjectPro
 
         const txtContent = [
             `${project.title}`,
-            `${format(new Date(project.created), "PPPp")}`,
+            `${format(new Date(project.created_at), "PPPp")}`,
             `${nhm.translate(editor.getHTML())}`,
         ].join("\n");
 
@@ -66,7 +67,7 @@ export function DownloadProject({ editor, project }: Readonly<DownloadProjectPro
 
         const mdContent = [
             `# ${project.title}`,
-            `## ${format(new Date(project.created), "PPPp")}`,
+            `## ${format(new Date(project.created_at), "PPPp")}`,
             `${nhm.translate(editor.getHTML())}`,
         ].join("\n");
 

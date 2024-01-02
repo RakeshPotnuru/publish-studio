@@ -38,6 +38,8 @@ export default class PaymentController extends PaymentService {
 
         const user = await super.getUserById(user_id);
 
+        if (!user) return;
+
         await super.updateCustomer(user, session.customer as string);
 
         return {
@@ -54,13 +56,15 @@ export default class PaymentController extends PaymentService {
         if (!payment) {
             throw new TRPCError({
                 code: "NOT_FOUND",
-                message: "No subsciption found",
+                message: "No subscription found",
             });
         }
 
         await super.deletePayment(payment._id);
 
         const user = await super.getUserById(payment.user_id);
+
+        if (!user) return;
 
         if (user.stripe_customer_id) {
             await super.deleteCustomer(user.stripe_customer_id);

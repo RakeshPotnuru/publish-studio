@@ -76,7 +76,7 @@ export default class WordPressController extends WordPressService {
 
         const newPost = await super.publishPost(
             {
-                title: `<h1>${input.post.title}</h1>`,
+                title: `<h1>${input.post.title ?? "Untitled"}</h1>`,
                 content: input.post.body?.html,
                 status: platform.default_publish_status,
                 publicize: platform.publicize,
@@ -116,7 +116,7 @@ export default class WordPressController extends WordPressService {
 
         const updatedPost = await super.updatePost(
             {
-                title: `<h1>${input.post.title}</h1>`,
+                title: `<h1>${input.post.title ?? "Untitled"}</h1>`,
                 content: input.post.body?.html,
                 status: platform.default_publish_status,
                 publicize: platform.publicize,

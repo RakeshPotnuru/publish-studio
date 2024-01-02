@@ -34,4 +34,27 @@ export default class NLUService extends ProjectService {
             });
         }
     }
+
+    async getConcepts(title: string) {
+        try {
+            const response = await nlu.analyze({
+                text: title,
+                features: {
+                    concepts: {
+                        limit: 5,
+                    },
+                },
+            });
+            console.log(response.result.concepts);
+
+            return response.result;
+        } catch (error) {
+            console.log(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: defaultConfig.defaultErrorMessage,
+            });
+        }
+    }
 }

@@ -60,15 +60,8 @@ export function Navbar({ className, ...props }: NavbarProps) {
     const { user, setUser, setIsLoading } = useUserStore();
 
     const { isFetching } = trpc.getUser.useQuery(undefined, {
-        onSuccess: data => {
-            setUser({
-                _id: data.data.user._id,
-                first_name: data.data.user.first_name,
-                last_name: data.data.user.last_name,
-                email: data.data.user.email,
-                profile_pic: data.data.user.profile_pic,
-                platforms: data.data.user.platforms || [],
-            });
+        onSuccess: ({ data }) => {
+            setUser(data.user);
             setIsLoading(false);
         },
     });
@@ -106,7 +99,7 @@ export function Navbar({ className, ...props }: NavbarProps) {
                 <NavItem icon={<Icons.Question className="size-5" />} tooltip="Help">
                     <DropdownMenuItem asChild>
                         <Link href={siteConfig.links.support}>
-                            <Icons.Support className="size-4 mr-2" />
+                            <Icons.Support className="mr-2 size-4" />
                             Support
                         </Link>
                     </DropdownMenuItem>
@@ -127,7 +120,7 @@ export function Navbar({ className, ...props }: NavbarProps) {
                 </Popover>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="size-8 relative rounded-full">
+                        <Button variant="ghost" className="relative size-8 rounded-full">
                             <Avatar className="size-9">
                                 <AvatarImage
                                     src={user?.profile_pic}
@@ -151,19 +144,19 @@ export function Navbar({ className, ...props }: NavbarProps) {
                         <DropdownMenuSeparator />
                         <DropdownMenuItem asChild>
                             <Link href="/profile">
-                                <Icons.Profile className="size-4 mr-2" />
+                                <Icons.Profile className="mr-2 size-4" />
                                 Profile
                             </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
                             <Link href="/settings">
-                                <Icons.Settings className="size-4 mr-2" />
+                                <Icons.Settings className="mr-2 size-4" />
                                 Settings
                             </Link>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={handleLogout}>
-                            <Icons.Logout className="size-4 mr-2" />
+                            <Icons.Logout className="mr-2 size-4" />
                             <span>Logout</span>
                         </DropdownMenuItem>
                     </DropdownMenuContent>

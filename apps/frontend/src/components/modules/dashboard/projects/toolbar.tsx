@@ -1,12 +1,13 @@
-import { Button, Input, useToast } from "@itsrakesh/ui";
+import { Button, Input, toast } from "@itsrakesh/ui";
 import { Table } from "@tanstack/react-table";
 import { useState } from "react";
+
+import type { IProject } from "@publish-studio/core";
 
 import { Icons } from "@/assets/icons";
 import { DataTableViewOptions } from "@/components/ui/data-table";
 import { DataTableFacetedFilter } from "@/components/ui/data-table/faceted-filter";
 import { Tooltip } from "@/components/ui/tooltip";
-import type { IProject } from "@/lib/store/projects";
 import { trpc } from "@/utils/trpc";
 import { statuses } from "./columns";
 
@@ -19,28 +20,19 @@ export function Toolbar<TData>({ table }: Readonly<ToolbarProps<TData>>) {
 
     const isFiltered = table.getState().columnFilters.length > 0;
 
-    const { toast } = useToast();
     const utils = trpc.useUtils();
 
     const { mutateAsync: deleteProjects, isLoading } = trpc.deleteProjects.useMutation({
         onSuccess: ({ data }) => {
             const count = data.projects.deletedCount;
 
-            toast({
-                variant: "success",
-                title: `Project${count > 1 ? "s" : ""} deleted`,
-                description: `${count} project${count > 1 ? "s" : ""} deleted successfully`,
-            });
+            toast.success(`${count} project${count > 1 ? "s" : ""} deleted successfully`);
 
             utils.getAllProjects.invalidate();
             table.resetRowSelection();
         },
         onError: error => {
-            toast({
-                variant: "destructive",
-                title: "Error",
-                description: error.message,
-            });
+            toast.error(error.message);
         },
     });
 
@@ -57,8 +49,8 @@ export function Toolbar<TData>({ table }: Readonly<ToolbarProps<TData>>) {
             <div className="flex flex-1 items-center space-x-2">
                 <Input
                     placeholder="Search projects..."
-                    value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
-                    onChange={event => table.getColumn("title")?.setFilterValue(event.target.value)}
+                    value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+                    onChange={event => table.getColumn("name")?.setFilterValue(event.target.value)}
                     className="h-8 w-[150px] lg:w-[250px]"
                 />
                 {table.getColumn("status") && (

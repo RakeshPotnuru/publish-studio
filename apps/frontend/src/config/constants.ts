@@ -26,6 +26,10 @@ enum sentiments {
 }
 
 const project = {
+    name: {
+        MIN_LENGTH: 3,
+        MAX_LENGTH: 160,
+    },
     title: {
         MIN_LENGTH: 3,
         MAX_LENGTH: 120,

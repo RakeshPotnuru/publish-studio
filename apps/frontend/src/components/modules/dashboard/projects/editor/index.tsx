@@ -1,14 +1,15 @@
 "use client";
 
-import { useToast } from "@itsrakesh/ui";
+import { toast } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import { TableOfContent, TableOfContentDataItem } from "@tiptap-pro/extension-table-of-content";
 import { useEditor } from "@tiptap/react";
 import { memo, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
+import { IProject } from "@publish-studio/core";
+
 import { useFullscreenStatus } from "@/hooks/fullscreen-status";
-import { IProject } from "@/lib/store/projects";
 import { trpc } from "@/utils/trpc";
 import { Heading } from "../../../../ui/heading";
 import { Shell } from "../../../../ui/layouts/shell";
@@ -32,15 +33,10 @@ export function Editor({ className, project, ...props }: Readonly<EditorProps>) 
     const [items, setItems] = useState<TableOfContentDataItem[]>([]);
 
     const isFullscreen = useFullscreenStatus();
-    const { toast } = useToast();
 
     const { mutateAsync: autoSaveProject, isLoading } = trpc.updateProject.useMutation({
         onError: error => {
-            toast({
-                variant: "destructive",
-                title: "Failed to save project",
-                description: error.message,
-            });
+            toast.error(error.message);
         },
     });
 

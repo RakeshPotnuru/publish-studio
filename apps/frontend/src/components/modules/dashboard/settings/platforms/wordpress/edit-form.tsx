@@ -9,22 +9,23 @@ import {
     FormMessage,
     RadioGroup,
     RadioGroupItem,
-    useToast,
+    toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import type { IWordPress } from "@publish-studio/core";
+
 import { ErrorBox } from "@/components/ui/error-box";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { constants } from "@/config/constants";
 import { trpc } from "@/utils/trpc";
-import { TWordPressStatus } from ".";
 
 interface WordPressEditFormProps extends React.HTMLAttributes<HTMLDivElement> {
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    default_publish_status: TWordPressStatus;
+    default_publish_status: IWordPress["default_publish_status"];
     publicize: string;
 }
 
@@ -42,16 +43,11 @@ export function WordPressEditForm({
 }: Readonly<WordPressEditFormProps>) {
     const [error, setError] = useState<string | null>(null);
 
-    const { toast } = useToast();
     const utils = trpc.useUtils();
 
     const { mutateAsync: edit, isLoading: isUpdating } = trpc.updateWordPress.useMutation({
         onSuccess: () => {
-            toast({
-                variant: "success",
-                title: "Updated",
-                description: "Your WordPress account has been updated successfully.",
-            });
+            toast.success("Your WordPress account has been updated successfully.");
             utils.getAllPlatforms.invalidate();
             setIsOpen(false);
         },

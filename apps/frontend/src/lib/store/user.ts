@@ -1,15 +1,6 @@
-import { TPlatformName } from "@/types/common";
-import type { Types } from "mongoose";
 import { create } from "zustand";
 
-interface IUser {
-    _id: Types.ObjectId;
-    email: string;
-    first_name: string;
-    last_name: string;
-    profile_pic?: string;
-    platforms: TPlatformName[];
-}
+import type { IUser } from "@publish-studio/core";
 
 interface IUserState {
     user: IUser | null;

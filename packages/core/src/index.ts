@@ -60,3 +60,4 @@ app.listen(defaultConfig.port, () => {
 });
 
 export type AppRouter = typeof appRouter;
+export * from "./types";

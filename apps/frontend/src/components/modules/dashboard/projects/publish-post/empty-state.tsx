@@ -1,7 +1,7 @@
-import { Icons } from "@/assets/icons";
 import { Button } from "@itsrakesh/ui";
 import Link from "next/link";
 
+import { Icons } from "@/assets/icons";
 import { siteConfig } from "@/config/site";
 
 export function EmptyState() {

@@ -14,7 +14,8 @@ export interface IProject {
     _id?: Types.ObjectId;
     user_id?: Types.ObjectId;
     folder_id?: Types.ObjectId;
-    title: string;
+    name: string;
+    title?: string;
     description?: string;
     body?: {
         json?: JSON;
@@ -36,6 +37,7 @@ export interface IProject {
         sentiment?: TSentimentLabel;
         emotion?: IEmotionScores;
     };
+    topics?: string[];
     scheduled_at?: Date;
     published_at?: Date;
     created_at?: Date;
@@ -44,6 +46,7 @@ export interface IProject {
 
 export interface IProjectResponse {
     _id: Types.ObjectId;
+    name: string;
     title: string;
     user_id: Types.ObjectId;
     folder_id?: Types.ObjectId;
@@ -71,6 +74,7 @@ export interface IProjectResponse {
         sentiment?: TSentimentLabel;
         emotion?: IEmotionScores;
     };
+    topics?: string[];
     created_at: Date;
     updated_at: Date;
 }

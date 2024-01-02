@@ -26,7 +26,7 @@
     },
     "dependencies": {
         "@hookform/resolvers": "^3.3.2",
-        "@itsrakesh/ui": "^0.10.0",
+        "@itsrakesh/ui": "^0.11.1",
         "@itsrakesh/utils": "^1.2.1",
         "@publish-studio/core": "*",
         "@tanstack/react-query": "^4.36.1",

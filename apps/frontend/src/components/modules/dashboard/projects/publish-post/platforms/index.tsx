@@ -9,18 +9,17 @@ import {
     FormLabel,
     FormMessage,
 } from "@itsrakesh/ui";
-import type { Types } from "mongoose";
 import Link from "next/link";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
+
+import type { IPlatform, IProject } from "@publish-studio/core";
 
 import { Icons } from "@/assets/icons";
 import { Images } from "@/assets/images";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
-import { TPlatformPublishStatus } from "@/lib/store/projects";
-import { TPlatformName } from "@/types/common";
 import formatTimestamp from "@/utils/format-timestamp";
 import { formSchema } from "../form-schema";
 import { Dev } from "./dev";
@@ -79,15 +78,9 @@ const platformConfig: IPlatformConfig[] = [
 
 interface PlatformsFieldProps {
     form: UseFormReturn<z.infer<typeof formSchema>>;
-    connectedPlatforms: TPlatformName[];
+    connectedPlatforms: IPlatform["name"][];
     isLoading: boolean;
-    publishedPlatforms?: {
-        name: TPlatformName;
-        published_url?: string;
-        id?: string;
-        status?: TPlatformPublishStatus;
-        _id: Types.ObjectId;
-    }[];
+    publishedPlatforms?: IProject["platforms"];
     onSubmit: (data: z.infer<typeof formSchema>) => void;
     onRefresh: () => void;
     scheduledAt?: Date;

@@ -23,7 +23,6 @@ interface NewFolderDialogProps extends React.HTMLAttributes<HTMLDialogElement> {
 const formSchema = z.object({
     name: z
         .string()
-        .nonempty("Please enter a name for your folder")
         .min(
             constants.project.title.MIN_LENGTH,
             `Name must contain at least ${constants.folder.name.MIN_LENGTH} characters`,

@@ -1,4 +1,4 @@
-import { useToast } from "@itsrakesh/ui";
+import { toast } from "@itsrakesh/ui";
 import type { Types } from "mongoose";
 
 import { Icons } from "@/assets/icons";
@@ -15,24 +15,14 @@ interface GenerateOutlineProps extends MenuProps {
 }
 
 export function GenerateOutline({ editor, project_id }: Readonly<GenerateOutlineProps>) {
-    const { toast } = useToast();
-
     const { mutateAsync: generateOutline, isLoading } = trpc.generateOutline.useMutation({
         onSuccess: ({ data }) => {
-            toast({
-                variant: "success",
-                title: "Success",
-                description: "Outline generated successfully.",
-            });
+            toast.success("Outline generated successfully.");
             const deserialized = deserialize(editor.schema, data.outline);
             editor.commands.insertContentAt(0, deserialized);
         },
         onError: error => {
-            toast({
-                variant: "destructive",
-                title: "Error",
-                description: error.message,
-            });
+            toast.error(error.message);
         },
     });
 

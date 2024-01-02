@@ -1,13 +1,14 @@
-import { Button, Skeleton, useToast } from "@itsrakesh/ui";
+import { Button, Skeleton, toast } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import { useState } from "react";
+
+import type { IProject } from "@publish-studio/core";
 
 import { Icons } from "@/assets/icons";
 import { Heading } from "@/components/ui/heading";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { MagicButton } from "@/components/ui/magic-button";
 import { MagicText } from "@/components/ui/magic-text";
-import { IProject } from "@/lib/store/projects";
 import fleschReadingEaseScore from "@/utils/flesch-reading-ease-score";
 import { trpc } from "@/utils/trpc";
 import type { MenuProps } from "../../editor/menu/fixed-menu";
@@ -20,15 +21,9 @@ interface ToneAnalysisProps extends MenuProps {
 export function ToneAnalysis({ editor, project }: Readonly<ToneAnalysisProps>) {
     const [data, setData] = useState<Partial<IToneAnalysis>>();
 
-    const { toast } = useToast();
-
     const { mutateAsync: analyzeContent, isLoading } = trpc.getToneAnalysis.useMutation({
         onError: error => {
-            toast({
-                variant: "destructive",
-                title: "Error",
-                description: error.message,
-            });
+            toast.error(error.message);
         },
     });
 
@@ -45,7 +40,7 @@ export function ToneAnalysis({ editor, project }: Readonly<ToneAnalysisProps>) {
 
     const level = fleschReadingEaseScore(editor.getText())?.schoolLevel;
     const sentiment = data?.sentiment || project.tone_analysis?.sentiment;
-    const emotion = data?.emotion || project.tone_analysis?.emotion;
+    const emotion = data?.emotion ?? project.tone_analysis?.emotion;
 
     return (
         <div className="space-y-2">
@@ -57,15 +52,14 @@ export function ToneAnalysis({ editor, project }: Readonly<ToneAnalysisProps>) {
                     Find out how your content sounds to readers.
                     <br />
                     <span className="text-warning">Note:</span> To use this tool, your content must
-                    have a minimum readbility level of 5th grade. Current level:{" "}
+                    have a minimum readability level of 5th grade. Current level:{" "}
                     <span
                         className={cn("text-success", {
                             "text-destructive": !level,
                         })}
                     >
-                        {level ? level : "No grade"}
+                        {level || "No grade"}.
                     </span>
-                    .
                 </p>
             </div>
             {isLoading ? (

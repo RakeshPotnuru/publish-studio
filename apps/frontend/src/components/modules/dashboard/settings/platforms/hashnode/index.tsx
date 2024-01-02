@@ -1,4 +1,6 @@
-import { Types } from "mongoose";
+import { toast } from "@itsrakesh/ui";
+
+import type { IHashnode } from "@publish-studio/core";
 
 import { Images } from "@/assets/images";
 import { trpc } from "@/utils/trpc";
@@ -6,45 +8,30 @@ import { PlatformCard } from "../platform-card";
 import { HashnodeConnectForm } from "./connect-form";
 import { HashnodeEditForm } from "./edit-form";
 
-export interface IHashnodeDefaultSettings {
-    enable_table_of_contents: boolean;
-    send_newsletter: boolean;
-    delisted: boolean;
-}
-
-export interface IHashnodeResponse {
-    _id: Types.ObjectId;
-    user_id: Types.ObjectId;
-    api_key: string;
-    username: string;
-    profile_pic?: string;
-    blog_handle?: string;
-    publication: {
-        publication_id: string;
-        publication_logo?: string;
-    };
-    default_settings: IHashnodeDefaultSettings;
-    created_at: Date;
-    updated_at: Date;
-}
-
 interface HashnodeToProps {
-    data?: IHashnodeResponse;
+    data?: IHashnode;
     isLoading: boolean;
     isOpen: boolean;
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function Hashnode({ data, isOpen, isLoading, setIsOpen }: Readonly<HashnodeToProps>) {
-    const { refetch: disconnectHashnode, isFetching: isDisconnectingHashnode } =
-        trpc.disconnectHashnode.useQuery(undefined, {
-            enabled: false,
-        });
+    const {
+        refetch: disconnectHashnode,
+        isFetching: isDisconnectingHashnode,
+        error: disconnectError,
+    } = trpc.disconnectHashnode.useQuery(undefined, {
+        enabled: false,
+    });
 
     return (
         <PlatformCard
             onDisconnect={async () => {
-                await disconnectHashnode();
+                try {
+                    await disconnectHashnode();
+                } catch (error) {
+                    toast.error(disconnectError?.message ?? "Something went wrong.");
+                }
             }}
             isOpen={isOpen}
             setIsOpen={setIsOpen}

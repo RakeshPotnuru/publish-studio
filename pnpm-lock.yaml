@@ -45,8 +45,8 @@ importers:
         specifier: ^3.3.2
         version: 3.3.2(react-hook-form@7.48.2)
       '@itsrakesh/ui':
-        specifier: ^0.10.0
-        version: 0.10.0(@types/react-dom@18.2.17)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.4.0)
+        specifier: ^0.11.1
+        version: 0.11.1(@types/react-dom@18.2.17)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.4.0)
       '@itsrakesh/utils':
         specifier: ^1.2.1
         version: 1.2.1(react@18.2.0)
@@ -2018,8 +2018,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /@itsrakesh/ui@0.10.0(@types/react-dom@18.2.17)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.4.0):
-    resolution: {integrity: sha512-wRT8MT3yFwVabMxZTQKoMiLOV0cGlGxtGL7DlQ5t6FVxd7EoQJA8t+Hrmd4d73598fFbLdrJFdgSFi7l+7qQXg==}
+  /@itsrakesh/ui@0.11.1(@types/react-dom@18.2.17)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.4.0):
+    resolution: {integrity: sha512-AARjaQ7WMKRYoCcI+C4jo+KRuXbHrlf8+cuojZa/BUZEAcVKDGwlivCKYcj2FWEmcM+l4j65zBYbbMznKrkZ3w==}
     peerDependencies:
       react: ^18.2.0
     dependencies:
@@ -2052,6 +2052,8 @@ packages:
       react: 18.2.0
       react-day-picker: 8.9.1(date-fns@2.30.0)(react@18.2.0)
       react-hook-form: 7.48.2(react@18.2.0)
+      react-resizable-panels: 1.0.7(react-dom@18.2.0)(react@18.2.0)
+      sonner: 1.3.1(react-dom@18.2.0)(react@18.2.0)
       tailwindcss-animate: 1.0.7(tailwindcss@3.4.0)
     transitivePeerDependencies:
       - '@types/react'
@@ -10703,6 +10705,16 @@ packages:
       use-sidecar: 1.1.2(@types/react@18.2.38)(react@18.2.0)
     dev: false
 
+  /react-resizable-panels@1.0.7(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-CluJkHQheeNqIJly2FYDfri3ME+2h2nCXpf0Y+hTO1K1eVtNxXFA5hVp5cUD6NS70iiufswOmnku9QZiLr1hYg==}
+    peerDependencies:
+      react: ^16.14.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.14.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
   /react-simple-animate@3.5.2(react-dom@18.2.0):
     resolution: {integrity: sha512-xLE65euP920QMTOmv5haPlml+hmOPDkbIr5WeF7ADIXWBYt5kW/vwpNfWg8EKMab8aeDxIZ6QjffVh8v2dUyhg==}
     peerDependencies:
@@ -11174,6 +11186,16 @@ packages:
       ansi-styles: 6.2.1
       is-fullwidth-code-point: 4.0.0
     dev: true
+
+  /sonner@1.3.1(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-+rOAO56b2eI3q5BtgljERSn2umRk63KFIvgb2ohbZ5X+Eb5u+a/7/0ZgswYqgBMg8dyl7n6OXd9KasA8QF9ToA==}
+    peerDependencies:
+      react: ^18.0.0
+      react-dom: ^18.0.0
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
 
   /sort-object-keys@1.1.3:
     resolution: {integrity: sha512-855pvK+VkU7PaKYPc+Jjnmt4EzejQHyhhF33q31qG8x7maDzkeFhAAThdCYay11CISO+qAMwjOBP+fPZe0IPyg==}
