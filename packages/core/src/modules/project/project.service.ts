@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
+import type { IPaginationOptions } from "../../types/common.types";
 import Folder from "../folder/folder.model";
 import FolderService from "../folder/folder.service";
 import Project from "./project.model";
@@ -48,10 +49,7 @@ export default class ProjectService extends FolderService {
     }
 
     async getAllProjectsByUserId(
-        pagination: {
-            page: number;
-            limit: number;
-        },
+        pagination: IPaginationOptions,
         user_id: Types.ObjectId | undefined,
     ) {
         try {

@@ -5,6 +5,11 @@ export interface IPagination {
     total_pages: number;
 }
 
+export interface IPaginationOptions {
+    page: number;
+    limit: number;
+}
+
 export interface ITimestamps {
     created_at: Date;
     updated_at: Date;

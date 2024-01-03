@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
+import type { IPaginationOptions } from "../../types/common.types";
 import Project from "../project/project.model";
 import Folder from "./folder.model";
 import type { IFolder, IFoldersResponse } from "./folder.types";
@@ -44,7 +45,7 @@ export default class FolderService {
     }
 
     async getAllFoldersByUserId(
-        pagination: { page: number; limit: number },
+        pagination: IPaginationOptions,
         user_id: Types.ObjectId | undefined,
     ) {
         try {

@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
 import type { Context } from "../../trpc";
+import type { IPaginationOptions } from "../../types/common.types";
 import FolderService from "./folder.service";
 import type { IFolder } from "./folder.types";
 
@@ -31,10 +32,7 @@ export default class FolderController extends FolderService {
 
     async getAllFoldersHandler(
         input: {
-            pagination: {
-                page: number;
-                limit: number;
-            };
+            pagination: IPaginationOptions;
         },
         ctx: Context,
     ) {

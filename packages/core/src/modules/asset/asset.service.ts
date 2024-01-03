@@ -7,6 +7,7 @@ import type { Types } from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 
 import type { Context } from "../../trpc";
+import type { IPaginationOptions } from "../../types/common.types";
 import type { IFile } from "../../types/file.types";
 import s3 from "../../utils/aws/s3";
 import Project from "../project/project.model";
@@ -97,10 +98,7 @@ export default class AssetService extends ProjectService {
     }
 
     async getAllAssetsByUserId(
-        pagination: {
-            page: number;
-            limit: number;
-        },
+        pagination: IPaginationOptions,
         user_id: Types.ObjectId | undefined,
     ) {
         try {

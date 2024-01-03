@@ -3,6 +3,7 @@ import type { Types } from "mongoose";
 
 import { constants } from "../../config/constants";
 import type { Context } from "../../trpc";
+import type { IPaginationOptions } from "../../types/common.types";
 import type { IFile } from "../../types/file.types";
 import AssetService from "./asset.service";
 
@@ -48,10 +49,7 @@ export default class AssetController extends AssetService {
 
     async getAllAssetsHandler(
         input: {
-            pagination: {
-                page: number;
-                limit: number;
-            };
+            pagination: IPaginationOptions;
         },
         ctx: Context,
     ) {

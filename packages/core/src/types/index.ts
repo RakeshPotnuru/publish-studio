@@ -7,4 +7,5 @@ export type { IMediumResponse as IMedium } from "../modules/platform/medium/medi
 export type { IPlatformResponse as IPlatform } from "../modules/platform/platform.types";
 export type { IWordPressResponse as IWordPress } from "../modules/platform/wordpress/wordpress.types";
 export type { IProjectResponse as IProject } from "../modules/project/project.types";
+export * from "../modules/stats/stats.types";
 export type { IUserResponse as IUser } from "../modules/user/user.types";

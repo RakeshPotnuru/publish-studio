@@ -3,6 +3,7 @@ import type { Types } from "mongoose";
 
 import { constants } from "../../config/constants";
 import type { Context } from "../../trpc";
+import type { IPaginationOptions } from "../../types/common.types";
 import GenerativeAIController from "../generative-ai/generative-ai.controller";
 import type { TPlatformName } from "../platform/platform.types";
 import ProjectHelpers from "./project.helpers";
@@ -277,10 +278,7 @@ export default class ProjectController extends ProjectService {
     async getProjectsByFolderIdHandler(
         input: {
             folder_id: Types.ObjectId;
-            pagination: {
-                page: number;
-                limit: number;
-            };
+            pagination: IPaginationOptions;
         },
         ctx: Context,
     ) {
