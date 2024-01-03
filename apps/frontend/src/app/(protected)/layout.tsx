@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { Navbar } from "@/components/ui/layouts/navbar";
+import { NetworkStatusToast } from "@/components/ui/network-status-toast";
 import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
@@ -12,6 +13,7 @@ export default function DashboardLayout({ children }: Readonly<{ children: React
         <>
             <Navbar />
             <main className="m-8">{children}</main>
+            <NetworkStatusToast />
         </>
     );
 }

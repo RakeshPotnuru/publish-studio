@@ -20,7 +20,9 @@ export function RecentFolders() {
     const folders = data?.data.folders ?? [];
 
     const foldersView = error ? (
-        <ErrorBox title="Error fetching folders" description={error.message} />
+        <div className="flex items-center justify-center">
+            <ErrorBox title="Error fetching folders" description={error.message} />
+        </div>
     ) : (
         <div className="grid grid-cols-4 gap-4 rounded-lg border p-4">
             {folders.length ? (

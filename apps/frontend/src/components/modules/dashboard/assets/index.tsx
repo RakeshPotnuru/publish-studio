@@ -41,7 +41,9 @@ export function Assets({ isWidget, onAdd, ...props }: Readonly<AssetsProps>) {
                 </NewAssetDialog>
             </div>
             {error ? (
-                <ErrorBox title="Error" description={error.message} />
+                <div className="flex h-[70vh] items-center justify-center">
+                    <ErrorBox title="Error" description={error.message} />
+                </div>
             ) : (
                 <AssetsTable
                     isWidget={isWidget}

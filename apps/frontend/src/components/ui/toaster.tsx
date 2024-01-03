@@ -14,7 +14,6 @@ export const Toaster = () => {
             visibleToasts={5}
             closeButton
             richColors
-            expand
         />
     );
 };

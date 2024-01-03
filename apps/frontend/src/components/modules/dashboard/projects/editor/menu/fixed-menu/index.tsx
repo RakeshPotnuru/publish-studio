@@ -11,7 +11,7 @@ import { MarkActions } from "../actions/mark-actions";
 import { NodeActions } from "../actions/node-actions";
 import { TextStyleActions } from "../actions/text-style-actions";
 import { MenuAction } from "../menu-action";
-import { MenuSeparator } from "../menu-seperator";
+import { MenuSeparator } from "../menu-separator";
 
 export interface MenuProps {
     editor: Editor;

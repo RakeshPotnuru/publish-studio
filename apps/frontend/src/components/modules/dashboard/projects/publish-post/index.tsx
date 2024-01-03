@@ -475,7 +475,8 @@ export function PublishPost({
                                     disabled={
                                         !form.formState.isDirty ||
                                         isLoading ||
-                                        project.status === constants.project.status.SCHEDULED
+                                        project.status === constants.project.status.SCHEDULED ||
+                                        form.getValues().platforms.length === 0
                                     }
                                 >
                                     <ButtonLoader isLoading={isPostPublishing}>
@@ -495,7 +496,8 @@ export function PublishPost({
                                         disabled={
                                             !form.formState.isDirty ||
                                             isLoading ||
-                                            project.status === constants.project.status.SCHEDULED
+                                            project.status === constants.project.status.SCHEDULED ||
+                                            form.getValues().platforms.length === 0
                                         }
                                     >
                                         <ButtonLoader isLoading={isPostPublishing}>

@@ -38,7 +38,9 @@ export function Folders({ ...props }: ProjectsProps) {
                 </NewFolderDialog>
             </div>
             {error ? (
-                <ErrorBox title="Error" description={error.message} />
+                <div className="flex h-[70vh] items-center justify-center">
+                    <ErrorBox title="Error" description={error.message} />
+                </div>
             ) : (
                 <FoldersTable
                     columns={columns}

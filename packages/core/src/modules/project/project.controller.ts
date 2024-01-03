@@ -8,10 +8,10 @@ import GenerativeAIController from "../generative-ai/generative-ai.controller";
 import type { TPlatformName } from "../platform/platform.types";
 import ProjectHelpers from "./project.helpers";
 import ProjectService from "./project.service";
-import type { IProject, IProjectPlatform, IProjectUpdate } from "./project.types";
+import type { IProjectCreate, IProjectPlatform, IProjectUpdate } from "./project.types";
 
 export default class ProjectController extends ProjectService {
-    async createProjectHandler(input: IProject, ctx: Context) {
+    async createProjectHandler(input: IProjectCreate, ctx: Context) {
         const project = input;
 
         if (project.folder_id) {
@@ -33,45 +33,52 @@ export default class ProjectController extends ProjectService {
             status: project.status,
         });
 
-        const genAI = new GenerativeAIController();
+        try {
+            const genAI = new GenerativeAIController();
 
-        let generated_title: string | undefined;
-        let generated_description: string | undefined;
-        let topics: string[] | undefined;
+            let generated_title: string | undefined;
+            let generated_description: string | undefined;
+            let topics: string[] | undefined;
 
-        if (!project.title) {
-            const { data } = await genAI.generateTitleHandler({ project_id: newProject._id }, ctx);
-            generated_title = data.title;
-        }
+            if (!project.title) {
+                const { data } = await genAI.generateTitleHandler(
+                    { project_id: newProject._id },
+                    ctx,
+                );
+                generated_title = data.title;
+            }
 
-        if (!project.description) {
-            const { data } = await genAI.generateDescriptionHandler(
-                { project_id: newProject._id },
-                ctx,
+            if (!project.description) {
+                const { data } = await genAI.generateDescriptionHandler(
+                    { project_id: newProject._id },
+                    ctx,
+                );
+                generated_description = data.description;
+            }
+
+            const text =
+                generated_description ??
+                project.description ??
+                generated_title ??
+                project.title ??
+                project.name;
+            if (text) {
+                const { data } = await genAI.generateCategoriesHandler({ text });
+                topics = data.categories;
+            }
+
+            await super.updateProjectById(
+                newProject._id,
+                {
+                    title: generated_title ?? project.title,
+                    description: generated_description ?? project.description,
+                    topics: topics,
+                },
+                ctx.user?._id,
             );
-            generated_description = data.description;
+        } catch (error) {
+            console.log(error);
         }
-
-        const text =
-            generated_description ??
-            project.description ??
-            generated_title ??
-            project.title ??
-            project.name;
-        if (text) {
-            const { data } = await genAI.generateCategoriesHandler({ text });
-            topics = data.categories;
-        }
-
-        await super.updateProjectById(
-            newProject._id,
-            {
-                title: generated_title ?? project.title,
-                description: generated_description ?? project.description,
-                topics: topics ?? project.topics,
-            },
-            ctx.user?._id,
-        );
 
         return {
             success: true,

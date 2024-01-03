@@ -4,7 +4,7 @@ import { MenuShell } from "@/components/ui/layouts/shell";
 import { LinkAction } from "../actions/link-action";
 import { MarkActions } from "../actions/mark-actions";
 import type { MenuProps } from "../fixed-menu";
-import { MenuSeparator } from "../menu-seperator";
+import { MenuSeparator } from "../menu-separator";
 
 interface BubbleMenuProps extends MenuProps {}
 

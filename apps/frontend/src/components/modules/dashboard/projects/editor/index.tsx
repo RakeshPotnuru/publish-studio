@@ -21,6 +21,7 @@ import { EditorFooter } from "./editor-footer";
 import { extensions } from "./extensions";
 import { BubbleMenu } from "./menu/bubble-menu";
 import { FixedMenu } from "./menu/fixed-menu";
+import { ProjectToolbar } from "./project-toolbar";
 import { ToC } from "./toc";
 
 interface EditorProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -90,10 +91,13 @@ export function Editor({ className, project, ...props }: Readonly<EditorProps>) 
                     <EditorBody editor={editor} />
                     <EditorFooter editor={editor} isLoading={isLoading} />
                 </div>
-                <Shell className="sticky top-3 h-max max-h-[98vh] w-1/4 space-y-2 overflow-auto">
-                    <Heading level={2}>Table of Contents</Heading>
-                    <MemorizedToC items={items} editor={editor} />
-                </Shell>
+                <div className="flex w-1/4 flex-col space-y-4">
+                    <ProjectToolbar project={project} />
+                    <Shell className="sticky top-16 h-max max-h-[98vh] space-y-2 overflow-auto">
+                        <Heading level={2}>Table of Contents</Heading>
+                        <MemorizedToC items={items} editor={editor} />
+                    </Shell>
+                </div>
             </div>
             <ProjectTools editor={editor} project={project}>
                 <SideButton className="right-0 top-64 -mr-6 hover:-mr-4">Tools</SideButton>

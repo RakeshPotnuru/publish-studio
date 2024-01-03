@@ -38,7 +38,9 @@ export function Projects({ ...props }: ProjectsProps) {
                 </NewProjectDialog>
             </div>
             {error ? (
-                <ErrorBox title="Error" description={error.message} />
+                <div className="flex h-[70vh] items-center justify-center">
+                    <ErrorBox title="Error" description={error.message} />
+                </div>
             ) : (
                 <ProjectsTable
                     columns={columns}
