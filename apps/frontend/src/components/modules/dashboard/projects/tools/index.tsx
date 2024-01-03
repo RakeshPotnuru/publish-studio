@@ -10,6 +10,7 @@ import {
 import type { IProject } from "@publish-studio/core";
 
 import { MenuProps } from "@/components/modules/dashboard/projects/editor/menu/fixed-menu";
+import { Tooltip } from "@/components/ui/tooltip";
 import { DownloadProject } from "./download-project";
 import { GenerateOutline } from "./generate-outline";
 import { ImportMarkdown } from "./import-content";
@@ -27,7 +28,9 @@ export function ProjectTools({
 }: ProjectToolsProps & MenuProps) {
     return (
         <Sheet {...props}>
-            <SheetTrigger asChild>{children}</SheetTrigger>
+            <Tooltip content="Tools">
+                <SheetTrigger asChild>{children}</SheetTrigger>
+            </Tooltip>
             <SheetContent>
                 <SheetHeader>
                     <SheetTitle>Tools</SheetTitle>

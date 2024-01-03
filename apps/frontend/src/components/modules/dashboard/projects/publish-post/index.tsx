@@ -29,7 +29,6 @@ import { z } from "zod";
 import type { IProject } from "@publish-studio/core";
 
 import { Icons } from "@/assets/icons";
-import { HookFormDevTool } from "@/components/dev-tools/hookform-dev-tool";
 import { ImageWidget } from "@/components/ui/image-widget";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { DotsLoader } from "@/components/ui/loaders/dots-loader";
@@ -509,7 +508,6 @@ export function PublishPost({
                         </SheetFooter>
                     </form>
                 </Form>
-                <HookFormDevTool control={form.control} placement="bottom-left" />
                 <ImageWidget
                     open={openImageWidget}
                     onOpenChange={setOpenImageWidget}

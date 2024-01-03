@@ -13,9 +13,6 @@ import { useFullscreenStatus } from "@/hooks/fullscreen-status";
 import { trpc } from "@/utils/trpc";
 import { Heading } from "../../../../ui/heading";
 import { Shell } from "../../../../ui/layouts/shell";
-import { SideButton } from "../project";
-import { PublishPost } from "../publish-post";
-import { ProjectTools } from "../tools";
 import { EditorBody } from "./editor-body";
 import { EditorFooter } from "./editor-footer";
 import { extensions } from "./extensions";
@@ -92,19 +89,13 @@ export function Editor({ className, project, ...props }: Readonly<EditorProps>) 
                     <EditorFooter editor={editor} isLoading={isLoading} />
                 </div>
                 <div className="flex w-1/4 flex-col space-y-4">
-                    <ProjectToolbar project={project} />
+                    <ProjectToolbar editor={editor} project={project} />
                     <Shell className="sticky top-16 h-max max-h-[98vh] space-y-2 overflow-auto">
                         <Heading level={2}>Table of Contents</Heading>
                         <MemorizedToC items={items} editor={editor} />
                     </Shell>
                 </div>
             </div>
-            <ProjectTools editor={editor} project={project}>
-                <SideButton className="right-0 top-64 -mr-6 hover:-mr-4">Tools</SideButton>
-            </ProjectTools>
-            <PublishPost editor={editor} project={project}>
-                <SideButton>Publish Post</SideButton>
-            </PublishPost>
         </>
     );
 }

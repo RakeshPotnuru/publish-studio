@@ -51,7 +51,7 @@ export function Sidebar({ className, ...props }: SidebarProps) {
     return (
         <aside
             className={cn(
-                "bg-background sticky top-8 flex h-[85vh] flex-row rounded-xl",
+                "bg-background sticky top-8 flex h-[85dvh] flex-row rounded-xl",
                 className,
             )}
             {...props}

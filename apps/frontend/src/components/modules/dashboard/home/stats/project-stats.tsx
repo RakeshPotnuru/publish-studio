@@ -38,7 +38,7 @@ export function ProjectStats() {
         maintainAspectRatio: false,
         plugins: {
             legend: {
-                display: false,
+                position: "bottom",
             },
         },
         scales: {

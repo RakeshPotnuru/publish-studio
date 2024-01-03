@@ -1,20 +1,37 @@
-import { Icons } from "@/assets/icons";
-import { shortenText } from "@/utils/text-shortener";
 import { Button } from "@itsrakesh/ui";
+
 import type { IProject } from "@publish-studio/core";
 
-interface ProjectToolbarProps {
+import { Icons } from "@/assets/icons";
+import { Tooltip } from "@/components/ui/tooltip";
+import { shortenText } from "@/utils/text-shortener";
+import { PublishPost } from "../publish-post";
+import { ProjectTools } from "../tools";
+import { MenuProps } from "./menu/fixed-menu";
+import { ProjectSettings } from "../settings";
+
+interface ProjectToolbarProps extends MenuProps {
     project: IProject;
 }
 
-export function ProjectToolbar({ project }: Readonly<ProjectToolbarProps>) {
+export function ProjectToolbar({ project, editor }: Readonly<ProjectToolbarProps>) {
     return (
         <div className="bg-background sticky top-0 z-10 flex justify-between rounded-full p-2 shadow-sm">
             <Button variant="ghost">{shortenText(project.name, 20)}</Button>
-            <div>
-                <Button variant="ghost" size="icon">
-                    <Icons.Settings />
-                </Button>
+            <div className="flow-row flex space-x-1">
+                <PublishPost editor={editor} project={project}>
+                    <Button variant="secondary">Publish</Button>
+                </PublishPost>
+                <ProjectTools editor={editor} project={project}>
+                    <Button variant="ghost" size="icon">
+                        <Icons.Tools />
+                    </Button>
+                </ProjectTools>
+                <ProjectSettings project={project}>
+                    <Button variant="ghost" size="icon">
+                        <Icons.Settings />
+                    </Button>
+                </ProjectSettings>
             </div>
         </div>
     );

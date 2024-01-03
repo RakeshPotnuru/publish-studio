@@ -30,6 +30,7 @@ import { PiDotsThreeBold } from "react-icons/pi";
 import { RiFoldersFill } from "react-icons/ri";
 import { RxMixerHorizontal } from "react-icons/rx";
 import { TbLoader } from "react-icons/tb";
+import { FaTools } from "react-icons/fa";
 
 export const GeneralIcons = {
     Link: AiOutlineLink,
@@ -61,4 +62,5 @@ export const GeneralIcons = {
     LoadingDot: GoDotFill,
     Magic: FaWandMagicSparkles,
     Support: MdOutlineSupport,
+    Tools: FaTools,
 };

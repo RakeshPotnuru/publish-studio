@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function DashboardLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     return (
-        <div className="flex min-h-[85vh] flex-row space-x-8">
+        <div className="flex min-h-[85dvh] flex-row space-x-8">
             <Sidebar className="w-1/5" />
             <Shell className="w-full">{children}</Shell>
         </div>
