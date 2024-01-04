@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 declare global {
-    // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace NodeJS {
         // eslint-disable-next-line @typescript-eslint/no-empty-interface
         interface ProcessEnv extends z.infer<typeof ZodEnvironmentVariables> {}
@@ -41,6 +40,8 @@ const ZodEnvironmentVariables = z.object({
     IBM_WATSON_SERVICE_URL: z.string().url(),
     WORDPRESS_CLIENT_ID: z.string(),
     WORDPRESS_CLIENT_SECRET: z.string(),
+    PEXELS_API_KEY: z.string(),
+    UNSPLASH_ACCESS_KEY: z.string(),
 });
 
 ZodEnvironmentVariables.parse(process.env);

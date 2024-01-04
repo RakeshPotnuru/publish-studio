@@ -43,9 +43,11 @@
         "ibm-watson": "^8.0.0",
         "jsonwebtoken": "^9.0.2",
         "mongoose": "^8.0.1",
+        "pexels": "^1.4.0",
         "redis": "^4.6.11",
         "stripe": "^14.5.0",
         "superjson": "^2.2.1",
+        "unsplash-js": "^7.0.19",
         "uuid": "^9.0.1",
         "zod": "^3.22.4"
     },

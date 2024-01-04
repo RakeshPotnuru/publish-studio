@@ -5,8 +5,7 @@ import defaultConfig from "../../../config/app.config";
 import { constants } from "../../../config/constants";
 import type { Context } from "../../../trpc";
 import { encryptField } from "../../../utils/aws/kms";
-import type { IPublishResponse } from "../../project/project.helpers";
-import type { IProject } from "../../project/project.types";
+import type { IProject, IProjectPlatform } from "../../project/project.types";
 import HashnodeService from "./hashnode.service";
 import type { IHashnodeDefaultSettings } from "./hashnode.types";
 
@@ -164,7 +163,7 @@ export default class HashnodeController extends HashnodeService {
             post: IProject;
         },
         user_id: Types.ObjectId,
-    ): Promise<IPublishResponse> {
+    ): Promise<IProjectPlatform> {
         const platform = await super.getPlatform(user_id);
 
         if (!platform) {
@@ -185,7 +184,7 @@ export default class HashnodeController extends HashnodeService {
 
         const newPost = await super.publishPost(
             {
-                title: post.title,
+                title: post.title ?? post.name,
                 contentMarkdown: post.body.markdown,
                 tags: post.tags?.hashnode_tags ?? [],
                 publicationId: platform.publication.publication_id,

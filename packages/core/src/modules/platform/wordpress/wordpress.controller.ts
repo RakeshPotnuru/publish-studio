@@ -3,8 +3,7 @@ import type { Types } from "mongoose";
 
 import { constants } from "../../../config/constants";
 import type { Context } from "../../../trpc";
-import type { IPublishResponse } from "../../project/project.helpers";
-import type { IProject } from "../../project/project.types";
+import type { IProject, IProjectPlatform } from "../../project/project.types";
 import WordPressService from "./wordpress.service";
 import type { IWordPressUserUpdate } from "./wordpress.types";
 
@@ -64,7 +63,7 @@ export default class WordPressController extends WordPressService {
     async createPostHandler(
         input: { post: IProject },
         user_id: Types.ObjectId,
-    ): Promise<IPublishResponse> {
+    ): Promise<IProjectPlatform> {
         const platform = await super.getPlatform(user_id);
 
         if (!platform) {
@@ -76,7 +75,7 @@ export default class WordPressController extends WordPressService {
 
         const newPost = await super.publishPost(
             {
-                title: `<h1>${input.post.title ?? "Untitled"}</h1>`,
+                title: `<h1>${input.post.title ?? input.post.name}</h1>`,
                 content: input.post.body?.html,
                 status: platform.default_publish_status,
                 publicize: platform.publicize,

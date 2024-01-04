@@ -5,8 +5,7 @@ import defaultConfig from "../../../config/app.config";
 import { constants } from "../../../config/constants";
 import type { Context } from "../../../trpc";
 import { encryptField } from "../../../utils/aws/kms";
-import type { IPublishResponse } from "../../project/project.helpers";
-import type { IProject } from "../../project/project.types";
+import type { IProject, IProjectPlatform } from "../../project/project.types";
 import MediumService from "./medium.service";
 import type { TMediumStatus } from "./medium.types";
 
@@ -125,7 +124,7 @@ export default class MediumController extends MediumService {
     async createPostHandler(
         input: { post: IProject },
         user_id: Types.ObjectId,
-    ): Promise<IPublishResponse> {
+    ): Promise<IProjectPlatform> {
         const user = await super.getPlatform(user_id);
 
         if (!user) {
@@ -137,7 +136,7 @@ export default class MediumController extends MediumService {
 
         const newPost = await super.publishPost(
             {
-                title: input.post.title,
+                title: input.post.title ?? input.post.name,
                 contentFormat: "markdown",
                 content: input.post.body?.markdown,
                 tags: input.post.tags?.medium_tags,

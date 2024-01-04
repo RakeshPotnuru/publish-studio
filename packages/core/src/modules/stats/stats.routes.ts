@@ -6,23 +6,19 @@ import StatsController from "./stats.controller";
 const statsRouter = router({
     getTopicStats: protectedProcedure
         .input(
-            z
-                .object({
-                    limit: z.number().optional(),
-                })
-                .optional(),
+            z.object({
+                limit: z.number().optional(),
+            }),
         )
         .query(({ input, ctx }) => new StatsController().getTopicStatsHandler(ctx, input)),
 
     getProjectStats: protectedProcedure
         .input(
-            z
-                .object({
-                    days: z.number().optional(),
-                    from: z.date().optional(),
-                    to: z.date().optional(),
-                })
-                .optional(),
+            z.object({
+                days: z.number().optional(),
+                from: z.date().optional(),
+                to: z.date().optional(),
+            }),
         )
         .query(({ input, ctx }) => new StatsController().getProjectStatsHandler(ctx, input)),
 });

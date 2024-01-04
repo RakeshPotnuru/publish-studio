@@ -4,8 +4,7 @@ import type { Types } from "mongoose";
 import { constants } from "../../../config/constants";
 import type { Context } from "../../../trpc";
 import { encryptField } from "../../../utils/aws/kms";
-import type { IPublishResponse } from "../../project/project.helpers";
-import type { IProject } from "../../project/project.types";
+import type { IProject, IProjectPlatform } from "../../project/project.types";
 import DevToService from "./devto.service";
 
 export default class DevToController extends DevToService {
@@ -96,7 +95,7 @@ export default class DevToController extends DevToService {
     async createPostHandler(
         input: { post: IProject },
         user_id: Types.ObjectId,
-    ): Promise<IPublishResponse> {
+    ): Promise<IProjectPlatform> {
         const platform = await super.getPlatform(user_id);
 
         if (!platform) {
@@ -108,7 +107,7 @@ export default class DevToController extends DevToService {
 
         const newPost = await super.publishPost(
             {
-                title: input.post.title,
+                title: input.post.title ?? input.post.name,
                 body_markdown: input.post.body?.markdown,
                 description: input.post.description,
                 published: platform.default_publish_status,

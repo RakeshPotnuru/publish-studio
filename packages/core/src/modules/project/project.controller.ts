@@ -29,6 +29,8 @@ export default class ProjectController extends ProjectService {
             user_id: ctx.user?._id,
             folder_id: project.folder_id,
             name: project.name,
+            title: project.title,
+            description: project.description,
             body: project.body,
             status: project.status,
         });
@@ -36,32 +38,9 @@ export default class ProjectController extends ProjectService {
         try {
             const genAI = new GenerativeAIController();
 
-            let generated_title: string | undefined;
-            let generated_description: string | undefined;
             let topics: string[] | undefined;
 
-            if (!project.title) {
-                const { data } = await genAI.generateTitleHandler(
-                    { project_id: newProject._id },
-                    ctx,
-                );
-                generated_title = data.title;
-            }
-
-            if (!project.description) {
-                const { data } = await genAI.generateDescriptionHandler(
-                    { project_id: newProject._id },
-                    ctx,
-                );
-                generated_description = data.description;
-            }
-
-            const text =
-                generated_description ??
-                project.description ??
-                generated_title ??
-                project.title ??
-                project.name;
+            const text = project.description ?? project.title ?? project.name;
             if (text) {
                 const { data } = await genAI.generateCategoriesHandler({ text });
                 topics = data.categories;
@@ -70,8 +49,6 @@ export default class ProjectController extends ProjectService {
             await super.updateProjectById(
                 newProject._id,
                 {
-                    title: generated_title ?? project.title,
-                    description: generated_description ?? project.description,
                     topics: topics,
                 },
                 ctx.user?._id,

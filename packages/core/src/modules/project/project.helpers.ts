@@ -105,7 +105,7 @@ export default class ProjectHelpers {
             return {} as IProjectPlatform;
         }
 
-        return (await controller.createPostHandler({ post: project }, user_id)) as IProjectPlatform;
+        return await controller.createPostHandler({ post: project }, user_id);
     }
 
     async publishOnPlatforms(project: IProject, user_id: Types.ObjectId) {

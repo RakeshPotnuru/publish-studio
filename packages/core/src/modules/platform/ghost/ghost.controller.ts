@@ -99,7 +99,10 @@ export default class GhostController extends GhostService {
         };
     }
 
-    async createPostHandler(input: { post: IProject }, user_id: Types.ObjectId) {
+    async createPostHandler(
+        input: { post: IProject },
+        user_id: Types.ObjectId,
+    ): Promise<IProjectPlatform> {
         const platform = await super.getPlatform(user_id);
 
         if (!platform) {
@@ -135,7 +138,7 @@ export default class GhostController extends GhostService {
                 : constants.project.platformPublishStatuses.ERROR,
             published_url: newPost?.success ? newPost?.data.url : undefined,
             id: newPost?.success ? newPost?.data.id : undefined,
-        } as IProjectPlatform;
+        };
     }
 
     async updatePostHandler(
