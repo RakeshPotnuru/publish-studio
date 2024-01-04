@@ -10,14 +10,15 @@ import { DataTableFacetedFilter } from "@/components/ui/data-table/faceted-filte
 import { Tooltip } from "@/components/ui/tooltip";
 import { constants } from "@/config/constants";
 import { trpc } from "@/utils/trpc";
+import { TInsertImageOptions } from "./image-widget";
 
 interface ToolbarProps<TData> {
     table: Table<TData>;
     isWidget?: boolean;
-    onAdd?: (url: string) => void;
+    onImageInsert?: ({ ...options }: TInsertImageOptions) => void;
 }
 
-export function Toolbar<TData>({ table, isWidget, onAdd }: Readonly<ToolbarProps<TData>>) {
+export function Toolbar<TData>({ table, isWidget, onImageInsert }: Readonly<ToolbarProps<TData>>) {
     const [askingForConfirmation, setAskingForConfirmation] = useState(false);
 
     const isFiltered = table.getState().columnFilters.length > 0;
@@ -46,9 +47,14 @@ export function Toolbar<TData>({ table, isWidget, onAdd }: Readonly<ToolbarProps
         } catch (error) {}
     };
 
-    const handleAdd = (urls: string[]) => {
-        if (onAdd && urls.length === 1) {
-            onAdd(urls[0]);
+    const handleAdd = (urls: string[], alts: string[], titles?: string[]) => {
+        if (onImageInsert && urls.length === 1) {
+            onImageInsert({
+                src: urls[0],
+                alt: alts[0],
+                title: titles?.[0],
+                hasCaption: false,
+            });
         }
     };
 
@@ -130,7 +136,12 @@ export function Toolbar<TData>({ table, isWidget, onAdd }: Readonly<ToolbarProps
                                     handleAdd(
                                         table
                                             .getFilteredSelectedRowModel()
-                                            .rows.map(row => row.getValue("url")),
+                                            .rows.map(row => (row.original as IAsset).hosted_url),
+                                        table
+                                            .getFilteredSelectedRowModel()
+                                            .rows.map(
+                                                row => (row.original as IAsset).original_file_name,
+                                            ),
                                     )
                                 }
                                 variant="info"
@@ -138,7 +149,8 @@ export function Toolbar<TData>({ table, isWidget, onAdd }: Readonly<ToolbarProps
                                 disabled={
                                     table
                                         .getFilteredSelectedRowModel()
-                                        .rows.map(row => row.getValue("url")).length > 1
+                                        .rows.map(row => (row.original as IAsset).hosted_url)
+                                        .length > 1
                                 }
                             >
                                 Add

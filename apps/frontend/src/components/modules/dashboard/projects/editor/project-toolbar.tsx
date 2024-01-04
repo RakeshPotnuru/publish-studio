@@ -3,12 +3,11 @@ import { Button } from "@itsrakesh/ui";
 import type { IProject } from "@publish-studio/core";
 
 import { Icons } from "@/assets/icons";
-import { Tooltip } from "@/components/ui/tooltip";
 import { shortenText } from "@/utils/text-shortener";
 import { PublishPost } from "../publish-post";
+import { ProjectSettings } from "../settings";
 import { ProjectTools } from "../tools";
 import { MenuProps } from "./menu/fixed-menu";
-import { ProjectSettings } from "../settings";
 
 interface ProjectToolbarProps extends MenuProps {
     project: IProject;

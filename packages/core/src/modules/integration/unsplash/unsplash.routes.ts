@@ -12,7 +12,7 @@ const unsplashRouter = router({
                 page: z.number().int().positive().default(1),
             }),
         )
-        .mutation(({ input }) => new UnsplashController().searchPhotosHandler(input)),
+        .query(({ input }) => new UnsplashController().searchPhotosHandler(input)),
 });
 
 export default unsplashRouter;

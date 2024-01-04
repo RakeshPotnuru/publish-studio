@@ -23,9 +23,9 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Icons } from "@/assets/icons";
+import { ImageWidget } from "@/components/modules/dashboard/assets/image-widget";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
-import { ImageWidget } from "@/components/ui/image-widget";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { Tooltip } from "@/components/ui/tooltip";
 import { constants } from "@/config/constants";

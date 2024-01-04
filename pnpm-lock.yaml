@@ -373,9 +373,6 @@ importers:
       '@types/uuid':
         specifier: ^9.0.7
         version: 9.0.7
-      '@types/wpapi':
-        specifier: ^1.1.4
-        version: 1.1.4
       eslint:
         specifier: 8.54.0
         version: 8.54.0
@@ -5245,10 +5242,6 @@ packages:
       '@types/node': 20.9.4
       '@types/webidl-conversions': 7.0.2
     dev: false
-
-  /@types/wpapi@1.1.4:
-    resolution: {integrity: sha512-huqjb3PQ7cJsYlPXxUPDAKSptQ0Ko2gLUZKK7ra9PUU45el0djACDnTJB56nsCPplRZ0C5KJ3xKE9MxvGr1+yQ==}
-    dev: true
 
   /@types/yargs-parser@21.0.2:
     resolution: {integrity: sha512-5qcvofLPbfjmBfKaLfj/+f+Sbd6pN4zl7w7VSVI5uz7m9QZTuB2aZAa2uo1wHFBNN2x6g/SoTkXmd8mQnQF2Cw==}

@@ -3,6 +3,7 @@ import { z } from "zod";
 import { constants } from "@/config/constants";
 
 export const formSchema = z.object({
+    cover_image: z.string().optional(),
     title: z
         .string()
         .min(1, "Please enter a title for your post.")

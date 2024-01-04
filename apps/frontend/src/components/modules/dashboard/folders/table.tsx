@@ -148,7 +148,9 @@ export function FoldersTable<TData, TValue>({
                             </div>
                         ))
                     ) : (
-                        <div className="col-span-4 p-4 text-center text-gray-500">No results</div>
+                        <div className="text-muted-foreground col-span-4 p-4 text-center">
+                            No results
+                        </div>
                     )}
                 </div>
             )}

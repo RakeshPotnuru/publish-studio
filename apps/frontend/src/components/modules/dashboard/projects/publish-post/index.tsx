@@ -29,7 +29,7 @@ import { z } from "zod";
 import type { IProject } from "@publish-studio/core";
 
 import { Icons } from "@/assets/icons";
-import { ImageWidget } from "@/components/ui/image-widget";
+import { ImageWidget } from "@/components/modules/dashboard/assets/image-widget";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { DotsLoader } from "@/components/ui/loaders/dots-loader";
 import { MagicButton } from "@/components/ui/magic-button";
@@ -246,6 +246,7 @@ export function PublishPost({
     useEffect(() => {
         if (project) {
             form.reset({
+                cover_image: project.cover_image,
                 title: project.title,
                 description: project.description,
                 platforms: project.platforms,
@@ -258,6 +259,7 @@ export function PublishPost({
                 },
                 canonical_url: project.canonical_url,
             });
+            setCoverImage(project.cover_image);
         }
     }, [project, form]);
 
@@ -475,7 +477,7 @@ export function PublishPost({
                                         !form.formState.isDirty ||
                                         isLoading ||
                                         project.status === constants.project.status.SCHEDULED ||
-                                        form.getValues().platforms.length === 0
+                                        form.getValues().platforms?.length === 0
                                     }
                                 >
                                     <ButtonLoader isLoading={isPostPublishing}>
@@ -496,7 +498,7 @@ export function PublishPost({
                                             !form.formState.isDirty ||
                                             isLoading ||
                                             project.status === constants.project.status.SCHEDULED ||
-                                            form.getValues().platforms.length === 0
+                                            form.getValues().platforms?.length === 0
                                         }
                                     >
                                         <ButtonLoader isLoading={isPostPublishing}>
@@ -512,9 +514,10 @@ export function PublishPost({
                     open={openImageWidget}
                     onOpenChange={setOpenImageWidget}
                     isWidget
-                    onAdd={url => {
+                    onImageInsert={({ src }) => {
                         setOpenImageWidget(false);
-                        setCoverImage(url);
+                        setCoverImage(src);
+                        form.setValue("cover_image", src, { shouldDirty: true });
                     }}
                 />
             </>

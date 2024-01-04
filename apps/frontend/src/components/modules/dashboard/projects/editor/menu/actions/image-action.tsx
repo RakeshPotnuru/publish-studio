@@ -1,12 +1,36 @@
 import { useState } from "react";
 
 import { Icons } from "@/assets/icons";
-import { ImageWidget } from "@/components/ui/image-widget";
+import {
+    ImageWidget,
+    TInsertImageOptions,
+} from "@/components/modules/dashboard/assets/image-widget";
+import { deserialize } from "../../transform-markdown";
 import { MenuProps } from "../fixed-menu";
 import { MenuAction } from "../menu-action";
 
 export function ImageAction({ editor }: Readonly<MenuProps>) {
     const [open, setOpen] = useState(false);
+
+    const handleImageInsert = ({
+        src,
+        alt,
+        title,
+        hasCaption,
+        captionMarkdown,
+    }: TInsertImageOptions) => {
+        setOpen(false);
+        editor.chain().focus().setImage({ src, alt, title }).run();
+        if (hasCaption) {
+            const deserialized = deserialize(editor.schema, captionMarkdown);
+
+            editor
+                .chain()
+                .focus()
+                .insertContentAt(editor.state.selection.anchor + 1, deserialized)
+                .run();
+        }
+    };
 
     return (
         <>
@@ -21,10 +45,7 @@ export function ImageAction({ editor }: Readonly<MenuProps>) {
                 open={open}
                 onOpenChange={setOpen}
                 isWidget={true}
-                onAdd={url => {
-                    setOpen(false);
-                    editor.chain().focus().setImage({ src: url }).run();
-                }}
+                onImageInsert={handleImageInsert}
             />
         </>
     );

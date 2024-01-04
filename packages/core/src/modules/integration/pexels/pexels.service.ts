@@ -10,10 +10,19 @@ export default class PexelsService {
 
     async searchPhotos(input: { query: string; per_page: number; page: number }) {
         try {
-            return await this.pexels().photos.search({
+            const result = await this.pexels().photos.search({
                 query: input.query,
                 per_page: input.per_page,
                 page: input.page,
+            });
+
+            if ("photos" in result) {
+                return result;
+            }
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: result.error,
             });
         } catch (error) {
             console.log(error);

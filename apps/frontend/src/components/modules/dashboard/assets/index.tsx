@@ -11,13 +11,14 @@ import { trpc } from "@/utils/trpc";
 import { columns } from "./columns";
 import { NewAssetDialog } from "./new-asset";
 import { AssetsTable } from "./table";
+import { TInsertImageOptions } from "./image-widget";
 
 interface AssetsProps extends React.HTMLAttributes<HTMLElement> {
     isWidget?: boolean;
-    onAdd?: (url: string) => void;
+    onImageInsert?: (options: TInsertImageOptions) => void;
 }
 
-export function Assets({ isWidget, onAdd, ...props }: Readonly<AssetsProps>) {
+export function Assets({ isWidget, onImageInsert, ...props }: Readonly<AssetsProps>) {
     const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
         pageIndex: 0,
         pageSize: 10,
@@ -47,7 +48,7 @@ export function Assets({ isWidget, onAdd, ...props }: Readonly<AssetsProps>) {
             ) : (
                 <AssetsTable
                     isWidget={isWidget}
-                    onAdd={onAdd}
+                    onImageInsert={onImageInsert}
                     columns={columns}
                     data={data?.data.assets ?? []}
                     refetch={refetch}

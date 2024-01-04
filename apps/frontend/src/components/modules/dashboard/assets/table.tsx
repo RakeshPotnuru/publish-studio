@@ -19,10 +19,11 @@ import { useEffect, useMemo, useState } from "react";
 import { DataTablePagination } from "@/components/ui/data-table";
 import { TableLoader } from "@/components/ui/loaders/table-loader";
 import { Toolbar } from "./toolbar";
+import { TInsertImageOptions } from "./image-widget";
 
 interface AssetsTableProps<TData, TValue> {
     isWidget?: boolean;
-    onAdd?: (url: string) => void;
+    onImageInsert?: (options: TInsertImageOptions) => void;
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     refetch: () => void;
@@ -34,7 +35,7 @@ interface AssetsTableProps<TData, TValue> {
 
 export function AssetsTable<TData, TValue>({
     isWidget,
-    onAdd,
+    onImageInsert,
     columns,
     data,
     isLoading,
@@ -113,7 +114,7 @@ export function AssetsTable<TData, TValue>({
 
     return (
         <div className="space-y-4">
-            <Toolbar table={table} isWidget={isWidget} onAdd={onAdd} />
+            <Toolbar table={table} isWidget={isWidget} onImageInsert={onImageInsert} />
             <div className="rounded-md border">
                 <Table>
                     <TableHeader>
