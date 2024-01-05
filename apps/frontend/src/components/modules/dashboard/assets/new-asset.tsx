@@ -20,14 +20,21 @@ import type { IAsset } from "@publish-studio/core";
 import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
+import { Tooltip } from "@/components/ui/tooltip";
 import { constants } from "@/config/constants";
 import { formatFileSize } from "@/utils/file-size";
 import { shortenText } from "@/utils/text-shortener";
 import { trpc } from "@/utils/trpc";
 
-interface NewAssetDialogProps extends React.HTMLAttributes<HTMLDialogElement> {}
+interface NewAssetDialogProps extends React.HTMLAttributes<HTMLDialogElement> {
+    enableTooltip?: boolean;
+}
 
-export function NewAssetDialog({ children, ...props }: NewAssetDialogProps) {
+export function NewAssetDialog({
+    children,
+    enableTooltip = false,
+    ...props
+}: Readonly<NewAssetDialogProps>) {
     const [file, setFile] = useState<File | null>(null);
     const [isDragActive, setIsDragActive] = useState(false);
     const [error, setError] = useState<{
@@ -156,8 +163,10 @@ export function NewAssetDialog({ children, ...props }: NewAssetDialogProps) {
 
     return (
         <Dialog open={open} onOpenChange={setOpen} {...props}>
-            <DialogTrigger asChild>{children}</DialogTrigger>
-            <DialogContent>
+            <Tooltip content="Upload asset" hidden={!enableTooltip}>
+                <DialogTrigger asChild>{children}</DialogTrigger>
+            </Tooltip>
+            <DialogContent onCloseAutoFocus={e => e.preventDefault()}>
                 <DialogHeader>
                     <DialogTitle>Upload new asset</DialogTitle>
                     <DialogDescription>

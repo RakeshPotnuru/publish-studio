@@ -1,11 +1,14 @@
 "use client";
 
-import { ScrollArea } from "@itsrakesh/ui";
+import { Button, ScrollArea } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import Link from "next/link";
 import { usePathname, useSelectedLayoutSegment } from "next/navigation";
 
 import { Icons } from "@/assets/icons";
+import { NewAssetDialog } from "@/components/modules/dashboard/assets/new-asset";
+import { NewFolderDialog } from "@/components/modules/dashboard/folders/new-folder";
+import { NewProjectDialog } from "@/components/modules/dashboard/projects/new-project";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLElement> {}
 
@@ -74,13 +77,48 @@ export function Sidebar({ className, ...props }: SidebarProps) {
                     ) : (
                         <>
                             <SidebarItem label="Dashboard" link="/" icon={<Icons.Dashboard />} />
-                            <SidebarItem
-                                label="Projects"
-                                link="/projects"
-                                icon={<Icons.Projects />}
-                            />
-                            <SidebarItem label="Folders" link="/folders" icon={<Icons.Folders />} />
-                            <SidebarItem label="Assets" link="/assets" icon={<Icons.Assets />} />
+                            <div className="flex flex-row items-center space-x-2">
+                                <div className="w-3/4">
+                                    <SidebarItem
+                                        label="Projects"
+                                        link="/projects"
+                                        icon={<Icons.Projects />}
+                                    />
+                                </div>
+                                <NewProjectDialog enableTooltip>
+                                    <Button variant="ghost" size="icon">
+                                        <Icons.Add />
+                                    </Button>
+                                </NewProjectDialog>
+                            </div>
+                            <div className="flex flex-row items-center space-x-2">
+                                <div className="w-3/4">
+                                    <SidebarItem
+                                        label="Folders"
+                                        link="/folders"
+                                        icon={<Icons.Folders />}
+                                    />
+                                </div>
+                                <NewFolderDialog enableTooltip>
+                                    <Button variant="ghost" size="icon">
+                                        <Icons.Add />
+                                    </Button>
+                                </NewFolderDialog>
+                            </div>
+                            <div className="flex flex-row items-center space-x-2">
+                                <div className="w-3/4">
+                                    <SidebarItem
+                                        label="Assets"
+                                        link="/assets"
+                                        icon={<Icons.Assets />}
+                                    />
+                                </div>
+                                <NewAssetDialog enableTooltip>
+                                    <Button variant="ghost" size="icon">
+                                        <Icons.Add />
+                                    </Button>
+                                </NewAssetDialog>
+                            </div>
                         </>
                     )}
                 </div>

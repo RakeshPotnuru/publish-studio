@@ -21,15 +21,18 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import type { IFolder } from "@publish-studio/core";
+
 import { ErrorBox } from "@/components/ui/error-box";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
+import { Tooltip } from "@/components/ui/tooltip";
 import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
-import { IFolder } from "@publish-studio/core";
 
 interface NewProjectDialogProps extends React.HTMLAttributes<HTMLDialogElement> {
     folderId?: IFolder["_id"];
+    enableTooltip?: boolean;
 }
 
 const formSchema = z.object({
@@ -45,14 +48,21 @@ const formSchema = z.object({
         ),
 });
 
-export function NewProjectDialog({ children, folderId }: Readonly<NewProjectDialogProps>) {
+export function NewProjectDialog({
+    children,
+    folderId,
+    enableTooltip = false,
+    ...props
+}: Readonly<NewProjectDialogProps>) {
     const [error, setError] = useState<string | null>(null);
+    const [open, setOpen] = useState(false);
 
     const router = useRouter();
 
     const { mutateAsync: createProject, isLoading } = trpc.createProject.useMutation({
         onSuccess({ data }) {
             toast.success("Project created successfully.");
+            setOpen(false);
 
             router.push(`${siteConfig.pages.projects.link}/${data.project._id}`);
         },
@@ -80,9 +90,11 @@ export function NewProjectDialog({ children, folderId }: Readonly<NewProjectDial
     };
 
     return (
-        <Dialog>
-            <DialogTrigger asChild>{children}</DialogTrigger>
-            <DialogContent>
+        <Dialog open={open} onOpenChange={setOpen} {...props}>
+            <Tooltip content="Create project" hidden={!enableTooltip}>
+                <DialogTrigger asChild>{children}</DialogTrigger>
+            </Tooltip>
+            <DialogContent onCloseAutoFocus={e => e.preventDefault()}>
                 <DialogHeader>
                     <DialogTitle>Create a new project</DialogTitle>
                 </DialogHeader>

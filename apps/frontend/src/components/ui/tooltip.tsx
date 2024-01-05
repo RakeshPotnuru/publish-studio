@@ -10,14 +10,21 @@ interface TooltipProps {
     children: React.ReactNode;
     side?: "top" | "bottom" | "left" | "right";
     asChild?: boolean;
+    hidden?: boolean;
 }
 
-export function Tooltip({ content, children, side = "bottom", asChild = true }: TooltipProps) {
+export function Tooltip({
+    content,
+    children,
+    side = "bottom",
+    asChild = true,
+    hidden = false,
+}: Readonly<TooltipProps>) {
     return (
         <TooltipProvider>
             <TooltipPrimitive>
                 <TooltipTrigger asChild={asChild}>{children}</TooltipTrigger>
-                <TooltipContent side={side}>
+                <TooltipContent side={side} hidden={hidden}>
                     <p>{content}</p>
                 </TooltipContent>
             </TooltipPrimitive>

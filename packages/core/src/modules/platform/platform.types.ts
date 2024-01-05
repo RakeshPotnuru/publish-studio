@@ -8,22 +8,46 @@ import type { IHashnode, IHashnodeResponse } from "./hashnode/hashnode.types";
 import type { IMedium, IMediumResponse } from "./medium/medium.types";
 import type { IWordPress } from "./wordpress/wordpress.types";
 
-export interface IPlatform {
-    _id?: Types.ObjectId;
-    user_id?: Types.ObjectId;
-    name: (typeof constants.user.platforms)[keyof typeof constants.user.platforms];
-    data: IHashnode | IMedium | IDevTo | IGhost | IWordPress;
-    pagination?: IPagination;
-}
-
 export type TPlatformName =
     (typeof constants.user.platforms)[keyof typeof constants.user.platforms];
 
-export interface IPlatformResponse {
+type TPlatform<T extends TPlatformName> = T extends "hashnode"
+    ? IHashnode
+    : T extends "medium"
+    ? IMedium
+    : T extends "devto"
+    ? IDevTo
+    : T extends "ghost"
+    ? IGhost
+    : T extends "wordpress"
+    ? IWordPress
+    : never;
+
+export interface IPlatform<T extends TPlatformName = TPlatformName> {
+    _id?: Types.ObjectId;
+    user_id?: Types.ObjectId;
+    name: T;
+    data: TPlatform<T>;
+    pagination?: IPagination;
+}
+
+type TPlatformResponse<T extends TPlatformName> = T extends "hashnode"
+    ? IHashnodeResponse
+    : T extends "medium"
+    ? IMediumResponse
+    : T extends "devto"
+    ? IDevToResponse
+    : T extends "ghost"
+    ? IGhost
+    : T extends "wordpress"
+    ? IWordPress
+    : never;
+
+export interface IPlatformResponse<T extends TPlatformName = TPlatformName> {
     _id: Types.ObjectId;
     user_id: Types.ObjectId;
-    name: TPlatformName;
-    data: IHashnodeResponse | IMediumResponse | IDevToResponse | IGhost | IWordPress;
+    name: T;
+    data: TPlatformResponse<T>;
     created_at: Date;
     updated_at: Date;
 }

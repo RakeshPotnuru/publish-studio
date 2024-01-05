@@ -21,7 +21,7 @@ export type TInsertImageOptions =
           alt: string;
           title?: string;
           hasCaption: false;
-          captionMarkdown?: undefined;
+          captionMarkdown?: string;
       }
     | {
           src: string;

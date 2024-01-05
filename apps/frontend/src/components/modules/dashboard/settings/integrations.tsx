@@ -4,7 +4,7 @@ import { Button } from "@itsrakesh/ui";
 import Image from "next/image";
 import { useState } from "react";
 
-import type { IDevTo, IGhost, IHashnode, IMedium, IWordPress } from "@publish-studio/core";
+import type { IPlatform } from "@publish-studio/core";
 
 import { Images } from "@/assets/images";
 import { ErrorBox } from "@/components/ui/error-box";
@@ -32,18 +32,19 @@ export function Integrations({ ...props }: IntegrationsProps) {
 
     const platforms = data?.data.platforms;
 
-    const devto = platforms?.find(platform => platform.name === constants.user.platforms.DEVTO)
-        ?.data as IDevTo;
-    const medium = platforms?.find(platform => platform.name === constants.user.platforms.MEDIUM)
-        ?.data as IMedium;
-    const hashnode = platforms?.find(
-        platform => platform.name === constants.user.platforms.HASHNODE,
-    )?.data as IHashnode;
-    const ghost = platforms?.find(platform => platform.name === constants.user.platforms.GHOST)
-        ?.data as IGhost;
-    const wordpress = platforms?.find(
-        platform => platform.name === constants.user.platforms.WORDPRESS,
-    )?.data as IWordPress;
+    const devto: IPlatform<typeof constants.user.platforms.DEVTO> | undefined = platforms?.find(
+        platform => platform.name === constants.user.platforms.DEVTO,
+    )?.data;
+    const medium: IPlatform<typeof constants.user.platforms.MEDIUM> | undefined = platforms?.find(
+        platform => platform.name === constants.user.platforms.MEDIUM,
+    )?.data;
+    const hashnode: IPlatform<typeof constants.user.platforms.HASHNODE> | undefined =
+        platforms?.find(platform => platform.name === constants.user.platforms.HASHNODE)?.data;
+    const ghost: IPlatform<typeof constants.user.platforms.GHOST> | undefined = platforms?.find(
+        platform => platform.name === constants.user.platforms.GHOST,
+    )?.data;
+    const wordpress: IPlatform<typeof constants.user.platforms.WORDPRESS> | undefined =
+        platforms?.find(platform => platform.name === constants.user.platforms.WORDPRESS)?.data;
 
     return (
         <div className="space-y-8" {...props}>

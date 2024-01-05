@@ -14,7 +14,7 @@ export interface IDevToResponse {
     user_id: Types.ObjectId;
     api_key: string;
     username: string;
-    profile_pic: string;
+    profile_pic?: string;
     default_publish_status: boolean;
     created_at: Date;
     updated_at: Date;
