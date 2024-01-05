@@ -7,6 +7,7 @@ import type { IAsset } from "@publish-studio/core";
 
 import { DataTableColumnHeader } from "@/components/ui/data-table";
 import { formatFileSize } from "@/utils/file-size";
+import imageLoader from "@/utils/image-loader";
 import { shortenText } from "@/utils/text-shortener";
 import { AssetDialog } from "./asset";
 import { RowActions } from "./row-actions";
@@ -45,13 +46,13 @@ export const columns: ColumnDef<IAsset>[] = [
         cell: ({ row }) => (
             <AssetDialog name={row.original.original_file_name} url={row.original.hosted_url}>
                 <Image
+                    loader={imageLoader}
                     src={row.original.hosted_url}
                     alt={row.original.original_file_name}
                     width={50}
                     height={50}
                     loading="lazy"
                     className="cursor-zoom-in"
-                    unoptimized
                 />
             </AssetDialog>
         ),
