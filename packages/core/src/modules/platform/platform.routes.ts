@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { constants } from "../../config/constants";
 import { protectedProcedure, router } from "../../trpc";
+import BloggerController from "./blogger/blogger.controller";
 import DevToController from "./devto/devto.controller";
 import GhostController from "./ghost/ghost.controller";
 import type { TGhostStatus } from "./ghost/ghost.types";
@@ -137,6 +138,16 @@ const platformRouter = router({
 
     disconnectWordPress: protectedProcedure.query(({ ctx }) =>
         new WordPressController().deletePlatformHandler(ctx),
+    ),
+
+    connectBlogger: protectedProcedure
+        .input(z.string())
+        .mutation(({ input, ctx }) => new BloggerController().createPlatformHandler(input, ctx)),
+
+    getBloggerAuthUrl: protectedProcedure.query(() => new BloggerController().getAuthUrlHandler()),
+
+    disconnectBlogger: protectedProcedure.query(({ ctx }) =>
+        new BloggerController().deletePlatformHandler(ctx),
     ),
 });
 

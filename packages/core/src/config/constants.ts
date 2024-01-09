@@ -5,6 +5,7 @@ enum platforms {
     MEDIUM = "Medium",
     GHOST = "Ghost",
     WORDPRESS = "WordPress",
+    BLOGGER = "Blogger",
 }
 
 enum projectStatus {

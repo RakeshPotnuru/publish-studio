@@ -3,6 +3,8 @@ import { OAuth2Client } from "google-auth-library";
 
 const gOAuth = new OAuth2Client(process.env.GOOGLE_OAUTH_CLIENT_ID);
 
+export default gOAuth;
+
 export const verifyGoogleToken = async (token: string) => {
     try {
         const ticket = await gOAuth.verifyIdToken({
@@ -26,5 +28,3 @@ export const verifyGoogleToken = async (token: string) => {
         });
     }
 };
-
-export default gOAuth;

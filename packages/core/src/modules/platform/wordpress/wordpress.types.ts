@@ -20,7 +20,6 @@ export interface IWordPressResponse {
     user_id: Types.ObjectId;
     blog_url: string;
     blog_id: string;
-    token: string;
     publicize: boolean;
     default_publish_status: TWordPressStatus;
     created_at: Date;

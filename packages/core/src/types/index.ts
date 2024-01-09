@@ -1,5 +1,6 @@
 export type { IAssetResponse as IAsset } from "../modules/asset/asset.types";
 export type { IFolderResponse as IFolder } from "../modules/folder/folder.types";
+export type { IBloggerResponse as IBlogger } from "../modules/platform/blogger/blogger.types";
 export type { IDevToResponse as IDevTo } from "../modules/platform/devto/devto.types";
 export type { IGhostResponse as IGhost } from "../modules/platform/ghost/ghost.types";
 export type { IHashnodeResponse as IHashnode } from "../modules/platform/hashnode/hashnode.types";

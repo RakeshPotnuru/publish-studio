@@ -11,6 +11,7 @@ import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
 import { constants } from "@/config/constants";
 import { trpc } from "@/utils/trpc";
+import { Blogger } from "./platforms/blogger";
 import { DevTo } from "./platforms/dev";
 import { Ghost } from "./platforms/ghost";
 import { Hashnode } from "./platforms/hashnode";
@@ -25,6 +26,7 @@ export function Integrations({ ...props }: IntegrationsProps) {
     const [isHashnodeOpen, setIsHashnodeOpen] = useState(false);
     const [isGhostOpen, setIsGhostOpen] = useState(false);
     const [isWordPressOpen, setIsWordPressOpen] = useState(false);
+    const [isBloggerOpen, setIsBloggerOpen] = useState(false);
 
     const { data, isFetching, error } = trpc.getAllPlatforms.useQuery({
         pagination: { page: 1, limit: 10 },
@@ -45,6 +47,9 @@ export function Integrations({ ...props }: IntegrationsProps) {
     )?.data;
     const wordpress: IPlatform<typeof constants.user.platforms.WORDPRESS> | undefined =
         platforms?.find(platform => platform.name === constants.user.platforms.WORDPRESS)?.data;
+    const blogger: IPlatform<typeof constants.user.platforms.BLOGGER> | undefined = platforms?.find(
+        platform => platform.name === constants.user.platforms.BLOGGER,
+    )?.data;
 
     return (
         <div className="space-y-8" {...props}>
@@ -58,6 +63,12 @@ export function Integrations({ ...props }: IntegrationsProps) {
                 <Heading level={2}>Platforms</Heading>
                 {error && <ErrorBox title="Error" description={error.message} />}
                 <div className="grid grid-cols-2 gap-4">
+                    <Blogger
+                        isLoading={isFetching}
+                        isOpen={isBloggerOpen}
+                        setIsOpen={setIsBloggerOpen}
+                        data={blogger}
+                    />
                     <DevTo
                         isLoading={isFetching}
                         isOpen={isDevOpen}
