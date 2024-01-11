@@ -1,23 +1,23 @@
 import type { Types } from "mongoose";
 import { z } from "zod";
 
-import { protectedProcedure, router } from "../../trpc";
+import { proProtectedProcedure, router } from "../../trpc";
 import GenerativeAIController from "./generative-ai.controller";
 
 const generativeAIRouter = router({
-    generateTitle: protectedProcedure
+    generateTitle: proProtectedProcedure
         .input(z.object({ project_id: z.custom<Types.ObjectId>() }))
         .mutation(({ input, ctx }) =>
             new GenerativeAIController().generateTitleHandler(input, ctx),
         ),
 
-    generateDescription: protectedProcedure
+    generateDescription: proProtectedProcedure
         .input(z.object({ project_id: z.custom<Types.ObjectId>() }))
         .mutation(({ input, ctx }) =>
             new GenerativeAIController().generateDescriptionHandler(input, ctx),
         ),
 
-    generateOutline: protectedProcedure
+    generateOutline: proProtectedProcedure
         .input(z.object({ project_id: z.custom<Types.ObjectId>() }))
         .mutation(({ input, ctx }) =>
             new GenerativeAIController().generateOutlineHandler(input, ctx),

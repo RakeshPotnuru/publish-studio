@@ -13,13 +13,14 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@itsrakesh/ui";
-
-import { Icons } from "@/assets/icons";
-import { siteConfig } from "@/config/site";
-import { trpc } from "@/utils/trpc";
 import { cn } from "@itsrakesh/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+
+import { Icons } from "@/assets/icons";
+import { constants } from "@/config/constants";
+import { siteConfig } from "@/config/site";
+import { trpc } from "@/utils/trpc";
 import { Center } from "../ui/center";
 import { ErrorBox } from "../ui/error-box";
 import { Heading } from "../ui/heading";
@@ -87,7 +88,8 @@ export function Upgrade({ children, featureText, ...props }: Readonly<UpgradePro
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <Heading className="text-center">
-                                    $0 <span className="text-sm">/ month</span>
+                                    {constants.payment.currency.SYMBOL}0{" "}
+                                    <span className="text-sm">/ month</span>
                                 </Heading>
                                 <ul className="list-inside list-disc space-y-2">
                                     <li>Feature 1</li>
@@ -101,7 +103,7 @@ export function Upgrade({ children, featureText, ...props }: Readonly<UpgradePro
                                 </Button>
                             </CardFooter>
                         </Card>
-                        <div className="from-primary rounded-xl bg-gradient-to-tr via-purple-500 to-blue-500 p-1">
+                        <div className="from-primary rounded-xl bg-gradient-to-tr via-purple-500 to-blue-500 p-[1px]">
                             <Card>
                                 <CardHeader>
                                     <CardTitle>Pro</CardTitle>
@@ -109,7 +111,9 @@ export function Upgrade({ children, featureText, ...props }: Readonly<UpgradePro
                                 </CardHeader>
                                 <CardContent className="space-y-4">
                                     <Heading className="text-center">
-                                        $999 <span className="text-sm">/ month</span>
+                                        {constants.payment.currency.SYMBOL}
+                                        {constants.payment.plans.proMonthly.PRICE_IN_DOLLARS}{" "}
+                                        <span className="text-sm">/ month</span>
                                     </Heading>
                                     <ul className="list-inside list-disc space-y-2">
                                         <li>Everything in free +</li>
@@ -129,12 +133,12 @@ export function Upgrade({ children, featureText, ...props }: Readonly<UpgradePro
                             </Card>
                         </div>
                     </div>
-                    <Button variant="link" asChild>
-                        <Link href={siteConfig.links.pricing}>
-                            Full comparison <Icons.ExternalLink className="ml-2 size-4" />
-                        </Link>
-                    </Button>
                 </div>
+                <Button variant="link" asChild>
+                    <Link href={siteConfig.links.pricing}>
+                        Full comparison <Icons.ExternalLink className="ml-2 size-4" />
+                    </Link>
+                </Button>
             </DialogContent>
         </Dialog>
     );

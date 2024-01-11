@@ -129,7 +129,10 @@ const payment = {
             PRICE_ID: "price_1NjGYWSEoLcIwk4mKMkjgvoZ",
         },
     },
-    CURRENCY: "usd",
+    currency: {
+        NAME: "usd",
+        SYMBOL: "$",
+    },
 };
 
 enum mimeTypes {

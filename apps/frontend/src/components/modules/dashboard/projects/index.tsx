@@ -9,7 +9,7 @@ import { Heading } from "@/components/ui/heading";
 import { trpc } from "@/utils/trpc";
 import { useState } from "react";
 import { columns } from "./columns";
-import { NewProjectDialog } from "./new-project";
+import { NewProject } from "./new-project";
 import { ProjectsTable } from "./table";
 
 interface ProjectsProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -31,11 +31,11 @@ export function Projects({ ...props }: ProjectsProps) {
         <div className="space-y-8" {...props}>
             <div className="flex items-center justify-between">
                 <Heading>My Projects</Heading>
-                <NewProjectDialog>
+                <NewProject>
                     <Button>
                         <Icons.Add className="mr-2 size-4" /> New Project
                     </Button>
-                </NewProjectDialog>
+                </NewProject>
             </div>
             {error ? (
                 <div className="flex h-[70vh] items-center justify-center">

@@ -2,7 +2,7 @@ import type { Types } from "mongoose";
 import { z } from "zod";
 
 import { constants } from "../../config/constants";
-import { protectedProcedure, router } from "../../trpc";
+import { proProtectedProcedure, protectedProcedure, router } from "../../trpc";
 import ProjectController from "./project.controller";
 
 const projectRouter = router({
@@ -110,7 +110,7 @@ const projectRouter = router({
         )
         .mutation(({ input, ctx }) => new ProjectController().schedulePostHandler(input, ctx)),
 
-    updatePost: protectedProcedure
+    updatePost: proProtectedProcedure
         .input(
             z.object({
                 project_id: z.custom<Types.ObjectId>(),

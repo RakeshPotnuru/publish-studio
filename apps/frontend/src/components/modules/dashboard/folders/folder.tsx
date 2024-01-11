@@ -11,7 +11,7 @@ import { trpc } from "@/utils/trpc";
 import { Button, Skeleton } from "@itsrakesh/ui";
 import { PaginationState } from "@tanstack/react-table";
 import { columns } from "../projects/columns";
-import { NewProjectDialog } from "../projects/new-project";
+import { NewProject } from "../projects/new-project";
 import { ProjectsTable } from "../projects/table";
 
 interface FolderProps extends React.HTMLAttributes<HTMLElement> {}
@@ -39,11 +39,11 @@ export function Folder({ ...props }: FolderProps) {
                 <Heading>
                     {isFetching ? <Skeleton className="h-8 w-56" /> : data?.data.folder_name}
                 </Heading>
-                <NewProjectDialog folderId={folderId}>
+                <NewProject folderId={folderId}>
                     <Button>
                         <Icons.Add className="mr-2 size-4" /> New Project Here
                     </Button>
-                </NewProjectDialog>
+                </NewProject>
             </div>
             {error ? (
                 <ErrorBox title="Error" description={error.message} />

@@ -150,6 +150,7 @@ export default class ProjectService extends FolderService {
                 { _id: id, user_id },
                 {
                     $set: {
+                        name: project.name,
                         title: project.title,
                         description: project.description,
                         folder_id: project.folder_id,

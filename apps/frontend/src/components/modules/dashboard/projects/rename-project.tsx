@@ -8,6 +8,7 @@ import {
     DialogTrigger,
     Form,
     FormControl,
+    FormDescription,
     FormField,
     FormItem,
     FormMessage,
@@ -15,19 +16,20 @@ import {
     toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
-import mongoose, { Types } from "mongoose";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Icons } from "@/assets/icons";
+import type { IProject } from "@publish-studio/core";
+
 import { ErrorBox } from "@/components/ui/error-box";
+import { ButtonLoader } from "@/components/ui/loaders/button-loader";
+import { Tooltip } from "@/components/ui/tooltip";
 import { constants } from "@/config/constants";
 import { trpc } from "@/utils/trpc";
 
-interface EditFolderProps extends React.HTMLAttributes<HTMLDialogElement> {
-    name: string;
-    folderId: Types.ObjectId;
+interface RenameProjectProps extends React.HTMLAttributes<HTMLDialogElement> {
+    project: IProject;
 }
 
 const formSchema = z.object({
@@ -35,27 +37,27 @@ const formSchema = z.object({
         .string()
         .min(
             constants.project.title.MIN_LENGTH,
-            `Name must contain at least ${constants.folder.name.MIN_LENGTH} characters`,
+            `Name must contain at least ${constants.project.name.MIN_LENGTH} characters`,
         )
         .max(
-            constants.project.title.MAX_LENGTH,
-            `Name must not exceed ${constants.folder.name.MAX_LENGTH} characters`,
+            constants.project.name.MAX_LENGTH,
+            `Name must not exceed ${constants.project.name.MAX_LENGTH} characters`,
         ),
 });
 
-export function EditFolder({ children, ...props }: Readonly<EditFolderProps>) {
+export function RenameProject({ children, project, ...props }: Readonly<RenameProjectProps>) {
     const [error, setError] = useState<string | null>(null);
     const [open, setOpen] = useState(false);
 
     const utils = trpc.useUtils();
 
-    const { mutateAsync: editFolder, isLoading } = trpc.updateFolder.useMutation({
-        onSuccess() {
-            toast.success("Folder successfully updated");
-            utils.getAllFolders.invalidate();
+    const { mutateAsync: rename, isLoading: isRenaming } = trpc.updateProject.useMutation({
+        onSuccess: () => {
+            toast.success("Project renamed successfully");
             setOpen(false);
+            utils.getProjectById.invalidate();
         },
-        onError(error) {
+        onError: error => {
             setError(error.message);
         },
     });
@@ -64,70 +66,69 @@ export function EditFolder({ children, ...props }: Readonly<EditFolderProps>) {
         resolver: zodResolver(formSchema),
         mode: "onBlur",
         defaultValues: {
-            name: props.name,
+            name: project.name,
         },
     });
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         try {
-            setError(null);
-            await editFolder({
-                id: new mongoose.Types.ObjectId(props.folderId),
-                folder: data,
+            await rename({
+                id: project._id,
+                project: {
+                    name: data.name,
+                },
             });
         } catch (error) {}
     };
 
+    const isLoading = form.formState.isSubmitting || isRenaming;
+
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>{children}</DialogTrigger>
-            <DialogContent>
+        <Dialog open={open} onOpenChange={setOpen} {...props}>
+            <Tooltip content="Rename project">
+                <DialogTrigger asChild>{children}</DialogTrigger>
+            </Tooltip>
+            <DialogContent onCloseAutoFocus={e => e.preventDefault()}>
                 <DialogHeader>
-                    <DialogTitle>Edit folder</DialogTitle>
+                    <DialogTitle>Rename your project</DialogTitle>
                 </DialogHeader>
                 <div
                     className={cn("space-y-2", {
                         "animate-shake": error,
                     })}
                 >
-                    {error && <ErrorBox title="Could not create project" description={error} />}
+                    {error && <ErrorBox title="Could not rename project" description={error} />}
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                             <FormField
                                 control={form.control}
                                 name="name"
-                                disabled={form.formState.isSubmitting || isLoading}
+                                disabled={isLoading}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormControl>
                                             <Input
                                                 type="text"
-                                                placeholder="Enter a name for your folder"
+                                                placeholder="Enter a name for your project"
                                                 autoFocus
                                                 {...field}
                                             />
                                         </FormControl>
+                                        <FormDescription>
+                                            Your project name provides important context for
+                                            generative AI. So make it descriptive, but not too long.
+                                        </FormDescription>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
                             <Button
                                 type="submit"
+                                size="sm"
                                 className="w-full"
-                                disabled={
-                                    form.formState.isSubmitting ||
-                                    !form.formState.isDirty ||
-                                    isLoading
-                                }
+                                disabled={!form.formState.isDirty || isLoading}
                             >
-                                {isLoading ? (
-                                    <>
-                                        <Icons.Loading className="mr-2 size-4 animate-spin" />
-                                        Please wait
-                                    </>
-                                ) : (
-                                    "Continue"
-                                )}
+                                <ButtonLoader isLoading={isLoading}>Continue</ButtonLoader>
                             </Button>
                         </form>
                     </Form>

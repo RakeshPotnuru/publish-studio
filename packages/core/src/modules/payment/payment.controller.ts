@@ -97,7 +97,7 @@ export default class PaymentController extends PaymentService {
             subscription_id: session.subscription as string,
             isPaid: true,
             amount: session.amount_total ?? 0 / 100,
-            currency: session.currency ?? "usd",
+            currency: session.currency ?? constants.payment.currency.NAME,
         });
 
         const user = await super.getUserById(user_id);

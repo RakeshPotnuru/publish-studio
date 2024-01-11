@@ -99,12 +99,13 @@ export function Navbar({ className, ...props }: NavbarProps) {
                 />
             </Link>
             <div className="flex flex-row items-center space-x-2">
-                {user?.user_type !== "pro" && (
-                    <ProButton size="sm">
-                        <Icons.Pro className="mr-2 size-4" />
-                        Upgrade
-                    </ProButton>
-                )}
+                {isFetching ||
+                    (user?.user_type !== "pro" && (
+                        <ProButton size="sm">
+                            <Icons.Pro className="mr-2 size-4" />
+                            Upgrade
+                        </ProButton>
+                    ))}
                 <NavItem icon={<Icons.Question className="size-5" />} tooltip="Help">
                     <DropdownMenuItem asChild>
                         <Link href={siteConfig.links.support}>

@@ -16,8 +16,8 @@ export function Home({ ...props }: HomeProps) {
             </Heading>
             <Stats />
             <Heading level={2}>Recent</Heading>
-            <RecentFolders />
             <RecentProjects />
+            <RecentFolders />
         </div>
     );
 }

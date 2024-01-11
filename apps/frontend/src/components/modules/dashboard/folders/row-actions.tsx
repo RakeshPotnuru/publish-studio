@@ -15,7 +15,7 @@ import type { IFolder } from "@publish-studio/core";
 import { Icons } from "@/assets/icons";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { trpc } from "@/utils/trpc";
-import { EditFolderDialog } from "./edit-folder";
+import { EditFolder } from "./edit-folder";
 
 interface RowActionsProps<TData> {
     row: Row<TData & IFolder>;
@@ -51,7 +51,7 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[160px]">
-                <EditFolderDialog name={row.original.name} folderId={row.original._id}>
+                <EditFolder name={row.original.name} folderId={row.original._id}>
                     <DropdownMenuItem
                         onSelect={event => {
                             event.preventDefault();
@@ -60,7 +60,7 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
                         <Icons.Edit className="mr-2 size-4" />
                         Rename
                     </DropdownMenuItem>
-                </EditFolderDialog>
+                </EditFolder>
                 <DropdownMenuSeparator />
                 {askingForConfirmation ? (
                     <div className="space-x-1 py-1 pl-2 text-sm">

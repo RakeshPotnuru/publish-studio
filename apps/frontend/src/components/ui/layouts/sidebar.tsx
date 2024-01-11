@@ -8,7 +8,7 @@ import { usePathname, useSelectedLayoutSegment } from "next/navigation";
 import { Icons } from "@/assets/icons";
 import { NewAssetDialog } from "@/components/modules/dashboard/assets/new-asset";
 import { NewFolderDialog } from "@/components/modules/dashboard/folders/new-folder";
-import { NewProjectDialog } from "@/components/modules/dashboard/projects/new-project";
+import { NewProject } from "@/components/modules/dashboard/projects/new-project";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLElement> {}
 
@@ -85,11 +85,11 @@ export function Sidebar({ className, ...props }: SidebarProps) {
                                         icon={<Icons.Projects />}
                                     />
                                 </div>
-                                <NewProjectDialog enableTooltip>
+                                <NewProject enableTooltip>
                                     <Button variant="ghost" size="icon">
                                         <Icons.Add />
                                     </Button>
-                                </NewProjectDialog>
+                                </NewProject>
                             </div>
                             <div className="flex flex-row items-center space-x-2">
                                 <div className="w-3/4">

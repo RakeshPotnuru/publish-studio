@@ -2,11 +2,11 @@ import type { Types } from "mongoose";
 import { z } from "zod";
 
 import { constants } from "../../config/constants";
-import { protectedProcedure, router } from "../../trpc";
+import { proProtectedProcedure, router } from "../../trpc";
 import NLUController from "./nlu.controller";
 
 const nluRouter = router({
-    getToneAnalysis: protectedProcedure
+    getToneAnalysis: proProtectedProcedure
         .input(
             z.object({
                 text: z

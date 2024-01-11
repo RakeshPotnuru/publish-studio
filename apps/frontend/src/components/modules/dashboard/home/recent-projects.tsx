@@ -7,7 +7,7 @@ import { Heading } from "@/components/ui/heading";
 import { FoldersLoader } from "@/components/ui/loaders/folders-loader";
 import { shortenText } from "@/utils/text-shortener";
 import { trpc } from "@/utils/trpc";
-import { NewProjectDialog } from "../projects/new-project";
+import { NewProject } from "../projects/new-project";
 
 export function RecentProjects() {
     const { data, isFetching, error } = trpc.getAllProjects.useQuery({
@@ -50,11 +50,11 @@ export function RecentProjects() {
             ) : (
                 <div className="col-span-4 space-y-4 p-4 text-center text-gray-500">
                     <p>No projects yet. Ready to begin?</p>
-                    <NewProjectDialog>
+                    <NewProject>
                         <Button variant="secondary">
                             <Icons.Add className="mr-2 size-4" /> New Project
                         </Button>
-                    </NewProjectDialog>
+                    </NewProject>
                 </div>
             )}
         </div>

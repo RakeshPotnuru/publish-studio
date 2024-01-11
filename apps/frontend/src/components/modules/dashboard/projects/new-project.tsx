@@ -30,7 +30,7 @@ import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
 
-interface NewProjectDialogProps extends React.HTMLAttributes<HTMLDialogElement> {
+interface NewProjectProps extends React.HTMLAttributes<HTMLDialogElement> {
     folderId?: IFolder["_id"];
     enableTooltip?: boolean;
 }
@@ -48,18 +48,18 @@ const formSchema = z.object({
         ),
 });
 
-export function NewProjectDialog({
+export function NewProject({
     children,
     folderId,
     enableTooltip = false,
     ...props
-}: Readonly<NewProjectDialogProps>) {
+}: Readonly<NewProjectProps>) {
     const [error, setError] = useState<string | null>(null);
     const [open, setOpen] = useState(false);
 
     const router = useRouter();
 
-    const { mutateAsync: createProject, isLoading } = trpc.createProject.useMutation({
+    const { mutateAsync: createProject, isLoading: isCreating } = trpc.createProject.useMutation({
         onSuccess({ data }) {
             toast.success("Project created successfully.");
             setOpen(false);
@@ -89,6 +89,8 @@ export function NewProjectDialog({
         } catch (error) {}
     };
 
+    const isLoading = form.formState.isSubmitting || isCreating;
+
     return (
         <Dialog open={open} onOpenChange={setOpen} {...props}>
             <Tooltip content="Create project" hidden={!enableTooltip}>
@@ -109,7 +111,7 @@ export function NewProjectDialog({
                             <FormField
                                 control={form.control}
                                 name="name"
-                                disabled={form.formState.isSubmitting || isLoading}
+                                disabled={isLoading}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormControl>
@@ -132,11 +134,7 @@ export function NewProjectDialog({
                                 type="submit"
                                 size="sm"
                                 className="w-full"
-                                disabled={
-                                    form.formState.isSubmitting ||
-                                    !form.formState.isDirty ||
-                                    isLoading
-                                }
+                                disabled={!form.formState.isDirty || isLoading}
                             >
                                 <ButtonLoader isLoading={isLoading}>Continue</ButtonLoader>
                             </Button>

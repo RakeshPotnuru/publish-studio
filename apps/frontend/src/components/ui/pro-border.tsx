@@ -10,7 +10,7 @@ export function ProBorder({ children, className, ...props }: Readonly<ProBorderP
     return (
         <div
             className={cn(
-                "from-primary rounded-xl bg-gradient-to-tr via-purple-500 to-blue-500 p-1",
+                "from-primary rounded-xl bg-gradient-to-tr via-purple-500 to-blue-500 p-[1px]",
                 {
                     "bg-none": user?.user_type !== "pro",
                 },
