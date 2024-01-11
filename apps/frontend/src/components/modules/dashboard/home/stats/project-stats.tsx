@@ -54,7 +54,7 @@ export function ProjectStats() {
                 ticks: {
                     precision: 0,
                 },
-                max: data?.data.stats[0].count && data?.data.stats[0].count < 10 ? 10 : undefined,
+                max: data?.data.stats[0]?.count && data?.data.stats[0].count < 10 ? 10 : undefined,
             },
         },
     };

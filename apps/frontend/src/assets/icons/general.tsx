@@ -2,6 +2,7 @@ import {
     AiFillBell,
     AiFillProject,
     AiFillQuestionCircle,
+    AiFillThunderbolt,
     AiOutlineCloudSync,
     AiOutlineLink,
 } from "react-icons/ai";
@@ -14,7 +15,7 @@ import {
     BsFillSunFill,
 } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
-import { FaFolder, FaPaintRoller, FaPuzzlePiece } from "react-icons/fa";
+import { FaFolder, FaPaintRoller, FaPuzzlePiece, FaTools } from "react-icons/fa";
 import { FaWandMagicSparkles } from "react-icons/fa6";
 import { GoDotFill } from "react-icons/go";
 import { HiExternalLink } from "react-icons/hi";
@@ -30,7 +31,6 @@ import { PiDotsThreeBold } from "react-icons/pi";
 import { RiFoldersFill } from "react-icons/ri";
 import { RxMixerHorizontal } from "react-icons/rx";
 import { TbLoader } from "react-icons/tb";
-import { FaTools } from "react-icons/fa";
 
 export const GeneralIcons = {
     Link: AiOutlineLink,
@@ -63,4 +63,5 @@ export const GeneralIcons = {
     Magic: FaWandMagicSparkles,
     Support: MdOutlineSupport,
     Tools: FaTools,
+    Pro: AiFillThunderbolt,
 };

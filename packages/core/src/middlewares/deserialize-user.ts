@@ -49,7 +49,7 @@ export const deserializeUser = async ({ req, res }: CreateExpressContextOptions)
         return {
             req,
             res,
-            user: { ...user, _id: user._id },
+            user: { ...user.toJSON() },
         };
     } catch (error) {
         console.log(error);

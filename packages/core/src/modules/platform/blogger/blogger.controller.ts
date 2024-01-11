@@ -16,7 +16,7 @@ export default class BloggerController extends BloggerService {
     }
 
     async createPlatformHandler(code: string, ctx: Context) {
-        const response = await super.getBloggerSites(code);
+        const response = await super.getTokenAndBlogs(code);
 
         const newPlatform = super.createPlatform({
             user_id: ctx.user?._id,

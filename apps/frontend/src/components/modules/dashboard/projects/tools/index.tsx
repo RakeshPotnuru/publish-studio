@@ -31,7 +31,7 @@ export function ProjectTools({
             <Tooltip content="Tools">
                 <SheetTrigger asChild>{children}</SheetTrigger>
             </Tooltip>
-            <SheetContent>
+            <SheetContent onCloseAutoFocus={e => e.preventDefault()}>
                 <SheetHeader>
                     <SheetTitle>Tools</SheetTitle>
                     <SheetDescription>Tools to help you manage your project.</SheetDescription>

@@ -9,7 +9,72 @@ import stripe from "../../utils/stripe";
 import PaymentService from "./payment.service";
 
 export default class PaymentController extends PaymentService {
+    async stripeWebhookHandler(ctx: Context) {
+        const signature = ctx.req.headers["stripe-signature"] as string;
+        const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+        let event: Stripe.Event;
+
+        // Verify webhook signature and extract the event.
+        try {
+            event = stripe.webhooks.constructEvent(
+                ctx.req.body as Buffer,
+                signature,
+                endpointSecret,
+            );
+        } catch (error) {
+            console.log(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "Error creating event",
+            });
+        }
+
+        // Handle the event
+        switch (event.type) {
+            case "checkout.session.completed": {
+                const session = event.data.object;
+
+                if (session.client_reference_id && session.payment_status === "paid") {
+                    await this.upgradePlan(
+                        session.id,
+                        new mongoose.Types.ObjectId(session.client_reference_id),
+                    );
+                }
+
+                break;
+            }
+            case "subscription_schedule.canceled": {
+                const subscription = event.data.object;
+
+                await this.downgradePlan(subscription.id);
+
+                break;
+            }
+            default: {
+                console.log(`Unhandled event type ${event.type} from stripe`);
+            }
+        }
+
+        return {
+            status: "success",
+            data: {
+                message: "Webhook received successfully",
+            },
+        };
+    }
+
     async makePaymentHandler(ctx: Context) {
+        const payment = await super.getPayment(ctx.user?._id);
+
+        if (payment?.isPaid) {
+            throw new TRPCError({
+                code: "BAD_REQUEST",
+                message: "You already have an active subscription",
+            });
+        }
+
         const session = await super.createCheckoutSession(ctx);
 
         return {
@@ -30,7 +95,6 @@ export default class PaymentController extends PaymentService {
         await super.createPayment({
             user_id: user_id,
             subscription_id: session.subscription as string,
-            intent_id: session.payment_intent as string,
             isPaid: true,
             amount: session.amount_total ?? 0 / 100,
             currency: session.currency ?? "usd",
@@ -84,71 +148,32 @@ export default class PaymentController extends PaymentService {
     }
 
     async cancelSubscriptionHandler(ctx: Context) {
-        const payment = await super.fetchPayment(ctx.user?._id);
+        const payment = await super.getPayment(ctx.user?._id);
 
         if (!payment) {
             throw new TRPCError({
                 code: "NOT_FOUND",
-                message: "No subsciption found",
+                message: "No subscription found",
             });
         }
 
         await super.cancelSubscription(payment.subscription_id);
-    }
-
-    async stripeWebhookHandler(ctx: Context) {
-        const signature = ctx.req.headers["stripe-signature"] as string;
-        const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
-
-        let event: Stripe.Event;
-
-        // Verify webhook signature and extract the event.
-        try {
-            event = stripe.webhooks.constructEvent(
-                ctx.req.body as Buffer,
-                signature,
-                endpointSecret,
-            );
-        } catch (error) {
-            console.log(error);
-
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: "Error creating event",
-            });
-        }
-
-        // Handle the event
-        switch (event.type) {
-            case "checkout.session.completed": {
-                const session = event.data.object;
-
-                if (session.client_reference_id) {
-                    await this.upgradePlan(
-                        session.id,
-                        new mongoose.Types.ObjectId(session.client_reference_id),
-                    );
-                }
-
-                break;
-            }
-            case "subscription_schedule.canceled": {
-                const subscription = event.data.object;
-
-                await this.downgradePlan(subscription.id);
-
-                break;
-            }
-            default: {
-                console.log(`Unhandled event type ${event.type} from stripe`);
-            }
-        }
 
         return {
             status: "success",
             data: {
-                message: "Webhook received successfully",
+                message:
+                    "Subscription cancelled successfully. You will be downgraded to the free plan at the end of your billing cycle.",
             },
+        };
+    }
+
+    async getSessionHandler(session_id: string) {
+        const session = await super.fetchCheckoutSession(session_id);
+
+        return {
+            status: "success",
+            data: { session },
         };
     }
 }

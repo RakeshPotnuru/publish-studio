@@ -5,8 +5,7 @@ import type { IPayment } from "./payment.types";
 const PaymentSchema = new Schema<IPayment>(
     {
         user_id: { type: Schema.Types.ObjectId, required: true },
-        subscription_id: { type: String, required: true },
-        intent_id: { type: String, required: true },
+        subscription_id: { type: String, required: true, unique: true },
         isPaid: { type: Boolean, required: true },
         amount: { type: Number, required: true },
         currency: { type: String, required: true },

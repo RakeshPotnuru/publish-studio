@@ -32,7 +32,7 @@ import { Icons } from "@/assets/icons";
 import { ImageWidget } from "@/components/modules/dashboard/assets/image-widget";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { DotsLoader } from "@/components/ui/loaders/dots-loader";
-import { MagicButton } from "@/components/ui/magic-button";
+import { ProButton } from "@/components/ui/pro-button";
 import { Tooltip } from "@/components/ui/tooltip";
 import { constants } from "@/config/constants";
 import useUserStore from "@/lib/store/user";
@@ -300,12 +300,13 @@ export function PublishPost({
                                             <FormLabel>Title</FormLabel>
                                             <div className="flex items-center space-x-1">
                                                 <Tooltip content="Generate title">
-                                                    <MagicButton
+                                                    <ProButton
                                                         ref={tooltipRef}
                                                         type="button"
                                                         onClick={handleGenerateTitle}
                                                         size="icon"
                                                         disabled={isTitleGenerating || isLoading}
+                                                        featureText="generate SEO optimized title"
                                                     >
                                                         <ButtonLoader
                                                             isLoading={isTitleGenerating}
@@ -313,7 +314,7 @@ export function PublishPost({
                                                         >
                                                             <Icons.Magic className="size-4" />
                                                         </ButtonLoader>
-                                                    </MagicButton>
+                                                    </ProButton>
                                                 </Tooltip>
                                                 <FormControl>
                                                     <Input
@@ -354,7 +355,7 @@ export function PublishPost({
                                             <FormLabel>Description</FormLabel>
                                             <div className="flex items-start space-x-1">
                                                 <Tooltip content="Generate description">
-                                                    <MagicButton
+                                                    <ProButton
                                                         ref={tooltipRef}
                                                         type="button"
                                                         onClick={handleGenerateDescription}
@@ -362,6 +363,7 @@ export function PublishPost({
                                                         disabled={
                                                             isDescriptionGenerating || isLoading
                                                         }
+                                                        featureText="generate SEO optimized description"
                                                     >
                                                         <ButtonLoader
                                                             isLoading={isDescriptionGenerating}
@@ -369,7 +371,7 @@ export function PublishPost({
                                                         >
                                                             <Icons.Magic className="size-4" />
                                                         </ButtonLoader>
-                                                    </MagicButton>
+                                                    </ProButton>
                                                 </Tooltip>
                                                 <FormControl>
                                                     <Textarea
@@ -457,17 +459,18 @@ export function PublishPost({
                                 </Button>
                             </Tooltip>
                             {project.status === constants.project.status.PUBLISHED && (
-                                <MagicButton
+                                <ProButton
                                     onClick={form.handleSubmit(handleUpdate)}
                                     type="button"
                                     disabled={
                                         isLoading || project.updated_at === project.published_at
                                     }
+                                    featureText="update published post in a single click"
                                 >
                                     <ButtonLoader isLoading={isPostUpdating}>
                                         Update Post
                                     </ButtonLoader>
-                                </MagicButton>
+                                </ProButton>
                             )}
                             {/* Hide when post is published to all user connected platforms */}
                             {user.platforms.length !== project.platforms?.length && (

@@ -70,7 +70,7 @@ export default class PaymentService extends UserService {
                     },
                 ],
                 success_url:
-                    defaultConfig.client_url + "/payment/success?session_id={CHECKOUT_SESSION_ID}",
+                    defaultConfig.client_url + "/payment-success?session_id={CHECKOUT_SESSION_ID}",
                 cancel_url: defaultConfig.client_url,
                 client_reference_id: ctx.user?._id.toString(),
             };
@@ -112,7 +112,7 @@ export default class PaymentService extends UserService {
         }
     }
 
-    async fetchPayment(user_id: Types.ObjectId | undefined) {
+    async getPayment(user_id: Types.ObjectId | undefined): Promise<IPayment | null> {
         try {
             return await Payment.findOne({
                 user_id: user_id,

@@ -26,6 +26,8 @@ import { trpc } from "@/utils/trpc";
 import { useCookies } from "react-cookie";
 import { Icons } from "../../../assets/icons";
 import { Images } from "../../../assets/images";
+import { ProBorder } from "../pro-border";
+import { ProButton } from "../pro-button";
 import { Tooltip } from "../tooltip";
 
 const NavItem = ({
@@ -59,8 +61,9 @@ export function Navbar({ className, ...props }: NavbarProps) {
     const { mutateAsync: logout } = trpc.logout.useMutation();
     const { user, setUser, setIsLoading } = useUserStore();
 
-    const { isFetching } = trpc.getUser.useQuery(undefined, {
+    const { isFetching } = trpc.getMe.useQuery(undefined, {
         onSuccess: ({ data }) => {
+            if (!data.user) return;
             setUser(data.user);
             setIsLoading(false);
         },
@@ -95,7 +98,13 @@ export function Navbar({ className, ...props }: NavbarProps) {
                     className="rounded-md drop-shadow-md"
                 />
             </Link>
-            <div className="flex flex-row items-center space-x-1">
+            <div className="flex flex-row items-center space-x-2">
+                {user?.user_type !== "pro" && (
+                    <ProButton size="sm">
+                        <Icons.Pro className="mr-2 size-4" />
+                        Upgrade
+                    </ProButton>
+                )}
                 <NavItem icon={<Icons.Question className="size-5" />} tooltip="Help">
                     <DropdownMenuItem asChild>
                         <Link href={siteConfig.links.support}>
@@ -121,26 +130,37 @@ export function Navbar({ className, ...props }: NavbarProps) {
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="relative size-8 rounded-full">
-                            <Avatar className="size-9">
-                                <AvatarImage
-                                    src={user?.profile_pic}
-                                    alt={`${user?.first_name} ${user?.last_name}`}
-                                />
-                                {isFetching ? (
-                                    <AvatarFallback>
-                                        <Skeleton className="size-4 animate-ping rounded-full" />
-                                    </AvatarFallback>
-                                ) : (
-                                    <AvatarFallback>
-                                        {user?.first_name.charAt(0)}
-                                        {user?.last_name.charAt(0)}
-                                    </AvatarFallback>
-                                )}
-                            </Avatar>
+                            <ProBorder className="rounded-full">
+                                <Avatar className="size-9">
+                                    <AvatarImage
+                                        src={user?.profile_pic}
+                                        alt={`${user?.first_name} ${user?.last_name}`}
+                                    />
+                                    {isFetching ? (
+                                        <AvatarFallback>
+                                            <Skeleton className="size-4 animate-ping rounded-full" />
+                                        </AvatarFallback>
+                                    ) : (
+                                        <AvatarFallback>
+                                            {user?.first_name.charAt(0)}
+                                            {user?.last_name.charAt(0)}
+                                        </AvatarFallback>
+                                    )}
+                                </Avatar>
+                            </ProBorder>
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-48" align="end" forceMount>
-                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                        <DropdownMenuLabel className="grid grid-cols-2 items-center">
+                            My Account{" "}
+                            {user?.user_type === "pro" && (
+                                <Tooltip content="Pro">
+                                    <span>
+                                        <Icons.Pro className="text-primary mr-2 size-4" />
+                                    </span>
+                                </Tooltip>
+                            )}
+                        </DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem asChild>
                             <Link href="/profile">

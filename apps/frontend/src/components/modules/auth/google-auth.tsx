@@ -1,26 +1,35 @@
 import { toast } from "@itsrakesh/ui";
+import { jwtDecode } from "jwt-decode";
+import { useTheme } from "next-themes";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useCookies } from "react-cookie";
 
 import { ErrorBox } from "@/components/ui/error-box";
 import { DotsLoader } from "@/components/ui/loaders/dots-loader";
 import { trpc } from "@/utils/trpc";
-import { useTheme } from "next-themes";
 
 export function GoogleAuth() {
     const [error, setError] = useState<string | null>(null);
 
     const { theme } = useTheme();
     const authButtonRef = useRef<HTMLDivElement>(null);
+    const [_, setCookie] = useCookies(["ps_access_token"]);
 
     const { mutateAsync: connectGoogle, isLoading } = trpc.connectGoogle.useMutation({
         onSuccess({ data }) {
-            toast.success(`Authenticated as ${data.user.email}`);
-
             if (!data.access_token) {
+                setError("Something went wrong. Please try again.");
                 return;
             }
 
-            localStorage.setItem("ps_access_token", data.access_token);
+            const decoded = jwtDecode<{ exp: number }>(data.access_token);
+            setCookie("ps_access_token", data.access_token, {
+                path: "/",
+                expires: new Date(decoded.exp * 1000),
+                sameSite: "lax",
+            });
+
+            toast.success(`Authenticated as ${data.user.email}`);
 
             setTimeout(() => {
                 window.location.reload();

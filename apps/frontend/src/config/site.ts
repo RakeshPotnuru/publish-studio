@@ -19,6 +19,7 @@ export const siteConfig = {
         support: "mailto:support@publishstudio.one",
         wordpressAuthorize: "https://public-api.wordpress.com/oauth2/authorize",
         wordpressConnectedApps: "https://wordpress.com/me/security/connected-applications",
+        pricing: "https://publishstudio.one/pricing",
     },
     twitter: {
         site: "@publishstudio",

@@ -161,7 +161,39 @@ export default class BloggerService {
         }
     }
 
-    async getBloggerSites(code: string) {
+    async getBloggerBlogs(user_id: Types.ObjectId) {
+        try {
+            const blogs = await (
+                await this.blogger(user_id)
+            )?.blogs.listByUser({
+                userId: "self",
+            });
+
+            if (!blogs?.data.items || blogs?.data.items.length === 0) {
+                throw new TRPCError({
+                    code: "NOT_FOUND",
+                    message: "No blogs found for the user.",
+                });
+            }
+
+            return blogs.data.items.map(blog => ({
+                id: blog.id,
+                url: blog.url,
+            })) as {
+                id: string;
+                url: string;
+            }[];
+        } catch (error) {
+            console.log(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "An error occurred while fetching the blogs. Please try again later.",
+            });
+        }
+    }
+
+    async getTokenAndBlogs(code: string) {
         try {
             const { tokens } = await this.oauth2Client.getToken(code);
 

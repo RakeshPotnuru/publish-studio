@@ -4,8 +4,7 @@ import type { Types } from "mongoose";
 import { Icons } from "@/assets/icons";
 import { Heading } from "@/components/ui/heading";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
-import { MagicButton } from "@/components/ui/magic-button";
-import { MagicText } from "@/components/ui/magic-text";
+import { ProButton } from "@/components/ui/pro-button";
 import { trpc } from "@/utils/trpc";
 import type { MenuProps } from "../editor/menu/fixed-menu";
 import { deserialize } from "../editor/transform-markdown";
@@ -37,23 +36,22 @@ export function GenerateOutline({ editor, project_id }: Readonly<GenerateOutline
     return (
         <div className="space-y-2">
             <div>
-                <Heading level={5}>
-                    <MagicText>Generate Outline</MagicText>
-                </Heading>
+                <Heading level={5}>Generate Outline</Heading>
                 <p className="text-muted-foreground text-sm">
                     Quickly generate an outline of your topic.
                 </p>
             </div>
-            <MagicButton
+            <ProButton
                 onClick={handleGenerateOutline}
                 size="sm"
                 className="w-full"
                 disabled={isLoading}
+                featureText="generate an outline of your topic"
             >
                 <ButtonLoader isLoading={isLoading}>
                     <Icons.Magic className="mr-2 size-4" /> Generate Outline
                 </ButtonLoader>
-            </MagicButton>
+            </ProButton>
         </div>
     );
 }

@@ -45,10 +45,6 @@ export function LoginForm({ ...props }: LoginFormProps) {
 
     const { mutateAsync: login, isLoading } = trpc.login.useMutation({
         onSuccess({ data }) {
-            toast.success("Logged in successfully", {
-                description: `Welcome back, ${data.user.first_name} ${data.user.last_name}!`,
-            });
-
             if (!data.access_token) {
                 setError("Something went wrong. Please try again.");
                 return;
@@ -59,6 +55,10 @@ export function LoginForm({ ...props }: LoginFormProps) {
                 path: "/",
                 expires: new Date(decoded.exp * 1000),
                 sameSite: "lax",
+            });
+
+            toast.success("Logged in successfully", {
+                description: `Welcome back, ${data.user.first_name} ${data.user.last_name}!`,
             });
 
             setTimeout(() => {

@@ -15,13 +15,13 @@ interface ProjectSettingsProps extends React.HTMLAttributes<HTMLDivElement> {
     project: IProject;
 }
 
-export function ProjectSettings({ children, project, ...props }: ProjectSettingsProps) {
+export function ProjectSettings({ children, project, ...props }: Readonly<ProjectSettingsProps>) {
     return (
         <Sheet {...props}>
             <Tooltip content="Settings">
                 <SheetTrigger asChild>{children}</SheetTrigger>
             </Tooltip>
-            <SheetContent>
+            <SheetContent onCloseAutoFocus={e => e.preventDefault()}>
                 <SheetHeader>
                     <SheetTitle>Settings</SheetTitle>
                     <SheetDescription>Your project settings.</SheetDescription>

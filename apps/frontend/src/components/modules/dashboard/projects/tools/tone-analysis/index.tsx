@@ -7,8 +7,7 @@ import type { IProject } from "@publish-studio/core";
 import { Icons } from "@/assets/icons";
 import { Heading } from "@/components/ui/heading";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
-import { MagicButton } from "@/components/ui/magic-button";
-import { MagicText } from "@/components/ui/magic-text";
+import { ProButton } from "@/components/ui/pro-button";
 import fleschReadingEaseScore from "@/utils/flesch-reading-ease-score";
 import { trpc } from "@/utils/trpc";
 import type { MenuProps } from "../../editor/menu/fixed-menu";
@@ -45,9 +44,7 @@ export function ToneAnalysis({ editor, project }: Readonly<ToneAnalysisProps>) {
     return (
         <div className="space-y-2">
             <div>
-                <Heading level={5}>
-                    <MagicText>Tone Analysis</MagicText>
-                </Heading>
+                <Heading level={5}>Tone Analysis</Heading>
                 <p className="text-muted-foreground text-sm">
                     Find out how your content sounds to readers.
                     <br />
@@ -89,17 +86,18 @@ export function ToneAnalysis({ editor, project }: Readonly<ToneAnalysisProps>) {
                     </div>
                 )
             )}
-            <MagicButton
+            <ProButton
                 onClick={handleAnalyzeContent}
                 size="sm"
                 className="w-full"
                 disabled={isLoading || !level}
+                featureText="analyze your content"
             >
                 <ButtonLoader isLoading={isLoading}>
                     <Icons.Magic className="mr-2 size-4" />
                     {data || project.tone_analysis ? "Analyze Again" : "Analyze Content"}
                 </ButtonLoader>
-            </MagicButton>
+            </ProButton>
         </div>
     );
 }
