@@ -5,9 +5,9 @@ import { useState } from "react";
 import type { IProject } from "@publish-studio/core";
 
 import { Icons } from "@/assets/icons";
+import { AskForConfirmation } from "@/components/ui/ask-for-confirmation";
 import { DataTableViewOptions } from "@/components/ui/data-table";
 import { DataTableFacetedFilter } from "@/components/ui/data-table/faceted-filter";
-import { Tooltip } from "@/components/ui/tooltip";
 import { trpc } from "@/utils/trpc";
 import { statuses } from "./columns";
 
@@ -22,13 +22,13 @@ export function Toolbar<TData>({ table }: Readonly<ToolbarProps<TData>>) {
 
     const utils = trpc.useUtils();
 
-    const { mutateAsync: deleteProjects, isLoading } = trpc.deleteProjects.useMutation({
+    const { mutateAsync: deleteProjects, isLoading } = trpc.projects.delete.useMutation({
         onSuccess: ({ data }) => {
             const count = data.projects.deletedCount;
 
             toast.success(`${count} project${count > 1 ? "s" : ""} deleted successfully`);
 
-            utils.getAllProjects.invalidate();
+            utils.projects.getAll.invalidate();
             table.resetRowSelection();
         },
         onError: error => {
@@ -74,34 +74,11 @@ export function Toolbar<TData>({ table }: Readonly<ToolbarProps<TData>>) {
             <div className="flex flex-row items-center space-x-2">
                 {table.getFilteredSelectedRowModel().rows.length > 0 &&
                     (askingForConfirmation ? (
-                        <div className="space-x-1 text-sm">
-                            <span>Confirm?</span>
-                            <Tooltip content="Delete">
-                                <Button
-                                    onClick={handleDelete}
-                                    variant="destructive"
-                                    size="icon"
-                                    className="size-8"
-                                    disabled={isLoading}
-                                >
-                                    {isLoading ? (
-                                        <Icons.Loading className="animate-spin" />
-                                    ) : (
-                                        <Icons.Check />
-                                    )}
-                                </Button>
-                            </Tooltip>
-                            <Tooltip content="Cancel">
-                                <Button
-                                    onClick={() => setAskingForConfirmation(false)}
-                                    variant="outline"
-                                    size="icon"
-                                    className="size-8"
-                                >
-                                    <Icons.Close />
-                                </Button>
-                            </Tooltip>
-                        </div>
+                        <AskForConfirmation
+                            onCancel={() => setAskingForConfirmation(false)}
+                            onConfirm={handleDelete}
+                            isLoading={isLoading}
+                        />
                     ) : (
                         <Button
                             onClick={() => setAskingForConfirmation(true)}

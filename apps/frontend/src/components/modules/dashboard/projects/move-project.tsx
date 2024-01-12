@@ -50,25 +50,24 @@ export function MoveProject({ children, projectId, ...props }: Readonly<MoveProj
 
     const utils = trpc.useUtils();
 
-    const { data, isLoading, error } = trpc.getAllFolders.useQuery({
+    const { data, isLoading, error } = trpc.folders.getAll.useQuery({
         pagination: {
             page: 1,
             limit: 10,
         },
     });
 
-    const { mutateAsync: moveProject, isLoading: isProjectMoving } = trpc.updateProject.useMutation(
-        {
+    const { mutateAsync: moveProject, isLoading: isProjectMoving } =
+        trpc.projects.update.useMutation({
             onSuccess: () => {
                 toast.success("Project moved successfully.");
-                utils.getProjectsByFolderId.invalidate();
+                utils.projects.getByFolderId.invalidate();
                 props.onOpenChange(false);
             },
             onError: error => {
                 setMoveError(error.message);
             },
-        },
-    );
+        });
 
     const items =
         data?.data.folders.map(folder => ({

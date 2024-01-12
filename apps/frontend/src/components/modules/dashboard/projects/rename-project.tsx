@@ -51,11 +51,11 @@ export function RenameProject({ children, project, ...props }: Readonly<RenamePr
 
     const utils = trpc.useUtils();
 
-    const { mutateAsync: rename, isLoading: isRenaming } = trpc.updateProject.useMutation({
+    const { mutateAsync: rename, isLoading: isRenaming } = trpc.projects.update.useMutation({
         onSuccess: () => {
             toast.success("Project renamed successfully");
             setOpen(false);
-            utils.getProjectById.invalidate();
+            utils.projects.getById.invalidate();
         },
         onError: error => {
             setError(error.message);

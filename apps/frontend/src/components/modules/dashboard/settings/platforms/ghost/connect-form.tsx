@@ -47,16 +47,17 @@ export function GhostConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFor
 
     const utils = trpc.useUtils();
 
-    const { mutateAsync: connect, isLoading: isConnecting } = trpc.connectGhost.useMutation({
-        onSuccess: () => {
-            toast.success("Your Ghost account has been connected successfully.");
-            utils.getAllPlatforms.invalidate();
-            setIsOpen(false);
-        },
-        onError: error => {
-            setError(error.message);
-        },
-    });
+    const { mutateAsync: connect, isLoading: isConnecting } =
+        trpc.platforms.ghost.connect.useMutation({
+            onSuccess: () => {
+                toast.success("Your Ghost account has been connected successfully.");
+                utils.platforms.getAll.invalidate();
+                setIsOpen(false);
+            },
+            onError: error => {
+                setError(error.message);
+            },
+        });
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),

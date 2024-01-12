@@ -36,7 +36,7 @@ SideButton.displayName = "SideButton";
 export function Project({ ...props }: ProjectProps) {
     const { projectId } = useParams();
 
-    const { data, isFetching, error } = trpc.getProjectById.useQuery(
+    const { data, isFetching, error } = trpc.projects.getById.useQuery(
         new mongoose.Types.ObjectId(projectId.toString()),
     );
 

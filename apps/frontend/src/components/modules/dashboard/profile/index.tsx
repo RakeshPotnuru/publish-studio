@@ -58,11 +58,11 @@ export function Profile({ ...props }: ProfileProps) {
     const { user, isLoading: isUserLoading } = useUserStore();
     const utils = trpc.useUtils();
 
-    const { mutateAsync: editProfile, isLoading: isUpdating } = trpc.updateUser.useMutation({
+    const { mutateAsync: editProfile, isLoading: isUpdating } = trpc.users.update.useMutation({
         onSuccess: () => {
             toast.success("Your profile has been updated successfully.");
             setIsEditing(false);
-            utils.getUser.invalidate();
+            utils.auth.getMe.invalidate();
         },
         onError: error => {
             setError(error.message);
@@ -155,8 +155,8 @@ export function Profile({ ...props }: ProfileProps) {
                                         open={open}
                                         onOpenChange={setOpen}
                                         isWidget={true}
-                                        onAdd={url => {
-                                            form.setValue("profile_pic", url, {
+                                        onImageInsert={({ src }) => {
+                                            form.setValue("profile_pic", src, {
                                                 shouldDirty: true,
                                             });
                                             setOpen(false);

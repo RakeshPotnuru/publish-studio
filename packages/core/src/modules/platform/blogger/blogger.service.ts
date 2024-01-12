@@ -9,7 +9,7 @@ import Platform from "../../../modules/platform/platform.model";
 import User from "../../../modules/user/user.model";
 import { decryptField } from "../../../utils/aws/kms";
 import Blogger from "./blogger.model";
-import type { IBlogger } from "./blogger.types";
+import type { IBlogger, IBloggerUserUpdate } from "./blogger.types";
 
 export default class BloggerService {
     private readonly PLATFORM = constants.user.platforms.BLOGGER;
@@ -92,7 +92,7 @@ export default class BloggerService {
         }
     }
 
-    async updatePlatform(platform: IBlogger, user_id: Types.ObjectId | undefined) {
+    async updatePlatform(platform: IBloggerUserUpdate, user_id: Types.ObjectId | undefined) {
         try {
             return (await Blogger.findOneAndUpdate(
                 {
@@ -161,7 +161,7 @@ export default class BloggerService {
         }
     }
 
-    async getBloggerBlogs(user_id: Types.ObjectId) {
+    async getBloggerBlogs(user_id: Types.ObjectId | undefined) {
         try {
             const blogs = await (
                 await this.blogger(user_id)

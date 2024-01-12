@@ -5,7 +5,7 @@ interface ShowPasswordProps extends React.HTMLAttributes<HTMLDivElement> {
     setPasswordVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export function ShowPassword({ passwordVisible, setPasswordVisible }: ShowPasswordProps) {
+export function ShowPassword({ passwordVisible, setPasswordVisible }: Readonly<ShowPasswordProps>) {
     const handleShowPassword = () => {
         setPasswordVisible(!passwordVisible);
     };

@@ -9,9 +9,12 @@ export function BloggerConnectForm() {
 
     const scopes = ["manage your blogger account"];
 
-    const { refetch: getAuthUrl, isFetching } = trpc.getBloggerAuthUrl.useQuery(undefined, {
-        enabled: false,
-    });
+    const { refetch: getAuthUrl, isFetching } = trpc.platforms.blogger.getAuthUrl.useQuery(
+        undefined,
+        {
+            enabled: false,
+        },
+    );
 
     const handleAuthenticate = async () => {
         try {

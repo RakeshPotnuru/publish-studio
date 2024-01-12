@@ -45,16 +45,17 @@ export function MediumConnectForm({ setIsOpen, ...props }: Readonly<MediumConnec
 
     const utils = trpc.useUtils();
 
-    const { mutateAsync: connect, isLoading: isConnecting } = trpc.connectMedium.useMutation({
-        onSuccess: () => {
-            toast.success("Your Medium account has been connected successfully.");
-            utils.getAllPlatforms.invalidate();
-            setIsOpen(false);
-        },
-        onError: error => {
-            setError(error.message);
-        },
-    });
+    const { mutateAsync: connect, isLoading: isConnecting } =
+        trpc.platforms.medium.connect.useMutation({
+            onSuccess: () => {
+                toast.success("Your Medium account has been connected successfully.");
+                utils.platforms.getAll.invalidate();
+                setIsOpen(false);
+            },
+            onError: error => {
+                setError(error.message);
+            },
+        });
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),

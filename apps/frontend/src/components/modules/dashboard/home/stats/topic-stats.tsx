@@ -28,7 +28,7 @@ Chart.register(ArcElement);
 export function TopicStats() {
     const { theme } = useTheme();
 
-    const { data, isFetching, error } = trpc.getTopicStats.useQuery({});
+    const { data, isFetching, error } = trpc.stats.getTopics.useQuery({});
 
     const chartData = generateChartData(data?.data.stats || []);
 

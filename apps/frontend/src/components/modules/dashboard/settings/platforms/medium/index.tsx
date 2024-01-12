@@ -21,7 +21,7 @@ export function Medium({ data, isOpen, isLoading, setIsOpen }: Readonly<MediumTo
         refetch: disconnectMedium,
         isFetching: isDisconnectingMedium,
         error: disconnectError,
-    } = trpc.disconnectMedium.useQuery(undefined, {
+    } = trpc.platforms.medium.disconnect.useQuery(undefined, {
         enabled: false,
     });
 

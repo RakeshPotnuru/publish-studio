@@ -25,7 +25,7 @@ export function Folder({ ...props }: FolderProps) {
     const params = useParams();
     const folderId = new mongoose.Types.ObjectId(params.folderId.toString());
 
-    const { data, isFetching, error, refetch } = trpc.getProjectsByFolderId.useQuery({
+    const { data, isFetching, error, refetch } = trpc.projects.getByFolderId.useQuery({
         pagination: {
             page: pageIndex + 1,
             limit: pageSize,

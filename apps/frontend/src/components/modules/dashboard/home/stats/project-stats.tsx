@@ -29,7 +29,7 @@ const generateChartData = (projects: IProjectStats[]): ChartData<"line"> => {
 export function ProjectStats() {
     const { theme } = useTheme();
 
-    const { data, isFetching, error } = trpc.getProjectStats.useQuery({});
+    const { data, isFetching, error } = trpc.stats.getProjects.useQuery({});
 
     const chartData = generateChartData(data?.data.stats || []);
 

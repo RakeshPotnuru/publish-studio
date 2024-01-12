@@ -23,7 +23,7 @@ export function WordPress({ data, isOpen, isLoading, setIsOpen }: Readonly<WordP
         isFetching: isDisconnectingWordPress,
         data: disconnectResponse,
         error: disconnectError,
-    } = trpc.disconnectWordPress.useQuery(undefined, {
+    } = trpc.platforms.wordpress.disconnect.useQuery(undefined, {
         enabled: false,
     });
 

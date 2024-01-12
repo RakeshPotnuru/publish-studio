@@ -32,7 +32,7 @@ export function Editor({ className, project, ...props }: Readonly<EditorProps>) 
 
     const isFullscreen = useFullscreenStatus();
 
-    const { mutateAsync: autoSaveProject, isLoading } = trpc.updateProject.useMutation({
+    const { mutateAsync: autoSaveProject, isLoading } = trpc.projects.update.useMutation({
         onError: error => {
             toast.error(error.message);
         },

@@ -1,9 +1,10 @@
 "use client";
 
-import { siteConfig } from "@/config/site";
 import { Button } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import Link from "next/link";
+
+import { siteConfig } from "@/config/site";
 
 interface FooterProps extends React.HTMLAttributes<HTMLElement> {}
 

@@ -21,6 +21,7 @@ import {
     TabsTrigger,
     Textarea,
 } from "@itsrakesh/ui";
+import { cn } from "@itsrakesh/utils";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -31,7 +32,6 @@ import { deserialize } from "@/components/modules/dashboard/projects/editor/tran
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
-import { cn } from "@itsrakesh/utils";
 
 const mdFormSchema = z.object({
     markdown: z.string().min(1, "Markdown is required."),

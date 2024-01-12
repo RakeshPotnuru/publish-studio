@@ -41,16 +41,17 @@ export function DevConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFormP
 
     const utils = trpc.useUtils();
 
-    const { mutateAsync: connect, isLoading: isConnecting } = trpc.connectDevTo.useMutation({
-        onSuccess: () => {
-            toast.success("Your Dev account has been connected successfully.");
-            utils.getAllPlatforms.invalidate();
-            setIsOpen(false);
-        },
-        onError: error => {
-            setError(error.message);
-        },
-    });
+    const { mutateAsync: connect, isLoading: isConnecting } =
+        trpc.platforms.devto.connect.useMutation({
+            onSuccess: () => {
+                toast.success("Your Dev account has been connected successfully.");
+                utils.platforms.getAll.invalidate();
+                setIsOpen(false);
+            },
+            onError: error => {
+                setError(error.message);
+            },
+        });
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),

@@ -20,7 +20,7 @@ export function Folders({ ...props }: ProjectsProps) {
         pageSize: 10,
     });
 
-    const { data, isFetching, refetch, error } = trpc.getAllFolders.useQuery({
+    const { data, isFetching, refetch, error } = trpc.folders.getAll.useQuery({
         pagination: {
             page: pageIndex + 1,
             limit: pageSize,

@@ -1,8 +1,8 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Form, FormControl, FormField, FormItem, FormMessage, Input } from "@itsrakesh/ui";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { TProvider } from ".";
 import { ButtonLoader } from "../../../../ui/loaders/button-loader";
 

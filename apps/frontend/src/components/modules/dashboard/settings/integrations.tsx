@@ -28,7 +28,7 @@ export function Integrations({ ...props }: IntegrationsProps) {
     const [isWordPressOpen, setIsWordPressOpen] = useState(false);
     const [isBloggerOpen, setIsBloggerOpen] = useState(false);
 
-    const { data, isFetching, error } = trpc.getAllPlatforms.useQuery({
+    const { data, isFetching, error } = trpc.platforms.getAll.useQuery({
         pagination: { page: 1, limit: 10 },
     });
 

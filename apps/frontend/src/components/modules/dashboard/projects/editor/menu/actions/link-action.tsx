@@ -23,7 +23,7 @@ const formSchema = z.object({
     link: z.string().url({ message: "Please enter a valid URL" }),
 });
 
-export function LinkAction({ editor, isBubbleMenu }: MenuProps) {
+export function LinkAction({ editor, isBubbleMenu }: Readonly<MenuProps>) {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         mode: "onBlur",

@@ -23,7 +23,7 @@ export function Ghost({ data, isOpen, isLoading, setIsOpen }: Readonly<GhostProp
         refetch: disconnectGhost,
         isFetching: isDisconnectingGhost,
         error: disconnectError,
-    } = trpc.disconnectGhost.useQuery(undefined, {
+    } = trpc.platforms.ghost.disconnect.useQuery(undefined, {
         enabled: false,
     });
 

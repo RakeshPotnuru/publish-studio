@@ -20,7 +20,7 @@ export function Hashnode({ data, isOpen, isLoading, setIsOpen }: Readonly<Hashno
         refetch: disconnectHashnode,
         isFetching: isDisconnectingHashnode,
         error: disconnectError,
-    } = trpc.disconnectHashnode.useQuery(undefined, {
+    } = trpc.platforms.hashnode.disconnect.useQuery(undefined, {
         enabled: false,
     });
 

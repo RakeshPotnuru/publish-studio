@@ -6,7 +6,7 @@ import AssetController from "./asset.controller";
 import type { TMimeType } from "./asset.types";
 
 const assetRouter = router({
-    uploadImage: protectedProcedure
+    upload: protectedProcedure
         .input(
             z.object({
                 file: z.object({
@@ -19,7 +19,7 @@ const assetRouter = router({
         )
         .mutation(({ input, ctx }) => new AssetController().uploadImageHandler(input, ctx)),
 
-    getAllAssets: protectedProcedure
+    getAll: protectedProcedure
         .input(
             z.object({
                 pagination: z.object({
@@ -30,7 +30,7 @@ const assetRouter = router({
         )
         .query(({ input, ctx }) => new AssetController().getAllAssetsHandler(input, ctx)),
 
-    deleteAssets: protectedProcedure
+    delete: protectedProcedure
         .input(z.array(z.custom<Types.ObjectId>()))
         .mutation(({ input, ctx }) => new AssetController().deleteAssetsHandler(input, ctx)),
 });

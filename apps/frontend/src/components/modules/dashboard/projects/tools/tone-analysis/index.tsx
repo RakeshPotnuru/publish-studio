@@ -20,7 +20,7 @@ interface ToneAnalysisProps extends MenuProps {
 export function ToneAnalysis({ editor, project }: Readonly<ToneAnalysisProps>) {
     const [data, setData] = useState<Partial<IToneAnalysis>>();
 
-    const { mutateAsync: analyzeContent, isLoading } = trpc.getToneAnalysis.useMutation({
+    const { mutateAsync: analyzeContent, isLoading } = trpc.nlu.getToneAnalysis.useMutation({
         onError: error => {
             toast.error(error.message);
         },

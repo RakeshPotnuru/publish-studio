@@ -5,7 +5,7 @@ interface MenuSeparatorProps {
     isBubbleMenu?: boolean;
 }
 
-export function MenuSeparator({ isBubbleMenu }: MenuSeparatorProps) {
+export function MenuSeparator({ isBubbleMenu }: Readonly<MenuSeparatorProps>) {
     return (
         <Separator
             orientation="vertical"

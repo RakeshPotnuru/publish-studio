@@ -15,7 +15,7 @@ export function GoogleAuth() {
     const authButtonRef = useRef<HTMLDivElement>(null);
     const [_, setCookie] = useCookies(["ps_access_token"]);
 
-    const { mutateAsync: connectGoogle, isLoading } = trpc.connectGoogle.useMutation({
+    const { mutateAsync: connectGoogle, isLoading } = trpc.auth.connectGoogle.useMutation({
         onSuccess({ data }) {
             if (!data.access_token) {
                 setError("Something went wrong. Please try again.");

@@ -59,7 +59,7 @@ export function NewProject({
 
     const router = useRouter();
 
-    const { mutateAsync: createProject, isLoading: isCreating } = trpc.createProject.useMutation({
+    const { mutateAsync: createProject, isLoading: isCreating } = trpc.projects.create.useMutation({
         onSuccess({ data }) {
             toast.success("Project created successfully.");
             setOpen(false);

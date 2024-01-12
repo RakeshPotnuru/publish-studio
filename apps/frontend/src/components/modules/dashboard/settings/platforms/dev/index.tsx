@@ -19,7 +19,7 @@ export function DevTo({ data, isOpen, isLoading, setIsOpen }: Readonly<DevToProp
         refetch: disconnectDevTo,
         isFetching: isDisconnectingDevTo,
         error: disconnectError,
-    } = trpc.disconnectDevTo.useQuery(undefined, {
+    } = trpc.platforms.devto.disconnect.useQuery(undefined, {
         enabled: false,
     });
 

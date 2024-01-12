@@ -16,10 +16,10 @@ export function ConnectBlogger() {
 
     const utils = trpc.useUtils();
 
-    const { mutateAsync: connect } = trpc.connectBlogger.useMutation({
+    const { mutateAsync: connect } = trpc.platforms.blogger.connect.useMutation({
         onSuccess() {
             toast.success("Your Blogger account has been connected successfully.");
-            utils.getAllPlatforms.invalidate();
+            utils.platforms.getAll.invalidate();
             router.push(siteConfig.pages.settings.integrations.link);
         },
         onError(error) {

@@ -19,11 +19,11 @@ import {
 import { cn } from "@itsrakesh/utils";
 import Image from "next/image";
 import Link from "next/link";
+import { useCookies } from "react-cookie";
 
 import { siteConfig } from "@/config/site";
 import useUserStore from "@/lib/store/user";
 import { trpc } from "@/utils/trpc";
-import { useCookies } from "react-cookie";
 import { Icons } from "../../../assets/icons";
 import { Images } from "../../../assets/images";
 import { ProBorder } from "../pro-border";
@@ -58,10 +58,10 @@ interface NavbarProps extends React.HTMLAttributes<HTMLElement> {}
 export function Navbar({ className, ...props }: NavbarProps) {
     const [_, __, removeCookie] = useCookies(["ps_access_token"]);
 
-    const { mutateAsync: logout } = trpc.logout.useMutation();
+    const { mutateAsync: logout } = trpc.auth.logout.useMutation();
     const { user, setUser, setIsLoading } = useUserStore();
 
-    const { isFetching } = trpc.getMe.useQuery(undefined, {
+    const { isFetching } = trpc.auth.getMe.useQuery(undefined, {
         onSuccess: ({ data }) => {
             if (!data.user) return;
             setUser(data.user);

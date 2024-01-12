@@ -16,10 +16,10 @@ export function ConnectWP() {
 
     const utils = trpc.useUtils();
 
-    const { mutateAsync: connect } = trpc.connectWordPress.useMutation({
+    const { mutateAsync: connect } = trpc.platforms.wordpress.connect.useMutation({
         onSuccess() {
             toast.success("Your WordPress account has been connected successfully.");
-            utils.getAllPlatforms.invalidate();
+            utils.platforms.getAll.invalidate();
             router.push(siteConfig.pages.settings.integrations.link);
         },
         onError(error) {

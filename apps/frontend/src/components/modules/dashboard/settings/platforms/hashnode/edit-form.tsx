@@ -54,16 +54,18 @@ export function HashnodeEditForm({
 
     const utils = trpc.useUtils();
 
-    const { mutateAsync: edit, isLoading: isUpdating } = trpc.updateHashnode.useMutation({
-        onSuccess: () => {
-            toast.success("Your Hashnode account has been updated successfully.");
-            utils.getAllPlatforms.invalidate();
-            setIsOpen(false);
+    const { mutateAsync: edit, isLoading: isUpdating } = trpc.platforms.hashnode.update.useMutation(
+        {
+            onSuccess: () => {
+                toast.success("Your Hashnode account has been updated successfully.");
+                utils.platforms.getAll.invalidate();
+                setIsOpen(false);
+            },
+            onError: error => {
+                setError(error.message);
+            },
         },
-        onError: error => {
-            setError(error.message);
-        },
-    });
+    );
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),

@@ -54,7 +54,7 @@ export function NewFolderDialog({
 
     const router = useRouter();
 
-    const { mutateAsync: createFolder, isLoading } = trpc.createFolder.useMutation({
+    const { mutateAsync: createFolder, isLoading } = trpc.folders.create.useMutation({
         onSuccess({ data }) {
             toast.success("Folder created successfully.");
             setOpen(false);

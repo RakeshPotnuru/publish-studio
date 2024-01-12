@@ -57,7 +57,7 @@ export function ResetPasswordForm({ ...props }: ResetPasswordFormProps) {
     const token = searchParams.get("token");
 
     const { mutateAsync: sendResetPasswordEmail, isLoading: isEmailStepLoading } =
-        trpc.sendResetPasswordEmail.useMutation({
+        trpc.auth.email.sendResetPassword.useMutation({
             onSuccess() {
                 setError(null);
                 setStep("link");
@@ -68,7 +68,7 @@ export function ResetPasswordForm({ ...props }: ResetPasswordFormProps) {
         });
 
     const { mutateAsync: resetPassword, isLoading: isPasswordStepLoading } =
-        trpc.resetPassword.useMutation({
+        trpc.auth.resetPassword.useMutation({
             onSuccess() {
                 setError(null);
                 setStep("success");

@@ -22,7 +22,7 @@ export function Blogger({ data, isOpen, isLoading, setIsOpen }: Readonly<Blogger
         isFetching: isDisconnectingBlogger,
         data: disconnectResponse,
         error: disconnectError,
-    } = trpc.disconnectBlogger.useQuery(undefined, {
+    } = trpc.platforms.blogger.disconnect.useQuery(undefined, {
         enabled: false,
     });
 

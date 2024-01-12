@@ -26,7 +26,7 @@ export default class UserController extends UserService {
         }
     }
 
-    async getUserHandler(ctx: Context) {
+    async getUserByIdHandler(ctx: Context) {
         const user = await super.getUserById(ctx.user?._id);
 
         if (!user) {

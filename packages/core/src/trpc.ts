@@ -43,6 +43,5 @@ const isPro = t.middleware(({ next, ctx }) => {
 });
 
 export const router = t.router;
-export const mergeRouters = t.mergeRouters;
 export const protectedProcedure = t.procedure.use(isAuthenticated);
 export const proProtectedProcedure = t.procedure.use(isPro);

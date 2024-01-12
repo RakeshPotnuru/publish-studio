@@ -37,7 +37,7 @@ export function Upgrade({ children, featureText, ...props }: Readonly<UpgradePro
         refetch: goToCheckout,
         error,
         isFetching,
-    } = trpc.createCheckoutSession.useQuery(undefined, {
+    } = trpc.payment.createCheckoutSession.useQuery(undefined, {
         enabled: false,
     });
 

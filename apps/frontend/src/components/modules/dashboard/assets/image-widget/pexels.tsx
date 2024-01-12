@@ -23,7 +23,7 @@ export function Pexels({ onImageInsert }: Readonly<PexelsProps>) {
         isFetching,
         error,
         refetch: searchPhotos,
-    } = trpc.searchPexels.useQuery(
+    } = trpc.pexels.search.useQuery(
         {
             query: query,
             page: pageIndex + 1,

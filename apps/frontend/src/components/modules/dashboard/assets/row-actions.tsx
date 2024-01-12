@@ -11,6 +11,7 @@ import { useState } from "react";
 import type { IAsset } from "@publish-studio/core";
 
 import { Icons } from "@/assets/icons";
+import { AskForConfirmation } from "@/components/ui/ask-for-confirmation";
 import { trpc } from "@/utils/trpc";
 
 interface RowActionsProps<TData> {
@@ -22,10 +23,10 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
 
     const utils = trpc.useUtils();
 
-    const { mutateAsync: deleteAsset, isLoading } = trpc.deleteAssets.useMutation({
+    const { mutateAsync: deleteAsset, isLoading } = trpc.assets.delete.useMutation({
         onSuccess: () => {
             toast.success("Asset deleted successfully");
-            utils.getAllAssets.invalidate();
+            utils.assets.getAll.invalidate();
         },
         onError: error => {
             toast.error(error.message);
@@ -48,30 +49,16 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[160px]">
                 {askingForConfirmation ? (
-                    <div className="space-x-1 py-1 pl-2 text-sm">
-                        <span>Confirm?</span>
-                        <Button
-                            onClick={handleDelete}
-                            variant="destructive"
-                            size="icon"
-                            className="h-6 w-6"
-                            disabled={isLoading}
-                        >
-                            {isLoading ? (
-                                <Icons.Loading className="animate-spin" />
-                            ) : (
-                                <Icons.Check />
-                            )}
-                        </Button>
-                        <Button
-                            onClick={() => setAskingForConfirmation(false)}
-                            variant="outline"
-                            size="icon"
-                            className="h-6 w-6"
-                        >
-                            <Icons.Close />
-                        </Button>
-                    </div>
+                    <AskForConfirmation
+                        onCancel={() => setAskingForConfirmation(false)}
+                        onConfirm={handleDelete}
+                        isLoading={isLoading}
+                        classNames={{
+                            confirmButton: "h-6 w-6",
+                            cancelButton: "h-6 w-6",
+                            container: "py-1 pl-2",
+                        }}
+                    />
                 ) : (
                     <slot
                         onClick={() => setAskingForConfirmation(true)}

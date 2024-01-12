@@ -1,5 +1,6 @@
-import { Icons } from "@/assets/icons";
 import { cn } from "@itsrakesh/utils";
+
+import { Icons } from "@/assets/icons";
 
 interface ButtonLoaderProps {
     isLoading: boolean;

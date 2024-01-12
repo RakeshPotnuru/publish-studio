@@ -45,16 +45,17 @@ export function HashnodeConnectForm({ setIsOpen, ...props }: Readonly<HashnodeCo
 
     const utils = trpc.useUtils();
 
-    const { mutateAsync: connect, isLoading: isConnecting } = trpc.connectHashnode.useMutation({
-        onSuccess: () => {
-            toast.success("Your Hashnode account has been connected successfully.");
-            utils.getAllPlatforms.invalidate();
-            setIsOpen(false);
-        },
-        onError: error => {
-            setError(error.message);
-        },
-    });
+    const { mutateAsync: connect, isLoading: isConnecting } =
+        trpc.platforms.hashnode.connect.useMutation({
+            onSuccess: () => {
+                toast.success("Your Hashnode account has been connected successfully.");
+                utils.platforms.getAll.invalidate();
+                setIsOpen(false);
+            },
+            onError: error => {
+                setError(error.message);
+            },
+        });
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),

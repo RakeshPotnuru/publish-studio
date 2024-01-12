@@ -6,7 +6,7 @@ import { proProtectedProcedure, protectedProcedure, router } from "../../trpc";
 import ProjectController from "./project.controller";
 
 const projectRouter = router({
-    createProject: protectedProcedure
+    create: protectedProcedure
         .input(
             z.object({
                 folder_id: z.custom<Types.ObjectId>().optional(),
@@ -35,11 +35,36 @@ const projectRouter = router({
         )
         .mutation(({ input, ctx }) => new ProjectController().createProjectHandler(input, ctx)),
 
-    getProjectById: protectedProcedure
+    getById: protectedProcedure
         .input(z.custom<Types.ObjectId>())
         .query(({ input, ctx }) => new ProjectController().getProjectByIdHandler(input, ctx)),
 
-    updateProject: protectedProcedure
+    getAll: protectedProcedure
+        .input(
+            z.object({
+                pagination: z.object({
+                    page: z.number().int().positive().default(1),
+                    limit: z.number().int().positive().default(10),
+                }),
+            }),
+        )
+        .query(({ input, ctx }) => new ProjectController().getAllProjectsHandler(input, ctx)),
+
+    getByFolderId: protectedProcedure
+        .input(
+            z.object({
+                folder_id: z.custom<Types.ObjectId>(),
+                pagination: z.object({
+                    page: z.number().int().positive().default(1),
+                    limit: z.number().int().positive().default(10),
+                }),
+            }),
+        )
+        .query(({ input, ctx }) =>
+            new ProjectController().getProjectsByFolderIdHandler(input, ctx),
+        ),
+
+    update: protectedProcedure
         .input(
             z.object({
                 id: z.custom<Types.ObjectId>(),
@@ -94,65 +119,42 @@ const projectRouter = router({
         )
         .mutation(({ input, ctx }) => new ProjectController().updateProjectHandler(input, ctx)),
 
-    schedulePost: protectedProcedure
-        .input(
-            z.object({
-                project_id: z.custom<Types.ObjectId>(),
-                scheduled_at: z.date(),
-                platforms: z
-                    .array(
-                        z.object({
-                            name: z.nativeEnum(constants.user.platforms),
-                        }),
-                    )
-                    .min(1),
-            }),
-        )
-        .mutation(({ input, ctx }) => new ProjectController().schedulePostHandler(input, ctx)),
-
-    updatePost: proProtectedProcedure
-        .input(
-            z.object({
-                project_id: z.custom<Types.ObjectId>(),
-                platforms: z
-                    .array(
-                        z.object({
-                            name: z.nativeEnum(constants.user.platforms),
-                        }),
-                    )
-                    .min(1),
-            }),
-        )
-        .mutation(({ input, ctx }) => new ProjectController().updatePostHandler(input, ctx)),
-
-    getAllProjects: protectedProcedure
-        .input(
-            z.object({
-                pagination: z.object({
-                    page: z.number().int().positive().default(1),
-                    limit: z.number().int().positive().default(10),
-                }),
-            }),
-        )
-        .query(({ input, ctx }) => new ProjectController().getAllProjectsHandler(input, ctx)),
-
-    getProjectsByFolderId: protectedProcedure
-        .input(
-            z.object({
-                folder_id: z.custom<Types.ObjectId>(),
-                pagination: z.object({
-                    page: z.number().int().positive().default(1),
-                    limit: z.number().int().positive().default(10),
-                }),
-            }),
-        )
-        .query(({ input, ctx }) =>
-            new ProjectController().getProjectsByFolderIdHandler(input, ctx),
-        ),
-
-    deleteProjects: protectedProcedure
+    delete: protectedProcedure
         .input(z.array(z.custom<Types.ObjectId>()))
         .mutation(({ input, ctx }) => new ProjectController().deleteProjectsHandler(input, ctx)),
+
+    post: router({
+        schedule: protectedProcedure
+            .input(
+                z.object({
+                    project_id: z.custom<Types.ObjectId>(),
+                    scheduled_at: z.date(),
+                    platforms: z
+                        .array(
+                            z.object({
+                                name: z.nativeEnum(constants.user.platforms),
+                            }),
+                        )
+                        .min(1),
+                }),
+            )
+            .mutation(({ input, ctx }) => new ProjectController().schedulePostHandler(input, ctx)),
+
+        update: proProtectedProcedure
+            .input(
+                z.object({
+                    project_id: z.custom<Types.ObjectId>(),
+                    platforms: z
+                        .array(
+                            z.object({
+                                name: z.nativeEnum(constants.user.platforms),
+                            }),
+                        )
+                        .min(1),
+                }),
+            )
+            .mutation(({ input, ctx }) => new ProjectController().updatePostHandler(input, ctx)),
+    }),
 });
 
 export default projectRouter;

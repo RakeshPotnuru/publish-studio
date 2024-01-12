@@ -18,6 +18,11 @@ export interface IBloggerResponse {
     updated_at: Date;
 }
 
+export interface IBloggerUserUpdate {
+    blog_id: string;
+    blog_url: string;
+}
+
 export interface IBloggerCreatePostInput {
     title: string;
     content?: string;

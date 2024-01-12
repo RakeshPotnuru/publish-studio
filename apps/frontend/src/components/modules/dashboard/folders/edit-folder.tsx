@@ -49,10 +49,10 @@ export function EditFolder({ children, ...props }: Readonly<EditFolderProps>) {
 
     const utils = trpc.useUtils();
 
-    const { mutateAsync: editFolder, isLoading } = trpc.updateFolder.useMutation({
+    const { mutateAsync: editFolder, isLoading } = trpc.folders.update.useMutation({
         onSuccess() {
             toast.success("Folder successfully updated");
-            utils.getAllFolders.invalidate();
+            utils.folders.getAll.invalidate();
             setOpen(false);
         },
         onError(error) {

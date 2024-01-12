@@ -24,7 +24,7 @@ export function Assets({ isWidget, onImageInsert, ...props }: Readonly<AssetsPro
         pageSize: 10,
     });
 
-    const { data, isFetching, refetch, error } = trpc.getAllAssets.useQuery({
+    const { data, isFetching, refetch, error } = trpc.assets.getAll.useQuery({
         pagination: {
             page: pageIndex + 1,
             limit: pageSize,

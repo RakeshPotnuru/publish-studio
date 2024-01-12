@@ -10,7 +10,7 @@ import { trpc } from "@/utils/trpc";
 import { NewProject } from "../projects/new-project";
 
 export function RecentProjects() {
-    const { data, isFetching, error } = trpc.getAllProjects.useQuery({
+    const { data, isFetching, error } = trpc.projects.getAll.useQuery({
         pagination: {
             page: 1,
             limit: 5,

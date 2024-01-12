@@ -4,7 +4,7 @@ interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
     level?: 1 | 2 | 3 | 4 | 5 | 6;
 }
 
-export function Heading({ level = 1, children, className, ...props }: HeadingProps) {
+export function Heading({ level = 1, children, className, ...props }: Readonly<HeadingProps>) {
     switch (level) {
         case 1:
             return (

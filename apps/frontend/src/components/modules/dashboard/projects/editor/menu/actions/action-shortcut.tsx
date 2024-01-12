@@ -8,7 +8,7 @@ interface ActionShortcutProps {
     os: string;
 }
 
-export function ActionShortcut({ shortcut, os }: ActionShortcutProps) {
+export function ActionShortcut({ shortcut, os }: Readonly<ActionShortcutProps>) {
     const macKeys = shortcut.mac.split(" + ");
     const pcKeys = shortcut.pc.split(" + ");
 

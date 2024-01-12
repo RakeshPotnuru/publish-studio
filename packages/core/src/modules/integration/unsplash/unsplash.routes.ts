@@ -4,7 +4,7 @@ import { protectedProcedure, router } from "../../../trpc";
 import UnsplashController from "./unsplash.controller";
 
 const unsplashRouter = router({
-    searchUnsplash: protectedProcedure
+    search: protectedProcedure
         .input(
             z.object({
                 query: z.string(),

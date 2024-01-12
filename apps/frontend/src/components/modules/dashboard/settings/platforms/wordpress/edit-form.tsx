@@ -45,16 +45,17 @@ export function WordPressEditForm({
 
     const utils = trpc.useUtils();
 
-    const { mutateAsync: edit, isLoading: isUpdating } = trpc.updateWordPress.useMutation({
-        onSuccess: () => {
-            toast.success("Your WordPress account has been updated successfully.");
-            utils.getAllPlatforms.invalidate();
-            setIsOpen(false);
-        },
-        onError: error => {
-            setError(error.message);
-        },
-    });
+    const { mutateAsync: edit, isLoading: isUpdating } =
+        trpc.platforms.wordpress.update.useMutation({
+            onSuccess: () => {
+                toast.success("Your WordPress account has been updated successfully.");
+                utils.platforms.getAll.invalidate();
+                setIsOpen(false);
+            },
+            onError: error => {
+                setError(error.message);
+            },
+        });
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),

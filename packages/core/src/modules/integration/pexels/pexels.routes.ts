@@ -4,7 +4,7 @@ import { protectedProcedure, router } from "../../../trpc";
 import PexelsController from "./pexels.controller";
 
 const pexelsRouter = router({
-    searchPexels: protectedProcedure
+    search: protectedProcedure
         .input(
             z.object({
                 query: z.string(),

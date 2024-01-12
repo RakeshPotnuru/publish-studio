@@ -50,10 +50,10 @@ export function GhostEditForm({
 
     const utils = trpc.useUtils();
 
-    const { mutateAsync: edit, isLoading: isUpdating } = trpc.updateGhost.useMutation({
+    const { mutateAsync: edit, isLoading: isUpdating } = trpc.platforms.ghost.update.useMutation({
         onSuccess: () => {
             toast.success("Your Ghost account has been updated successfully.");
-            utils.getAllPlatforms.invalidate();
+            utils.platforms.getAll.invalidate();
             setIsOpen(false);
         },
         onError: error => {

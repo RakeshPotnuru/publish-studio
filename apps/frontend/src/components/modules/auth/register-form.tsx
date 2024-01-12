@@ -68,7 +68,7 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
     const [error, setError] = useState<string | null>(null);
     const [passwordVisible, setPasswordVisible] = useState(false);
 
-    const { mutateAsync: register, isLoading } = trpc.register.useMutation({
+    const { mutateAsync: register, isLoading } = trpc.auth.register.useMutation({
         onSuccess() {
             setStep("success");
         },

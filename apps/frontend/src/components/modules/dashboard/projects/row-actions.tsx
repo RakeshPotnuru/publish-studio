@@ -16,6 +16,7 @@ import { useState } from "react";
 import type { IProject } from "@publish-studio/core";
 
 import { Icons } from "@/assets/icons";
+import { AskForConfirmation } from "@/components/ui/ask-for-confirmation";
 import { constants } from "@/config/constants";
 import { trpc } from "@/utils/trpc";
 import { MoveProject } from "./move-project";
@@ -31,11 +32,11 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
     const { folderId } = useParams();
     const utils = trpc.useUtils();
 
-    const { mutateAsync: deleteProject, isLoading } = trpc.deleteProjects.useMutation({
+    const { mutateAsync: deleteProject, isLoading } = trpc.projects.delete.useMutation({
         onSuccess: () => {
             toast.success("Project deleted successfully");
-            utils.getAllProjects.invalidate();
-            utils.getProjectsByFolderId.invalidate();
+            utils.projects.getAll.invalidate();
+            utils.projects.getByFolderId.invalidate();
         },
         onError: error => {
             toast.error(error.message);
@@ -43,11 +44,11 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
     });
 
     const { mutateAsync: duplicateProject, isLoading: isDuplicating } =
-        trpc.createProject.useMutation({
+        trpc.projects.create.useMutation({
             onSuccess: () => {
                 toast.success("Project created successfully");
-                utils.getAllProjects.invalidate();
-                utils.getProjectsByFolderId.invalidate();
+                utils.projects.getAll.invalidate();
+                utils.projects.getByFolderId.invalidate();
             },
             onError: error => {
                 toast.error(error.message);
@@ -128,30 +129,16 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     {askingForConfirmation ? (
-                        <div className="space-x-1 py-1 pl-2 text-sm">
-                            <span>Confirm?</span>
-                            <Button
-                                onClick={handleDelete}
-                                variant="destructive"
-                                size="icon"
-                                className="h-6 w-6"
-                                disabled={isLoading}
-                            >
-                                {isLoading ? (
-                                    <Icons.Loading className="animate-spin" />
-                                ) : (
-                                    <Icons.Check />
-                                )}
-                            </Button>
-                            <Button
-                                onClick={() => setAskingForConfirmation(false)}
-                                variant="outline"
-                                size="icon"
-                                className="h-6 w-6"
-                            >
-                                <Icons.Close />
-                            </Button>
-                        </div>
+                        <AskForConfirmation
+                            onCancel={() => setAskingForConfirmation(false)}
+                            onConfirm={handleDelete}
+                            isLoading={isLoading}
+                            classNames={{
+                                confirmButton: "h-6 w-6",
+                                cancelButton: "h-6 w-6",
+                                container: "py-1 pl-2",
+                            }}
+                        />
                     ) : (
                         <slot
                             onClick={() => setAskingForConfirmation(true)}

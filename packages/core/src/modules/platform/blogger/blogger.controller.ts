@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import type { Context } from "../../../trpc";
 import BloggerService from "./blogger.service";
+import type { IBloggerUserUpdate } from "./blogger.types";
 
 export default class BloggerController extends BloggerService {
     getAuthUrlHandler() {
@@ -11,6 +12,17 @@ export default class BloggerController extends BloggerService {
             status: "success",
             data: {
                 authUrl,
+            },
+        };
+    }
+
+    async getBloggerBlogsHandler(ctx: Context) {
+        const blogs = await super.getBloggerBlogs(ctx.user?._id);
+
+        return {
+            status: "success",
+            data: {
+                blogs,
             },
         };
     }
@@ -29,6 +41,17 @@ export default class BloggerController extends BloggerService {
             status: "success",
             data: {
                 platform: newPlatform,
+            },
+        };
+    }
+
+    async updatePlatformHandler(input: IBloggerUserUpdate, ctx: Context) {
+        const updatedPlatform = await super.updatePlatform(input, ctx.user?._id);
+
+        return {
+            status: "success",
+            data: {
+                platform: updatedPlatform,
             },
         };
     }

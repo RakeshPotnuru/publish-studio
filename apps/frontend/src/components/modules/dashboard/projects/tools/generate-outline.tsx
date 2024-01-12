@@ -14,7 +14,7 @@ interface GenerateOutlineProps extends MenuProps {
 }
 
 export function GenerateOutline({ editor, project_id }: Readonly<GenerateOutlineProps>) {
-    const { mutateAsync: generateOutline, isLoading } = trpc.generateOutline.useMutation({
+    const { mutateAsync: generateOutline, isLoading } = trpc.genAI.generate.outline.useMutation({
         onSuccess: ({ data }) => {
             toast.success("Outline generated successfully.");
             const deserialized = deserialize(editor.schema, data.outline);

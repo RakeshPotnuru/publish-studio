@@ -38,7 +38,7 @@ const ToCItem = ({
     </div>
 );
 
-export function ToC({ items = [], editor }: ToCProps) {
+export function ToC({ items = [], editor }: Readonly<ToCProps>) {
     if (items.length === 0) return <ToCEmptyState />;
 
     const onItemClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, id: string) => {

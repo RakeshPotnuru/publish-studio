@@ -5,11 +5,9 @@ import { protectedProcedure, router } from "../../trpc";
 import UserController from "./user.controller";
 
 const userRouter = router({
-    getMe: protectedProcedure.query(({ ctx }) => new UserController().getMeHandler(ctx)),
+    getById: protectedProcedure.query(({ ctx }) => new UserController().getUserByIdHandler(ctx)),
 
-    getUser: protectedProcedure.query(({ ctx }) => new UserController().getUserHandler(ctx)),
-
-    updateUser: protectedProcedure
+    update: protectedProcedure
         .input(
             z.object({
                 first_name: z

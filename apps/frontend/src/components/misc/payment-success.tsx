@@ -14,7 +14,7 @@ export function PaymentSuccess() {
     const router = useRouter();
     const sessionId = searchParams.get("session_id");
 
-    const { mutateAsync: fetchSession } = trpc.getSession.useMutation({
+    const { mutateAsync: fetchSession } = trpc.payment.getSession.useMutation({
         onSuccess({ data }) {
             if (data.session.payment_status === "paid") {
                 toast.success("Payment successful!");

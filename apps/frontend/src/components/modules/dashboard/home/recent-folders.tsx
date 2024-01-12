@@ -10,7 +10,7 @@ import { trpc } from "@/utils/trpc";
 import { NewFolderDialog } from "../folders/new-folder";
 
 export function RecentFolders() {
-    const { data, isFetching, error } = trpc.getAllFolders.useQuery({
+    const { data, isFetching, error } = trpc.folders.getAll.useQuery({
         pagination: {
             page: 1,
             limit: 5,

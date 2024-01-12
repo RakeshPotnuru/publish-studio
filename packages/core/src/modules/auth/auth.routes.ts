@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { constants } from "../../config/constants";
 import { protectedProcedure, router, t } from "../../trpc";
+import UserController from "../user/user.controller";
 import AuthController from "./auth.controller";
 
 const authRouter = router({
@@ -52,33 +53,37 @@ const authRouter = router({
 
     logout: protectedProcedure.mutation(({ ctx }) => new AuthController().logoutHandler(ctx)),
 
+    getMe: protectedProcedure.query(({ ctx }) => new UserController().getMeHandler(ctx)),
+
     refresh: protectedProcedure.query(({ ctx }) =>
         new AuthController().refreshAccessTokenHandler(ctx),
     ),
 
-    verifyEmail: t.procedure
-        .input(
-            z.object({
-                token: z.string(),
-            }),
-        )
-        .mutation(({ input }) => new AuthController().verifyEmailHandler(input)),
+    email: router({
+        verify: t.procedure
+            .input(
+                z.object({
+                    token: z.string(),
+                }),
+            )
+            .mutation(({ input }) => new AuthController().verifyEmailHandler(input)),
 
-    resendVerificationEmail: t.procedure
-        .input(
-            z.object({
-                email: z.string().email(),
-            }),
-        )
-        .mutation(({ input }) => new AuthController().resendVerificationEmailHandler(input)),
+        resendVerification: t.procedure
+            .input(
+                z.object({
+                    email: z.string().email(),
+                }),
+            )
+            .mutation(({ input }) => new AuthController().resendVerificationEmailHandler(input)),
 
-    sendResetPasswordEmail: t.procedure
-        .input(
-            z.object({
-                email: z.string().email(),
-            }),
-        )
-        .mutation(({ input }) => new AuthController().sendResetPasswordEmailHandler(input)),
+        sendResetPassword: t.procedure
+            .input(
+                z.object({
+                    email: z.string().email(),
+                }),
+            )
+            .mutation(({ input }) => new AuthController().sendResetPasswordEmailHandler(input)),
+    }),
 
     resetPassword: t.procedure
         .input(

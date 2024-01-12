@@ -4,7 +4,7 @@ import { protectedProcedure, router } from "../../trpc";
 import StatsController from "./stats.controller";
 
 const statsRouter = router({
-    getTopicStats: protectedProcedure
+    getTopics: protectedProcedure
         .input(
             z.object({
                 limit: z.number().optional(),
@@ -12,7 +12,7 @@ const statsRouter = router({
         )
         .query(({ input, ctx }) => new StatsController().getTopicStatsHandler(ctx, input)),
 
-    getProjectStats: protectedProcedure
+    getProjects: protectedProcedure
         .input(
             z.object({
                 days: z.number().optional(),

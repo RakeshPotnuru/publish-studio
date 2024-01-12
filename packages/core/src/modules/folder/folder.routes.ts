@@ -6,7 +6,7 @@ import { protectedProcedure, router } from "../../trpc";
 import FolderController from "./folder.controller";
 
 const folderRouter = router({
-    createFolder: protectedProcedure
+    create: protectedProcedure
         .input(
             z.object({
                 name: z
@@ -17,7 +17,7 @@ const folderRouter = router({
         )
         .mutation(({ input, ctx }) => new FolderController().createFolderHandler(input, ctx)),
 
-    getAllFolders: protectedProcedure
+    getAll: protectedProcedure
         .input(
             z.object({
                 pagination: z.object({
@@ -28,7 +28,7 @@ const folderRouter = router({
         )
         .query(({ input, ctx }) => new FolderController().getAllFoldersHandler(input, ctx)),
 
-    updateFolder: protectedProcedure
+    update: protectedProcedure
         .input(
             z.object({
                 id: z.custom<Types.ObjectId>(),
@@ -42,7 +42,7 @@ const folderRouter = router({
         )
         .mutation(({ input, ctx }) => new FolderController().updateFolderHandler(input, ctx)),
 
-    deleteFolders: protectedProcedure
+    delete: protectedProcedure
         .input(z.array(z.custom<Types.ObjectId>()))
         .mutation(({ input, ctx }) => new FolderController().deleteFoldersHandler(input, ctx)),
 });

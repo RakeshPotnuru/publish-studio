@@ -17,6 +17,7 @@ import {
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import Link from "next/link";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -25,7 +26,6 @@ import { ErrorBox } from "@/components/ui/error-box";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
-import { useState } from "react";
 
 interface DevEditFormProps extends React.HTMLAttributes<HTMLDivElement> {
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -46,10 +46,10 @@ export function DevEditForm({
 
     const utils = trpc.useUtils();
 
-    const { mutateAsync: edit, isLoading: isUpdating } = trpc.updateDevTo.useMutation({
+    const { mutateAsync: edit, isLoading: isUpdating } = trpc.platforms.devto.update.useMutation({
         onSuccess: () => {
             toast.success("Your Dev account has been updated successfully.");
-            utils.getAllPlatforms.invalidate();
+            utils.platforms.getAll.invalidate();
             setIsOpen(false);
         },
         onError: error => {

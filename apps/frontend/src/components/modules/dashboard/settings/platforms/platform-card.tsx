@@ -47,16 +47,24 @@ export function PlatformCard({
 
     const actionView = connected ? (
         <div className="flex flex-row space-x-1">
-            <AskForConfirmation
-                askingForConfirmation={askingForConfirmation}
-                onOpen={() => setAskingForConfirmation(true)}
-                onCancel={() => setAskingForConfirmation(false)}
-                onConfirm={() => {
-                    onDisconnect();
-                    setAskingForConfirmation(false);
-                    utils.getAllPlatforms.invalidate();
-                }}
-            />
+            {askingForConfirmation ? (
+                <AskForConfirmation
+                    onCancel={() => setAskingForConfirmation(false)}
+                    onConfirm={() => {
+                        onDisconnect();
+                        setAskingForConfirmation(false);
+                        utils.platforms.getAll.invalidate();
+                    }}
+                />
+            ) : (
+                <Button
+                    onClick={() => setAskingForConfirmation(true)}
+                    size="sm"
+                    variant="destructive"
+                >
+                    Disconnect
+                </Button>
+            )}
             <div>
                 <PlatformDialog
                     open={isOpen}

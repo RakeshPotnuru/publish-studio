@@ -18,7 +18,7 @@ export function VerifyEmail() {
     const searchParams = useSearchParams();
     const token = searchParams.get("token");
 
-    const { mutateAsync: verifyEmail } = trpc.verifyEmail.useMutation({
+    const { mutateAsync: verifyEmail } = trpc.auth.email.verify.useMutation({
         onSuccess() {
             setError(null);
             setIsSuccess(true);

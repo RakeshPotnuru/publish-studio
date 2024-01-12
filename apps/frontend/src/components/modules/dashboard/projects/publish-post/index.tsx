@@ -61,8 +61,8 @@ export function PublishPost({
     const utils = trpc.useUtils();
     const tooltipRef = useRef<HTMLButtonElement>(null);
 
-    const { mutateAsync: saveProject, isLoading: isProjectSaving } = trpc.updateProject.useMutation(
-        {
+    const { mutateAsync: saveProject, isLoading: isProjectSaving } =
+        trpc.projects.update.useMutation({
             onSuccess: () => {
                 toast.success("Project saved successfully.");
                 handleRefresh();
@@ -70,11 +70,10 @@ export function PublishPost({
             onError: error => {
                 toast.error(error.message);
             },
-        },
-    );
+        });
 
-    const { mutateAsync: publishPost, isLoading: isPostPublishing } = trpc.schedulePost.useMutation(
-        {
+    const { mutateAsync: publishPost, isLoading: isPostPublishing } =
+        trpc.projects.post.schedule.useMutation({
             onSuccess: () => {
                 toast("Post added to queue successfully. You will be notified when published.", {
                     action: {
@@ -89,21 +88,21 @@ export function PublishPost({
             onError: error => {
                 toast.error(error.message);
             },
-        },
-    );
+        });
 
-    const { mutateAsync: updatePost, isLoading: isPostUpdating } = trpc.updatePost.useMutation({
-        onSuccess: () => {
-            toast.success("Post updated successfully.");
-            handleRefresh();
-        },
-        onError: error => {
-            toast.error(error.message);
-        },
-    });
+    const { mutateAsync: updatePost, isLoading: isPostUpdating } =
+        trpc.projects.post.update.useMutation({
+            onSuccess: () => {
+                toast.success("Post updated successfully.");
+                handleRefresh();
+            },
+            onError: error => {
+                toast.error(error.message);
+            },
+        });
 
     const { mutateAsync: generateTitle, isLoading: isTitleGenerating } =
-        trpc.generateTitle.useMutation({
+        trpc.genAI.generate.title.useMutation({
             onSuccess: ({ data }) => {
                 form.setValue("title", data.title, { shouldDirty: true });
             },
@@ -113,7 +112,7 @@ export function PublishPost({
         });
 
     const { mutateAsync: generateDescription, isLoading: isDescriptionGenerating } =
-        trpc.generateDescription.useMutation({
+        trpc.genAI.generate.description.useMutation({
             onSuccess: ({ data }) => {
                 form.setValue("description", data.description, { shouldDirty: true });
             },
@@ -240,7 +239,7 @@ export function PublishPost({
     };
 
     function handleRefresh() {
-        utils.getProjectById.invalidate();
+        utils.projects.getById.invalidate();
     }
 
     useEffect(() => {

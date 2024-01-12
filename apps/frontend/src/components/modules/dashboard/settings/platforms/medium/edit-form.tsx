@@ -21,17 +21,18 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import type { IMedium } from "@publish-studio/core";
+
 import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
-import { TMediumStatus } from ".";
 
 interface MediumEditFormProps extends React.HTMLAttributes<HTMLDivElement> {
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    default_publish_status: TMediumStatus;
+    default_publish_status: IMedium["default_publish_status"];
     notify_followers: string;
 }
 
@@ -51,10 +52,10 @@ export function MediumEditForm({
 
     const utils = trpc.useUtils();
 
-    const { mutateAsync: edit, isLoading: isUpdating } = trpc.updateMedium.useMutation({
+    const { mutateAsync: edit, isLoading: isUpdating } = trpc.platforms.medium.update.useMutation({
         onSuccess: () => {
             toast.success("Your Medium account has been updated successfully.");
-            utils.getAllPlatforms.invalidate();
+            utils.platforms.getAll.invalidate();
             setIsOpen(false);
         },
         onError: error => {

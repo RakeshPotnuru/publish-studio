@@ -2,7 +2,7 @@ import { Icons } from "@/assets/icons";
 import type { MenuProps } from "../fixed-menu";
 import { MenuAction } from "../menu-action";
 
-export function NodeActions({ editor }: MenuProps) {
+export function NodeActions({ editor }: Readonly<MenuProps>) {
     return (
         <>
             <MenuAction

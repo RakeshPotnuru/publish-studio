@@ -43,7 +43,7 @@ export function LoginForm({ ...props }: LoginFormProps) {
 
     const [_, setCookie] = useCookies(["ps_access_token"]);
 
-    const { mutateAsync: login, isLoading } = trpc.login.useMutation({
+    const { mutateAsync: login, isLoading } = trpc.auth.login.useMutation({
         onSuccess({ data }) {
             if (!data.access_token) {
                 setError("Something went wrong. Please try again.");

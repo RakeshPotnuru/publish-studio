@@ -47,16 +47,18 @@ export function NewAssetDialog({
     const utils = trpc.useUtils();
     const { projectId } = useParams();
 
-    const { mutateAsync: getPresignedURL, isLoading: isUrlLoading } = trpc.uploadImage.useMutation({
-        onError: error => {
-            setError({
-                title: "Upload failed",
-                description: error.message,
-            });
-        },
-    });
+    const { mutateAsync: getPresignedURL, isLoading: isUrlLoading } =
+        trpc.assets.upload.useMutation({
+            onError: error => {
+                setError({
+                    title: "Upload failed",
+                    description: error.message,
+                });
+            },
+        });
 
-    const { mutateAsync: deleteAsset, isLoading: isAssetLoading } = trpc.deleteAssets.useMutation();
+    const { mutateAsync: deleteAsset, isLoading: isAssetLoading } =
+        trpc.assets.delete.useMutation();
 
     const handleDrag = (event: React.DragEvent<HTMLSlotElement>) => {
         event.preventDefault();
@@ -152,7 +154,7 @@ export function NewAssetDialog({
 
             toast.success("Image has been uploaded successfully");
 
-            utils.getAllAssets.invalidate();
+            utils.assets.getAll.invalidate();
             setOpen(false);
         } catch (error) {
             await deleteAsset([data.asset._id]);

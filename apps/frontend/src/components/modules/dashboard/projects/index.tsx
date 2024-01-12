@@ -20,7 +20,7 @@ export function Projects({ ...props }: ProjectsProps) {
         pageSize: 10,
     });
 
-    const { data, isFetching, refetch, error } = trpc.getAllProjects.useQuery({
+    const { data, isFetching, refetch, error } = trpc.projects.getAll.useQuery({
         pagination: {
             page: pageIndex + 1,
             limit: pageSize,

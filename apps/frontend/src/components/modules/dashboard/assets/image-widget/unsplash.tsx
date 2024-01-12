@@ -23,7 +23,7 @@ export function Unsplash({ onImageInsert }: Readonly<UnsplashProps>) {
         isFetching,
         error,
         refetch: searchPhotos,
-    } = trpc.searchUnsplash.useQuery(
+    } = trpc.unsplash.search.useQuery(
         {
             query: query,
             page: pageIndex + 1,
