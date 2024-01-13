@@ -62,6 +62,9 @@ const project = {
         wordpress: {
             MAX_LENGTH: 5,
         },
+        blogger: {
+            MAX_LENGTH: 3,
+        },
     },
     status: projectStatus,
     platformPublishStatuses,

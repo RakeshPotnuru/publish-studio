@@ -108,6 +108,7 @@ export interface ITags {
     medium_tags?: string[];
     ghost_tags?: { name: string; _id?: Types.ObjectId }[];
     wordpress_tags?: string[];
+    blogger_tags?: string[];
 }
 
 export interface IPost {

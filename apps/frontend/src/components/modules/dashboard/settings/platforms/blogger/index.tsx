@@ -51,7 +51,14 @@ export function Blogger({ data, isOpen, isLoading, setIsOpen }: Readonly<Blogger
             connected={data !== undefined}
             username={data?.blog_url.split("/")[2]}
             profile_url={data?.blog_url}
-            editForm={<BloggerEditForm setIsOpen={setIsOpen} />}
+            editForm={
+                <BloggerEditForm
+                    setIsOpen={setIsOpen}
+                    blog_id={data?.blog_id ?? ""}
+                    blog_url={data?.blog_url ?? ""}
+                    status={data?.status.toString() ?? "false"}
+                />
+            }
             connectForm={<BloggerConnectForm />}
         />
     );

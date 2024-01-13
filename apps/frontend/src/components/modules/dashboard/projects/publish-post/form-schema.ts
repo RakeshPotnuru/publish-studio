@@ -72,6 +72,16 @@ export const formSchema = z.object({
                 },
             )
             .optional(),
+        blogger_tags: z
+            .string()
+            .refine(
+                value =>
+                    (value ?? "").split(",").length <= constants.project.tags.blogger.MAX_LENGTH,
+                {
+                    message: `Maximum ${constants.project.tags.blogger.MAX_LENGTH} labels allowed.`,
+                },
+            )
+            .optional(),
     }),
     canonical_url: z.string().optional(),
 });

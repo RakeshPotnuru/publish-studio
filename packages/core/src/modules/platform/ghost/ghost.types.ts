@@ -39,7 +39,7 @@ export interface IGhostSiteOutput {
     };
 }
 
-export interface IGhostPostInput {
+export interface IGhostCreatePostInput {
     title: string;
     html?: string;
     canonical_url?: string;
@@ -47,7 +47,7 @@ export interface IGhostPostInput {
     tags?: { name: string }[];
 }
 
-export type TGhostPostUpdate = Partial<IGhostPostInput> & { updated_at: Date };
+export type TGhostUpdatePostInput = Partial<IGhostCreatePostInput> & { updated_at: Date };
 
 export interface IGhostUpdatePostOutput {
     isError: boolean;

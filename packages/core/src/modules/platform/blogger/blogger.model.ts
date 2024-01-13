@@ -12,6 +12,7 @@ const BloggerSchema = new Schema<IBlogger>(
         blog_id: { type: String, required: true, unique: true },
         blog_url: { type: String, required: true, unique: true },
         token: { type: String, required: true, unique: true },
+        status: { type: Boolean, required: true, default: true },
     },
 
     {

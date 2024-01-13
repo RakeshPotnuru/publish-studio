@@ -134,6 +134,7 @@ export function PublishPost({
                 medium_tags: "",
                 ghost_tags: "",
                 wordpress_tags: "",
+                blogger_tags: "",
             },
             canonical_url: "",
         },
@@ -176,6 +177,9 @@ export function PublishPost({
                             : undefined,
                         wordpress_tags: data.tags.wordpress_tags?.split(",").shift()?.length
                             ? data.tags.wordpress_tags?.split(",")
+                            : undefined,
+                        blogger_tags: data.tags.blogger_tags?.split(",").shift()?.length
+                            ? data.tags.blogger_tags?.split(",")
                             : undefined,
                     },
                     body: {
@@ -255,6 +259,7 @@ export function PublishPost({
                     medium_tags: project.tags?.medium_tags?.join(","),
                     ghost_tags: project.tags?.ghost_tags?.map(tag => tag.name).join(","),
                     wordpress_tags: project.tags?.wordpress_tags?.join(","),
+                    blogger_tags: project.tags?.blogger_tags?.join(","),
                 },
                 canonical_url: project.canonical_url,
             });

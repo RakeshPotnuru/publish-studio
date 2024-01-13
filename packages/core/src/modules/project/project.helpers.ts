@@ -5,6 +5,7 @@ import { Types } from "mongoose";
 
 import { bullMQConnectionOptions } from "../../config/app.config";
 import { constants } from "../../config/constants";
+import BloggerController from "../platform/blogger/blogger.controller";
 import DevToController from "../platform/devto/devto.controller";
 import GhostController from "../platform/ghost/ghost.controller";
 import HashnodeController from "../platform/hashnode/hashnode.controller";
@@ -51,6 +52,7 @@ export default class ProjectHelpers {
         | MediumController
         | GhostController
         | WordPressController
+        | BloggerController
         | undefined {
         switch (platform) {
             case constants.user.platforms.DEVTO: {
@@ -68,6 +70,9 @@ export default class ProjectHelpers {
             case constants.user.platforms.WORDPRESS: {
                 return new WordPressController();
             }
+            case constants.user.platforms.BLOGGER: {
+                return new BloggerController();
+            }
 
             default: {
                 return;
@@ -77,7 +82,13 @@ export default class ProjectHelpers {
 
     static getPlatformUpdateController(
         platform: TPlatformName,
-    ): DevToController | HashnodeController | GhostController | WordPressController | undefined {
+    ):
+        | DevToController
+        | HashnodeController
+        | GhostController
+        | WordPressController
+        | BloggerController
+        | undefined {
         switch (platform) {
             case constants.user.platforms.DEVTO: {
                 return new DevToController();
@@ -90,6 +101,9 @@ export default class ProjectHelpers {
             }
             case constants.user.platforms.WORDPRESS: {
                 return new WordPressController();
+            }
+            case constants.user.platforms.BLOGGER: {
+                return new BloggerController();
             }
 
             default: {
@@ -161,6 +175,16 @@ export default class ProjectHelpers {
             publishResponse.push(response);
         }
 
+        if (ProjectHelpers.shouldPublishOnPlatform(project, constants.user.platforms.BLOGGER)) {
+            const response = await this.publishOnPlatform(
+                constants.user.platforms.BLOGGER,
+                project,
+                user_id,
+            );
+
+            publishResponse.push(response);
+        }
+
         return publishResponse;
     }
 
@@ -213,6 +237,10 @@ export default class ProjectHelpers {
 
         if (ProjectHelpers.shouldUpdateOnPlatform(project, constants.user.platforms.WORDPRESS)) {
             await this.updateOnPlatform(constants.user.platforms.WORDPRESS, project, user_id);
+        }
+
+        if (ProjectHelpers.shouldUpdateOnPlatform(project, constants.user.platforms.BLOGGER)) {
+            await this.updateOnPlatform(constants.user.platforms.BLOGGER, project, user_id);
         }
 
         return updateResponse;

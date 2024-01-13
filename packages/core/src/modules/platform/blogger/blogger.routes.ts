@@ -13,6 +13,7 @@ const bloggerRouter = router({
             z.object({
                 blog_id: z.string(),
                 blog_url: z.string(),
+                status: z.boolean(),
             }),
         )
         .mutation(({ input, ctx }) => new BloggerController().updatePlatformHandler(input, ctx)),

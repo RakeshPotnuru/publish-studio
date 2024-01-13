@@ -43,14 +43,14 @@ export default class GenerativeAIController extends GenerativeAIService {
         }
 
         const output = await super.generateDescription(project.title ?? project.name);
-
+        console.log(output);
         const regex = /Description: (.*?)(?:Title:|$)/;
         const match = new RegExp(regex).exec(output);
 
         if (!match) {
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: "Unable to generate description. Try changing the project name.",
+                message: "Unable to generate description. Please try again.",
             });
         }
 

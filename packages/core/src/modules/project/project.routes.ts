@@ -110,6 +110,7 @@ const projectRouter = router({
                                 )
                                 .optional(),
                             wordpress_tags: z.array(z.string()).optional(),
+                            blogger_tags: z.array(z.string()).optional(),
                         })
                         .optional(),
                     canonical_url: z.string().optional(),

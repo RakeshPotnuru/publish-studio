@@ -90,6 +90,7 @@ export default class PaymentController extends PaymentService {
 
         await super.updateUser(user_id, {
             user_type: constants.user.userTypes.PRO,
+            stripe_customer_id: session.customer as string,
         });
 
         await super.createPayment({

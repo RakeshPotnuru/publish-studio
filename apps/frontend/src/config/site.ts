@@ -16,6 +16,8 @@ export const siteConfig = {
         mediumTags: "https://medium.com/topics",
         ghostTags: "https://ghost.org/help/tags/",
         wordpressTags: "https://wordpress.com/support/posts/tags/",
+        bloggerLabels:
+            "https://support.google.com/blogger/answer/154172?visit_id=638407487949946224-3277732177&rd=1#:~:text=Add%20labels%20to,find%20your%20labels.",
         support: "mailto:support@publishstudio.one",
         wordpressAuthorize: "https://public-api.wordpress.com/oauth2/authorize",
         wordpressConnectedApps: "https://wordpress.com/me/security/connected-applications",

@@ -6,6 +6,7 @@ export interface IBlogger {
     blog_id: string;
     blog_url: string;
     token: string;
+    status: boolean;
 }
 
 export interface IBloggerResponse {
@@ -14,6 +15,7 @@ export interface IBloggerResponse {
     blog_id: string;
     blog_url: string;
     token: string;
+    status: boolean;
     created_at: Date;
     updated_at: Date;
 }
@@ -21,26 +23,20 @@ export interface IBloggerResponse {
 export interface IBloggerUserUpdate {
     blog_id: string;
     blog_url: string;
+    status: boolean;
 }
 
 export interface IBloggerCreatePostInput {
-    title: string;
-    content?: string;
-    labels?: string[];
-    status: string;
+    blogId: string;
+    isDraft: boolean;
+    requestBody: {
+        title: string;
+        content?: string;
+        labels?: string[];
+    };
 }
 
-export type IBloggerUpdatePost = Partial<IBloggerCreatePostInput>;
-
-export interface IOutput {
-    isError: boolean;
-    id?: string;
-    url?: string;
-}
-
-export type IBloggerCreatePostOutput = IOutput extends { isError: false }
-    ? { id: string; url: string }
-    : IOutput;
+export type TBloggerUpdatePostInput = Partial<IBloggerCreatePostInput>;
 
 export interface IBloggerUpdatePostOutput {
     isError: boolean;

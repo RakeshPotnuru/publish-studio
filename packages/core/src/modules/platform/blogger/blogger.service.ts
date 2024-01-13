@@ -9,7 +9,13 @@ import Platform from "../../../modules/platform/platform.model";
 import User from "../../../modules/user/user.model";
 import { decryptField } from "../../../utils/aws/kms";
 import Blogger from "./blogger.model";
-import type { IBlogger, IBloggerUserUpdate } from "./blogger.types";
+import type {
+    IBlogger,
+    IBloggerCreatePostInput,
+    IBloggerUpdatePostOutput,
+    IBloggerUserUpdate,
+    TBloggerUpdatePostInput,
+} from "./blogger.types";
 
 export default class BloggerService {
     private readonly PLATFORM = constants.user.platforms.BLOGGER;
@@ -113,11 +119,9 @@ export default class BloggerService {
         }
     }
 
-    async deletePlatform(user_id: Types.ObjectId | undefined) {
+    async deletePlatform(user_id: Types.ObjectId | undefined, token: string) {
         try {
-            const platform = await this.getPlatform(user_id);
-
-            const decryptedToken = await decryptField(platform.token);
+            const decryptedToken = await decryptField(token);
 
             await this.oauth2Client.revokeToken(decryptedToken);
 
@@ -146,11 +150,26 @@ export default class BloggerService {
         }
     }
 
-    async getPlatform(user_id: Types.ObjectId | undefined) {
+    async getPlatform(user_id: Types.ObjectId | undefined): Promise<IBlogger | null> {
         try {
-            return (await Blogger.findOne({
+            return await Blogger.findOne({
                 user_id,
-            }).exec()) as IBlogger;
+            }).exec();
+        } catch (error) {
+            console.log(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "An error occurred while getting the platform. Please try again later.",
+            });
+        }
+    }
+
+    async getPlatformByBlogId(blog_id: string): Promise<IBlogger | null> {
+        try {
+            return await Blogger.findOne({
+                blog_id,
+            }).exec();
         } catch (error) {
             console.log(error);
 
@@ -236,5 +255,34 @@ export default class BloggerService {
                 message: defaultConfig.defaultErrorMessage,
             });
         }
+    }
+
+    async publishPost(post: IBloggerCreatePostInput, user_id: Types.ObjectId | undefined) {
+        const blogger = await this.blogger(user_id);
+
+        return await blogger?.posts.insert(post);
+    }
+
+    async updatePost(
+        post: TBloggerUpdatePostInput,
+        post_id: string,
+        user_id: Types.ObjectId | undefined,
+    ): Promise<IBloggerUpdatePostOutput> {
+        const blogger = await this.blogger(user_id);
+
+        const response = await blogger?.posts.update({
+            postId: post_id,
+            ...post,
+        });
+
+        if (response?.statusText !== "OK") {
+            return {
+                isError: true,
+            };
+        }
+
+        return {
+            isError: false,
+        };
     }
 }

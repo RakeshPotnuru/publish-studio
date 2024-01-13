@@ -22,6 +22,7 @@ import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import formatTimestamp from "@/utils/format-timestamp";
 import { formSchema } from "../form-schema";
+import { Blogger } from "./blogger";
 import { Dev } from "./dev";
 import { Ghost } from "./ghost";
 import { Medium } from "./medium";
@@ -72,6 +73,14 @@ const platformConfig: IPlatformConfig[] = [
         logo: Images.wordpressLogo,
         component: (form: UseFormReturn<z.infer<typeof formSchema>>, isLoading) => (
             <WordPress form={form} isLoading={isLoading} />
+        ),
+    },
+    {
+        label: "Blogger",
+        value: constants.user.platforms.BLOGGER,
+        logo: Images.bloggerLogo,
+        component: (form: UseFormReturn<z.infer<typeof formSchema>>, isLoading) => (
+            <Blogger form={form} isLoading={isLoading} />
         ),
     },
 ];

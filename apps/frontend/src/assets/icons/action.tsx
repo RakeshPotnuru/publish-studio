@@ -20,6 +20,7 @@ import { PiPlusCircleLight } from "react-icons/pi";
 import { RxCaretSort, RxCross2 } from "react-icons/rx";
 import { TbPlugConnected } from "react-icons/tb";
 import { TiDownload, TiLockClosed, TiLockOpen } from "react-icons/ti";
+import { IoMdRefresh } from "react-icons/io";
 
 export const ActionIcons = {
     EditProfile: MdManageAccounts,
@@ -45,4 +46,5 @@ export const ActionIcons = {
     Mic: BiSolidMicrophone,
     MicOff: BiSolidMicrophoneOff,
     Import: TiDownload,
+    Refresh: IoMdRefresh,
 };

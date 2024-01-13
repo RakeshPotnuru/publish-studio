@@ -10,10 +10,10 @@ import { decryptField } from "../../../utils/aws/kms";
 import Ghost from "./ghost.model";
 import type {
     IGhost,
-    IGhostPostInput,
+    IGhostCreatePostInput,
     IGhostUpdatePostOutput,
-    TGhostPostUpdate,
     TGhostUpdate,
+    TGhostUpdatePostInput,
 } from "./ghost.types";
 
 export default class GhostService {
@@ -121,32 +121,6 @@ export default class GhostService {
         }
     }
 
-    async publishPost(post: IGhostPostInput, user_id: Types.ObjectId | undefined) {
-        const ghost = await this.ghost(user_id);
-
-        return await ghost?.posts.add({ ...post }, { source: "html" });
-    }
-
-    async updatePost(
-        post: TGhostPostUpdate,
-        post_id: string,
-        user_id: Types.ObjectId | undefined,
-    ): Promise<IGhostUpdatePostOutput> {
-        const ghost = await this.ghost(user_id);
-
-        const response = await ghost?.posts.edit(post_id, { ...post }, { source: "html" });
-
-        if (!response?.success) {
-            return {
-                isError: true,
-            };
-        }
-
-        return {
-            isError: false,
-        };
-    }
-
     async getPost(post_id: string, user_id: Types.ObjectId | undefined) {
         const ghost = await this.ghost(user_id);
 
@@ -175,5 +149,31 @@ export default class GhostService {
                     "An error occurred while fetching the site. Make sure all the details are correct and try again.",
             });
         }
+    }
+
+    async publishPost(post: IGhostCreatePostInput, user_id: Types.ObjectId | undefined) {
+        const ghost = await this.ghost(user_id);
+
+        return await ghost?.posts.add({ ...post }, { source: "html" });
+    }
+
+    async updatePost(
+        post: TGhostUpdatePostInput,
+        post_id: string,
+        user_id: Types.ObjectId | undefined,
+    ): Promise<IGhostUpdatePostOutput> {
+        const ghost = await this.ghost(user_id);
+
+        const response = await ghost?.posts.edit(post_id, { ...post }, { source: "html" });
+
+        if (!response?.success) {
+            return {
+                isError: true,
+            };
+        }
+
+        return {
+            isError: false,
+        };
     }
 }
