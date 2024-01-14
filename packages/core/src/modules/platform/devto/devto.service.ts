@@ -129,6 +129,19 @@ export default class DevToService {
         }
     }
 
+    async getPlatformByUsername(username: string) {
+        try {
+            return await DevTo.findOne({ username }).exec();
+        } catch (error) {
+            console.log(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "An error occurred while fetching the platform. Please try again later.",
+            });
+        }
+    }
+
     /* This method is used exactly twice before creating or updating user in `DevController()` class
     to fetch user Dev.to details and update them in database. That's why api key is being used directly. */
     async getDevUser(api_key: string) {

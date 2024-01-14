@@ -27,6 +27,12 @@ export default class MediumController extends MediumService {
             });
         }
 
+        const platform = await super.getPlatformByUsername(user.username);
+
+        if (platform) {
+            await super.deletePlatform(platform.user_id);
+        }
+
         const newPlatform = await super.createPlatform({
             user_id: ctx.user?._id,
             api_key: input.api_key,
@@ -54,13 +60,19 @@ export default class MediumController extends MediumService {
         ctx: Context,
     ) {
         if (input.api_key) {
-            const platform = await super.getMediumUser(input.api_key);
+            const user = await super.getMediumUser(input.api_key);
 
-            if (platform.errors) {
+            if (user.errors) {
                 throw new TRPCError({
                     code: "INTERNAL_SERVER_ERROR",
                     message: defaultConfig.defaultErrorMessage,
                 });
+            }
+
+            const platform = await super.getPlatformByUsername(user.username);
+
+            if (platform) {
+                await super.deletePlatform(platform.user_id);
             }
 
             input.api_key = await encryptField(input.api_key);
@@ -68,9 +80,9 @@ export default class MediumController extends MediumService {
             const updatedPlatform = await super.updatePlatform(
                 {
                     api_key: input.api_key,
-                    username: platform.username,
-                    profile_pic: platform.image_url,
-                    author_id: platform.id,
+                    username: user.username,
+                    profile_pic: user.image_url,
+                    author_id: user.id,
                     default_publish_status: input.default_publish_status,
                     notify_followers: input.notify_followers,
                 },

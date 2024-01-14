@@ -11,6 +11,12 @@ export default class WordPressController extends WordPressService {
     async createPlatformHandler(code: string, ctx: Context) {
         const site = await super.getWordPressSite(code);
 
+        const platform = await super.getPlatformByBlogId(site.blog_id);
+
+        if (platform) {
+            await super.deletePlatform(platform.user_id);
+        }
+
         const newPlatform = super.createPlatform({
             user_id: ctx.user?._id,
             blog_url: site.blog_url,

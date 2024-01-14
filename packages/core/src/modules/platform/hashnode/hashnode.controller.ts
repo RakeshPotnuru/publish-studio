@@ -37,6 +37,12 @@ export default class HashnodeController extends HashnodeService {
             });
         }
 
+        const platform = await super.getPlatformByUsername(user.data.me.username);
+
+        if (platform) {
+            await super.deletePlatform(platform.user_id);
+        }
+
         const newPlatform = await super.createPlatform({
             user_id: ctx.user?._id,
             api_key: input.api_key,
@@ -88,6 +94,12 @@ export default class HashnodeController extends HashnodeService {
                     code: "BAD_REQUEST",
                     message: "You don't have any publications on Hashnode.",
                 });
+            }
+
+            const platform = await super.getPlatformByUsername(user.data.me.username);
+
+            if (platform) {
+                await super.deletePlatform(platform.user_id);
             }
 
             input.api_key = await encryptField(input.api_key);

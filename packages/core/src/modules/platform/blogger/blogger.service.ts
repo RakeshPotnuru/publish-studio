@@ -160,7 +160,7 @@ export default class BloggerService {
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while getting the platform. Please try again later.",
+                message: "An error occurred while fetching the platform. Please try again later.",
             });
         }
     }
@@ -175,26 +175,26 @@ export default class BloggerService {
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while getting the platform. Please try again later.",
+                message: "An error occurred while fetching the platform. Please try again later.",
             });
         }
     }
 
     async getBloggerBlogs(user_id: Types.ObjectId | undefined) {
-        try {
-            const blogs = await (
-                await this.blogger(user_id)
-            )?.blogs.listByUser({
-                userId: "self",
+        const blogs = await (
+            await this.blogger(user_id)
+        )?.blogs.listByUser({
+            userId: "self",
+        });
+
+        if (!blogs?.data.items || blogs?.data.items.length === 0) {
+            throw new TRPCError({
+                code: "NOT_FOUND",
+                message: "No blogs found for the user.",
             });
+        }
 
-            if (!blogs?.data.items || blogs?.data.items.length === 0) {
-                throw new TRPCError({
-                    code: "NOT_FOUND",
-                    message: "No blogs found for the user.",
-                });
-            }
-
+        try {
             return blogs.data.items.map(blog => ({
                 id: blog.id,
                 url: blog.url,

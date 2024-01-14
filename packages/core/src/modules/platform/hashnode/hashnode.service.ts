@@ -127,6 +127,19 @@ export default class HashnodeService {
         }
     }
 
+    async getPlatformByUsername(username: string) {
+        try {
+            return await Hashnode.findOne({ username }).exec();
+        } catch (error) {
+            console.log(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "An error occurred while fetching the platform. Please try again later.",
+            });
+        }
+    }
+
     /* This method is used exactly twice before creating or updating user in `HashnodeController()` class
     to fetch user Hashnode details and update them in database. That's why api key is being used directly. */
     async getHashnodeUser(api_key: string) {

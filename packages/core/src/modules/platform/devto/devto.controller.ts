@@ -14,6 +14,12 @@ export default class DevToController extends DevToService {
     ) {
         const user = await super.getDevUser(input.api_key);
 
+        const platform = await super.getPlatformByUsername(user.username);
+
+        if (platform) {
+            await super.deletePlatform(platform.user_id);
+        }
+
         const newPlatform = await super.createPlatform({
             user_id: ctx.user?._id,
             api_key: input.api_key,
@@ -36,6 +42,12 @@ export default class DevToController extends DevToService {
     ) {
         if (input.api_key) {
             const user = await super.getDevUser(input.api_key);
+
+            const platform = await super.getPlatformByUsername(user.username);
+
+            if (platform) {
+                await super.deletePlatform(platform.user_id);
+            }
 
             input.api_key = await encryptField(input.api_key);
 

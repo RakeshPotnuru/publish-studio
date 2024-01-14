@@ -138,6 +138,19 @@ export default class WordPressService {
         }
     }
 
+    async getPlatformByBlogId(blog_id: string) {
+        try {
+            return await WordPress.findOne({ blog_id }).exec();
+        } catch (error) {
+            console.log(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "An error occurred while getting the platform.",
+            });
+        }
+    }
+
     async getWordPressSite(code: string) {
         try {
             const response = await axios.post(

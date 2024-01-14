@@ -19,6 +19,12 @@ export default class GhostController extends GhostService {
             });
         }
 
+        const platform = await super.getPlatformByAPIUrl(input.api_url);
+
+        if (platform) {
+            await super.deletePlatform(platform.user_id);
+        }
+
         const newPlatform = await super.createPlatform({
             user_id: ctx.user?._id,
             api_url: input.api_url,
@@ -43,6 +49,12 @@ export default class GhostController extends GhostService {
                     code: "NOT_FOUND",
                     message: "Invalid fields. Site not found.",
                 });
+            }
+
+            const platform = await super.getPlatformByAPIUrl(input.api_url);
+
+            if (platform) {
+                await super.deletePlatform(platform.user_id);
             }
 
             input.admin_api_key = await encryptField(input.admin_api_key);

@@ -127,6 +127,19 @@ export default class MediumService {
         }
     }
 
+    async getPlatformByUsername(username: string) {
+        try {
+            return await Medium.findOne({ username }).exec();
+        } catch (error) {
+            console.log(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "An error occurred while fetching the platform. Please try again later.",
+            });
+        }
+    }
+
     /* This method is used exactly twice before creating or updating user in `MediumController()` method
     to fetch user Medium details and update them in database. That's why api key is being used directly. */
     async getMediumUser(api_key: string) {

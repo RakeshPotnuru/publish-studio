@@ -121,6 +121,19 @@ export default class GhostService {
         }
     }
 
+    async getPlatformByAPIUrl(api_url: string) {
+        try {
+            return (await Ghost.findOne({ api_url }).exec()) as IGhost;
+        } catch (error) {
+            console.log(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "An error occurred while fetching the platform. Please try again later.",
+            });
+        }
+    }
+
     async getPost(post_id: string, user_id: Types.ObjectId | undefined) {
         const ghost = await this.ghost(user_id);
 

@@ -1,7 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
-import defaultConfig from "../../../config/app.config";
 import { constants } from "../../../config/constants";
 import type { Context } from "../../../trpc";
 import type { IProject, IProjectPlatform } from "../../project/project.types";
@@ -34,6 +33,12 @@ export default class BloggerController extends BloggerService {
     async createPlatformHandler(code: string, ctx: Context) {
         const response = await super.getTokenAndBlogs(code);
 
+        const platform = await super.getPlatformByBlogId(response.blogs?.[0].id);
+
+        if (platform) {
+            await super.deletePlatform(platform.user_id, platform.token);
+        }
+
         const newPlatform = super.createPlatform({
             user_id: ctx.user?._id,
             blog_id: response.blogs?.[0].id,
@@ -53,11 +58,8 @@ export default class BloggerController extends BloggerService {
     async updatePlatformHandler(input: IBloggerUserUpdate, ctx: Context) {
         const platform = await super.getPlatformByBlogId(input.blog_id);
 
-        if (platform?.blog_id === input.blog_id) {
-            throw new TRPCError({
-                code: "BAD_REQUEST",
-                message: `This blog is already connected to a ${defaultConfig.app_name} account. Please disconnect it first to continue.`,
-            });
+        if (platform) {
+            await super.deletePlatform(platform.user_id, platform.token);
         }
 
         const updatedPlatform = await super.updatePlatform(input, ctx.user?._id);
