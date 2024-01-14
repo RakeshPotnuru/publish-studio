@@ -25,19 +25,19 @@ import { trpc } from "@/utils/trpc";
 
 interface WordPressEditFormProps extends React.HTMLAttributes<HTMLDivElement> {
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    default_publish_status: IWordPress["default_publish_status"];
+    status: IWordPress["status"];
     publicize: string;
 }
 
 const formSchema = z.object({
     api_key: z.string().optional(),
-    default_publish_status: z.nativeEnum(constants.wordpressStatuses),
+    status: z.nativeEnum(constants.wordpressStatuses),
     publicize: z.string(),
 });
 
 export function WordPressEditForm({
     setIsOpen,
-    default_publish_status,
+    status,
     publicize,
     ...props
 }: Readonly<WordPressEditFormProps>) {
@@ -61,7 +61,7 @@ export function WordPressEditForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
             api_key: "",
-            default_publish_status,
+            status,
             publicize,
         },
     });
@@ -90,7 +90,7 @@ export function WordPressEditForm({
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                     <FormField
                         control={form.control}
-                        name="default_publish_status"
+                        name="status"
                         disabled={isLoading}
                         render={({ field }) => (
                             <FormItem>

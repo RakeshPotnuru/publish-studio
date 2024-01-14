@@ -29,7 +29,7 @@ import { trpc } from "@/utils/trpc";
 
 interface HashnodeEditFormProps extends React.HTMLAttributes<HTMLDivElement> {
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    default_settings: {
+    settings: {
         enable_table_of_contents: string;
         send_newsletter: string;
         delisted: string;
@@ -38,7 +38,7 @@ interface HashnodeEditFormProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const formSchema = z.object({
     api_key: z.string().optional(),
-    default_settings: z.object({
+    settings: z.object({
         enable_table_of_contents: z.string().default("false").optional(),
         send_newsletter: z.string().default("false").optional(),
         delisted: z.string().default("false").optional(),
@@ -46,7 +46,7 @@ const formSchema = z.object({
 });
 
 export function HashnodeEditForm({
-    default_settings,
+    settings,
     setIsOpen,
     ...props
 }: Readonly<HashnodeEditFormProps>) {
@@ -71,10 +71,10 @@ export function HashnodeEditForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
             api_key: "",
-            default_settings: {
-                enable_table_of_contents: default_settings.enable_table_of_contents,
-                send_newsletter: default_settings.send_newsletter,
-                delisted: default_settings.delisted,
+            settings: {
+                enable_table_of_contents: settings.enable_table_of_contents,
+                send_newsletter: settings.send_newsletter,
+                delisted: settings.delisted,
             },
         },
     });
@@ -84,11 +84,10 @@ export function HashnodeEditForm({
             setError(null);
             await edit({
                 ...data,
-                default_settings: {
-                    enable_table_of_contents:
-                        data.default_settings.enable_table_of_contents === "true",
-                    send_newsletter: data.default_settings.send_newsletter === "true",
-                    delisted: data.default_settings.delisted === "true",
+                settings: {
+                    enable_table_of_contents: data.settings.enable_table_of_contents === "true",
+                    send_newsletter: data.settings.send_newsletter === "true",
+                    delisted: data.settings.delisted === "true",
                 },
             });
         } catch (error) {}
@@ -175,7 +174,7 @@ export function HashnodeEditForm({
                     />
                     <FormField
                         control={form.control}
-                        name="default_settings.send_newsletter"
+                        name="settings.send_newsletter"
                         disabled={isLoading}
                         render={({ field }) => (
                             <FormItem>
@@ -209,7 +208,7 @@ export function HashnodeEditForm({
                     />
                     <FormField
                         control={form.control}
-                        name="default_settings.enable_table_of_contents"
+                        name="settings.enable_table_of_contents"
                         disabled={isLoading}
                         render={({ field }) => (
                             <FormItem>
@@ -242,7 +241,7 @@ export function HashnodeEditForm({
                     />
                     <FormField
                         control={form.control}
-                        name="default_settings.delisted"
+                        name="settings.delisted"
                         disabled={isLoading}
                         render={({ field }) => (
                             <FormItem>

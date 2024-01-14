@@ -44,12 +44,11 @@ export function Hashnode({ data, isOpen, isLoading, setIsOpen }: Readonly<Hashno
             editForm={
                 <HashnodeEditForm
                     setIsOpen={setIsOpen}
-                    default_settings={{
-                        delisted: data?.default_settings.delisted.toString() ?? "false",
+                    settings={{
+                        delisted: data?.settings.delisted.toString() ?? "false",
                         enable_table_of_contents:
-                            data?.default_settings.enable_table_of_contents.toString() ?? "false",
-                        send_newsletter:
-                            data?.default_settings.send_newsletter.toString() ?? "false",
+                            data?.settings.enable_table_of_contents.toString() ?? "false",
+                        send_newsletter: data?.settings.send_newsletter.toString() ?? "false",
                     }}
                 />
             }

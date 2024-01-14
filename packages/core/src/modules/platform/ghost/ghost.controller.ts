@@ -29,7 +29,7 @@ export default class GhostController extends GhostService {
             user_id: ctx.user?._id,
             api_url: input.api_url,
             admin_api_key: input.admin_api_key,
-            default_publish_status: input.default_publish_status,
+            status: input.status,
         });
 
         return {
@@ -63,7 +63,7 @@ export default class GhostController extends GhostService {
                 {
                     api_url: input.api_url,
                     admin_api_key: input.admin_api_key,
-                    default_publish_status: input.default_publish_status,
+                    status: input.status,
                 },
                 ctx.user?._id,
             );
@@ -78,7 +78,7 @@ export default class GhostController extends GhostService {
 
         const updatedPlatform = await super.updatePlatform(
             {
-                default_publish_status: input.default_publish_status,
+                status: input.status,
             },
             ctx.user?._id,
         );
@@ -137,7 +137,7 @@ export default class GhostController extends GhostService {
                 html: input.post.body?.html,
                 title: input.post.title ?? input.post.name,
                 canonical_url: input.post.canonical_url,
-                status: platform.default_publish_status,
+                status: platform.status,
                 tags: tags ?? undefined,
             },
             user_id,
@@ -182,7 +182,7 @@ export default class GhostController extends GhostService {
                       html: input.post.body?.html,
                       title: input.post.title,
                       canonical_url: input.post.canonical_url,
-                      status: platform.default_publish_status,
+                      status: platform.status,
                       tags: tags ?? undefined,
                       updated_at: new Date(post.data.updated_at ?? Date.now()),
                   },
@@ -194,7 +194,7 @@ export default class GhostController extends GhostService {
                       html: input.post.body?.html,
                       title: input.post.title,
                       canonical_url: input.post.canonical_url,
-                      status: platform.default_publish_status,
+                      status: platform.status,
                       tags: tags ?? undefined,
                       updated_at: new Date(),
                   },

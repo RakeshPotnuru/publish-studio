@@ -34,9 +34,7 @@ interface MediumConnectFormProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const formSchema = z.object({
     api_key: z.string().min(1, { message: "API key is required" }),
-    default_publish_status: z
-        .nativeEnum(constants.mediumStatuses)
-        .default(constants.mediumStatuses.DRAFT),
+    status: z.nativeEnum(constants.mediumStatuses).default(constants.mediumStatuses.DRAFT),
     notify_followers: z.string().default("false"),
 });
 
@@ -61,7 +59,7 @@ export function MediumConnectForm({ setIsOpen, ...props }: Readonly<MediumConnec
         resolver: zodResolver(formSchema),
         defaultValues: {
             api_key: "",
-            default_publish_status: constants.mediumStatuses.DRAFT,
+            status: constants.mediumStatuses.DRAFT,
             notify_followers: "false",
         },
     });
@@ -157,7 +155,7 @@ export function MediumConnectForm({ setIsOpen, ...props }: Readonly<MediumConnec
                     />
                     <FormField
                         control={form.control}
-                        name="default_publish_status"
+                        name="status"
                         disabled={isLoading}
                         render={({ field }) => (
                             <FormItem>

@@ -41,10 +41,7 @@ export function DevTo({ data, isOpen, isLoading, setIsOpen }: Readonly<DevToProp
             username={data?.username}
             profile_url={`https://dev.to/@${data?.username}`}
             editForm={
-                <DevEditForm
-                    setIsOpen={setIsOpen}
-                    default_publish_status={data?.default_publish_status.toString() ?? "false"}
-                />
+                <DevEditForm setIsOpen={setIsOpen} status={data?.status.toString() ?? "false"} />
             }
             connectForm={<DevConnectForm setIsOpen={setIsOpen} />}
         />

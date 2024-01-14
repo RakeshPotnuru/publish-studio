@@ -29,19 +29,15 @@ import { trpc } from "@/utils/trpc";
 
 interface DevEditFormProps extends React.HTMLAttributes<HTMLDivElement> {
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    default_publish_status: string;
+    status: string;
 }
 
 const formSchema = z.object({
     api_key: z.string().optional(),
-    default_publish_status: z.string().optional(),
+    status: z.string().optional(),
 });
 
-export function DevEditForm({
-    default_publish_status,
-    setIsOpen,
-    ...props
-}: Readonly<DevEditFormProps>) {
+export function DevEditForm({ status, setIsOpen, ...props }: Readonly<DevEditFormProps>) {
     const [error, setError] = useState<string | null>(null);
 
     const utils = trpc.useUtils();
@@ -61,7 +57,7 @@ export function DevEditForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
             api_key: "",
-            default_publish_status,
+            status,
         },
     });
 
@@ -70,7 +66,7 @@ export function DevEditForm({
             setError(null);
             await edit({
                 ...data,
-                default_publish_status: data.default_publish_status === "true",
+                status: data.status === "true",
             });
         } catch (error) {}
     };
@@ -156,7 +152,7 @@ export function DevEditForm({
                     />
                     <FormField
                         control={form.control}
-                        name="default_publish_status"
+                        name="status"
                         disabled={isLoading}
                         render={({ field }) => (
                             <FormItem>

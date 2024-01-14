@@ -11,7 +11,7 @@ const ghostRouter = router({
             z.object({
                 api_url: z.string(),
                 admin_api_key: z.string(),
-                default_publish_status: z.nativeEnum(constants.ghostStatuses),
+                status: z.nativeEnum(constants.ghostStatuses),
             }),
         )
         .mutation(({ input, ctx }) => new GhostController().createPlatformHandler(input, ctx)),
@@ -21,7 +21,7 @@ const ghostRouter = router({
             z.object({
                 api_url: z.string().optional(),
                 admin_api_key: z.string().optional(),
-                default_publish_status: z.custom<TGhostStatus>().optional(),
+                status: z.custom<TGhostStatus>().optional(),
             }),
         )
         .mutation(({ input, ctx }) => new GhostController().updatePlatformHandler(input, ctx)),

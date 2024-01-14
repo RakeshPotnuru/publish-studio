@@ -13,7 +13,7 @@ const MediumSchema = new Schema<IMedium>(
         username: { type: String, unique: true },
         profile_pic: { type: String },
         author_id: { type: String, required: true },
-        default_publish_status: {
+        status: {
             type: String,
             enum: constants.mediumStatuses,
             required: true,

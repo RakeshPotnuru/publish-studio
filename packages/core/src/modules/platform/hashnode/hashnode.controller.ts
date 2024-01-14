@@ -11,7 +11,7 @@ import type { IHashnodeDefaultSettings } from "./hashnode.types";
 
 export default class HashnodeController extends HashnodeService {
     async createPlatformHandler(
-        input: { api_key: string; default_settings: IHashnodeDefaultSettings },
+        input: { api_key: string; settings: IHashnodeDefaultSettings },
         ctx: Context,
     ) {
         const user = await super.getHashnodeUser(input.api_key);
@@ -53,10 +53,10 @@ export default class HashnodeController extends HashnodeService {
                 publication_id: user.data.me.publications.edges[0].node.id,
                 publication_logo: user.data.me.publications.edges[0].node.favicon,
             },
-            default_settings: {
-                enable_table_of_contents: input.default_settings.enable_table_of_contents,
-                send_newsletter: input.default_settings.send_newsletter,
-                delisted: input.default_settings.delisted,
+            settings: {
+                enable_table_of_contents: input.settings.enable_table_of_contents,
+                send_newsletter: input.settings.send_newsletter,
+                delisted: input.settings.delisted,
             },
         });
 
@@ -69,7 +69,7 @@ export default class HashnodeController extends HashnodeService {
     }
 
     async updatePlatformHandler(
-        input: { api_key?: string; default_settings: IHashnodeDefaultSettings },
+        input: { api_key?: string; settings: IHashnodeDefaultSettings },
         ctx: Context,
     ) {
         if (input.api_key) {
@@ -114,10 +114,10 @@ export default class HashnodeController extends HashnodeService {
                         publication_id: user.data.me.publications.edges[0].node.id,
                         publication_logo: user.data.me.publications.edges[0].node.id,
                     },
-                    default_settings: {
-                        enable_table_of_contents: input.default_settings?.enable_table_of_contents,
-                        send_newsletter: input.default_settings?.send_newsletter,
-                        delisted: input.default_settings?.delisted,
+                    settings: {
+                        enable_table_of_contents: input.settings?.enable_table_of_contents,
+                        send_newsletter: input.settings?.send_newsletter,
+                        delisted: input.settings?.delisted,
                     },
                 },
                 ctx.user?._id,
@@ -133,10 +133,10 @@ export default class HashnodeController extends HashnodeService {
 
         const updatedPlatform = await super.updatePlatform(
             {
-                default_settings: {
-                    enable_table_of_contents: input.default_settings.enable_table_of_contents,
-                    send_newsletter: input.default_settings.send_newsletter,
-                    delisted: input.default_settings.delisted,
+                settings: {
+                    enable_table_of_contents: input.settings.enable_table_of_contents,
+                    send_newsletter: input.settings.send_newsletter,
+                    delisted: input.settings.delisted,
                 },
             },
             ctx.user?._id,
@@ -201,9 +201,9 @@ export default class HashnodeController extends HashnodeService {
                 tags: post.tags?.hashnode_tags ?? [],
                 publicationId: platform.publication.publication_id,
                 settings: {
-                    delisted: platform.default_settings.delisted,
-                    enableTableOfContent: platform.default_settings.enable_table_of_contents,
-                    isNewsletterActivated: platform.default_settings.send_newsletter,
+                    delisted: platform.settings.delisted,
+                    enableTableOfContent: platform.settings.enable_table_of_contents,
+                    isNewsletterActivated: platform.settings.send_newsletter,
                 },
                 coverImageOptions: {
                     coverImageURL: post.cover_image,

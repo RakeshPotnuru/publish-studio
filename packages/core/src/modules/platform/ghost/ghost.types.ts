@@ -9,7 +9,7 @@ export interface IGhost {
     user_id?: Types.ObjectId;
     api_url: string;
     admin_api_key: string;
-    default_publish_status: TGhostStatus;
+    status: TGhostStatus;
 }
 
 export type TGhostUpdate = Partial<IGhost>;
@@ -19,7 +19,7 @@ export interface IGhostResponse {
     user_id: Types.ObjectId;
     api_url: string;
     admin_api_key: string;
-    default_publish_status: TGhostStatus;
+    status: TGhostStatus;
     created_at: Date;
     updated_at: Date;
 }

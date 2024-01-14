@@ -6,7 +6,7 @@ export interface IDevTo {
     api_key: string;
     username?: string;
     profile_pic?: string;
-    default_publish_status: boolean;
+    status: boolean;
 }
 
 export interface IDevToResponse {
@@ -15,7 +15,7 @@ export interface IDevToResponse {
     api_key: string;
     username: string;
     profile_pic?: string;
-    default_publish_status: boolean;
+    status: boolean;
     created_at: Date;
     updated_at: Date;
 }

@@ -8,7 +8,7 @@ const devtoRouter = router({
         .input(
             z.object({
                 api_key: z.string(),
-                default_publish_status: z.boolean(),
+                status: z.boolean(),
             }),
         )
         .mutation(({ input, ctx }) => new DevToController().createPlatformHandler(input, ctx)),
@@ -17,7 +17,7 @@ const devtoRouter = router({
         .input(
             z.object({
                 api_key: z.string().optional(),
-                default_publish_status: z.boolean().optional(),
+                status: z.boolean().optional(),
             }),
         )
         .mutation(({ input, ctx }) => new DevToController().updatePlatformHandler(input, ctx)),

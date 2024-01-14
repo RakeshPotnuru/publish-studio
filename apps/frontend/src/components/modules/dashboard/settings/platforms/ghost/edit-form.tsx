@@ -32,20 +32,16 @@ import { TGhostStatus } from ".";
 interface DevEditFormProps extends React.HTMLAttributes<HTMLDivElement> {
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
     api_url: string;
-    default_publish_status: TGhostStatus;
+    status: TGhostStatus;
 }
 
 const formSchema = z.object({
     admin_api_key: z.string().optional(),
     api_url: z.string().url().optional(),
-    default_publish_status: z.nativeEnum(constants.ghostStatuses).optional(),
+    status: z.nativeEnum(constants.ghostStatuses).optional(),
 });
 
-export function GhostEditForm({
-    default_publish_status,
-    setIsOpen,
-    ...props
-}: Readonly<DevEditFormProps>) {
+export function GhostEditForm({ status, setIsOpen, ...props }: Readonly<DevEditFormProps>) {
     const [error, setError] = useState<string | null>(null);
 
     const utils = trpc.useUtils();
@@ -65,7 +61,7 @@ export function GhostEditForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
             api_url: props.api_url,
-            default_publish_status: default_publish_status,
+            status: status,
         },
     });
 
@@ -207,7 +203,7 @@ export function GhostEditForm({
                     />
                     <FormField
                         control={form.control}
-                        name="default_publish_status"
+                        name="status"
                         disabled={isLoading}
                         render={({ field }) => (
                             <FormItem>

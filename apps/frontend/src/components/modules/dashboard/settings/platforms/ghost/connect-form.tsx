@@ -37,9 +37,7 @@ const formSchema = z.object({
     api_url: z.string().min(1, { message: "API URL is required" }).url({
         message: "API URL must be a valid URL",
     }),
-    default_publish_status: z
-        .nativeEnum(constants.ghostStatuses)
-        .default(constants.ghostStatuses.DRAFT),
+    status: z.nativeEnum(constants.ghostStatuses).default(constants.ghostStatuses.DRAFT),
 });
 
 export function GhostConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFormProps>) {
@@ -64,7 +62,7 @@ export function GhostConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFor
         defaultValues: {
             admin_api_key: "",
             api_url: "",
-            default_publish_status: constants.ghostStatuses.DRAFT,
+            status: constants.ghostStatuses.DRAFT,
         },
     });
 
@@ -206,7 +204,7 @@ export function GhostConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFor
                     />
                     <FormField
                         control={form.control}
-                        name="default_publish_status"
+                        name="status"
                         disabled={isLoading}
                         render={({ field }) => (
                             <FormItem>

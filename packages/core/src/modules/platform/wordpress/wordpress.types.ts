@@ -12,7 +12,7 @@ export interface IWordPress {
     blog_id: string;
     token: string;
     publicize: boolean;
-    default_publish_status: TWordPressStatus;
+    status: TWordPressStatus;
 }
 
 export interface IWordPressResponse {
@@ -21,14 +21,14 @@ export interface IWordPressResponse {
     blog_url: string;
     blog_id: string;
     publicize: boolean;
-    default_publish_status: TWordPressStatus;
+    status: TWordPressStatus;
     created_at: Date;
     updated_at: Date;
 }
 
 export interface IWordPressUserUpdate {
     publicize: boolean;
-    default_publish_status: TWordPressStatus;
+    status: TWordPressStatus;
 }
 
 export interface IWordPressCreatePostInput {

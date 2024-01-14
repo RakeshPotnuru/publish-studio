@@ -9,7 +9,7 @@ const mediumRouter = router({
         .input(
             z.object({
                 api_key: z.string(),
-                default_publish_status: z.nativeEnum(constants.mediumStatuses),
+                status: z.nativeEnum(constants.mediumStatuses),
                 notify_followers: z.boolean(),
             }),
         )
@@ -19,7 +19,7 @@ const mediumRouter = router({
         .input(
             z.object({
                 api_key: z.string().optional(),
-                default_publish_status: z.nativeEnum(constants.mediumStatuses).optional(),
+                status: z.nativeEnum(constants.mediumStatuses).optional(),
                 notify_followers: z.boolean().optional(),
             }),
         )

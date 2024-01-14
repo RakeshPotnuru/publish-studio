@@ -8,7 +8,7 @@ const hashnodeRouter = router({
         .input(
             z.object({
                 api_key: z.string(),
-                default_settings: z.object({
+                settings: z.object({
                     enable_table_of_contents: z.boolean(),
                     send_newsletter: z.boolean(),
                     delisted: z.boolean(),
@@ -21,7 +21,7 @@ const hashnodeRouter = router({
         .input(
             z.object({
                 api_key: z.string().optional(),
-                default_settings: z.object({
+                settings: z.object({
                     enable_table_of_contents: z.boolean(),
                     send_newsletter: z.boolean(),
                     delisted: z.boolean(),

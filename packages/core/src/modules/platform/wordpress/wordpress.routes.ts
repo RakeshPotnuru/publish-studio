@@ -13,7 +13,7 @@ const wordpressRouter = router({
         .input(
             z.object({
                 publicize: z.boolean(),
-                default_publish_status: z.nativeEnum(constants.wordpressStatuses),
+                status: z.nativeEnum(constants.wordpressStatuses),
             }),
         )
         .mutation(({ input, ctx }) => new WordPressController().updatePlatformHandler(input, ctx)),

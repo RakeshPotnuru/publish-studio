@@ -8,10 +8,7 @@ import type { IProject, IProjectPlatform } from "../../project/project.types";
 import DevToService from "./devto.service";
 
 export default class DevToController extends DevToService {
-    async createPlatformHandler(
-        input: { api_key: string; default_publish_status: boolean },
-        ctx: Context,
-    ) {
+    async createPlatformHandler(input: { api_key: string; status: boolean }, ctx: Context) {
         const user = await super.getDevUser(input.api_key);
 
         const platform = await super.getPlatformByUsername(user.username);
@@ -25,7 +22,7 @@ export default class DevToController extends DevToService {
             api_key: input.api_key,
             username: user.username,
             profile_pic: user.profile_image,
-            default_publish_status: input.default_publish_status,
+            status: input.status,
         });
 
         return {
@@ -36,10 +33,7 @@ export default class DevToController extends DevToService {
         };
     }
 
-    async updatePlatformHandler(
-        input: { api_key?: string; default_publish_status?: boolean },
-        ctx: Context,
-    ) {
+    async updatePlatformHandler(input: { api_key?: string; status?: boolean }, ctx: Context) {
         if (input.api_key) {
             const user = await super.getDevUser(input.api_key);
 
@@ -56,7 +50,7 @@ export default class DevToController extends DevToService {
                     api_key: input.api_key,
                     username: user.username,
                     profile_pic: user.profile_image,
-                    default_publish_status: input.default_publish_status,
+                    status: input.status,
                 },
                 ctx.user?._id,
             );
@@ -71,7 +65,7 @@ export default class DevToController extends DevToService {
 
         const updatedPlatform = await super.updatePlatform(
             {
-                default_publish_status: input.default_publish_status,
+                status: input.status,
             },
             ctx.user?._id,
         );
@@ -122,7 +116,7 @@ export default class DevToController extends DevToService {
                 title: input.post.title ?? input.post.name,
                 body_markdown: input.post.body?.markdown,
                 description: input.post.description,
-                published: platform.default_publish_status,
+                published: platform.status,
                 canonical_url: input.post.canonical_url,
                 tags: input.post.tags?.devto_tags,
                 main_image: input.post.cover_image,
@@ -163,7 +157,7 @@ export default class DevToController extends DevToService {
                 title: input.post.title,
                 body_markdown: input.post.body?.markdown,
                 description: input.post.description,
-                published: platform.default_publish_status,
+                published: platform.status,
                 canonical_url: input.post.canonical_url,
                 tags: input.post.tags?.devto_tags,
                 main_image: input.post.cover_image,

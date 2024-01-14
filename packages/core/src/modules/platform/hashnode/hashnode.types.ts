@@ -17,7 +17,7 @@ export interface IHashnode {
         publication_id: string;
         publication_logo?: string;
     };
-    default_settings: IHashnodeDefaultSettings;
+    settings: IHashnodeDefaultSettings;
 }
 
 export interface IHashnodeResponse {
@@ -31,7 +31,7 @@ export interface IHashnodeResponse {
         publication_id: string;
         publication_logo?: string;
     };
-    default_settings: IHashnodeDefaultSettings;
+    settings: IHashnodeDefaultSettings;
     created_at: Date;
     updated_at: Date;
 }

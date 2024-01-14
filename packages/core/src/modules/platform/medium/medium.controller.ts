@@ -13,7 +13,7 @@ export default class MediumController extends MediumService {
     async createUserHandler(
         input: {
             api_key: string;
-            default_publish_status: TMediumStatus;
+            status: TMediumStatus;
             notify_followers: boolean;
         },
         ctx: Context,
@@ -39,7 +39,7 @@ export default class MediumController extends MediumService {
             username: user.username,
             profile_pic: user.image_url,
             author_id: user.id,
-            default_publish_status: input.default_publish_status,
+            status: input.status,
             notify_followers: input.notify_followers,
         });
 
@@ -54,7 +54,7 @@ export default class MediumController extends MediumService {
     async updatePlatformHandler(
         input: {
             api_key?: string;
-            default_publish_status?: TMediumStatus;
+            status?: TMediumStatus;
             notify_followers?: boolean;
         },
         ctx: Context,
@@ -83,7 +83,7 @@ export default class MediumController extends MediumService {
                     username: user.username,
                     profile_pic: user.image_url,
                     author_id: user.id,
-                    default_publish_status: input.default_publish_status,
+                    status: input.status,
                     notify_followers: input.notify_followers,
                 },
                 ctx.user?._id,
@@ -99,7 +99,7 @@ export default class MediumController extends MediumService {
 
         const updatedPlatform = await super.updatePlatform(
             {
-                default_publish_status: input.default_publish_status,
+                status: input.status,
                 notify_followers: input.notify_followers,
             },
             ctx.user?._id,
@@ -152,7 +152,7 @@ export default class MediumController extends MediumService {
                 contentFormat: "markdown",
                 content: input.post.body?.markdown,
                 tags: input.post.tags?.medium_tags,
-                publishStatus: user.default_publish_status,
+                publishStatus: user.status,
                 canonicalUrl: input.post.canonical_url,
             },
             user.author_id,

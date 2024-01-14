@@ -33,7 +33,7 @@ interface HashnodeConnectFormProps extends React.HTMLAttributes<HTMLDivElement> 
 
 const formSchema = z.object({
     api_key: z.string().min(1, { message: "API key is required" }),
-    default_settings: z.object({
+    settings: z.object({
         enable_table_of_contents: z.string().default("false"),
         send_newsletter: z.string().default("false"),
         delisted: z.string().default("false"),
@@ -61,7 +61,7 @@ export function HashnodeConnectForm({ setIsOpen, ...props }: Readonly<HashnodeCo
         resolver: zodResolver(formSchema),
         defaultValues: {
             api_key: "",
-            default_settings: {
+            settings: {
                 enable_table_of_contents: "false",
                 send_newsletter: "false",
                 delisted: "false",
@@ -74,11 +74,10 @@ export function HashnodeConnectForm({ setIsOpen, ...props }: Readonly<HashnodeCo
             setError(null);
             await connect({
                 ...data,
-                default_settings: {
-                    enable_table_of_contents:
-                        data.default_settings.enable_table_of_contents === "true",
-                    send_newsletter: data.default_settings.send_newsletter === "true",
-                    delisted: data.default_settings.delisted === "true",
+                settings: {
+                    enable_table_of_contents: data.settings.enable_table_of_contents === "true",
+                    send_newsletter: data.settings.send_newsletter === "true",
+                    delisted: data.settings.delisted === "true",
                 },
             });
         } catch (error) {}
@@ -165,7 +164,7 @@ export function HashnodeConnectForm({ setIsOpen, ...props }: Readonly<HashnodeCo
                     />
                     <FormField
                         control={form.control}
-                        name="default_settings.send_newsletter"
+                        name="settings.send_newsletter"
                         disabled={isLoading}
                         render={({ field }) => (
                             <FormItem>
@@ -199,7 +198,7 @@ export function HashnodeConnectForm({ setIsOpen, ...props }: Readonly<HashnodeCo
                     />
                     <FormField
                         control={form.control}
-                        name="default_settings.enable_table_of_contents"
+                        name="settings.enable_table_of_contents"
                         disabled={isLoading}
                         render={({ field }) => (
                             <FormItem>
@@ -232,7 +231,7 @@ export function HashnodeConnectForm({ setIsOpen, ...props }: Readonly<HashnodeCo
                     />
                     <FormField
                         control={form.control}
-                        name="default_settings.delisted"
+                        name="settings.delisted"
                         disabled={isLoading}
                         render={({ field }) => (
                             <FormItem>

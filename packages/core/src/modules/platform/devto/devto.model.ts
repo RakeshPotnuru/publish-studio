@@ -12,7 +12,7 @@ const DevToSchema = new Schema<IDevTo>(
         api_key: { type: String, required: true, unique: true },
         username: { type: String, required: true, unique: true },
         profile_pic: { type: String },
-        default_publish_status: { type: Boolean, required: true, default: false },
+        status: { type: Boolean, required: true, default: false },
     },
     {
         timestamps: {

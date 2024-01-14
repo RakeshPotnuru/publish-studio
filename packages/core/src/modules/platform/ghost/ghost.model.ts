@@ -11,7 +11,7 @@ const GhostSchema = new Schema<IGhost>(
         user_id: { type: Schema.Types.ObjectId, required: true, unique: true },
         api_url: { type: String, required: true, unique: true },
         admin_api_key: { type: String, required: true, unique: true },
-        default_publish_status: {
+        status: {
             type: String,
             enum: constants.ghostStatuses,
             required: true,

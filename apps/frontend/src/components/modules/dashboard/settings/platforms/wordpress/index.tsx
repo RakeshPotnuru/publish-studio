@@ -56,9 +56,7 @@ export function WordPress({ data, isOpen, isLoading, setIsOpen }: Readonly<WordP
             editForm={
                 <WordPressEditForm
                     setIsOpen={setIsOpen}
-                    default_publish_status={
-                        data?.default_publish_status ?? constants.wordpressStatuses.DRAFT
-                    }
+                    status={data?.status ?? constants.wordpressStatuses.DRAFT}
                     publicize={data?.publicize.toString() ?? "false"}
                 />
             }

@@ -13,7 +13,7 @@ const WordPressSchema = new Schema<IWordPress>(
         blog_id: { type: String, required: true, unique: true },
         token: { type: String, required: true, unique: true },
         publicize: { type: Boolean, required: true, default: false },
-        default_publish_status: {
+        status: {
             type: String,
             enum: constants.wordpressStatuses,
             required: true,

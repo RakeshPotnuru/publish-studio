@@ -45,9 +45,7 @@ export function Medium({ data, isOpen, isLoading, setIsOpen }: Readonly<MediumTo
             editForm={
                 <MediumEditForm
                     setIsOpen={setIsOpen}
-                    default_publish_status={
-                        data?.default_publish_status ?? constants.mediumStatuses.DRAFT
-                    }
+                    status={data?.status ?? constants.mediumStatuses.DRAFT}
                     notify_followers={data?.notify_followers.toString() ?? "false"}
                 />
             }

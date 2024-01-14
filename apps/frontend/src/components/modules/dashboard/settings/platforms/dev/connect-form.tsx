@@ -33,7 +33,7 @@ interface DevConnectFormProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const formSchema = z.object({
     api_key: z.string().min(1, { message: "API key is required" }),
-    default_publish_status: z.string().default("false"),
+    status: z.string().default("false"),
 });
 
 export function DevConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFormProps>) {
@@ -57,7 +57,7 @@ export function DevConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFormP
         resolver: zodResolver(formSchema),
         defaultValues: {
             api_key: "",
-            default_publish_status: "false",
+            status: "false",
         },
     });
 
@@ -66,7 +66,7 @@ export function DevConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFormP
             setError(null);
             await connect({
                 ...data,
-                default_publish_status: data.default_publish_status === "true",
+                status: data.status === "true",
             });
         } catch (error) {}
     };
@@ -152,7 +152,7 @@ export function DevConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFormP
                     />
                     <FormField
                         control={form.control}
-                        name="default_publish_status"
+                        name="status"
                         disabled={isLoading}
                         render={({ field }) => (
                             <FormItem>

@@ -32,19 +32,19 @@ import { trpc } from "@/utils/trpc";
 
 interface MediumEditFormProps extends React.HTMLAttributes<HTMLDivElement> {
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    default_publish_status: IMedium["default_publish_status"];
+    status: IMedium["status"];
     notify_followers: string;
 }
 
 const formSchema = z.object({
     api_key: z.string().optional(),
-    default_publish_status: z.nativeEnum(constants.mediumStatuses),
+    status: z.nativeEnum(constants.mediumStatuses),
     notify_followers: z.string(),
 });
 
 export function MediumEditForm({
     setIsOpen,
-    default_publish_status,
+    status,
     notify_followers,
     ...props
 }: Readonly<MediumEditFormProps>) {
@@ -67,7 +67,7 @@ export function MediumEditForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
             api_key: "",
-            default_publish_status,
+            status,
             notify_followers,
         },
     });
@@ -163,7 +163,7 @@ export function MediumEditForm({
                     />
                     <FormField
                         control={form.control}
-                        name="default_publish_status"
+                        name="status"
                         disabled={isLoading}
                         render={({ field }) => (
                             <FormItem>

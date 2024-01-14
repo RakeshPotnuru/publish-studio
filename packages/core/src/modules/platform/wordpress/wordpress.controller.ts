@@ -23,7 +23,7 @@ export default class WordPressController extends WordPressService {
             blog_id: site.blog_id,
             token: site.access_token,
             publicize: false,
-            default_publish_status: constants.wordpressStatuses.DRAFT,
+            status: constants.wordpressStatuses.DRAFT,
         });
 
         return {
@@ -83,7 +83,7 @@ export default class WordPressController extends WordPressService {
             {
                 title: `<h1>${input.post.title ?? input.post.name}</h1>`,
                 content: input.post.body?.html,
-                status: platform.default_publish_status,
+                status: platform.status,
                 publicize: platform.publicize,
                 excerpt: input.post.description,
                 tags: input.post.tags?.wordpress_tags,
@@ -123,7 +123,7 @@ export default class WordPressController extends WordPressService {
             {
                 title: `<h1>${input.post.title ?? "Untitled"}</h1>`,
                 content: input.post.body?.html,
-                status: platform.default_publish_status,
+                status: platform.status,
                 publicize: platform.publicize,
                 excerpt: input.post.description,
                 tags: input.post.tags?.wordpress_tags,

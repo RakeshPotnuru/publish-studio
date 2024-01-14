@@ -12,7 +12,7 @@ export interface IMedium {
     username: string;
     profile_pic: string;
     author_id: string;
-    default_publish_status: TMediumStatus;
+    status: TMediumStatus;
     notify_followers: boolean;
 }
 
@@ -23,7 +23,7 @@ export interface IMediumResponse {
     username: string;
     profile_pic: string;
     author_id: string;
-    default_publish_status: TMediumStatus;
+    status: TMediumStatus;
     notify_followers: boolean;
     created_at: Date;
     updated_at: Date;
@@ -34,7 +34,7 @@ export interface IMediumUserUpdate {
     username?: string;
     profile_pic?: string;
     author_id?: string;
-    default_publish_status?: TMediumStatus;
+    status?: TMediumStatus;
     notify_followers?: boolean;
 }
 

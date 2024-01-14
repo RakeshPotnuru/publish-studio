@@ -48,9 +48,7 @@ export function Ghost({ data, isOpen, isLoading, setIsOpen }: Readonly<GhostProp
             editForm={
                 <GhostEditForm
                     setIsOpen={setIsOpen}
-                    default_publish_status={
-                        data?.default_publish_status ?? constants.ghostStatuses.DRAFT
-                    }
+                    status={data?.status ?? constants.ghostStatuses.DRAFT}
                     api_url={data?.api_url ?? ""}
                 />
             }
