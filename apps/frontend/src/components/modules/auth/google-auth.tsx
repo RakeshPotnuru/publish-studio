@@ -7,6 +7,7 @@ import { useCookies } from "react-cookie";
 import { Center } from "@/components/ui/center";
 import { ErrorBox } from "@/components/ui/error-box";
 import { DotsLoader } from "@/components/ui/loaders/dots-loader";
+import { Shake } from "@/components/ui/shake";
 import { trpc } from "@/utils/trpc";
 
 export function GoogleAuth() {
@@ -76,7 +77,7 @@ export function GoogleAuth() {
     }, [theme, handleConnectGoogle]);
 
     return (
-        <div className="flex justify-center">
+        <Shake isShaking={error} className="flex justify-center">
             {error && (
                 <Center>
                     <ErrorBox title="Error" description={error} />
@@ -94,6 +95,6 @@ export function GoogleAuth() {
                     }}
                 />
             )}
-        </div>
+        </Shake>
     );
 }
