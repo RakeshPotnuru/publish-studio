@@ -2,7 +2,7 @@
     "private": true,
     "name": "publish-studio",
     "version": "0.0.0",
-    "description": "Publish Blogs to mutliple platforms from a single place",
+    "description": "Publish Studio",
     "license": "MIT",
     "author": "Rakesh Potnuru",
     "scripts": {
@@ -28,6 +28,6 @@
         "rimraf": "^5.0.1",
         "turbo": "1.10.3"
     },
-    "packageManager": "pnpm@8.12.1",
+    "packageManager": "pnpm@8.14.1",
     "prettier": "@bravo68web/prettier-config"
 }
