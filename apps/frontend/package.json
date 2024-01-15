@@ -22,7 +22,7 @@
         "dev": "doppler run -- next dev",
         "faker": "ts-node --esm --project ./tsconfig.scripts.json ./src/data/faker.ts",
         "lint": "next lint",
-        "start": "doppler run -- next start"
+        "start": "next start"
     },
     "dependencies": {
         "@hookform/resolvers": "^3.3.2",

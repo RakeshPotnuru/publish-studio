@@ -24,6 +24,11 @@ export function TRPCProvider({ children }: Readonly<{ children: React.ReactNode 
 
     const token = cookies.ps_access_token;
 
+    if (!process.env.NEXT_PUBLIC_TRPC_API_URL) {
+        console.error("NEXT_PUBLIC_TRPC_API_URL is not set");
+        process.exit(1);
+    }
+
     const trpcClient = trpc.createClient({
         transformer: superjson,
         links: [
@@ -31,7 +36,7 @@ export function TRPCProvider({ children }: Readonly<{ children: React.ReactNode 
                 enabled: () => true,
             }),
             httpBatchLink({
-                url: process.env.NEXT_PUBLIC_TRPC_API_URL as string,
+                url: process.env.NEXT_PUBLIC_TRPC_API_URL,
                 async headers() {
                     if (!token) {
                         return {};
