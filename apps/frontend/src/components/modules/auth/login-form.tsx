@@ -12,38 +12,38 @@ import {
     Input,
     toast,
 } from "@itsrakesh/ui";
-import { cn } from "@itsrakesh/utils";
 import { jwtDecode } from "jwt-decode";
 import Link from "next/link";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useCookies } from "react-cookie";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { Center } from "@/components/ui/center";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
+import { Shake } from "@/components/ui/shake";
 import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
 import { GoogleAuth } from "./google-auth";
 import { ShowPassword } from "./show-password";
 
-interface LoginFormProps extends React.HTMLAttributes<HTMLDivElement> {}
-
 const formSchema = z.object({
     email: z.string().email({ message: "Please enter a valid email address" }),
     password: z.string().min(1, { message: "Please enter your password" }),
 });
 
-export function LoginForm({ ...props }: LoginFormProps) {
+export function LoginForm() {
     const [error, setError] = useState<string | null>(null);
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [isVerificationError, setIsVerificationError] = useState(false);
+    const [email, setEmail] = useState<string | null>(null);
 
     const [_, setCookie] = useCookies(["ps_access_token"]);
 
-    const { mutateAsync: login, isLoading } = trpc.auth.login.useMutation({
+    const { mutateAsync: login, isLoading: isLoggingIn } = trpc.auth.login.useMutation({
         onSuccess({ data }) {
             if (!data.access_token) {
                 setError("Something went wrong. Please try again.");
@@ -90,23 +90,54 @@ export function LoginForm({ ...props }: LoginFormProps) {
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         try {
             setError(null);
+            setEmail(data.email);
             await login(data);
         } catch (error) {}
     };
 
+    const { mutateAsync: resendVerificationEmail, isLoading: isResendLoading } =
+        trpc.auth.email.resendVerification.useMutation({
+            onSuccess() {
+                toast.success("Verification email sent successfully");
+            },
+            onError(error) {
+                setError(error.message);
+            },
+        });
+
+    const handleResendVerificationEmail = async () => {
+        if (!email) {
+            return;
+        }
+
+        try {
+            setError(null);
+            await resendVerificationEmail({ email });
+        } catch (error) {}
+    };
+
+    const isLoading = form.formState.isSubmitting || isLoggingIn || isResendLoading;
+
     return (
-        <div
-            className={cn({
-                "animate-shake": error && !isVerificationError,
-            })}
-            {...props}
-        >
+        <Shake isShaking={error}>
             <div className="space-y-6">
                 <Heading level={2}>Sign in to your account</Heading>
-                {error && <ErrorBox title="Login failed" description={error} />}
+                {error && (
+                    <Center>
+                        <ErrorBox title="Login failed" description={error} />
+                    </Center>
+                )}
                 {isVerificationError && (
                     <div className="flex justify-center">
-                        <Button variant="ghost">Resend verification email</Button>
+                        <Button
+                            onClick={handleResendVerificationEmail}
+                            variant="ghost"
+                            disabled={isLoading}
+                        >
+                            <ButtonLoader isLoading={isResendLoading}>
+                                Resend verification email
+                            </ButtonLoader>
+                        </Button>
                     </div>
                 )}
                 <Form {...form}>
@@ -114,7 +145,7 @@ export function LoginForm({ ...props }: LoginFormProps) {
                         <FormField
                             control={form.control}
                             name="email"
-                            disabled={form.formState.isSubmitting || isLoading}
+                            disabled={isLoading}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Email</FormLabel>
@@ -133,13 +164,15 @@ export function LoginForm({ ...props }: LoginFormProps) {
                         <FormField
                             control={form.control}
                             name="password"
-                            disabled={form.formState.isSubmitting || isLoading}
+                            disabled={isLoading}
                             render={({ field }) => (
                                 <FormItem>
                                     <div className="flex justify-between">
                                         <FormLabel>Password</FormLabel>
                                         <Button variant="link" className="h-max p-0" asChild>
-                                            <Link href="/reset-password">Forgot Password?</Link>
+                                            <Link href={siteConfig.pages.resetPassword.link}>
+                                                Forgot Password?
+                                            </Link>
                                         </Button>
                                     </div>
                                     <FormControl>
@@ -161,11 +194,9 @@ export function LoginForm({ ...props }: LoginFormProps) {
                         <Button
                             type="submit"
                             className="w-full"
-                            disabled={
-                                form.formState.isSubmitting || !form.formState.isDirty || isLoading
-                            }
+                            disabled={!form.formState.isDirty || isLoading}
                         >
-                            <ButtonLoader isLoading={isLoading}>Continue</ButtonLoader>
+                            <ButtonLoader isLoading={isLoggingIn}>Continue</ButtonLoader>
                         </Button>
                     </form>
                 </Form>
@@ -178,6 +209,6 @@ export function LoginForm({ ...props }: LoginFormProps) {
                     </Button>
                 </p>
             </div>
-        </div>
+        </Shake>
     );
 }

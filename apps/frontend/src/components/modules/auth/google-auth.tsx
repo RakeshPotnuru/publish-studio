@@ -4,6 +4,7 @@ import { useTheme } from "next-themes";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
 
+import { Center } from "@/components/ui/center";
 import { ErrorBox } from "@/components/ui/error-box";
 import { DotsLoader } from "@/components/ui/loaders/dots-loader";
 import { trpc } from "@/utils/trpc";
@@ -76,7 +77,11 @@ export function GoogleAuth() {
 
     return (
         <div className="flex justify-center">
-            {error && <ErrorBox title="Error" description={error} />}
+            {error && (
+                <Center>
+                    <ErrorBox title="Error" description={error} />
+                </Center>
+            )}
             {isLoading ? (
                 <DotsLoader />
             ) : (

@@ -11,22 +11,21 @@ import {
     FormMessage,
     Input,
 } from "@itsrakesh/ui";
-import { cn } from "@itsrakesh/utils";
 import Link from "next/link";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { Center } from "@/components/ui/center";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
+import { Shake } from "@/components/ui/shake";
 import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
 import { GoogleAuth } from "./google-auth";
 import { ShowPassword } from "./show-password";
-
-interface RegisterFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const formSchema = z
     .object({
@@ -63,7 +62,7 @@ const formSchema = z
         path: ["confirmPassword"],
     });
 
-export function RegisterForm({ ...props }: RegisterFormProps) {
+export function RegisterForm() {
     const [step, setStep] = useState<"register" | "success">("register");
     const [error, setError] = useState<string | null>(null);
     const [passwordVisible, setPasswordVisible] = useState(false);
@@ -99,16 +98,15 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
     const isLoading = isRegistering || form.formState.isSubmitting;
 
     return (
-        <div
-            className={cn({
-                "animate-shake": error,
-            })}
-            {...props}
-        >
+        <Shake isShaking={error}>
             {step === "register" ? (
                 <div className="space-y-6">
                     <Heading level={2}>Create an account to get started</Heading>
-                    {error && <ErrorBox title="Registration failed" description={error} />}
+                    {error && (
+                        <Center>
+                            <ErrorBox title="Registration failed" description={error} />
+                        </Center>
+                    )}
                     <GoogleAuth />
                     <p className="text-center">Or</p>
                     <Form {...form}>
@@ -254,6 +252,6 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
                     .
                 </span>
             )}
-        </div>
+        </Shake>
     );
 }

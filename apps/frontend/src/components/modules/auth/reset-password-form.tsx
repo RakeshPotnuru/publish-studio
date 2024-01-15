@@ -12,19 +12,19 @@ import {
     Input,
 } from "@itsrakesh/ui";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { Center } from "@/components/ui/center";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
+import { Shake } from "@/components/ui/shake";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
-import { useSearchParams } from "next/navigation";
 import { ShowPassword } from "./show-password";
-
-interface ResetPasswordFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const emailFormSchema = z.object({
     email: z.string().email({ message: "Please enter a valid email address" }),
@@ -48,30 +48,21 @@ const passwordFormSchema = z
         path: ["confirmPassword"],
     });
 
-export function ResetPasswordForm({ ...props }: ResetPasswordFormProps) {
+export function ResetPasswordForm() {
     const [step, setStep] = useState<"email" | "link" | "password" | "success">("email");
     const [error, setError] = useState<string | null>(null);
     const [passwordVisible, setPasswordVisible] = useState(false);
+    const [email, setEmail] = useState<string | null>(null);
 
     const searchParams = useSearchParams();
     const token = searchParams.get("token");
 
-    const { mutateAsync: sendResetPasswordEmail, isLoading: isEmailStepLoading } =
+    /* ----------------------------- Email form ----------------------------- */
+    const { mutateAsync: sendResetPasswordEmail, isLoading: isSendingResetPassword } =
         trpc.auth.email.sendResetPassword.useMutation({
             onSuccess() {
                 setError(null);
                 setStep("link");
-            },
-            onError(error) {
-                setError(error.message);
-            },
-        });
-
-    const { mutateAsync: resetPassword, isLoading: isPasswordStepLoading } =
-        trpc.auth.resetPassword.useMutation({
-            onSuccess() {
-                setError(null);
-                setStep("success");
             },
             onError(error) {
                 setError(error.message);
@@ -86,6 +77,40 @@ export function ResetPasswordForm({ ...props }: ResetPasswordFormProps) {
         },
     });
 
+    const onEmailSubmit = async (data: z.infer<typeof emailFormSchema>) => {
+        try {
+            setError(null);
+            setEmail(data.email);
+            await sendResetPasswordEmail(data);
+        } catch (error) {}
+    };
+
+    const handleResend = async () => {
+        if (!email) {
+            return;
+        }
+
+        try {
+            setError(null);
+            await sendResetPasswordEmail({ email });
+        } catch (error) {}
+    };
+
+    const isEmailStepLoading = isSendingResetPassword || emailForm.formState.isSubmitting;
+    /* ----------------------------- Email form end ----------------------------- */
+
+    /* ----------------------------- Password form ----------------------------- */
+    const { mutateAsync: resetPassword, isLoading: isResettingPassword } =
+        trpc.auth.resetPassword.useMutation({
+            onSuccess() {
+                setError(null);
+                setStep("success");
+            },
+            onError(error) {
+                setError(error.message);
+            },
+        });
+
     const passwordForm = useForm<z.infer<typeof passwordFormSchema>>({
         resolver: zodResolver(passwordFormSchema),
         mode: "onBlur",
@@ -95,21 +120,19 @@ export function ResetPasswordForm({ ...props }: ResetPasswordFormProps) {
         },
     });
 
-    const onEmailSubmit = async (data: z.infer<typeof emailFormSchema>) => {
-        try {
-            await sendResetPasswordEmail(data);
-        } catch (error) {}
-    };
-
     const onPasswordSubmit = async (data: z.infer<typeof passwordFormSchema>) => {
         if (!token) {
             return;
         }
 
         try {
+            setError(null);
             await resetPassword({ token, password: data.password });
         } catch (error) {}
     };
+
+    const isPasswordStepLoading = isResettingPassword || passwordForm.formState.isSubmitting;
+    /* ----------------------------- Password form end ----------------------------- */
 
     useEffect(() => {
         if (!token) {
@@ -146,45 +169,49 @@ export function ResetPasswordForm({ ...props }: ResetPasswordFormProps) {
     }
 
     return (
-        <div {...props}>
+        <Shake isShaking={error}>
             <div className="space-y-6">
-                {error && <ErrorBox title="Error" description={error} />}
                 <Heading level={2}>
                     {step === "email" || step === "password"
                         ? "Reset your password"
                         : "Password reset link sent!"}
                 </Heading>
-
+                {error && (
+                    <Center>
+                        <ErrorBox title="Error" description={error} />
+                    </Center>
+                )}
                 <p className="text-sm">
-                    {step === "email" ? (
-                        "Enter the email associated with your account and we'll email you a link to reset your password."
-                    ) : (
-                        <>
-                            {step === "link" && (
-                                <span>
-                                    <p>
-                                        Check your inbox for a link to reset your password. If it
-                                        doesn&apos;t appear within a few minutes, check your spam
-                                        folder. If you still can&apos;t find it,
-                                    </p>{" "}
-                                    <Button
-                                        variant="link"
-                                        className="h-max p-0"
-                                        onClick={() => setStep("email")}
-                                    >
-                                        try a different email address
-                                    </Button>{" "}
-                                    or{" "}
-                                    <Button variant="link" className="h-max p-0">
-                                        resend
-                                    </Button>
-                                    .
-                                </span>
-                            )}
-                        </>
-                    )}
+                    {step === "email"
+                        ? "Enter the email associated with your account and we'll email you a link to reset your password."
+                        : step === "link" && (
+                              <span>
+                                  Check your inbox for a link to reset your password. If it
+                                  doesn&apos;t appear within a few minutes, check your spam folder.
+                                  If you still can&apos;t find it,{" "}
+                                  <Button
+                                      onClick={() => setStep("email")}
+                                      variant="link"
+                                      className="h-max p-0"
+                                  >
+                                      try a different email address
+                                  </Button>{" "}
+                                  or{" "}
+                                  <Button
+                                      onClick={handleResend}
+                                      variant="link"
+                                      className="h-max p-0"
+                                      disabled={isSendingResetPassword}
+                                  >
+                                      <ButtonLoader isLoading={isSendingResetPassword}>
+                                          resend
+                                      </ButtonLoader>
+                                  </Button>
+                                  .
+                              </span>
+                          )}
                 </p>
-                {/* Email form */}
+                {/* ----------------------------- Email form ----------------------------- */}
                 {step === "email" && (
                     <Form {...emailForm}>
                         <form
@@ -194,7 +221,7 @@ export function ResetPasswordForm({ ...props }: ResetPasswordFormProps) {
                             <FormField
                                 control={emailForm.control}
                                 name="email"
-                                disabled={emailForm.formState.isSubmitting || isEmailStepLoading}
+                                disabled={isEmailStepLoading}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Email</FormLabel>
@@ -214,18 +241,18 @@ export function ResetPasswordForm({ ...props }: ResetPasswordFormProps) {
                             <Button
                                 type="submit"
                                 className="w-full"
-                                disabled={
-                                    emailForm.formState.isSubmitting ||
-                                    !emailForm.formState.isDirty ||
-                                    isEmailStepLoading
-                                }
+                                disabled={!emailForm.formState.isDirty || isEmailStepLoading}
                             >
-                                <ButtonLoader isLoading={isEmailStepLoading}>Continue</ButtonLoader>
+                                <ButtonLoader isLoading={isSendingResetPassword}>
+                                    Continue
+                                </ButtonLoader>
                             </Button>
                         </form>
                     </Form>
                 )}
-                {/* Password form */}
+                {/* ----------------------------- Email form end ----------------------------- */}
+
+                {/* ----------------------------- Password form ----------------------------- */}
                 {step === "password" && (
                     <Form {...passwordForm}>
                         <form
@@ -235,9 +262,7 @@ export function ResetPasswordForm({ ...props }: ResetPasswordFormProps) {
                             <FormField
                                 control={passwordForm.control}
                                 name="password"
-                                disabled={
-                                    passwordForm.formState.isSubmitting || isPasswordStepLoading
-                                }
+                                disabled={isPasswordStepLoading}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Password</FormLabel>
@@ -261,6 +286,7 @@ export function ResetPasswordForm({ ...props }: ResetPasswordFormProps) {
                             <FormField
                                 control={passwordForm.control}
                                 name="confirmPassword"
+                                disabled={isPasswordStepLoading}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Confirm Password</FormLabel>
@@ -269,10 +295,6 @@ export function ResetPasswordForm({ ...props }: ResetPasswordFormProps) {
                                                 type="password"
                                                 placeholder="********"
                                                 autoComplete="new-password"
-                                                disabled={
-                                                    passwordForm.formState.isSubmitting ||
-                                                    isPasswordStepLoading
-                                                }
                                                 {...field}
                                             />
                                         </FormControl>
@@ -283,31 +305,28 @@ export function ResetPasswordForm({ ...props }: ResetPasswordFormProps) {
                             <Button
                                 type="submit"
                                 className="w-full"
-                                disabled={
-                                    passwordForm.formState.isSubmitting ||
-                                    !passwordForm.formState.isDirty ||
-                                    isPasswordStepLoading
-                                }
+                                disabled={!passwordForm.formState.isDirty || isPasswordStepLoading}
                             >
-                                <ButtonLoader isLoading={isPasswordStepLoading}>
+                                <ButtonLoader isLoading={isResettingPassword}>
                                     Continue
                                 </ButtonLoader>
                             </Button>
                         </form>
                     </Form>
                 )}
+                {/* ----------------------------- Password form end ----------------------------- */}
                 <p className="text-center">
                     <Button variant="link" className="h-max p-0" asChild>
-                        <Link href="/login">Back to Login</Link>
+                        <Link href={siteConfig.pages.login.link}>Back to Login</Link>
                     </Button>
                 </p>
                 <p className="text-center text-sm">
                     Don&apos;t have an account?{" "}
                     <Button variant="link" className="h-max p-0" asChild>
-                        <Link href="/register">Register</Link>
+                        <Link href={siteConfig.pages.register.link}>Register</Link>
                     </Button>
                 </p>
             </div>
-        </div>
+        </Shake>
     );
 }

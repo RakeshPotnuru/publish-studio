@@ -53,6 +53,11 @@ export const siteConfig = {
             description: "Reset your password",
             link: "/reset-password",
         },
+        verifyEmail: {
+            title: "Verify Email",
+            description: "Verify your email",
+            link: "/verify-email",
+        },
         dashboard: {
             title: "Dashboard",
             description: "Dashboard",

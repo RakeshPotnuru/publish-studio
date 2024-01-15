@@ -34,6 +34,7 @@ export function VerifyEmail() {
         }
 
         try {
+            setError(null);
             await verifyEmail({ token });
         } catch (error) {}
     }, [token, verifyEmail]);
