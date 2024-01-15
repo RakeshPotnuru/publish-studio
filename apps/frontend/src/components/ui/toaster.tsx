@@ -3,7 +3,7 @@
 import { Toaster as PSToaster, ToasterProps } from "@itsrakesh/ui";
 import { useTheme } from "next-themes";
 
-export const Toaster = () => {
+export function Toaster() {
     const { theme } = useTheme();
 
     return (
@@ -16,4 +16,4 @@ export const Toaster = () => {
             richColors
         />
     );
-};
+}

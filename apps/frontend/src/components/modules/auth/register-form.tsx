@@ -68,7 +68,7 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
     const [error, setError] = useState<string | null>(null);
     const [passwordVisible, setPasswordVisible] = useState(false);
 
-    const { mutateAsync: register, isLoading } = trpc.auth.register.useMutation({
+    const { mutateAsync: register, isLoading: isRegistering } = trpc.auth.register.useMutation({
         onSuccess() {
             setStep("success");
         },
@@ -96,6 +96,8 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
         } catch (error) {}
     };
 
+    const isLoading = isRegistering || form.formState.isSubmitting;
+
     return (
         <div
             className={cn({
@@ -114,7 +116,7 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
                             <FormField
                                 control={form.control}
                                 name="email"
-                                disabled={form.formState.isSubmitting || isLoading}
+                                disabled={isLoading}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Email</FormLabel>
@@ -134,7 +136,7 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
                                 <FormField
                                     control={form.control}
                                     name="first_name"
-                                    disabled={form.formState.isSubmitting || isLoading}
+                                    disabled={isLoading}
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>First Name</FormLabel>
@@ -153,7 +155,7 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
                                 <FormField
                                     control={form.control}
                                     name="last_name"
-                                    disabled={form.formState.isSubmitting || isLoading}
+                                    disabled={isLoading}
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>Last Name</FormLabel>
@@ -173,7 +175,7 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
                             <FormField
                                 control={form.control}
                                 name="password"
-                                disabled={form.formState.isSubmitting || isLoading}
+                                disabled={isLoading}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Password</FormLabel>
@@ -196,7 +198,7 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
                             <FormField
                                 control={form.control}
                                 name="confirm_password"
-                                disabled={form.formState.isSubmitting || isLoading}
+                                disabled={isLoading}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Confirm Password</FormLabel>
@@ -215,13 +217,11 @@ export function RegisterForm({ ...props }: RegisterFormProps) {
                             <Button
                                 type="submit"
                                 className="w-full"
-                                disabled={
-                                    form.formState.isSubmitting ||
-                                    !form.formState.isDirty ||
-                                    isLoading
-                                }
+                                disabled={!form.formState.isDirty || isLoading}
                             >
-                                <ButtonLoader isLoading={isLoading}>Create Account</ButtonLoader>
+                                <ButtonLoader isLoading={isRegistering}>
+                                    Create Account
+                                </ButtonLoader>
                             </Button>
                         </form>
                     </Form>

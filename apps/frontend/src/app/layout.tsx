@@ -5,7 +5,7 @@ import type { Metadata, Viewport } from "next";
 import { ThemeToggleButton } from "@/components/dev-tools/theme-toggle";
 import { Toaster } from "@/components/ui/toaster";
 import { siteConfig } from "@/config/site";
-import Providers from "@/lib/providers";
+import { Providers } from "@/lib/providers";
 
 export const metadata: Metadata = {
     title: {

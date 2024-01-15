@@ -2,7 +2,7 @@ import { CookiesProvider } from "./cookies";
 import { ThemeProvider } from "./theme";
 import { TRPCProvider } from "./trpc";
 
-export default function Providers({ children }: Readonly<{ children: React.ReactNode }>) {
+export function Providers({ children }: Readonly<{ children: React.ReactNode }>) {
     return (
         <ThemeProvider
             attribute="class"
