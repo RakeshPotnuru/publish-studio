@@ -14,11 +14,13 @@
         "MIMETYPES",
         "pexels",
         "publishstudio",
+        "Ratelimit",
         "superjson",
         "tanstack",
         "tiptap",
         "TRPC",
         "unoptimized",
+        "upstash",
         "zustand"
     ]
 }
