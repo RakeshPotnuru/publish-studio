@@ -1,7 +1,11 @@
+import { TRPCError } from "@trpc/server";
+import { Ratelimit } from "@upstash/ratelimit";
 import { z } from "zod";
 
+import defaultConfig from "../../config/app.config";
 import { constants } from "../../config/constants";
 import { protectedProcedure, router, t } from "../../trpc";
+import { rateLimiterMiddleware } from "../../utils/rate-limiter";
 import UserController from "../user/user.controller";
 import AuthController from "./auth.controller";
 
@@ -49,11 +53,34 @@ const authRouter = router({
                 password: z.string().min(1),
             }),
         )
-        .mutation(({ input, ctx }) => new AuthController().loginHandler(input, ctx)),
+        .mutation(async ({ input, ctx }) => {
+            if (!ctx.req.ip) {
+                throw new TRPCError({
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: defaultConfig.defaultErrorMessage,
+                });
+            }
+
+            rateLimiterMiddleware({ default: Ratelimit.slidingWindow(2, "1 m") }, ctx.req.ip); // TODO: add path
+
+            return new AuthController().loginHandler(input, ctx);
+        }),
 
     logout: protectedProcedure.mutation(({ ctx }) => new AuthController().logoutHandler(ctx)),
 
-    getMe: protectedProcedure.query(({ ctx }) => new UserController().getMeHandler(ctx)),
+    getMe: protectedProcedure.query(({ ctx }) => {
+        rateLimiterMiddleware(
+            {
+                default: Ratelimit.slidingWindow(2, "1 m"),
+                free: Ratelimit.slidingWindow(10, "1 m"),
+                pro: Ratelimit.slidingWindow(20, "1 m"),
+            },
+            ctx.user._id.toString(), // TODO: add path
+            ctx.user.user_type,
+        );
+
+        return new UserController().getMeHandler(ctx);
+    }),
 
     refresh: protectedProcedure.query(({ ctx }) =>
         new AuthController().refreshAccessTokenHandler(ctx),
