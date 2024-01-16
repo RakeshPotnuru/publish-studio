@@ -43,7 +43,7 @@ export default class BloggerService {
         }
     }
 
-    private async blogger(user_id: Types.ObjectId | undefined) {
+    private async blogger(user_id: Types.ObjectId) {
         try {
             const platform = await this.getPlatform(user_id);
 
@@ -98,7 +98,7 @@ export default class BloggerService {
         }
     }
 
-    async updatePlatform(platform: IBloggerUserUpdate, user_id: Types.ObjectId | undefined) {
+    async updatePlatform(platform: IBloggerUserUpdate, user_id: Types.ObjectId) {
         try {
             return (await Blogger.findOneAndUpdate(
                 {
@@ -119,7 +119,7 @@ export default class BloggerService {
         }
     }
 
-    async deletePlatform(user_id: Types.ObjectId | undefined, token: string) {
+    async deletePlatform(user_id: Types.ObjectId, token: string) {
         try {
             const decryptedToken = await decryptField(token);
 
@@ -150,7 +150,7 @@ export default class BloggerService {
         }
     }
 
-    async getPlatform(user_id: Types.ObjectId | undefined): Promise<IBlogger | null> {
+    async getPlatform(user_id: Types.ObjectId): Promise<IBlogger | null> {
         try {
             return await Blogger.findOne({
                 user_id,
@@ -180,7 +180,7 @@ export default class BloggerService {
         }
     }
 
-    async getBloggerBlogs(user_id: Types.ObjectId | undefined) {
+    async getBloggerBlogs(user_id: Types.ObjectId) {
         const blogs = await (
             await this.blogger(user_id)
         )?.blogs.listByUser({
@@ -257,7 +257,7 @@ export default class BloggerService {
         }
     }
 
-    async publishPost(post: IBloggerCreatePostInput, user_id: Types.ObjectId | undefined) {
+    async publishPost(post: IBloggerCreatePostInput, user_id: Types.ObjectId) {
         const blogger = await this.blogger(user_id);
 
         return await blogger?.posts.insert(post);
@@ -266,7 +266,7 @@ export default class BloggerService {
     async updatePost(
         post: TBloggerUpdatePostInput,
         post_id: string,
-        user_id: Types.ObjectId | undefined,
+        user_id: Types.ObjectId,
     ): Promise<IBloggerUpdatePostOutput> {
         const blogger = await this.blogger(user_id);
 

@@ -3,6 +3,7 @@ import type { CreateExpressContextOptions } from "@trpc/server/adapters/express"
 
 import defaultConfig from "../config/app.config";
 import User from "../modules/user/user.model";
+import type { IUser } from "../modules/user/user.types";
 import { verifyJwt } from "../utils/jwt";
 import redisClient from "../utils/redis";
 
@@ -18,7 +19,7 @@ export const deserializeUser = async ({ req, res }: CreateExpressContextOptions)
         const notAuthenticated = {
             req,
             res,
-            user: null,
+            user: {} as unknown as IUser,
         };
 
         if (!access_token) {

@@ -21,7 +21,7 @@ import type {
 export default class DevToService {
     private readonly PLATFORM = constants.user.platforms.DEVTO;
 
-    private async devTo(user_id: Types.ObjectId | undefined) {
+    private async devTo(user_id: Types.ObjectId) {
         try {
             const platform = await this.getPlatform(user_id);
 
@@ -76,7 +76,7 @@ export default class DevToService {
         }
     }
 
-    async updatePlatform(platform: TDevToUserUpdate, user_id: Types.ObjectId | undefined) {
+    async updatePlatform(platform: TDevToUserUpdate, user_id: Types.ObjectId) {
         try {
             return (await DevTo.findOneAndUpdate({ user_id }, platform, {
                 new: true,
@@ -91,7 +91,7 @@ export default class DevToService {
         }
     }
 
-    async deletePlatform(user_id: Types.ObjectId | undefined) {
+    async deletePlatform(user_id: Types.ObjectId) {
         try {
             await Platform.findOneAndDelete({
                 user_id,
@@ -116,7 +116,7 @@ export default class DevToService {
         }
     }
 
-    async getPlatform(user_id: Types.ObjectId | undefined) {
+    async getPlatform(user_id: Types.ObjectId) {
         try {
             return (await DevTo.findOne({ user_id }).exec()) as IDevTo;
         } catch (error) {
@@ -165,7 +165,7 @@ export default class DevToService {
 
     async publishPost(
         post: IDevToCreatePostInput,
-        user_id: Types.ObjectId | undefined,
+        user_id: Types.ObjectId,
     ): Promise<TDevToCreatePostOutput> {
         try {
             const devTo = await this.devTo(user_id);
@@ -185,7 +185,7 @@ export default class DevToService {
     async updatePost(
         post: IDevToUpdatePost,
         post_id: number,
-        user_id: Types.ObjectId | undefined,
+        user_id: Types.ObjectId,
     ): Promise<IDevToUpdatePostOutput> {
         try {
             const devTo = await this.devTo(user_id);

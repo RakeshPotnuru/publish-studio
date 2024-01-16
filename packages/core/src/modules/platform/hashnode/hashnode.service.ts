@@ -19,7 +19,7 @@ import type {
 export default class HashnodeService {
     private readonly PLATFORM = constants.user.platforms.HASHNODE;
 
-    private async hashnode(user_id: Types.ObjectId | undefined) {
+    private async hashnode(user_id: Types.ObjectId) {
         try {
             const platform = await this.getPlatform(user_id);
 
@@ -74,7 +74,7 @@ export default class HashnodeService {
         }
     }
 
-    async updatePlatform(user: Partial<IHashnode>, user_id: Types.ObjectId | undefined) {
+    async updatePlatform(user: Partial<IHashnode>, user_id: Types.ObjectId) {
         try {
             return (await Hashnode.findOneAndUpdate({ user_id }, user, {
                 new: true,
@@ -89,7 +89,7 @@ export default class HashnodeService {
         }
     }
 
-    async deletePlatform(user_id: Types.ObjectId | undefined) {
+    async deletePlatform(user_id: Types.ObjectId) {
         try {
             await Platform.findOneAndDelete({
                 user_id,
@@ -114,7 +114,7 @@ export default class HashnodeService {
         }
     }
 
-    async getPlatform(user_id: Types.ObjectId | undefined) {
+    async getPlatform(user_id: Types.ObjectId) {
         try {
             return (await Hashnode.findOne({ user_id }).exec()) as IHashnode;
         } catch (error) {
@@ -185,7 +185,7 @@ export default class HashnodeService {
 
     async publishPost(
         post: IHashnodeCreateStoryInput,
-        user_id: Types.ObjectId | undefined,
+        user_id: Types.ObjectId,
     ): Promise<THashnodeCreatePostOutput> {
         try {
             const hashnode = await this.hashnode(user_id);
@@ -215,7 +215,7 @@ export default class HashnodeService {
     async updatePost(
         post: Partial<IHashnodeCreateStoryInput>,
         post_id: string,
-        user_id: Types.ObjectId | undefined,
+        user_id: Types.ObjectId,
     ): Promise<IHashnodeUpdatePostOutput> {
         try {
             const hashnode = await this.hashnode(user_id);

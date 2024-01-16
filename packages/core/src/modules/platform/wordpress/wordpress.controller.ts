@@ -18,7 +18,7 @@ export default class WordPressController extends WordPressService {
         }
 
         const newPlatform = super.createPlatform({
-            user_id: ctx.user?._id,
+            user_id: ctx.user._id,
             blog_url: site.blog_url,
             blog_id: site.blog_id,
             token: site.access_token,
@@ -35,7 +35,7 @@ export default class WordPressController extends WordPressService {
     }
 
     async updatePlatformHandler(input: IWordPressUserUpdate, ctx: Context) {
-        const updatedPlatform = await super.updatePlatform(input, ctx.user?._id);
+        const updatedPlatform = await super.updatePlatform(input, ctx.user._id);
 
         return {
             status: "success",
@@ -46,7 +46,7 @@ export default class WordPressController extends WordPressService {
     }
 
     async deletePlatformHandler(ctx: Context) {
-        const platform = await super.getPlatform(ctx.user?._id);
+        const platform = await super.getPlatform(ctx.user._id);
 
         if (!platform) {
             throw new TRPCError({
@@ -55,7 +55,7 @@ export default class WordPressController extends WordPressService {
             });
         }
 
-        await super.deletePlatform(ctx.user?._id);
+        await super.deletePlatform(ctx.user._id);
 
         return {
             status: "success",
@@ -106,10 +106,7 @@ export default class WordPressController extends WordPressService {
         };
     }
 
-    async updatePostHandler(
-        input: { post: IProject; post_id: string },
-        user_id: Types.ObjectId | undefined,
-    ) {
+    async updatePostHandler(input: { post: IProject; post_id: string }, user_id: Types.ObjectId) {
         const platform = await super.getPlatform(user_id);
 
         if (!platform) {

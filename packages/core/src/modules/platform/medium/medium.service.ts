@@ -19,7 +19,7 @@ import type {
 export default class MediumService {
     private readonly PLATFORM = constants.user.platforms.MEDIUM;
 
-    private async medium(user_id: Types.ObjectId | undefined) {
+    private async medium(user_id: Types.ObjectId) {
         try {
             const platform = await this.getPlatform(user_id);
 
@@ -74,7 +74,7 @@ export default class MediumService {
         }
     }
 
-    async updatePlatform(user: IMediumUserUpdate, user_id: Types.ObjectId | undefined) {
+    async updatePlatform(user: IMediumUserUpdate, user_id: Types.ObjectId) {
         try {
             return (await Medium.findOneAndUpdate({ user_id }, user, {
                 new: true,
@@ -89,7 +89,7 @@ export default class MediumService {
         }
     }
 
-    async deletePlatform(user_id: Types.ObjectId | undefined) {
+    async deletePlatform(user_id: Types.ObjectId) {
         try {
             await Platform.findOneAndDelete({
                 user_id,
@@ -114,7 +114,7 @@ export default class MediumService {
         }
     }
 
-    async getPlatform(user_id: Types.ObjectId | undefined) {
+    async getPlatform(user_id: Types.ObjectId) {
         try {
             return (await Medium.findOne({ user_id }).exec()) as IMedium;
         } catch (error) {
@@ -165,7 +165,7 @@ export default class MediumService {
     async publishPost(
         post: IMediumCreatePostInput,
         author_id: string,
-        user_id: Types.ObjectId | undefined,
+        user_id: Types.ObjectId,
     ): Promise<TMediumCreatePostOutput> {
         try {
             const medium = await this.medium(user_id);

@@ -13,7 +13,7 @@ export default class PlatformController extends PlatformService {
     ) {
         const { platforms, pagination } = await super.getAllPlatformsByUserId(
             input.pagination,
-            ctx.user?._id,
+            ctx.user._id,
         );
 
         return {

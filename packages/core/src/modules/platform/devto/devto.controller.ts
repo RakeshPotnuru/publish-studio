@@ -18,7 +18,7 @@ export default class DevToController extends DevToService {
         }
 
         const newPlatform = await super.createPlatform({
-            user_id: ctx.user?._id,
+            user_id: ctx.user._id,
             api_key: input.api_key,
             username: user.username,
             profile_pic: user.profile_image,
@@ -52,7 +52,7 @@ export default class DevToController extends DevToService {
                     profile_pic: user.profile_image,
                     status: input.status,
                 },
-                ctx.user?._id,
+                ctx.user._id,
             );
 
             return {
@@ -67,7 +67,7 @@ export default class DevToController extends DevToService {
             {
                 status: input.status,
             },
-            ctx.user?._id,
+            ctx.user._id,
         );
 
         return {
@@ -79,7 +79,7 @@ export default class DevToController extends DevToService {
     }
 
     async deletePlatformHandler(ctx: Context) {
-        const platform = await super.getPlatform(ctx.user?._id);
+        const platform = await super.getPlatform(ctx.user._id);
 
         if (!platform) {
             throw new TRPCError({
@@ -88,7 +88,7 @@ export default class DevToController extends DevToService {
             });
         }
 
-        await super.deletePlatform(ctx.user?._id);
+        await super.deletePlatform(ctx.user._id);
 
         return {
             status: "success",
@@ -139,10 +139,7 @@ export default class DevToController extends DevToService {
         };
     }
 
-    async updatePostHandler(
-        input: { post: IProject; post_id: string },
-        user_id: Types.ObjectId | undefined,
-    ) {
+    async updatePostHandler(input: { post: IProject; post_id: string }, user_id: Types.ObjectId) {
         const platform = await super.getPlatform(user_id);
 
         if (!platform) {

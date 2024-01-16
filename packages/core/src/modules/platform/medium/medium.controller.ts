@@ -34,7 +34,7 @@ export default class MediumController extends MediumService {
         }
 
         const newPlatform = await super.createPlatform({
-            user_id: ctx.user?._id,
+            user_id: ctx.user._id,
             api_key: input.api_key,
             username: user.username,
             profile_pic: user.image_url,
@@ -86,7 +86,7 @@ export default class MediumController extends MediumService {
                     status: input.status,
                     notify_followers: input.notify_followers,
                 },
-                ctx.user?._id,
+                ctx.user._id,
             );
 
             return {
@@ -102,7 +102,7 @@ export default class MediumController extends MediumService {
                 status: input.status,
                 notify_followers: input.notify_followers,
             },
-            ctx.user?._id,
+            ctx.user._id,
         );
 
         return {
@@ -114,7 +114,7 @@ export default class MediumController extends MediumService {
     }
 
     async deletePlatformHandler(ctx: Context) {
-        const platform = await super.getPlatform(ctx.user?._id);
+        const platform = await super.getPlatform(ctx.user._id);
 
         if (!platform) {
             throw new TRPCError({
@@ -123,7 +123,7 @@ export default class MediumController extends MediumService {
             });
         }
 
-        await super.deletePlatform(ctx.user?._id);
+        await super.deletePlatform(ctx.user._id);
 
         return {
             status: "success",

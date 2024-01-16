@@ -26,7 +26,7 @@ export default class GhostController extends GhostService {
         }
 
         const newPlatform = await super.createPlatform({
-            user_id: ctx.user?._id,
+            user_id: ctx.user._id,
             api_url: input.api_url,
             admin_api_key: input.admin_api_key,
             status: input.status,
@@ -65,7 +65,7 @@ export default class GhostController extends GhostService {
                     admin_api_key: input.admin_api_key,
                     status: input.status,
                 },
-                ctx.user?._id,
+                ctx.user._id,
             );
 
             return {
@@ -80,7 +80,7 @@ export default class GhostController extends GhostService {
             {
                 status: input.status,
             },
-            ctx.user?._id,
+            ctx.user._id,
         );
 
         return {
@@ -92,7 +92,7 @@ export default class GhostController extends GhostService {
     }
 
     async deletePlatformHandler(ctx: Context) {
-        const user = await super.getPlatform(ctx.user?._id);
+        const user = await super.getPlatform(ctx.user._id);
 
         if (!user) {
             throw new TRPCError({
@@ -101,7 +101,7 @@ export default class GhostController extends GhostService {
             });
         }
 
-        await super.deletePlatform(ctx.user?._id);
+        await super.deletePlatform(ctx.user._id);
 
         return {
             status: "success",
@@ -153,10 +153,7 @@ export default class GhostController extends GhostService {
         };
     }
 
-    async updatePostHandler(
-        input: { post: IProject; post_id: string },
-        user_id: Types.ObjectId | undefined,
-    ) {
+    async updatePostHandler(input: { post: IProject; post_id: string }, user_id: Types.ObjectId) {
         const platform = await super.getPlatform(user_id);
 
         if (!platform) {

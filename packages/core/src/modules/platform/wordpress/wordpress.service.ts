@@ -21,7 +21,7 @@ export default class WordPressService {
     private readonly API_URL = defaultConfig.wordpress_api_url;
     private readonly API_VERSION = "v1.1";
 
-    private async wordpress(user_id: Types.ObjectId | undefined) {
+    private async wordpress(user_id: Types.ObjectId) {
         try {
             const platform = await this.getPlatform(user_id);
 
@@ -76,7 +76,7 @@ export default class WordPressService {
         }
     }
 
-    async updatePlatform(platform: IWordPressUserUpdate, user_id: Types.ObjectId | undefined) {
+    async updatePlatform(platform: IWordPressUserUpdate, user_id: Types.ObjectId) {
         try {
             return (await WordPress.findOneAndUpdate(
                 {
@@ -97,7 +97,7 @@ export default class WordPressService {
         }
     }
 
-    async deletePlatform(user_id: Types.ObjectId | undefined) {
+    async deletePlatform(user_id: Types.ObjectId) {
         try {
             // Note: There's no way I can disconnect this application from user's connected applications
             await Platform.findOneAndDelete({
@@ -123,7 +123,7 @@ export default class WordPressService {
         }
     }
 
-    async getPlatform(user_id: Types.ObjectId | undefined) {
+    async getPlatform(user_id: Types.ObjectId) {
         try {
             return (await WordPress.findOne({
                 user_id,
@@ -187,7 +187,7 @@ export default class WordPressService {
 
     async publishPost(
         post: IWordPressCreatePostInput,
-        user_id: Types.ObjectId | undefined,
+        user_id: Types.ObjectId,
     ): Promise<IWordPressCreatePostOutput> {
         try {
             const wordpress = await this.wordpress(user_id);
@@ -206,7 +206,7 @@ export default class WordPressService {
     async updatePost(
         post: IWordPressCreatePostInput,
         post_id: string,
-        user_id: Types.ObjectId | undefined,
+        user_id: Types.ObjectId,
     ): Promise<IWordPressUpdatePostOutput> {
         try {
             const wordpress = await this.wordpress(user_id);

@@ -27,7 +27,7 @@ export default class UserController extends UserService {
     }
 
     async getUserByIdHandler(ctx: Context) {
-        const user = await super.getUserById(ctx.user?._id);
+        const user = await super.getUserById(ctx.user._id);
 
         if (!user) {
             throw new TRPCError({
@@ -45,7 +45,7 @@ export default class UserController extends UserService {
     }
 
     async updateUserHandler(input: IUserUpdate, ctx: Context) {
-        const user = await super.updateUser(ctx.user?._id, input);
+        const user = await super.updateUser(ctx.user._id, input);
 
         return {
             status: "success",

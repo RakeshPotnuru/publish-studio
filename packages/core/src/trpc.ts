@@ -26,13 +26,6 @@ const isAuthenticated = t.middleware(({ next, ctx }) => {
 });
 
 const isPro = t.middleware(({ next, ctx }) => {
-    if (!ctx.user) {
-        throw new TRPCError({
-            code: "UNAUTHORIZED",
-            message: "You must be logged in to access this resource",
-        });
-    }
-
     if (ctx.user.user_type !== constants.user.userTypes.PRO) {
         throw new TRPCError({
             code: "UNAUTHORIZED",
@@ -44,4 +37,4 @@ const isPro = t.middleware(({ next, ctx }) => {
 
 export const router = t.router;
 export const protectedProcedure = t.procedure.use(isAuthenticated);
-export const proProtectedProcedure = t.procedure.use(isPro);
+export const proProtectedProcedure = t.procedure.use(isAuthenticated).use(isPro);

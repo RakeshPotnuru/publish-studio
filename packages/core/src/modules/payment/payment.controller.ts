@@ -66,7 +66,7 @@ export default class PaymentController extends PaymentService {
     }
 
     async makePaymentHandler(ctx: Context) {
-        const payment = await super.getPayment(ctx.user?._id);
+        const payment = await super.getPayment(ctx.user._id);
 
         if (payment?.isPaid) {
             throw new TRPCError({
@@ -149,7 +149,7 @@ export default class PaymentController extends PaymentService {
     }
 
     async cancelSubscriptionHandler(ctx: Context) {
-        const payment = await super.getPayment(ctx.user?._id);
+        const payment = await super.getPayment(ctx.user._id);
 
         if (!payment) {
             throw new TRPCError({

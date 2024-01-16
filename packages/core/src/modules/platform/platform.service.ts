@@ -10,7 +10,7 @@ export default class PlatformService {
             page: number;
             limit: number;
         },
-        user_id: Types.ObjectId | undefined,
+        user_id: Types.ObjectId,
     ) {
         try {
             const total_rows = await Platform.countDocuments({ user_id }).exec();

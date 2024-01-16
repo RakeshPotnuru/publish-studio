@@ -20,7 +20,7 @@ export default class BloggerController extends BloggerService {
     }
 
     async getBloggerBlogsHandler(ctx: Context) {
-        const blogs = await super.getBloggerBlogs(ctx.user?._id);
+        const blogs = await super.getBloggerBlogs(ctx.user._id);
 
         return {
             status: "success",
@@ -40,7 +40,7 @@ export default class BloggerController extends BloggerService {
         }
 
         const newPlatform = super.createPlatform({
-            user_id: ctx.user?._id,
+            user_id: ctx.user._id,
             blog_id: response.blogs?.[0].id,
             blog_url: response.blogs[0].url,
             token: response.token,
@@ -62,7 +62,7 @@ export default class BloggerController extends BloggerService {
             await super.deletePlatform(platform.user_id, platform.token);
         }
 
-        const updatedPlatform = await super.updatePlatform(input, ctx.user?._id);
+        const updatedPlatform = await super.updatePlatform(input, ctx.user._id);
 
         return {
             status: "success",
@@ -73,7 +73,7 @@ export default class BloggerController extends BloggerService {
     }
 
     async deletePlatformHandler(ctx: Context) {
-        const platform = await super.getPlatform(ctx.user?._id);
+        const platform = await super.getPlatform(ctx.user._id);
 
         if (!platform) {
             throw new TRPCError({
@@ -82,7 +82,7 @@ export default class BloggerController extends BloggerService {
             });
         }
 
-        await super.deletePlatform(ctx.user?._id, platform.token);
+        await super.deletePlatform(ctx.user._id, platform.token);
 
         return {
             status: "success",
@@ -129,10 +129,7 @@ export default class BloggerController extends BloggerService {
         };
     }
 
-    async updatePostHandler(
-        input: { post: IProject; post_id: string },
-        user_id: Types.ObjectId | undefined,
-    ) {
+    async updatePostHandler(input: { post: IProject; post_id: string }, user_id: Types.ObjectId) {
         const platform = await super.getPlatform(user_id);
 
         if (!platform) {

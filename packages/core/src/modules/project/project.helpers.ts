@@ -191,7 +191,7 @@ export default class ProjectHelpers {
     async updateOnPlatform(
         targetPlatform: TPlatformName,
         project: IProject,
-        user_id: Types.ObjectId | undefined,
+        user_id: Types.ObjectId,
     ) {
         const post_id = project.platforms?.find(platform => platform.name === targetPlatform)?.id;
 
@@ -216,7 +216,7 @@ export default class ProjectHelpers {
         );
     }
 
-    async updateOnPlatforms(project: IProject, user_id: Types.ObjectId | undefined) {
+    async updateOnPlatforms(project: IProject, user_id: Types.ObjectId) {
         const updateResponse = project.platforms;
 
         if (!updateResponse) {

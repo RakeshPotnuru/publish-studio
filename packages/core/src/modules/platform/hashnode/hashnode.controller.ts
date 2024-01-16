@@ -44,7 +44,7 @@ export default class HashnodeController extends HashnodeService {
         }
 
         const newPlatform = await super.createPlatform({
-            user_id: ctx.user?._id,
+            user_id: ctx.user._id,
             api_key: input.api_key,
             username: user.data.me.username,
             profile_pic: user.data.me.profilePicture,
@@ -120,7 +120,7 @@ export default class HashnodeController extends HashnodeService {
                         delisted: input.settings?.delisted,
                     },
                 },
-                ctx.user?._id,
+                ctx.user._id,
             );
 
             return {
@@ -139,7 +139,7 @@ export default class HashnodeController extends HashnodeService {
                     delisted: input.settings.delisted,
                 },
             },
-            ctx.user?._id,
+            ctx.user._id,
         );
 
         return {
@@ -151,7 +151,7 @@ export default class HashnodeController extends HashnodeService {
     }
 
     async deletePlatformHandler(ctx: Context) {
-        const platform = await super.getPlatform(ctx.user?._id);
+        const platform = await super.getPlatform(ctx.user._id);
 
         if (!platform) {
             throw new TRPCError({
@@ -160,7 +160,7 @@ export default class HashnodeController extends HashnodeService {
             });
         }
 
-        await super.deletePlatform(ctx.user?._id);
+        await super.deletePlatform(ctx.user._id);
 
         return {
             status: "success",
@@ -238,7 +238,7 @@ export default class HashnodeController extends HashnodeService {
             post: IProject;
             post_id: string;
         },
-        user_id: Types.ObjectId | undefined,
+        user_id: Types.ObjectId,
     ) {
         const user = await super.getPlatform(user_id);
 

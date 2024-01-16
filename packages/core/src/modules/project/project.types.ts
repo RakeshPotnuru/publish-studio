@@ -114,5 +114,5 @@ export interface ITags {
 export interface IPost {
     project_id: Types.ObjectId;
     scheduled_at: Date;
-    user_id: Types.ObjectId | undefined;
+    user_id: Types.ObjectId;
 }

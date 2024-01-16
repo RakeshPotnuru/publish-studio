@@ -35,7 +35,7 @@ export default class ProjectService extends FolderService {
         }
     }
 
-    async getProjectById(id: Types.ObjectId, user_id: Types.ObjectId | undefined) {
+    async getProjectById(id: Types.ObjectId, user_id: Types.ObjectId) {
         try {
             return (await Project.findOne({ _id: id, user_id }).exec()) as IProjectResponse;
         } catch (error) {
@@ -48,10 +48,7 @@ export default class ProjectService extends FolderService {
         }
     }
 
-    async getAllProjectsByUserId(
-        pagination: IPaginationOptions,
-        user_id: Types.ObjectId | undefined,
-    ) {
+    async getAllProjectsByUserId(pagination: IPaginationOptions, user_id: Types.ObjectId) {
         try {
             const total_rows = await Project.countDocuments({ user_id }).exec();
             const total_pages = Math.ceil(total_rows / pagination.limit);
@@ -87,7 +84,7 @@ export default class ProjectService extends FolderService {
             limit: number;
         },
         folder_id: Types.ObjectId,
-        user_id: Types.ObjectId | undefined,
+        user_id: Types.ObjectId,
     ) {
         try {
             const total_rows = await Project.countDocuments({ folder_id, user_id }).exec();
@@ -118,11 +115,7 @@ export default class ProjectService extends FolderService {
         }
     }
 
-    async updateProjectById(
-        id: Types.ObjectId,
-        project: IProjectUpdate,
-        user_id: Types.ObjectId | undefined,
-    ) {
+    async updateProjectById(id: Types.ObjectId, project: IProjectUpdate, user_id: Types.ObjectId) {
         try {
             await Promise.all(
                 (project.platforms ?? []).map(async platform => {
@@ -181,7 +174,7 @@ export default class ProjectService extends FolderService {
         }
     }
 
-    async deleteProjects(ids: Types.ObjectId[], user_id: Types.ObjectId | undefined) {
+    async deleteProjects(ids: Types.ObjectId[], user_id: Types.ObjectId) {
         try {
             return await Project.deleteMany({ user_id, _id: { $in: ids } }).exec();
         } catch (error) {

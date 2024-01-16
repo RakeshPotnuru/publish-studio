@@ -4,7 +4,7 @@ import Project from "../project/project.model";
 import type { IProjectStats, ITopicStats } from "./stats.types";
 
 export default class StatsService {
-    async getTopicStats(user_id: Types.ObjectId | undefined, limit = 5): Promise<ITopicStats[]> {
+    async getTopicStats(user_id: Types.ObjectId, limit = 5): Promise<ITopicStats[]> {
         const data = await Project.aggregate([
             { $match: { user_id } },
             { $unwind: "$topics" },
@@ -20,7 +20,7 @@ export default class StatsService {
     }
 
     async getProjectStats(
-        user_id: Types.ObjectId | undefined,
+        user_id: Types.ObjectId,
         days = 7,
         from: Date = new Date(new Date().setDate(new Date().getDate() - days)),
         to: Date = new Date(),

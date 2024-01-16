@@ -15,7 +15,7 @@ export default class ProjectController extends ProjectService {
         const project = input;
 
         if (project.folder_id) {
-            const folder = await super.getFolderById(project.folder_id, ctx.user?._id);
+            const folder = await super.getFolderById(project.folder_id, ctx.user._id);
 
             if (!folder) {
                 throw new TRPCError({
@@ -26,7 +26,7 @@ export default class ProjectController extends ProjectService {
         }
 
         const newProject = await super.createProject({
-            user_id: ctx.user?._id,
+            user_id: ctx.user._id,
             folder_id: project.folder_id,
             name: project.name,
             title: project.title,
@@ -51,7 +51,7 @@ export default class ProjectController extends ProjectService {
                 {
                     topics: topics,
                 },
-                ctx.user?._id,
+                ctx.user._id,
             );
         } catch (error) {
             console.log(error);
@@ -102,9 +102,9 @@ export default class ProjectController extends ProjectService {
         },
         ctx: Context,
     ) {
-        const project = await super.getProjectById(input.project_id, ctx.user?._id);
+        const project = await super.getProjectById(input.project_id, ctx.user._id);
 
-        const updateResponse = await new ProjectHelpers().updateOnPlatforms(project, ctx.user?._id);
+        const updateResponse = await new ProjectHelpers().updateOnPlatforms(project, ctx.user._id);
 
         if (!updateResponse) {
             throw new TRPCError({
@@ -126,7 +126,7 @@ export default class ProjectController extends ProjectService {
                         ? constants.project.status.PUBLISHED
                         : constants.project.status.DRAFT,
             },
-            ctx.user?._id,
+            ctx.user._id,
         );
 
         return {
@@ -147,7 +147,7 @@ export default class ProjectController extends ProjectService {
     ) {
         const { project_id, scheduled_at, platforms } = input;
 
-        const project = await super.getProjectById(project_id, ctx.user?._id);
+        const project = await super.getProjectById(project_id, ctx.user._id);
 
         /* This code block is checking if the number of platforms that the user has is equal to the
         number of platforms that the project has with a status of "SUCCESS". If they are equal, it
@@ -191,7 +191,7 @@ export default class ProjectController extends ProjectService {
                     )?.published_url,
                 })),
             },
-            ctx.user?._id,
+            ctx.user._id,
         );
 
         const projectHelpers = new ProjectHelpers();
@@ -199,7 +199,7 @@ export default class ProjectController extends ProjectService {
         await projectHelpers.schedulePost({
             project_id: project_id,
             scheduled_at: scheduled_at,
-            user_id: ctx.user?._id,
+            user_id: ctx.user._id,
         });
 
         await super.updateProjectById(
@@ -207,7 +207,7 @@ export default class ProjectController extends ProjectService {
             {
                 status: constants.project.status.SCHEDULED,
             },
-            ctx.user?._id,
+            ctx.user._id,
         );
 
         return {
@@ -219,7 +219,7 @@ export default class ProjectController extends ProjectService {
     }
 
     async getProjectByIdHandler(input: Types.ObjectId, ctx: Context) {
-        const project = await super.getProjectById(input, ctx.user?._id);
+        const project = await super.getProjectById(input, ctx.user._id);
 
         if (!project) {
             throw new TRPCError({
@@ -247,7 +247,7 @@ export default class ProjectController extends ProjectService {
     ) {
         const { projects, pagination } = await super.getAllProjectsByUserId(
             input.pagination,
-            ctx.user?._id,
+            ctx.user._id,
         );
 
         return {
@@ -266,11 +266,11 @@ export default class ProjectController extends ProjectService {
         },
         ctx: Context,
     ) {
-        const { name } = await super.getFolderById(input.folder_id, ctx.user?._id);
+        const { name } = await super.getFolderById(input.folder_id, ctx.user._id);
         const { projects, pagination } = await super.getProjectsByFolderId(
             input.pagination,
             input.folder_id,
-            ctx.user?._id,
+            ctx.user._id,
         );
 
         return {
@@ -287,7 +287,7 @@ export default class ProjectController extends ProjectService {
         input: { id: Types.ObjectId; project: IProjectUpdate },
         ctx: Context,
     ) {
-        const project = await super.getProjectById(input.id, ctx.user?._id);
+        const project = await super.getProjectById(input.id, ctx.user._id);
 
         if (!project) {
             throw new TRPCError({
@@ -297,7 +297,7 @@ export default class ProjectController extends ProjectService {
         }
 
         if (input.project.folder_id) {
-            const folder = await super.getFolderById(input.project.folder_id, ctx.user?._id);
+            const folder = await super.getFolderById(input.project.folder_id, ctx.user._id);
 
             if (!folder) {
                 throw new TRPCError({
@@ -307,11 +307,7 @@ export default class ProjectController extends ProjectService {
             }
         }
 
-        const updatedProject = await super.updateProjectById(
-            input.id,
-            input.project,
-            ctx.user?._id,
-        );
+        const updatedProject = await super.updateProjectById(input.id, input.project, ctx.user._id);
 
         return {
             status: "success",
@@ -325,14 +321,14 @@ export default class ProjectController extends ProjectService {
         const project_ids: Types.ObjectId[] = [];
 
         for (const element of input) {
-            const project = await super.getProjectById(element, ctx.user?._id);
+            const project = await super.getProjectById(element, ctx.user._id);
 
             if (project) {
                 project_ids.push(element);
             }
         }
 
-        const deletedProjects = await super.deleteProjects(project_ids, ctx.user?._id);
+        const deletedProjects = await super.deleteProjects(project_ids, ctx.user._id);
 
         return {
             status: "success",

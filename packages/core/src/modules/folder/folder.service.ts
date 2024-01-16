@@ -20,7 +20,7 @@ export default class FolderService {
         }
     }
 
-    async getFolderByName(name: string, user_id: Types.ObjectId | undefined) {
+    async getFolderByName(name: string, user_id: Types.ObjectId) {
         try {
             return (await Folder.findOne({ user_id, name }).exec()) as IFolder;
         } catch (error) {
@@ -33,7 +33,7 @@ export default class FolderService {
         }
     }
 
-    async getFolderById(id: Types.ObjectId, user_id: Types.ObjectId | undefined) {
+    async getFolderById(id: Types.ObjectId, user_id: Types.ObjectId) {
         try {
             return (await Folder.findOne({ user_id, _id: id }).exec()) as IFolder;
         } catch {
@@ -44,10 +44,7 @@ export default class FolderService {
         }
     }
 
-    async getAllFoldersByUserId(
-        pagination: IPaginationOptions,
-        user_id: Types.ObjectId | undefined,
-    ) {
+    async getAllFoldersByUserId(pagination: IPaginationOptions, user_id: Types.ObjectId) {
         try {
             const total_rows = await Folder.countDocuments({ user_id }).exec();
             const total_pages = Math.ceil(total_rows / pagination.limit);
@@ -77,7 +74,7 @@ export default class FolderService {
         }
     }
 
-    async updateFolder(id: Types.ObjectId, user_id: Types.ObjectId | undefined, folder: IFolder) {
+    async updateFolder(id: Types.ObjectId, user_id: Types.ObjectId, folder: IFolder) {
         try {
             return (await Folder.findOneAndUpdate({ user_id, _id: id }, folder, {
                 new: true,
@@ -103,7 +100,7 @@ export default class FolderService {
      * @returns the result of the `Folder.deleteMany()` method, which is a promise that resolves to an
      * object containing information about the deletion operation.
      */
-    async deleteFolders(ids: Types.ObjectId[], user_id: Types.ObjectId | undefined) {
+    async deleteFolders(ids: Types.ObjectId[], user_id: Types.ObjectId) {
         try {
             await Project.updateMany(
                 { user_id, folder_id: { $in: ids } },

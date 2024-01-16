@@ -20,7 +20,7 @@ export default class GhostService {
     private readonly PLATFORM = constants.user.platforms.GHOST;
     private readonly GHOST_API_VERSION = "v5.72.1";
 
-    private async ghost(user_id: Types.ObjectId | undefined) {
+    private async ghost(user_id: Types.ObjectId) {
         try {
             const platform = await this.getPlatform(user_id);
 
@@ -68,7 +68,7 @@ export default class GhostService {
         }
     }
 
-    async updatePlatform(user: TGhostUpdate, user_id: Types.ObjectId | undefined) {
+    async updatePlatform(user: TGhostUpdate, user_id: Types.ObjectId) {
         try {
             return (await Ghost.findOneAndUpdate({ user_id }, user, {
                 new: true,
@@ -83,7 +83,7 @@ export default class GhostService {
         }
     }
 
-    async deletePlatform(user_id: Types.ObjectId | undefined) {
+    async deletePlatform(user_id: Types.ObjectId) {
         try {
             await Platform.findOneAndDelete({
                 user_id,
@@ -108,7 +108,7 @@ export default class GhostService {
         }
     }
 
-    async getPlatform(user_id: Types.ObjectId | undefined) {
+    async getPlatform(user_id: Types.ObjectId) {
         try {
             return (await Ghost.findOne({ user_id }).exec()) as IGhost;
         } catch (error) {
@@ -134,7 +134,7 @@ export default class GhostService {
         }
     }
 
-    async getPost(post_id: string, user_id: Types.ObjectId | undefined) {
+    async getPost(post_id: string, user_id: Types.ObjectId) {
         const ghost = await this.ghost(user_id);
 
         return await ghost?.posts.read({ id: post_id }).fetch();
@@ -164,7 +164,7 @@ export default class GhostService {
         }
     }
 
-    async publishPost(post: IGhostCreatePostInput, user_id: Types.ObjectId | undefined) {
+    async publishPost(post: IGhostCreatePostInput, user_id: Types.ObjectId) {
         const ghost = await this.ghost(user_id);
 
         return await ghost?.posts.add({ ...post }, { source: "html" });
@@ -173,7 +173,7 @@ export default class GhostService {
     async updatePost(
         post: TGhostUpdatePostInput,
         post_id: string,
-        user_id: Types.ObjectId | undefined,
+        user_id: Types.ObjectId,
     ): Promise<IGhostUpdatePostOutput> {
         const ghost = await this.ghost(user_id);
 

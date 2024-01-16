@@ -21,7 +21,7 @@ export default class NLUController extends NLUService {
                     emotion: analysis.emotion?.document?.emotion,
                 },
             },
-            ctx.user?._id,
+            ctx.user._id,
         );
 
         return {

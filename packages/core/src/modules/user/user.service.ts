@@ -35,7 +35,7 @@ export default class UserService {
         }
     }
 
-    async getUserById(id: Types.ObjectId | undefined): Promise<IUserResponse | null> {
+    async getUserById(id: Types.ObjectId): Promise<IUserResponse | null> {
         try {
             return await User.findById(id).select("-password -google_sub").exec();
         } catch (error) {
@@ -48,7 +48,7 @@ export default class UserService {
         }
     }
 
-    async updateUser(id: Types.ObjectId | undefined, user: IUserUpdate) {
+    async updateUser(id: Types.ObjectId, user: IUserUpdate) {
         try {
             return (await User.findByIdAndUpdate(id, user, { new: true }).exec()) as IUser;
         } catch (error) {

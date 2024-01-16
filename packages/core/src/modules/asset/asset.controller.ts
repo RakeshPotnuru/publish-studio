@@ -55,7 +55,7 @@ export default class AssetController extends AssetService {
     ) {
         const { assets, pagination } = await super.getAllAssetsByUserId(
             input.pagination,
-            ctx.user?._id,
+            ctx.user._id,
         );
 
         return {
@@ -68,7 +68,7 @@ export default class AssetController extends AssetService {
     }
 
     async deleteAssetsHandler(input: Types.ObjectId[], ctx: Context) {
-        const deletedAssets = await super.deleteAssets(input, ctx.user?._id);
+        const deletedAssets = await super.deleteAssets(input, ctx.user._id);
 
         return {
             status: "success",

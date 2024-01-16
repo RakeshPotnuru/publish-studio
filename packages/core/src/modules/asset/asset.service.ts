@@ -97,10 +97,7 @@ export default class AssetService extends ProjectService {
         }
     }
 
-    async getAllAssetsByUserId(
-        pagination: IPaginationOptions,
-        user_id: Types.ObjectId | undefined,
-    ) {
+    async getAllAssetsByUserId(pagination: IPaginationOptions, user_id: Types.ObjectId) {
         try {
             const total_rows = await Asset.countDocuments({ user_id }).exec();
             const total_pages = Math.ceil(total_rows / pagination.limit);
@@ -138,7 +135,7 @@ export default class AssetService extends ProjectService {
      * valid `ObjectId` or `undefined`.
      * @returns the result of the `Asset.deleteMany({ _id: { : ids } }).exec()` operation.
      */
-    async deleteAssets(ids: Types.ObjectId[], user_id: Types.ObjectId | undefined) {
+    async deleteAssets(ids: Types.ObjectId[], user_id: Types.ObjectId) {
         try {
             const assets = await Asset.find({ _id: { $in: ids } }).exec();
 

@@ -8,7 +8,7 @@ import type { IFolder } from "./folder.types";
 
 export default class FolderController extends FolderService {
     async createFolderHandler(input: IFolder, ctx: Context) {
-        const folder = await super.getFolderByName(input.name, ctx.user?._id);
+        const folder = await super.getFolderByName(input.name, ctx.user._id);
 
         if (folder) {
             throw new TRPCError({
@@ -18,7 +18,7 @@ export default class FolderController extends FolderService {
         }
 
         const newFolder = await super.createFolder({
-            user_id: ctx.user?._id,
+            user_id: ctx.user._id,
             name: input.name,
         });
 
@@ -38,7 +38,7 @@ export default class FolderController extends FolderService {
     ) {
         const { folders, pagination } = await super.getAllFoldersByUserId(
             input.pagination,
-            ctx.user?._id,
+            ctx.user._id,
         );
 
         return {
@@ -51,7 +51,7 @@ export default class FolderController extends FolderService {
     }
 
     async updateFolderHandler(input: { id: Types.ObjectId; folder: IFolder }, ctx: Context) {
-        const isFolderExist = await super.getFolderById(input.id, ctx.user?._id);
+        const isFolderExist = await super.getFolderById(input.id, ctx.user._id);
 
         if (!isFolderExist) {
             throw new TRPCError({
@@ -60,7 +60,7 @@ export default class FolderController extends FolderService {
             });
         }
 
-        const isFolderNameExists = await super.getFolderByName(input.folder.name, ctx.user?._id);
+        const isFolderNameExists = await super.getFolderByName(input.folder.name, ctx.user._id);
 
         if (isFolderNameExists) {
             throw new TRPCError({
@@ -69,7 +69,7 @@ export default class FolderController extends FolderService {
             });
         }
 
-        const updatedFolder = await super.updateFolder(input.id, ctx.user?._id, input.folder);
+        const updatedFolder = await super.updateFolder(input.id, ctx.user._id, input.folder);
 
         return {
             status: "success",
@@ -80,7 +80,7 @@ export default class FolderController extends FolderService {
     }
 
     async deleteFoldersHandler(input: Types.ObjectId[], ctx: Context) {
-        const deletedFolders = await super.deleteFolders(input, ctx.user?._id);
+        const deletedFolders = await super.deleteFolders(input, ctx.user._id);
 
         return {
             status: "success",

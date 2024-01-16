@@ -6,7 +6,7 @@ import GenerativeAIService from "./generative-ai.service";
 
 export default class GenerativeAIController extends GenerativeAIService {
     async generateTitleHandler(input: { project_id: Types.ObjectId }, ctx: Context) {
-        const project = await super.getProjectById(input.project_id, ctx.user?._id);
+        const project = await super.getProjectById(input.project_id, ctx.user._id);
 
         if (!project) {
             throw new TRPCError({
@@ -33,7 +33,7 @@ export default class GenerativeAIController extends GenerativeAIService {
     }
 
     async generateDescriptionHandler(input: { project_id: Types.ObjectId }, ctx: Context) {
-        const project = await super.getProjectById(input.project_id, ctx.user?._id);
+        const project = await super.getProjectById(input.project_id, ctx.user._id);
 
         if (!project) {
             throw new TRPCError({
@@ -60,7 +60,7 @@ export default class GenerativeAIController extends GenerativeAIService {
     }
 
     async generateOutlineHandler(input: { project_id: Types.ObjectId }, ctx: Context) {
-        const project = await super.getProjectById(input.project_id, ctx.user?._id);
+        const project = await super.getProjectById(input.project_id, ctx.user._id);
 
         if (!project) {
             throw new TRPCError({
