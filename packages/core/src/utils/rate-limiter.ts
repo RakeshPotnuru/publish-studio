@@ -18,27 +18,22 @@ const adapter = {
     ) => redis.eval(script, keys.length, ...keys, ...(args ?? []).map(String)) as Promise<TData>,
 };
 
-const cache = new Map();
-
 export const rateLimiter = (limiter: RatelimitConfig["limiter"]) => {
     return {
         free: new Ratelimit({
             redis: adapter,
             limiter,
             // analytics: true, // enable if using @upstash/redis
-            ephemeralCache: cache,
         }),
         pro: new Ratelimit({
             redis: adapter,
             limiter: limiter,
             // analytics: true, // enable if using @upstash/redis
-            ephemeralCache: cache,
         }),
         public: new Ratelimit({
             redis: adapter,
             limiter: limiter,
             // analytics: true, // enable if using @upstash/redis
-            ephemeralCache: cache,
         }),
     };
 };

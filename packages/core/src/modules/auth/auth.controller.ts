@@ -3,6 +3,7 @@ import axios from "axios";
 import bycrypt from "bcryptjs";
 import { getCookie, setCookie } from "cookies-next";
 import type { OptionsType } from "cookies-next/lib/types";
+import { verify } from "hcaptcha";
 import type { Types } from "mongoose";
 
 import defaultConfig from "../../config/app.config";
@@ -495,6 +496,30 @@ export default class AuthController extends UserService {
             setCookie("access_token", "", { req, res, maxAge: -1 });
             setCookie("refresh_token", "", { req, res, maxAge: -1 });
             setCookie("logged_in", "", { req, res, maxAge: -1 });
+
+            return {
+                status: "success",
+            };
+        } catch (error) {
+            console.log(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: defaultConfig.defaultErrorMessage,
+            });
+        }
+    }
+
+    async verifyCaptchaHandler(input: string) {
+        try {
+            const { success } = await verify(process.env.HCAPTCHA_SECRET, input);
+
+            if (!success) {
+                throw new TRPCError({
+                    code: "BAD_REQUEST",
+                    message: "Invalid captcha. Please try again.",
+                });
+            }
 
             return {
                 status: "success",

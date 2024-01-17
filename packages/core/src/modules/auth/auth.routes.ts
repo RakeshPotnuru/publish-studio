@@ -61,7 +61,10 @@ const authRouter = router({
                 });
             }
 
-            rateLimiterMiddleware({ default: Ratelimit.slidingWindow(2, "1 m") }, ctx.req.ip); // TODO: add path
+            rateLimiterMiddleware(
+                { default: Ratelimit.slidingWindow(2, "1 m") },
+                `auth.login-${ctx.req.ip}`,
+            );
 
             return new AuthController().loginHandler(input, ctx);
         }),
@@ -69,16 +72,6 @@ const authRouter = router({
     logout: protectedProcedure.mutation(({ ctx }) => new AuthController().logoutHandler(ctx)),
 
     getMe: protectedProcedure.query(({ ctx }) => {
-        rateLimiterMiddleware(
-            {
-                default: Ratelimit.slidingWindow(2, "1 m"),
-                free: Ratelimit.slidingWindow(10, "1 m"),
-                pro: Ratelimit.slidingWindow(20, "1 m"),
-            },
-            ctx.user._id.toString(), // TODO: add path
-            ctx.user.user_type,
-        );
-
         return new UserController().getMeHandler(ctx);
     }),
 
@@ -124,6 +117,10 @@ const authRouter = router({
             }),
         )
         .mutation(({ input }) => new AuthController().resetPasswordHandler(input)),
+
+    verifyCaptcha: t.procedure
+        .input(z.string())
+        .mutation(({ input }) => new AuthController().verifyCaptchaHandler(input)),
 });
 
 export default authRouter;

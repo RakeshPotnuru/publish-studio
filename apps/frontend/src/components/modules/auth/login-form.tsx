@@ -27,6 +27,7 @@ import { Shake } from "@/components/ui/shake";
 import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
+import { Captcha } from "./captcha";
 import { GoogleAuth } from "./google-auth";
 import { ShowPassword } from "./show-password";
 
@@ -40,6 +41,8 @@ export function LoginForm() {
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [isVerificationError, setIsVerificationError] = useState(false);
     const [email, setEmail] = useState<string | null>(null);
+    const [isCaptchaCompleted, setIsCaptchaCompleted] = useState(false);
+    const [isCaptchaVerificationLoading, setIsCaptchaVerificationLoading] = useState(false);
 
     const [_, setCookie] = useCookies(["ps_access_token"]);
 
@@ -88,6 +91,11 @@ export function LoginForm() {
     });
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
+        if (!isCaptchaCompleted) {
+            setError("Please complete the captcha");
+            return;
+        }
+
         try {
             setError(null);
             setEmail(data.email);
@@ -116,7 +124,11 @@ export function LoginForm() {
         } catch (error) {}
     };
 
-    const isLoading = form.formState.isSubmitting || isLoggingIn || isResendLoading;
+    const isLoading =
+        form.formState.isSubmitting ||
+        isLoggingIn ||
+        isResendLoading ||
+        isCaptchaVerificationLoading;
 
     return (
         <Shake isShaking={error}>
@@ -191,10 +203,17 @@ export function LoginForm() {
                                 </FormItem>
                             )}
                         />
+                        <Center>
+                            <Captcha
+                                setIsSuccess={setIsCaptchaCompleted}
+                                setErrorMessage={setError}
+                                setIsLoading={setIsCaptchaVerificationLoading}
+                            />
+                        </Center>
                         <Button
                             type="submit"
                             className="w-full"
-                            disabled={!form.formState.isDirty || isLoading}
+                            disabled={!form.formState.isDirty || isLoading || !isCaptchaCompleted}
                         >
                             <ButtonLoader isLoading={isLoggingIn}>Continue</ButtonLoader>
                         </Button>

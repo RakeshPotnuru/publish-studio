@@ -43,6 +43,7 @@ const ZodEnvironmentVariables = z.object({
     WORDPRESS_CLIENT_SECRET: z.string(),
     PEXELS_API_KEY: z.string(),
     UNSPLASH_ACCESS_KEY: z.string(),
+    HCAPTCHA_SECRET: z.string(),
 });
 
 ZodEnvironmentVariables.parse(process.env);

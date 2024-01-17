@@ -24,6 +24,7 @@ import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { Shake } from "@/components/ui/shake";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
+import { Captcha } from "./captcha";
 import { ShowPassword } from "./show-password";
 
 const emailFormSchema = z.object({
@@ -53,6 +54,8 @@ export function ResetPasswordForm() {
     const [error, setError] = useState<string | null>(null);
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [email, setEmail] = useState<string | null>(null);
+    const [isCaptchaCompleted, setIsCaptchaCompleted] = useState(false);
+    const [isCaptchaVerificationLoading, setIsCaptchaVerificationLoading] = useState(false);
 
     const searchParams = useSearchParams();
     const token = searchParams.get("token");
@@ -78,6 +81,11 @@ export function ResetPasswordForm() {
     });
 
     const onEmailSubmit = async (data: z.infer<typeof emailFormSchema>) => {
+        if (!isCaptchaCompleted) {
+            setError("Please complete the captcha");
+            return;
+        }
+
         try {
             setError(null);
             setEmail(data.email);
@@ -96,7 +104,8 @@ export function ResetPasswordForm() {
         } catch (error) {}
     };
 
-    const isEmailStepLoading = isSendingResetPassword || emailForm.formState.isSubmitting;
+    const isEmailStepLoading =
+        isSendingResetPassword || emailForm.formState.isSubmitting || isCaptchaVerificationLoading;
     /* ----------------------------- Email form end ----------------------------- */
 
     /* ----------------------------- Password form ----------------------------- */
@@ -125,13 +134,19 @@ export function ResetPasswordForm() {
             return;
         }
 
+        if (!isCaptchaCompleted) {
+            setError("Please complete the captcha");
+            return;
+        }
+
         try {
             setError(null);
             await resetPassword({ token, password: data.password });
         } catch (error) {}
     };
 
-    const isPasswordStepLoading = isResettingPassword || passwordForm.formState.isSubmitting;
+    const isPasswordStepLoading =
+        isResettingPassword || passwordForm.formState.isSubmitting || isCaptchaVerificationLoading;
     /* ----------------------------- Password form end ----------------------------- */
 
     useEffect(() => {
@@ -238,10 +253,21 @@ export function ResetPasswordForm() {
                                     </FormItem>
                                 )}
                             />
+                            <Center>
+                                <Captcha
+                                    setIsSuccess={setIsCaptchaCompleted}
+                                    setErrorMessage={setError}
+                                    setIsLoading={setIsCaptchaVerificationLoading}
+                                />
+                            </Center>
                             <Button
                                 type="submit"
                                 className="w-full"
-                                disabled={!emailForm.formState.isDirty || isEmailStepLoading}
+                                disabled={
+                                    !emailForm.formState.isDirty ||
+                                    isEmailStepLoading ||
+                                    !isCaptchaCompleted
+                                }
                             >
                                 <ButtonLoader isLoading={isSendingResetPassword}>
                                     Continue
@@ -302,10 +328,21 @@ export function ResetPasswordForm() {
                                     </FormItem>
                                 )}
                             />
+                            <Center>
+                                <Captcha
+                                    setIsSuccess={setIsCaptchaCompleted}
+                                    setErrorMessage={setError}
+                                    setIsLoading={setIsCaptchaVerificationLoading}
+                                />
+                            </Center>
                             <Button
                                 type="submit"
                                 className="w-full"
-                                disabled={!passwordForm.formState.isDirty || isPasswordStepLoading}
+                                disabled={
+                                    !passwordForm.formState.isDirty ||
+                                    isPasswordStepLoading ||
+                                    !isCaptchaCompleted
+                                }
                             >
                                 <ButtonLoader isLoading={isResettingPassword}>
                                     Continue

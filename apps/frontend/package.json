@@ -25,6 +25,7 @@
         "start": "next start"
     },
     "dependencies": {
+        "@hcaptcha/react-hcaptcha": "^1.9.3",
         "@hookform/resolvers": "^3.3.2",
         "@itsrakesh/ui": "^0.11.1",
         "@itsrakesh/utils": "^1.2.1",

@@ -24,6 +24,7 @@ import { Shake } from "@/components/ui/shake";
 import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
+import { Captcha } from "./captcha";
 import { GoogleAuth } from "./google-auth";
 import { ShowPassword } from "./show-password";
 
@@ -66,6 +67,8 @@ export function RegisterForm() {
     const [step, setStep] = useState<"register" | "success">("register");
     const [error, setError] = useState<string | null>(null);
     const [passwordVisible, setPasswordVisible] = useState(false);
+    const [isCaptchaCompleted, setIsCaptchaCompleted] = useState(false);
+    const [isCaptchaVerificationLoading, setIsCaptchaVerificationLoading] = useState(false);
 
     const { mutateAsync: register, isLoading: isRegistering } = trpc.auth.register.useMutation({
         onSuccess() {
@@ -89,13 +92,18 @@ export function RegisterForm() {
     });
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
+        if (!isCaptchaCompleted) {
+            setError("Please complete the captcha");
+            return;
+        }
+
         try {
             setError(null);
             await register(data);
         } catch (error) {}
     };
 
-    const isLoading = isRegistering || form.formState.isSubmitting;
+    const isLoading = isRegistering || form.formState.isSubmitting || isCaptchaVerificationLoading;
 
     return (
         <Shake isShaking={error}>
@@ -212,10 +220,19 @@ export function RegisterForm() {
                                     </FormItem>
                                 )}
                             />
+                            <Center>
+                                <Captcha
+                                    setIsSuccess={setIsCaptchaCompleted}
+                                    setErrorMessage={setError}
+                                    setIsLoading={setIsCaptchaVerificationLoading}
+                                />
+                            </Center>
                             <Button
                                 type="submit"
                                 className="w-full"
-                                disabled={!form.formState.isDirty || isLoading}
+                                disabled={
+                                    !form.formState.isDirty || isLoading || !isCaptchaCompleted
+                                }
                             >
                                 <ButtonLoader isLoading={isRegistering}>
                                     Create Account
