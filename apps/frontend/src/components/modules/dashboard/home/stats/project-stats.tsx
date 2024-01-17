@@ -6,6 +6,7 @@ import { Line } from "react-chartjs-2";
 
 import type { IProjectStats } from "@publish-studio/core";
 
+import { Center } from "@/components/ui/center";
 import { ErrorBox } from "@/components/ui/error-box";
 import { trpc } from "@/utils/trpc";
 
@@ -68,9 +69,9 @@ export function ProjectStats() {
     );
 
     return error ? (
-        <div className="flex items-center justify-center">
+        <Center>
             <ErrorBox title="Error fetching stats" description={error.message} />
-        </div>
+        </Center>
     ) : (
         <div className="flex flex-col items-center space-y-4">
             <h4 className="text-lg font-semibold">Your activity</h4>

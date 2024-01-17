@@ -2,6 +2,7 @@ import { Button } from "@itsrakesh/ui";
 import Link from "next/link";
 
 import { Icons } from "@/assets/icons";
+import { Center } from "@/components/ui/center";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
 import { FoldersLoader } from "@/components/ui/loaders/folders-loader";
@@ -20,9 +21,9 @@ export function RecentFolders() {
     const folders = data?.data.folders ?? [];
 
     const foldersView = error ? (
-        <div className="flex items-center justify-center">
+        <Center>
             <ErrorBox title="Error fetching folders" description={error.message} />
-        </div>
+        </Center>
     ) : (
         <div className="grid grid-cols-4 gap-4 rounded-lg border p-4">
             {folders.length ? (

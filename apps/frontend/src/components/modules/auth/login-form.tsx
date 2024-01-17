@@ -140,7 +140,7 @@ export function LoginForm() {
                     </Center>
                 )}
                 {isVerificationError && (
-                    <div className="flex justify-center">
+                    <Center>
                         <Button
                             onClick={handleResendVerificationEmail}
                             variant="ghost"
@@ -150,7 +150,7 @@ export function LoginForm() {
                                 Resend verification email
                             </ButtonLoader>
                         </Button>
-                    </div>
+                    </Center>
                 )}
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

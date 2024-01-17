@@ -43,7 +43,7 @@ export default class GenerativeAIController extends GenerativeAIService {
         }
 
         const output = await super.generateDescription(project.title ?? project.name);
-        console.log(output);
+
         const regex = /Description: (.*?)(?:Title:|$)/;
         const match = new RegExp(regex).exec(output);
 

@@ -1,12 +1,13 @@
+import { Skeleton } from "@itsrakesh/ui";
 import Chart, { ArcElement, ChartData, ChartOptions } from "chart.js/auto";
 import { useTheme } from "next-themes";
 import { Doughnut } from "react-chartjs-2";
 
 import type { ITopicStats } from "@publish-studio/core";
 
+import { Center } from "@/components/ui/center";
 import { ErrorBox } from "@/components/ui/error-box";
 import { trpc } from "@/utils/trpc";
-import { Skeleton } from "@itsrakesh/ui";
 
 const generateChartData = (topics: ITopicStats[]): ChartData<"doughnut"> => {
     const labels = topics.map(({ topic }) => topic);
@@ -72,9 +73,9 @@ export function TopicStats() {
     );
 
     return error ? (
-        <div className="flex items-center justify-center">
+        <Center>
             <ErrorBox title="Error fetching stats" description={error.message} />
-        </div>
+        </Center>
     ) : (
         <div className="flex flex-col items-center space-y-4">
             <h4 className="text-lg font-semibold">Your top topics</h4>
