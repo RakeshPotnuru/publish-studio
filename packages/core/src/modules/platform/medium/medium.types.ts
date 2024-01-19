@@ -6,22 +6,10 @@ export type TMediumStatus =
     (typeof constants.mediumStatuses)[keyof typeof constants.mediumStatuses];
 
 export interface IMedium {
-    _id?: Types.ObjectId;
-    user_id?: Types.ObjectId;
-    api_key: string;
-    username: string;
-    profile_pic: string;
-    author_id: string;
-    status: TMediumStatus;
-    notify_followers: boolean;
-}
-
-export interface IMediumResponse {
     _id: Types.ObjectId;
     user_id: Types.ObjectId;
     api_key: string;
     username: string;
-    profile_pic: string;
     author_id: string;
     status: TMediumStatus;
     notify_followers: boolean;
@@ -29,14 +17,9 @@ export interface IMediumResponse {
     updated_at: Date;
 }
 
-export interface IMediumUserUpdate {
-    api_key?: string;
-    username?: string;
-    profile_pic?: string;
-    author_id?: string;
-    status?: TMediumStatus;
-    notify_followers?: boolean;
-}
+export type TMediumCreateInput = Omit<IMedium, "_id" | "created_at" | "updated_at">;
+
+export type TMediumToUpdateInput = Partial<TMediumCreateInput>;
 
 export interface IMediumUserOutput {
     errors: {
@@ -59,7 +42,7 @@ export interface IMediumCreatePostInput {
     notifyFollowers?: boolean;
 }
 
-export interface IOutput {
+interface IOutput {
     isError: boolean;
     data?: {
         url: string;

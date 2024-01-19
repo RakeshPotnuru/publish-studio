@@ -47,11 +47,9 @@ export default class HashnodeController extends HashnodeService {
             user_id: ctx.user._id,
             api_key: input.api_key,
             username: user.data.me.username,
-            profile_pic: user.data.me.profilePicture,
             blog_handle: user.data.me.publications.edges[0].node.url,
             publication: {
                 publication_id: user.data.me.publications.edges[0].node.id,
-                publication_logo: user.data.me.publications.edges[0].node.favicon,
             },
             settings: {
                 enable_table_of_contents: input.settings.enable_table_of_contents,
@@ -108,11 +106,9 @@ export default class HashnodeController extends HashnodeService {
                 {
                     api_key: input.api_key,
                     username: user.data.me.username,
-                    profile_pic: user.data.me.profilePicture,
                     blog_handle: user.data.me.publications.edges[0].node.url,
                     publication: {
                         publication_id: user.data.me.publications.edges[0].node.id,
-                        publication_logo: user.data.me.publications.edges[0].node.id,
                     },
                     settings: {
                         enable_table_of_contents: input.settings?.enable_table_of_contents,
@@ -222,7 +218,7 @@ export default class HashnodeController extends HashnodeService {
 
         const hashnodeUser = await new HashnodeController().getPlatform(user_id);
 
-        const blogHandle = hashnodeUser.blog_handle;
+        const blogHandle = hashnodeUser?.blog_handle ?? "https://hashnode.com";
         const postSlug = newPost.data.publishPost.post.slug;
 
         return {
@@ -240,9 +236,9 @@ export default class HashnodeController extends HashnodeService {
         },
         user_id: Types.ObjectId,
     ) {
-        const user = await super.getPlatform(user_id);
+        const platform = await super.getPlatform(user_id);
 
-        if (!user) {
+        if (!platform) {
             throw new TRPCError({
                 code: "NOT_FOUND",
                 message: "Account not found. Please connect your Hashnode account to continue.",
@@ -253,6 +249,7 @@ export default class HashnodeController extends HashnodeService {
 
         const updatedPost = await super.updatePost(
             {
+                post_id,
                 title: post.title,
                 contentMarkdown: post.body?.markdown,
                 tags: post.tags?.hashnode_tags ?? [],
@@ -261,7 +258,6 @@ export default class HashnodeController extends HashnodeService {
                 },
                 originalArticleURL: post.canonical_url,
             },
-            post_id,
             user_id,
         );
 

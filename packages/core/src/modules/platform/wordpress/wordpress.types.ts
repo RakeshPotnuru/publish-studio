@@ -6,18 +6,9 @@ export type TWordPressStatus =
     (typeof constants.wordpressStatuses)[keyof typeof constants.wordpressStatuses];
 
 export interface IWordPress {
-    _id?: Types.ObjectId;
-    user_id?: Types.ObjectId;
-    blog_url: string;
-    blog_id: string;
-    token: string;
-    publicize: boolean;
-    status: TWordPressStatus;
-}
-
-export interface IWordPressResponse {
     _id: Types.ObjectId;
     user_id: Types.ObjectId;
+    token: string;
     blog_url: string;
     blog_id: string;
     publicize: boolean;
@@ -26,12 +17,22 @@ export interface IWordPressResponse {
     updated_at: Date;
 }
 
-export interface IWordPressUserUpdate {
+export type TWordPressCreateInput = Omit<IWordPress, "_id" | "created_at" | "updated_at">;
+
+export interface IWordPressUpdateInput {
     publicize: boolean;
     status: TWordPressStatus;
 }
 
+export interface IWordPressSiteOutput {
+    access_token: string;
+    blog_id: string;
+    blog_url: string;
+    token_type: string;
+}
+
 export interface IWordPressCreatePostInput {
+    blog_id: string;
     title: string;
     content?: string;
     tags?: string[];
@@ -40,9 +41,12 @@ export interface IWordPressCreatePostInput {
     excerpt?: string;
 }
 
-export type IWordPressUpdatePost = Partial<IWordPressCreatePostInput>;
+export type IWordPressUpdatePostInput = Partial<IWordPressCreatePostInput> & {
+    post_id: string;
+    blog_id: string;
+};
 
-export interface IOutput {
+interface IOutput {
     isError: boolean;
     ID?: number;
     URL?: string;

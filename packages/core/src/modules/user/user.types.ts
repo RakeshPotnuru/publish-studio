@@ -3,6 +3,9 @@ import type { Types } from "mongoose";
 import type { constants } from "../../config/constants";
 import type { TPlatformName } from "../platform/platform.types";
 
+type TAuthMode = (typeof constants.user.authModes)[keyof typeof constants.user.authModes];
+type TUserType = (typeof constants.user.userTypes)[keyof typeof constants.user.userTypes];
+
 export interface IUser {
     _id: Types.ObjectId;
     first_name: string;
@@ -10,15 +13,13 @@ export interface IUser {
     email: string;
     password?: string;
     profile_pic?: string;
-    user_type: (typeof constants.user.userTypes)[keyof typeof constants.user.userTypes];
+    user_type: TUserType;
     platforms?: TPlatformName[];
     is_verified: boolean;
     last_login: Date;
-    auth_modes: (typeof constants.user.authModes)[keyof typeof constants.user.authModes][];
+    auth_modes: TAuthMode[];
     google_sub?: string;
     stripe_customer_id?: string;
 }
-
-export type IUserResponse = Omit<IUser, "password" | "google_sub">;
 
 export type IUserUpdate = Partial<IUser>;

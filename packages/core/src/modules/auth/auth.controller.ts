@@ -237,7 +237,7 @@ export default class AuthController extends UserService {
         const user = await super.getUserByEmail(payload.email);
 
         if (!user) {
-            let newUser = await super.createUser({
+            const newUser = await super.createUser({
                 first_name: payload.given_name,
                 last_name: payload.family_name,
                 email: payload.email,
@@ -245,9 +245,8 @@ export default class AuthController extends UserService {
                 user_type: constants.user.userTypes.FREE,
                 auth_modes: [constants.user.authModes.GOOGLE],
                 google_sub: payload.sub,
+                is_verified: true,
             });
-
-            newUser = await super.updateUser(newUser._id, { is_verified: true });
 
             const { access_token, refresh_token } = await super.signTokens(newUser);
 
@@ -370,18 +369,18 @@ export default class AuthController extends UserService {
             });
         }
 
-        const reset_email_token = signJwt({ email: input.email }, "resetPasswordTokenPrivateKey", {
+        const resetEmailToken = signJwt({ email: input.email }, "resetPasswordTokenPrivateKey", {
             expiresIn: `${defaultConfig.resetPasswordTokenExpiresIn}m`,
         });
 
-        if (!reset_email_token) {
+        if (!resetEmailToken) {
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
                 message: defaultConfig.defaultErrorMessage,
             });
         }
 
-        await this.sendResetPasswordEmail(input.email, reset_email_token);
+        await this.sendResetPasswordEmail(input.email, resetEmailToken);
 
         return {
             status: "success",
@@ -410,8 +409,8 @@ export default class AuthController extends UserService {
             });
         }
 
-        const hashed_password = await bycrypt.hash(input.password, 12);
-        await super.updateUser(user._id, { password: hashed_password });
+        const hashedPassword = await bycrypt.hash(input.password, 12);
+        await super.updateUser(user._id, { password: hashedPassword });
 
         return {
             status: "success",
@@ -424,24 +423,24 @@ export default class AuthController extends UserService {
     async refreshAccessTokenHandler(ctx: Context) {
         // Get the refresh token from cookie
         const { req, res } = ctx;
-        const refresh_token = getCookie("refresh_token", { req, res });
+        const refreshToken = getCookie("refresh_token", { req, res });
 
-        const error_message = "Could not refresh access token.";
+        const errorMessage = "Could not refresh access token.";
 
-        if (!refresh_token) {
+        if (!refreshToken) {
             throw new TRPCError({
                 code: "FORBIDDEN",
-                message: error_message,
+                message: errorMessage,
             });
         }
 
         // Validate the Refresh token
-        const decoded = verifyJwt<{ sub: string }>(refresh_token, "refreshTokenPublicKey");
+        const decoded = verifyJwt<{ sub: string }>(refreshToken, "refreshTokenPublicKey");
 
         if (!decoded) {
             throw new TRPCError({
                 code: "FORBIDDEN",
-                message: error_message,
+                message: errorMessage,
             });
         }
 
@@ -451,7 +450,7 @@ export default class AuthController extends UserService {
         if (!session) {
             throw new TRPCError({
                 code: "FORBIDDEN",
-                message: error_message,
+                message: errorMessage,
             });
         }
 
@@ -461,17 +460,17 @@ export default class AuthController extends UserService {
         if (!user) {
             throw new TRPCError({
                 code: "FORBIDDEN",
-                message: error_message,
+                message: errorMessage,
             });
         }
 
         // Sign new access token
-        const access_token = signJwt({ sub: user._id }, "accessTokenPrivateKey", {
+        const accessToken = signJwt({ sub: user._id }, "accessTokenPrivateKey", {
             expiresIn: `${defaultConfig.accessTokenExpiresIn}m`,
         });
 
         // Send the access token as cookie
-        setCookie("access_token", access_token, { req, res, ...accessTokenCookieOptions });
+        setCookie("access_token", accessToken, { req, res, ...accessTokenCookieOptions });
         setCookie("logged_in", "true", {
             req,
             res,
@@ -482,7 +481,7 @@ export default class AuthController extends UserService {
         return {
             status: "success",
             data: {
-                access_token,
+                access_token: accessToken,
             },
         };
     }

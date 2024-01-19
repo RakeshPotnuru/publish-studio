@@ -6,7 +6,7 @@ import type { Context } from "../../../trpc";
 import { encryptField } from "../../../utils/aws/kms";
 import type { IProject, IProjectPlatform } from "../../project/project.types";
 import GhostService from "./ghost.service";
-import type { IGhost, TGhostUpdate } from "./ghost.types";
+import type { IGhost, TGhostUpdateInput } from "./ghost.types";
 
 export default class GhostController extends GhostService {
     async createPlatformHandler(input: IGhost, ctx: Context) {
@@ -40,7 +40,7 @@ export default class GhostController extends GhostService {
         };
     }
 
-    async updatePlatformHandler(input: TGhostUpdate, ctx: Context) {
+    async updatePlatformHandler(input: TGhostUpdateInput, ctx: Context) {
         if (input.admin_api_key && input.api_url) {
             const site = await super.getGhostSite(input.api_url, input.admin_api_key);
 
@@ -124,9 +124,11 @@ export default class GhostController extends GhostService {
             });
         }
 
+        const { post } = input;
+
         const tags =
-            input.post.tags?.ghost_tags &&
-            input.post.tags?.ghost_tags.map(tag => {
+            post.tags?.ghost_tags &&
+            post.tags?.ghost_tags.map(tag => {
                 return {
                     name: tag.name,
                 };
@@ -134,9 +136,9 @@ export default class GhostController extends GhostService {
 
         const newPost = await super.publishPost(
             {
-                html: input.post.body?.html,
-                title: input.post.title ?? input.post.name,
-                canonical_url: input.post.canonical_url,
+                html: post.body?.html,
+                title: post.title ?? post.name,
+                canonical_url: post.canonical_url,
                 status: platform.status,
                 tags: tags ?? undefined,
             },
@@ -163,39 +165,41 @@ export default class GhostController extends GhostService {
             });
         }
 
+        const { post, post_id } = input;
+
         const tags =
-            input.post.tags?.ghost_tags &&
-            input.post.tags?.ghost_tags.map(tag => {
+            post.tags?.ghost_tags &&
+            post.tags?.ghost_tags.map(tag => {
                 return {
                     name: tag.name,
                 };
             });
 
-        const post = await super.getPost(input.post_id, user_id);
+        const existingPost = await super.getPost(post_id, user_id);
 
-        const updatedPost = await (post?.success
+        const updatedPost = await (existingPost?.success
             ? super.updatePost(
                   {
-                      html: input.post.body?.html,
-                      title: input.post.title,
-                      canonical_url: input.post.canonical_url,
+                      post_id: post_id,
+                      html: post.body?.html,
+                      title: post.title,
+                      canonical_url: post.canonical_url,
                       status: platform.status,
                       tags: tags ?? undefined,
-                      updated_at: new Date(post.data.updated_at ?? Date.now()),
+                      updated_at: new Date(existingPost.data.updated_at ?? Date.now()),
                   },
-                  input.post_id,
                   user_id,
               )
             : super.updatePost(
                   {
-                      html: input.post.body?.html,
-                      title: input.post.title,
-                      canonical_url: input.post.canonical_url,
+                      post_id: post_id,
+                      html: post.body?.html,
+                      title: post.title,
+                      canonical_url: post.canonical_url,
                       status: platform.status,
                       tags: tags ?? undefined,
                       updated_at: new Date(),
                   },
-                  input.post_id,
                   user_id,
               ));
 

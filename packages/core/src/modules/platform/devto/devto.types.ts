@@ -1,26 +1,18 @@
 import type { Types } from "mongoose";
 
 export interface IDevTo {
-    _id?: Types.ObjectId;
-    user_id?: Types.ObjectId;
-    api_key: string;
-    username?: string;
-    profile_pic?: string;
-    status: boolean;
-}
-
-export interface IDevToResponse {
     _id: Types.ObjectId;
     user_id: Types.ObjectId;
     api_key: string;
     username: string;
-    profile_pic?: string;
     status: boolean;
     created_at: Date;
     updated_at: Date;
 }
 
-export type TDevToUserUpdate = Partial<IDevTo>;
+export type TDevToCreateInput = Omit<IDevTo, "_id" | "created_at" | "updated_at">;
+
+export type TDevToUpdateInput = Partial<TDevToCreateInput>;
 
 export interface IDevToUserOutput {
     username: string;
@@ -37,9 +29,9 @@ export interface IDevToCreatePostInput {
     tags?: string[];
 }
 
-export type IDevToUpdatePost = Partial<IDevToCreatePostInput>;
+export type IDevToUpdatePost = Partial<IDevToCreatePostInput> & { post_id: number };
 
-export interface IOutput {
+interface IOutput {
     isError: boolean;
     id?: number;
     url?: string;
@@ -51,4 +43,17 @@ export type TDevToCreatePostOutput = IOutput extends { isError: false }
 
 export interface IDevToUpdatePostOutput {
     isError: boolean;
+}
+
+export interface IDevToGetAllPostsOutput {
+    id: number;
+    title: string;
+    description: string;
+    published: boolean;
+    published_at: Date;
+    url: string;
+    body_markdown: string;
+    cover_image: string;
+    tag_list: string[];
+    canonical_url: string;
 }

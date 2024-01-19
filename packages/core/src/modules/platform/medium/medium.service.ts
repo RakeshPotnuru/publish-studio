@@ -12,8 +12,9 @@ import type {
     IMedium,
     IMediumCreatePostInput,
     IMediumUserOutput,
-    IMediumUserUpdate,
+    TMediumCreateInput,
     TMediumCreatePostOutput,
+    TMediumToUpdateInput,
 } from "./medium.types";
 
 export default class MediumService {
@@ -47,7 +48,7 @@ export default class MediumService {
         }
     }
 
-    async createPlatform(user: IMedium) {
+    async createPlatform(user: TMediumCreateInput): Promise<IMedium> {
         try {
             const newPlatform = await Medium.create(user);
 
@@ -63,7 +64,7 @@ export default class MediumService {
                 data: newPlatform._id,
             });
 
-            return newPlatform as IMedium;
+            return newPlatform;
         } catch (error) {
             console.log(error);
 
@@ -74,11 +75,14 @@ export default class MediumService {
         }
     }
 
-    async updatePlatform(user: IMediumUserUpdate, user_id: Types.ObjectId) {
+    async updatePlatform(
+        user: TMediumToUpdateInput,
+        user_id: Types.ObjectId,
+    ): Promise<IMedium | null> {
         try {
-            return (await Medium.findOneAndUpdate({ user_id }, user, {
+            return await Medium.findOneAndUpdate({ user_id }, user, {
                 new: true,
-            }).exec()) as IMedium;
+            }).exec();
         } catch (error) {
             console.log(error);
 
@@ -89,7 +93,7 @@ export default class MediumService {
         }
     }
 
-    async deletePlatform(user_id: Types.ObjectId) {
+    async deletePlatform(user_id: Types.ObjectId): Promise<IMedium | null> {
         try {
             await Platform.findOneAndDelete({
                 user_id,
@@ -102,7 +106,7 @@ export default class MediumService {
                 },
             }).exec();
 
-            return (await Medium.findOneAndDelete({ user_id }).exec()) as IMedium;
+            return await Medium.findOneAndDelete({ user_id }).exec();
         } catch (error) {
             console.log(error);
 
@@ -114,9 +118,9 @@ export default class MediumService {
         }
     }
 
-    async getPlatform(user_id: Types.ObjectId) {
+    async getPlatform(user_id: Types.ObjectId): Promise<IMedium | null> {
         try {
-            return (await Medium.findOne({ user_id }).exec()) as IMedium;
+            return await Medium.findOne({ user_id }).exec();
         } catch (error) {
             console.log(error);
 
@@ -127,7 +131,7 @@ export default class MediumService {
         }
     }
 
-    async getPlatformByUsername(username: string) {
+    async getPlatformByUsername(username: string): Promise<IMedium | null> {
         try {
             return await Medium.findOne({ username }).exec();
         } catch (error) {
@@ -142,7 +146,7 @@ export default class MediumService {
 
     /* This method is used exactly twice before creating or updating user in `MediumController()` method
     to fetch user Medium details and update them in database. That's why api key is being used directly. */
-    async getMediumUser(api_key: string) {
+    async getMediumUser(api_key: string): Promise<IMediumUserOutput> {
         try {
             const response = await axios.get(`${defaultConfig.medium_api_url}/me`, {
                 headers: {

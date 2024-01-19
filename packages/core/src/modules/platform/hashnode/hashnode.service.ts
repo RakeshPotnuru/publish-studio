@@ -10,10 +10,13 @@ import User from "../../user/user.model";
 import Hashnode from "./hashnode.model";
 import type {
     IHashnode,
-    IHashnodeCreateStoryInput,
+    IHashnodeCreatePostInput,
     IHashnodeUpdatePostOutput,
     IHashnodeUserOutput,
+    THashnodeCreateInput,
     THashnodeCreatePostOutput,
+    THashnodeToUpdateInput,
+    THashnodeToUpdatePost,
 } from "./hashnode.types";
 
 export default class HashnodeService {
@@ -23,7 +26,7 @@ export default class HashnodeService {
         try {
             const platform = await this.getPlatform(user_id);
 
-            if (!platform.api_key) {
+            if (!platform?.api_key) {
                 return;
             }
 
@@ -47,7 +50,7 @@ export default class HashnodeService {
         }
     }
 
-    async createPlatform(user: IHashnode) {
+    async createPlatform(user: THashnodeCreateInput): Promise<IHashnode> {
         try {
             const newPlatform = await Hashnode.create(user);
 
@@ -63,7 +66,7 @@ export default class HashnodeService {
                 data: newPlatform._id,
             });
 
-            return newPlatform as IHashnode;
+            return newPlatform;
         } catch (error) {
             console.log(error);
 
@@ -74,11 +77,14 @@ export default class HashnodeService {
         }
     }
 
-    async updatePlatform(user: Partial<IHashnode>, user_id: Types.ObjectId) {
+    async updatePlatform(
+        user: THashnodeToUpdateInput,
+        user_id: Types.ObjectId,
+    ): Promise<IHashnode | null> {
         try {
-            return (await Hashnode.findOneAndUpdate({ user_id }, user, {
+            return await Hashnode.findOneAndUpdate({ user_id }, user, {
                 new: true,
-            }).exec()) as IHashnode;
+            }).exec();
         } catch (error) {
             console.log(error);
 
@@ -89,7 +95,7 @@ export default class HashnodeService {
         }
     }
 
-    async deletePlatform(user_id: Types.ObjectId) {
+    async deletePlatform(user_id: Types.ObjectId): Promise<IHashnode | null> {
         try {
             await Platform.findOneAndDelete({
                 user_id,
@@ -102,7 +108,7 @@ export default class HashnodeService {
                 },
             }).exec();
 
-            return (await Hashnode.findOneAndDelete({ user_id }).exec()) as IHashnode;
+            return await Hashnode.findOneAndDelete({ user_id }).exec();
         } catch (error) {
             console.log(error);
 
@@ -114,9 +120,9 @@ export default class HashnodeService {
         }
     }
 
-    async getPlatform(user_id: Types.ObjectId) {
+    async getPlatform(user_id: Types.ObjectId): Promise<IHashnode | null> {
         try {
-            return (await Hashnode.findOne({ user_id }).exec()) as IHashnode;
+            return await Hashnode.findOne({ user_id }).exec();
         } catch (error) {
             console.log(error);
 
@@ -142,7 +148,7 @@ export default class HashnodeService {
 
     /* This method is used exactly twice before creating or updating user in `HashnodeController()` class
     to fetch user Hashnode details and update them in database. That's why api key is being used directly. */
-    async getHashnodeUser(api_key: string) {
+    async getHashnodeUser(api_key: string): Promise<IHashnodeUserOutput> {
         try {
             const response = await axios.post(
                 defaultConfig.hashnode_api_url,
@@ -184,7 +190,7 @@ export default class HashnodeService {
     }
 
     async publishPost(
-        post: IHashnodeCreateStoryInput,
+        post: IHashnodeCreatePostInput,
         user_id: Types.ObjectId,
     ): Promise<THashnodeCreatePostOutput> {
         try {
@@ -213,8 +219,7 @@ export default class HashnodeService {
     }
 
     async updatePost(
-        post: Partial<IHashnodeCreateStoryInput>,
-        post_id: string,
+        post: THashnodeToUpdatePost,
         user_id: Types.ObjectId,
     ): Promise<IHashnodeUpdatePostOutput> {
         try {
@@ -231,7 +236,7 @@ export default class HashnodeService {
                         }`,
                 variables: {
                     input: {
-                        id: post_id,
+                        id: post.post_id,
                         ...post,
                     },
                 },

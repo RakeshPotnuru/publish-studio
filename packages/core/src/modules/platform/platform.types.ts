@@ -2,48 +2,40 @@ import type { Types } from "mongoose";
 
 import type { constants } from "../../config/constants";
 import type { IPagination } from "../../types/common.types";
-import type { IBloggerResponse } from "./blogger/blogger.types";
-import type { IDevToResponse } from "./devto/devto.types";
-import type { IGhostResponse } from "./ghost/ghost.types";
-import type { IHashnodeResponse } from "./hashnode/hashnode.types";
-import type { IMediumResponse } from "./medium/medium.types";
-import type { IWordPressResponse } from "./wordpress/wordpress.types";
+import type { IBlogger } from "./blogger/blogger.types";
+import type { IDevTo } from "./devto/devto.types";
+import type { IGhost } from "./ghost/ghost.types";
+import type { IHashnode } from "./hashnode/hashnode.types";
+import type { IMedium } from "./medium/medium.types";
+import type { IWordPress } from "./wordpress/wordpress.types";
 
 export type TPlatformName =
     (typeof constants.user.platforms)[keyof typeof constants.user.platforms];
 
-export interface IPlatform {
-    _id?: Types.ObjectId;
-    user_id?: Types.ObjectId;
-    name: TPlatformName;
-    data: Types.ObjectId;
-    pagination?: IPagination;
-}
-
-type TPlatformResponse<T extends TPlatformName> = T extends "hashnode"
-    ? IHashnodeResponse
+type TPlatform<T extends TPlatformName> = T extends "hashnode"
+    ? IHashnode
     : T extends "medium"
-    ? IMediumResponse
+    ? IMedium
     : T extends "devto"
-    ? IDevToResponse
+    ? IDevTo
     : T extends "ghost"
-    ? IGhostResponse
+    ? IGhost
     : T extends "wordpress"
-    ? IWordPressResponse
+    ? IWordPress
     : T extends "blogger"
-    ? IBloggerResponse
+    ? IBlogger
     : never;
 
-export interface IPlatformResponse<T extends TPlatformName = TPlatformName> {
+export interface IPlatform<T extends TPlatformName = TPlatformName> {
     _id: Types.ObjectId;
     user_id: Types.ObjectId;
-    name: T;
-    data: TPlatformResponse<T>;
+    name: TPlatformName;
+    data: TPlatform<T>;
     created_at: Date;
     updated_at: Date;
 }
 
 export interface IPlatformsResponse {
-    platforms: IPlatformResponse[];
+    platforms: IPlatform[];
     pagination: IPagination;
 }

@@ -12,8 +12,9 @@ import Blogger from "./blogger.model";
 import type {
     IBlogger,
     IBloggerCreatePostInput,
+    IBloggerUpdateInput,
     IBloggerUpdatePostOutput,
-    IBloggerUserUpdate,
+    TBloggerCreateInput,
     TBloggerUpdatePostInput,
 } from "./blogger.types";
 
@@ -71,7 +72,7 @@ export default class BloggerService {
         }
     }
 
-    async createPlatform(platform: IBlogger) {
+    async createPlatform(platform: TBloggerCreateInput): Promise<IBlogger> {
         try {
             const newPlatform = await Blogger.create(platform);
 
@@ -87,7 +88,7 @@ export default class BloggerService {
                 data: newPlatform._id,
             });
 
-            return newPlatform as IBlogger;
+            return newPlatform;
         } catch (error) {
             console.log(error);
 
@@ -98,9 +99,12 @@ export default class BloggerService {
         }
     }
 
-    async updatePlatform(platform: IBloggerUserUpdate, user_id: Types.ObjectId) {
+    async updatePlatform(
+        platform: IBloggerUpdateInput,
+        user_id: Types.ObjectId,
+    ): Promise<IBlogger | null> {
         try {
-            return (await Blogger.findOneAndUpdate(
+            return await Blogger.findOneAndUpdate(
                 {
                     user_id,
                 },
@@ -108,7 +112,7 @@ export default class BloggerService {
                 {
                     new: true,
                 },
-            ).exec()) as IBlogger;
+            ).exec();
         } catch (error) {
             console.log(error);
 
@@ -119,7 +123,7 @@ export default class BloggerService {
         }
     }
 
-    async deletePlatform(user_id: Types.ObjectId, token: string) {
+    async deletePlatform(user_id: Types.ObjectId, token: string): Promise<IBlogger | null> {
         try {
             const decryptedToken = await decryptField(token);
 
@@ -136,9 +140,9 @@ export default class BloggerService {
                 name: this.PLATFORM,
             }).exec();
 
-            return (await Blogger.findOneAndDelete({
+            return await Blogger.findOneAndDelete({
                 user_id,
-            }).exec()) as IBlogger;
+            }).exec();
         } catch (error) {
             console.log(error);
 
@@ -265,13 +269,12 @@ export default class BloggerService {
 
     async updatePost(
         post: TBloggerUpdatePostInput,
-        post_id: string,
         user_id: Types.ObjectId,
     ): Promise<IBloggerUpdatePostOutput> {
         const blogger = await this.blogger(user_id);
 
         const response = await blogger?.posts.update({
-            postId: post_id,
+            postId: post.post_id,
             ...post,
         });
 

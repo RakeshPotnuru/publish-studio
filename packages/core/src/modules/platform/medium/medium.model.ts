@@ -11,7 +11,6 @@ const MediumSchema = new Schema<IMedium>(
         user_id: { type: Schema.Types.ObjectId, required: true, unique: true },
         api_key: { type: String, required: true, unique: true },
         username: { type: String, unique: true },
-        profile_pic: { type: String },
         author_id: { type: String, required: true },
         status: {
             type: String,

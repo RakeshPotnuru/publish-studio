@@ -5,7 +5,7 @@ import { constants } from "../../../config/constants";
 import type { Context } from "../../../trpc";
 import type { IProject, IProjectPlatform } from "../../project/project.types";
 import BloggerService from "./blogger.service";
-import type { IBloggerUserUpdate } from "./blogger.types";
+import type { IBloggerUpdateInput } from "./blogger.types";
 
 export default class BloggerController extends BloggerService {
     getAuthUrlHandler() {
@@ -55,7 +55,7 @@ export default class BloggerController extends BloggerService {
         };
     }
 
-    async updatePlatformHandler(input: IBloggerUserUpdate, ctx: Context) {
+    async updatePlatformHandler(input: IBloggerUpdateInput, ctx: Context) {
         const platform = await super.getPlatformByBlogId(input.blog_id);
 
         if (platform) {
@@ -105,14 +105,16 @@ export default class BloggerController extends BloggerService {
             });
         }
 
+        const { post } = input;
+
         const newPost = await super.publishPost(
             {
                 blogId: platform.blog_id,
                 isDraft: platform.status,
                 requestBody: {
-                    title: input.post.title ?? input.post.name,
-                    content: input.post.body?.html,
-                    labels: input.post.tags?.blogger_tags,
+                    title: post.title ?? post.name,
+                    content: post.body?.html,
+                    labels: post.tags?.blogger_tags,
                 },
             },
             user_id,
@@ -139,16 +141,18 @@ export default class BloggerController extends BloggerService {
             });
         }
 
+        const { post, post_id } = input;
+
         const updatedPost = await super.updatePost(
             {
+                post_id: post_id,
                 blogId: platform.blog_id,
                 requestBody: {
-                    title: input.post.title ?? input.post.name,
-                    content: input.post.body?.html,
-                    labels: input.post.tags?.blogger_tags,
+                    title: post.title ?? post.name,
+                    content: post.body?.html,
+                    labels: post.tags?.blogger_tags,
                 },
             },
-            input.post_id,
             user_id,
         );
 

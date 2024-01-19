@@ -30,8 +30,12 @@ const WordPressSchema = new Schema<IWordPress>(
 
 type TWordPressDocument = IWordPress & Document;
 
-/* The code `WordPressSchema.pre<TWordPressDocument>("save", async function (next) { ... })` is a pre-save
-middleware to encrypt "token" before saving. */
+/**
+ * Pre-save middleware for the WordPressSchema.
+ * Encrypts the token field before saving the document.
+ * @param {Function} next - The next function to be called in the middleware chain.
+ * @returns {void}
+ */
 WordPressSchema.pre<TWordPressDocument>("save", async function (next) {
     if (this.isModified("token")) {
         try {

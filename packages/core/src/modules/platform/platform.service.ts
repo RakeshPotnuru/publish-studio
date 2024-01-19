@@ -11,7 +11,7 @@ export default class PlatformService {
             limit: number;
         },
         user_id: Types.ObjectId,
-    ) {
+    ): Promise<IPlatformsResponse> {
         try {
             const total_rows = await Platform.countDocuments({ user_id }).exec();
             const total_pages = Math.ceil(total_rows / pagination.limit);
@@ -30,7 +30,7 @@ export default class PlatformService {
                     total_rows,
                     total_pages,
                 },
-            } as IPlatformsResponse;
+            };
         } catch (error) {
             console.log(error);
 

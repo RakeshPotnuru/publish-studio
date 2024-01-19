@@ -12,8 +12,11 @@ import type {
     IWordPress,
     IWordPressCreatePostInput,
     IWordPressCreatePostOutput,
+    IWordPressSiteOutput,
+    IWordPressUpdateInput,
+    IWordPressUpdatePostInput,
     IWordPressUpdatePostOutput,
-    IWordPressUserUpdate,
+    TWordPressCreateInput,
 } from "./wordpress.types";
 
 export default class WordPressService {
@@ -49,7 +52,7 @@ export default class WordPressService {
         }
     }
 
-    async createPlatform(platform: IWordPress) {
+    async createPlatform(platform: TWordPressCreateInput): Promise<IWordPress> {
         try {
             const newPlatform = await WordPress.create(platform);
 
@@ -65,7 +68,7 @@ export default class WordPressService {
                 data: newPlatform._id,
             });
 
-            return newPlatform as IWordPress;
+            return newPlatform;
         } catch (error) {
             console.log(error);
 
@@ -76,9 +79,12 @@ export default class WordPressService {
         }
     }
 
-    async updatePlatform(platform: IWordPressUserUpdate, user_id: Types.ObjectId) {
+    async updatePlatform(
+        platform: IWordPressUpdateInput,
+        user_id: Types.ObjectId,
+    ): Promise<IWordPress | null> {
         try {
-            return (await WordPress.findOneAndUpdate(
+            return await WordPress.findOneAndUpdate(
                 {
                     user_id,
                 },
@@ -86,7 +92,7 @@ export default class WordPressService {
                 {
                     new: true,
                 },
-            ).exec()) as IWordPress;
+            ).exec();
         } catch (error) {
             console.log(error);
 
@@ -97,7 +103,7 @@ export default class WordPressService {
         }
     }
 
-    async deletePlatform(user_id: Types.ObjectId) {
+    async deletePlatform(user_id: Types.ObjectId): Promise<IWordPress | null> {
         try {
             // Note: There's no way I can disconnect this application from user's connected applications
             await Platform.findOneAndDelete({
@@ -111,7 +117,7 @@ export default class WordPressService {
                 },
             }).exec();
 
-            return (await WordPress.findOneAndDelete({ user_id }).exec()) as IWordPress;
+            return await WordPress.findOneAndDelete({ user_id }).exec();
         } catch (error) {
             console.log(error);
 
@@ -123,11 +129,11 @@ export default class WordPressService {
         }
     }
 
-    async getPlatform(user_id: Types.ObjectId) {
+    async getPlatform(user_id: Types.ObjectId): Promise<IWordPress | null> {
         try {
-            return (await WordPress.findOne({
+            return await WordPress.findOne({
                 user_id,
-            }).exec()) as IWordPress;
+            }).exec();
         } catch (error) {
             console.log(error);
 
@@ -151,7 +157,7 @@ export default class WordPressService {
         }
     }
 
-    async getWordPressSite(code: string) {
+    async getWordPressSite(code: string): Promise<IWordPressSiteOutput> {
         try {
             const response = await axios.post(
                 `${this.API_URL}/oauth2/token`,
@@ -169,12 +175,7 @@ export default class WordPressService {
                 },
             );
 
-            return response.data as {
-                access_token: string;
-                blog_id: string;
-                blog_url: string;
-                token_type: string;
-            };
+            return response.data as IWordPressSiteOutput;
         } catch (error) {
             console.log(error);
 
@@ -191,9 +192,8 @@ export default class WordPressService {
     ): Promise<IWordPressCreatePostOutput> {
         try {
             const wordpress = await this.wordpress(user_id);
-            const platform = await this.getPlatform(user_id);
 
-            const response = await wordpress?.post(`/sites/${platform.blog_id}/posts/new`, post);
+            const response = await wordpress?.post(`/sites/${post.blog_id}/posts/new`, post);
 
             return response?.data as IWordPressCreatePostOutput;
         } catch (error) {
@@ -204,16 +204,14 @@ export default class WordPressService {
     }
 
     async updatePost(
-        post: IWordPressCreatePostInput,
-        post_id: string,
+        post: IWordPressUpdatePostInput,
         user_id: Types.ObjectId,
     ): Promise<IWordPressUpdatePostOutput> {
         try {
             const wordpress = await this.wordpress(user_id);
-            const platform = await this.getPlatform(user_id);
 
             const response = await wordpress?.post(
-                `/sites/${platform.blog_id}/posts/${post_id}`,
+                `/sites/${post.blog_id}/posts/${post.post_id}`,
                 post,
             );
 

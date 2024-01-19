@@ -37,7 +37,6 @@ export default class MediumController extends MediumService {
             user_id: ctx.user._id,
             api_key: input.api_key,
             username: user.username,
-            profile_pic: user.image_url,
             author_id: user.id,
             status: input.status,
             notify_followers: input.notify_followers,
@@ -81,7 +80,6 @@ export default class MediumController extends MediumService {
                 {
                     api_key: input.api_key,
                     username: user.username,
-                    profile_pic: user.image_url,
                     author_id: user.id,
                     status: input.status,
                     notify_followers: input.notify_followers,
@@ -137,25 +135,27 @@ export default class MediumController extends MediumService {
         input: { post: IProject },
         user_id: Types.ObjectId,
     ): Promise<IProjectPlatform> {
-        const user = await super.getPlatform(user_id);
+        const platform = await super.getPlatform(user_id);
 
-        if (!user) {
+        if (!platform) {
             throw new TRPCError({
                 code: "NOT_FOUND",
                 message: "Account not found. Please connect your Medium account to continue.",
             });
         }
 
+        const { post } = input;
+
         const newPost = await super.publishPost(
             {
-                title: input.post.title ?? input.post.name,
+                title: post.title ?? post.name,
                 contentFormat: "markdown",
-                content: input.post.body?.markdown,
-                tags: input.post.tags?.medium_tags,
-                publishStatus: user.status,
-                canonicalUrl: input.post.canonical_url,
+                content: post.body?.markdown,
+                tags: post.tags?.medium_tags,
+                publishStatus: platform.status,
+                canonicalUrl: post.canonical_url,
             },
-            user.author_id,
+            platform.author_id,
             user_id,
         );
 

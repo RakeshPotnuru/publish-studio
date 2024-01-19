@@ -5,7 +5,7 @@ import { constants } from "../../../config/constants";
 import type { Context } from "../../../trpc";
 import type { IProject, IProjectPlatform } from "../../project/project.types";
 import WordPressService from "./wordpress.service";
-import type { IWordPressUserUpdate } from "./wordpress.types";
+import type { IWordPressUpdateInput } from "./wordpress.types";
 
 export default class WordPressController extends WordPressService {
     async createPlatformHandler(code: string, ctx: Context) {
@@ -34,7 +34,7 @@ export default class WordPressController extends WordPressService {
         };
     }
 
-    async updatePlatformHandler(input: IWordPressUserUpdate, ctx: Context) {
+    async updatePlatformHandler(input: IWordPressUpdateInput, ctx: Context) {
         const updatedPlatform = await super.updatePlatform(input, ctx.user._id);
 
         return {
@@ -79,14 +79,17 @@ export default class WordPressController extends WordPressService {
             });
         }
 
+        const { post } = input;
+
         const newPost = await super.publishPost(
             {
-                title: `<h1>${input.post.title ?? input.post.name}</h1>`,
-                content: input.post.body?.html,
+                blog_id: platform.blog_id,
+                title: `<h1>${post.title ?? post.name}</h1>`,
+                content: post.body?.html,
                 status: platform.status,
                 publicize: platform.publicize,
-                excerpt: input.post.description,
-                tags: input.post.tags?.wordpress_tags,
+                excerpt: post.description,
+                tags: post.tags?.wordpress_tags,
             },
             user_id,
         );
@@ -116,16 +119,19 @@ export default class WordPressController extends WordPressService {
             });
         }
 
+        const { post, post_id } = input;
+
         const updatedPost = await super.updatePost(
             {
-                title: `<h1>${input.post.title ?? "Untitled"}</h1>`,
-                content: input.post.body?.html,
+                post_id,
+                blog_id: platform.blog_id,
+                title: `<h1>${post.title ?? "Untitled"}</h1>`,
+                content: post.body?.html,
                 status: platform.status,
                 publicize: platform.publicize,
-                excerpt: input.post.description,
-                tags: input.post.tags?.wordpress_tags,
+                excerpt: post.description,
+                tags: post.tags?.wordpress_tags,
             },
-            input.post_id,
             user_id,
         );
 

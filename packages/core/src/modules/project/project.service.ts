@@ -7,14 +7,13 @@ import FolderService from "../folder/folder.service";
 import Project from "./project.model";
 import type {
     IProject,
-    IProjectCreate,
-    IProjectResponse,
+    IProjectCreateInput,
     IProjectsResponse,
-    IProjectUpdate,
+    IProjectUpdateInput,
 } from "./project.types";
 
 export default class ProjectService extends FolderService {
-    async createProject(project: IProjectCreate): Promise<IProjectResponse> {
+    async createProject(project: IProjectCreateInput): Promise<IProject> {
         try {
             const newProject = await Project.create(project);
 
@@ -35,9 +34,9 @@ export default class ProjectService extends FolderService {
         }
     }
 
-    async getProjectById(id: Types.ObjectId, user_id: Types.ObjectId) {
+    async getProjectById(id: Types.ObjectId, user_id: Types.ObjectId): Promise<IProject | null> {
         try {
-            return (await Project.findOne({ _id: id, user_id }).exec()) as IProjectResponse;
+            return await Project.findOne({ _id: id, user_id }).exec();
         } catch (error) {
             console.log(error);
 
@@ -48,7 +47,10 @@ export default class ProjectService extends FolderService {
         }
     }
 
-    async getAllProjectsByUserId(pagination: IPaginationOptions, user_id: Types.ObjectId) {
+    async getAllProjectsByUserId(
+        pagination: IPaginationOptions,
+        user_id: Types.ObjectId,
+    ): Promise<IProjectsResponse> {
         try {
             const total_rows = await Project.countDocuments({ user_id }).exec();
             const total_pages = Math.ceil(total_rows / pagination.limit);
@@ -67,7 +69,7 @@ export default class ProjectService extends FolderService {
                     total_rows,
                     total_pages,
                 },
-            } as IProjectsResponse;
+            };
         } catch (error) {
             console.log(error);
 
@@ -115,7 +117,11 @@ export default class ProjectService extends FolderService {
         }
     }
 
-    async updateProjectById(id: Types.ObjectId, project: IProjectUpdate, user_id: Types.ObjectId) {
+    async updateProjectById(
+        id: Types.ObjectId,
+        project: IProjectUpdateInput,
+        user_id: Types.ObjectId,
+    ) {
         try {
             await Promise.all(
                 (project.platforms ?? []).map(async platform => {
@@ -152,7 +158,6 @@ export default class ProjectService extends FolderService {
                         canonical_url: project.canonical_url,
                         scheduled_at: project.scheduled_at,
                         status: project.status,
-                        assets: project.assets,
                         tone_analysis: project.tone_analysis,
                         topics: project.topics,
                         "body.json": project.body?.json,

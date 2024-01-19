@@ -11,7 +11,6 @@ const DevToSchema = new Schema<IDevTo>(
         user_id: { type: Schema.Types.ObjectId, required: true },
         api_key: { type: String, required: true, unique: true },
         username: { type: String, required: true, unique: true },
-        profile_pic: { type: String },
         status: { type: Boolean, required: true, default: false },
     },
     {

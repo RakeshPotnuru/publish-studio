@@ -4,12 +4,17 @@ import type { Types } from "mongoose";
 import type { IPaginationOptions } from "../../types/common.types";
 import Project from "../project/project.model";
 import Folder from "./folder.model";
-import type { IFolder, IFoldersResponse } from "./folder.types";
+import type {
+    IFolder,
+    IFoldersResponse,
+    TFolderCreateInput,
+    TFolderUpdateInput,
+} from "./folder.types";
 
 export default class FolderService {
-    async createFolder(folder: IFolder) {
+    async createFolder(folder: TFolderCreateInput): Promise<IFolder> {
         try {
-            return (await Folder.create(folder)) as IFolder;
+            return await Folder.create(folder);
         } catch (error) {
             console.log(error);
 
@@ -20,9 +25,9 @@ export default class FolderService {
         }
     }
 
-    async getFolderByName(name: string, user_id: Types.ObjectId) {
+    async getFolderByName(name: string, user_id: Types.ObjectId): Promise<IFolder | null> {
         try {
-            return (await Folder.findOne({ user_id, name }).exec()) as IFolder;
+            return await Folder.findOne({ user_id, name }).exec();
         } catch (error) {
             console.log(error);
 
@@ -33,9 +38,9 @@ export default class FolderService {
         }
     }
 
-    async getFolderById(id: Types.ObjectId, user_id: Types.ObjectId) {
+    async getFolderById(id: Types.ObjectId, user_id: Types.ObjectId): Promise<IFolder | null> {
         try {
-            return (await Folder.findOne({ user_id, _id: id }).exec()) as IFolder;
+            return await Folder.findOne({ user_id, _id: id }).exec();
         } catch {
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -44,7 +49,10 @@ export default class FolderService {
         }
     }
 
-    async getAllFoldersByUserId(pagination: IPaginationOptions, user_id: Types.ObjectId) {
+    async getAllFoldersByUserId(
+        pagination: IPaginationOptions,
+        user_id: Types.ObjectId,
+    ): Promise<IFoldersResponse> {
         try {
             const total_rows = await Folder.countDocuments({ user_id }).exec();
             const total_pages = Math.ceil(total_rows / pagination.limit);
@@ -63,7 +71,7 @@ export default class FolderService {
                     total_rows,
                     total_pages,
                 },
-            } as IFoldersResponse;
+            };
         } catch (error) {
             console.log(error);
 
@@ -74,11 +82,15 @@ export default class FolderService {
         }
     }
 
-    async updateFolder(id: Types.ObjectId, user_id: Types.ObjectId, folder: IFolder) {
+    async updateFolder(
+        id: Types.ObjectId,
+        user_id: Types.ObjectId,
+        folder: TFolderUpdateInput,
+    ): Promise<IFolder | null> {
         try {
-            return (await Folder.findOneAndUpdate({ user_id, _id: id }, folder, {
+            return await Folder.findOneAndUpdate({ user_id, _id: id }, folder, {
                 new: true,
-            }).exec()) as IFolder;
+            }).exec();
         } catch (error) {
             console.log(error);
 

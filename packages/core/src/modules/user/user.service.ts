@@ -6,12 +6,12 @@ import { signJwt } from "../../utils/jwt";
 import redisClient from "../../utils/redis";
 import type { IRegisterInput } from "../auth/auth.types";
 import User from "./user.model";
-import type { IUser, IUserResponse, IUserUpdate } from "./user.types";
+import type { IUser, IUserUpdate } from "./user.types";
 
 export default class UserService {
-    async createUser(user: IRegisterInput) {
+    async createUser(user: IRegisterInput): Promise<IUser> {
         try {
-            return (await User.create(user)) as IUser;
+            return await User.create(user);
         } catch (error) {
             console.log(error);
 
@@ -22,9 +22,9 @@ export default class UserService {
         }
     }
 
-    async getUserByEmail(email: string) {
+    async getUserByEmail(email: string): Promise<Omit<IUser, "google_sub"> | null> {
         try {
-            return (await User.findOne({ email }).exec()) as IUser;
+            return await User.findOne({ email }).select("-google_sub").exec();
         } catch (error) {
             console.log(error);
 
@@ -35,7 +35,7 @@ export default class UserService {
         }
     }
 
-    async getUserById(id: Types.ObjectId): Promise<IUserResponse | null> {
+    async getUserById(id: Types.ObjectId): Promise<Omit<IUser, "password" | "google_sub"> | null> {
         try {
             return await User.findById(id).select("-password -google_sub").exec();
         } catch (error) {
@@ -48,9 +48,14 @@ export default class UserService {
         }
     }
 
-    async updateUser(id: Types.ObjectId, user: IUserUpdate) {
+    async updateUser(
+        id: Types.ObjectId,
+        user: IUserUpdate,
+    ): Promise<Omit<IUser, "password" | "google_sub"> | null> {
         try {
-            return (await User.findByIdAndUpdate(id, user, { new: true }).exec()) as IUser;
+            return await User.findByIdAndUpdate(id, user, { new: true })
+                .select("-password -google_sub")
+                .exec();
         } catch (error) {
             console.log(error);
 

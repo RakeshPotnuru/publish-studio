@@ -7,34 +7,22 @@ export interface IHashnodeDefaultSettings {
 }
 
 export interface IHashnode {
-    _id?: Types.ObjectId;
-    user_id?: Types.ObjectId;
-    api_key: string;
-    username: string;
-    profile_pic?: string;
-    blog_handle: string;
-    publication: {
-        publication_id: string;
-        publication_logo?: string;
-    };
-    settings: IHashnodeDefaultSettings;
-}
-
-export interface IHashnodeResponse {
     _id: Types.ObjectId;
     user_id: Types.ObjectId;
     api_key: string;
     username: string;
-    profile_pic?: string;
     blog_handle: string;
     publication: {
         publication_id: string;
-        publication_logo?: string;
     };
     settings: IHashnodeDefaultSettings;
     created_at: Date;
     updated_at: Date;
 }
+
+export type THashnodeCreateInput = Omit<IHashnode, "_id" | "created_at" | "updated_at">;
+
+export type THashnodeToUpdateInput = Partial<THashnodeCreateInput>;
 
 export interface IHashnodeUserOutput {
     data: {
@@ -72,7 +60,7 @@ export interface IHashnodeUserOutput {
     }[];
 }
 
-export interface IHashnodeCreateStoryInput {
+export interface IHashnodeCreatePostInput {
     title: string;
     publicationId: string;
     contentMarkdown: string;
@@ -87,6 +75,8 @@ export interface IHashnodeCreateStoryInput {
         delisted: boolean;
     };
 }
+
+export type THashnodeToUpdatePost = Partial<IHashnodeCreatePostInput> & { post_id: string };
 
 export interface IOutput {
     isError: boolean;

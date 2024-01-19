@@ -12,7 +12,8 @@ import type {
     IGhost,
     IGhostCreatePostInput,
     IGhostUpdatePostOutput,
-    TGhostUpdate,
+    TGhostCreateInput,
+    TGhostUpdateInput,
     TGhostUpdatePostInput,
 } from "./ghost.types";
 
@@ -41,7 +42,7 @@ export default class GhostService {
         }
     }
 
-    async createPlatform(platform: IGhost) {
+    async createPlatform(platform: TGhostCreateInput): Promise<IGhost> {
         try {
             const newPlatform = await Ghost.create(platform);
 
@@ -57,7 +58,7 @@ export default class GhostService {
                 data: newPlatform._id,
             });
 
-            return newPlatform as IGhost;
+            return newPlatform;
         } catch (error) {
             console.log(error);
 
@@ -68,11 +69,11 @@ export default class GhostService {
         }
     }
 
-    async updatePlatform(user: TGhostUpdate, user_id: Types.ObjectId) {
+    async updatePlatform(user: TGhostUpdateInput, user_id: Types.ObjectId): Promise<IGhost | null> {
         try {
-            return (await Ghost.findOneAndUpdate({ user_id }, user, {
+            return await Ghost.findOneAndUpdate({ user_id }, user, {
                 new: true,
-            }).exec()) as IGhost;
+            }).exec();
         } catch (error) {
             console.log(error);
 
@@ -83,7 +84,7 @@ export default class GhostService {
         }
     }
 
-    async deletePlatform(user_id: Types.ObjectId) {
+    async deletePlatform(user_id: Types.ObjectId): Promise<IGhost | null> {
         try {
             await Platform.findOneAndDelete({
                 user_id,
@@ -96,7 +97,7 @@ export default class GhostService {
                 },
             }).exec();
 
-            return (await Ghost.findOneAndDelete({ user_id }).exec()) as IGhost;
+            return await Ghost.findOneAndDelete({ user_id }).exec();
         } catch (error) {
             console.log(error);
 
@@ -108,9 +109,9 @@ export default class GhostService {
         }
     }
 
-    async getPlatform(user_id: Types.ObjectId) {
+    async getPlatform(user_id: Types.ObjectId): Promise<IGhost | null> {
         try {
-            return (await Ghost.findOne({ user_id }).exec()) as IGhost;
+            return await Ghost.findOne({ user_id }).exec();
         } catch (error) {
             console.log(error);
 
@@ -121,9 +122,9 @@ export default class GhostService {
         }
     }
 
-    async getPlatformByAPIUrl(api_url: string) {
+    async getPlatformByAPIUrl(api_url: string): Promise<IGhost | null> {
         try {
-            return (await Ghost.findOne({ api_url }).exec()) as IGhost;
+            return await Ghost.findOne({ api_url }).exec();
         } catch (error) {
             console.log(error);
 
@@ -172,12 +173,11 @@ export default class GhostService {
 
     async updatePost(
         post: TGhostUpdatePostInput,
-        post_id: string,
         user_id: Types.ObjectId,
     ): Promise<IGhostUpdatePostOutput> {
         const ghost = await this.ghost(user_id);
 
-        const response = await ghost?.posts.edit(post_id, { ...post }, { source: "html" });
+        const response = await ghost?.posts.edit(post.post_id, { ...post }, { source: "html" });
 
         if (!response?.success) {
             return {

@@ -21,7 +21,6 @@ export default class DevToController extends DevToService {
             user_id: ctx.user._id,
             api_key: input.api_key,
             username: user.username,
-            profile_pic: user.profile_image,
             status: input.status,
         });
 
@@ -49,7 +48,6 @@ export default class DevToController extends DevToService {
                 {
                     api_key: input.api_key,
                     username: user.username,
-                    profile_pic: user.profile_image,
                     status: input.status,
                 },
                 ctx.user._id,
@@ -111,15 +109,17 @@ export default class DevToController extends DevToService {
             });
         }
 
+        const { post } = input;
+
         const newPost = await super.publishPost(
             {
-                title: input.post.title ?? input.post.name,
-                body_markdown: input.post.body?.markdown,
-                description: input.post.description,
+                title: post.title ?? post.name,
+                body_markdown: post.body?.markdown,
+                description: post.description,
                 published: platform.status,
-                canonical_url: input.post.canonical_url,
-                tags: input.post.tags?.devto_tags,
-                main_image: input.post.cover_image,
+                canonical_url: post.canonical_url,
+                tags: post.tags?.devto_tags,
+                main_image: post.cover_image,
             },
             user_id,
         );
@@ -149,17 +149,19 @@ export default class DevToController extends DevToService {
             });
         }
 
+        const { post, post_id } = input;
+
         const updatedPost = await super.updatePost(
             {
-                title: input.post.title,
-                body_markdown: input.post.body?.markdown,
-                description: input.post.description,
+                post_id: Number.parseInt(post_id),
+                title: post.title,
+                body_markdown: post.body?.markdown,
+                description: post.description,
                 published: platform.status,
-                canonical_url: input.post.canonical_url,
-                tags: input.post.tags?.devto_tags,
-                main_image: input.post.cover_image,
+                canonical_url: post.canonical_url,
+                tags: post.tags?.devto_tags,
+                main_image: post.cover_image,
             },
-            Number.parseInt(input.post_id),
             user_id,
         );
 

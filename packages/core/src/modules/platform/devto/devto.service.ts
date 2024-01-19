@@ -11,11 +11,13 @@ import DevTo from "./devto.model";
 import type {
     IDevTo,
     IDevToCreatePostInput,
+    IDevToGetAllPostsOutput,
     IDevToUpdatePost,
     IDevToUpdatePostOutput,
     IDevToUserOutput,
+    TDevToCreateInput,
     TDevToCreatePostOutput,
-    TDevToUserUpdate,
+    TDevToUpdateInput,
 } from "./devto.types";
 
 export default class DevToService {
@@ -49,7 +51,7 @@ export default class DevToService {
         }
     }
 
-    async createPlatform(platform: IDevTo) {
+    async createPlatform(platform: TDevToCreateInput): Promise<IDevTo> {
         try {
             const newPlatform = await DevTo.create(platform);
 
@@ -65,7 +67,7 @@ export default class DevToService {
                 data: newPlatform._id,
             });
 
-            return newPlatform as IDevTo;
+            return newPlatform;
         } catch (error) {
             console.log(error);
 
@@ -76,11 +78,14 @@ export default class DevToService {
         }
     }
 
-    async updatePlatform(platform: TDevToUserUpdate, user_id: Types.ObjectId) {
+    async updatePlatform(
+        platform: TDevToUpdateInput,
+        user_id: Types.ObjectId,
+    ): Promise<IDevTo | null> {
         try {
-            return (await DevTo.findOneAndUpdate({ user_id }, platform, {
+            return await DevTo.findOneAndUpdate({ user_id }, platform, {
                 new: true,
-            }).exec()) as IDevTo;
+            }).exec();
         } catch (error) {
             console.log(error);
 
@@ -91,7 +96,7 @@ export default class DevToService {
         }
     }
 
-    async deletePlatform(user_id: Types.ObjectId) {
+    async deletePlatform(user_id: Types.ObjectId): Promise<IDevTo | null> {
         try {
             await Platform.findOneAndDelete({
                 user_id,
@@ -104,7 +109,7 @@ export default class DevToService {
                 },
             }).exec();
 
-            return (await DevTo.findOneAndDelete({ user_id }).exec()) as IDevTo;
+            return await DevTo.findOneAndDelete({ user_id }).exec();
         } catch (error) {
             console.log(error);
 
@@ -116,9 +121,9 @@ export default class DevToService {
         }
     }
 
-    async getPlatform(user_id: Types.ObjectId) {
+    async getPlatform(user_id: Types.ObjectId): Promise<IDevTo | null> {
         try {
-            return (await DevTo.findOne({ user_id }).exec()) as IDevTo;
+            return await DevTo.findOne({ user_id }).exec();
         } catch (error) {
             console.log(error);
 
@@ -129,7 +134,7 @@ export default class DevToService {
         }
     }
 
-    async getPlatformByUsername(username: string) {
+    async getPlatformByUsername(username: string): Promise<IDevTo | null> {
         try {
             return await DevTo.findOne({ username }).exec();
         } catch (error) {
@@ -144,7 +149,7 @@ export default class DevToService {
 
     /* This method is used exactly twice before creating or updating user in `DevController()` class
     to fetch user Dev.to details and update them in database. That's why api key is being used directly. */
-    async getDevUser(api_key: string) {
+    async getDevUser(api_key: string): Promise<IDevToUserOutput> {
         try {
             const response = await axios.get(`${defaultConfig.devto_api_url}/users/me`, {
                 headers: {
@@ -184,13 +189,12 @@ export default class DevToService {
 
     async updatePost(
         post: IDevToUpdatePost,
-        post_id: number,
         user_id: Types.ObjectId,
     ): Promise<IDevToUpdatePostOutput> {
         try {
             const devTo = await this.devTo(user_id);
 
-            const response = await devTo?.put(`/articles/${post_id}`, {
+            const response = await devTo?.put(`/articles/${post.post_id}`, {
                 article: post,
             });
 
@@ -199,6 +203,23 @@ export default class DevToService {
             console.log(error);
 
             return { isError: true };
+        }
+    }
+
+    async getAllPosts(user_id: Types.ObjectId): Promise<IDevToGetAllPostsOutput[]> {
+        try {
+            const devTo = await this.devTo(user_id);
+
+            const response = await devTo?.get("/articles/me/all");
+
+            return response?.data as IDevToGetAllPostsOutput[];
+        } catch (error) {
+            console.log(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "An error occurred while fetching posts. Please try again later.",
+            });
         }
     }
 }

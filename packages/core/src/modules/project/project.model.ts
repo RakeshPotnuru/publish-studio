@@ -31,7 +31,6 @@ const ProjectSchema = new Schema<IProject>(
             default: constants.project.status.DRAFT,
         },
         cover_image: String,
-        assets: [{ type: Schema.Types.ObjectId, ref: "Asset" }],
         platforms: [
             {
                 name: { type: String, enum: constants.user.platforms, required: true },

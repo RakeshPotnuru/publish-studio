@@ -32,7 +32,6 @@ export interface IProject {
     };
     status: TProjectStatus;
     cover_image?: string;
-    assets?: Types.ObjectId[];
     platforms?: IProjectPlatform[];
     tags?: ITags;
     canonical_url?: string;
@@ -47,36 +46,35 @@ export interface IProject {
     updated_at: Date;
 }
 
-export interface IProjectResponse {
-    _id: Types.ObjectId;
-    name: string;
-    title?: string;
-    user_id: Types.ObjectId;
-    folder_id?: Types.ObjectId;
-    description?: string;
-    body?: {
-        json?: JSON;
-        html?: string;
-        markdown?: string;
-    };
-    status: TProjectStatus;
-    cover_image?: string;
-    assets?: Types.ObjectId[];
-    platforms?: IProjectPlatform[];
-    tags?: ITags;
-    canonical_url?: string;
-    scheduled_at?: Date;
-    published_at?: Date;
-    tone_analysis?: {
-        sentiment?: TSentimentLabel;
-        emotion?: IEmotionScores;
-    };
-    topics?: string[];
-    created_at: Date;
-    updated_at: Date;
-}
+// export interface IProjectResponse {
+//     _id: Types.ObjectId;
+//     name: string;
+//     title?: string;
+//     user_id: Types.ObjectId;
+//     folder_id?: Types.ObjectId;
+//     description?: string;
+//     body?: {
+//         json?: JSON;
+//         html?: string;
+//         markdown?: string;
+//     };
+//     status: TProjectStatus;
+//     cover_image?: string;
+//     platforms?: IProjectPlatform[];
+//     tags?: ITags;
+//     canonical_url?: string;
+//     scheduled_at?: Date;
+//     published_at?: Date;
+//     tone_analysis?: {
+//         sentiment?: TSentimentLabel;
+//         emotion?: IEmotionScores;
+//     };
+//     topics?: string[];
+//     created_at: Date;
+//     updated_at: Date;
+// }
 
-export interface IProjectCreate {
+export interface IProjectCreateInput {
     name: string;
     title?: string;
     description?: string;
@@ -91,11 +89,11 @@ export interface IProjectCreate {
 }
 
 export interface IProjectsResponse {
-    projects: IProjectResponse[];
+    projects: IProject[];
     pagination: IPagination;
 }
 
-export type IProjectUpdate = Partial<IProject>;
+export type IProjectUpdateInput = Partial<IProject>;
 
 export interface IHashnodeTag {
     name: string;

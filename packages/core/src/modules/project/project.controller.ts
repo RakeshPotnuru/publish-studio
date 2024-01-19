@@ -8,10 +8,10 @@ import GenerativeAIController from "../generative-ai/generative-ai.controller";
 import type { TPlatformName } from "../platform/platform.types";
 import ProjectHelpers from "./project.helpers";
 import ProjectService from "./project.service";
-import type { IProjectCreate, IProjectPlatform, IProjectUpdate } from "./project.types";
+import type { IProjectCreateInput, IProjectPlatform, IProjectUpdateInput } from "./project.types";
 
 export default class ProjectController extends ProjectService {
-    async createProjectHandler(input: IProjectCreate, ctx: Context) {
+    async createProjectHandler(input: IProjectCreateInput, ctx: Context) {
         const project = input;
 
         if (project.folder_id) {
@@ -68,6 +68,13 @@ export default class ProjectController extends ProjectService {
     async publishPost(project_id: Types.ObjectId, user_id: Types.ObjectId) {
         const project = await super.getProjectById(project_id, user_id);
 
+        if (!project) {
+            throw new TRPCError({
+                code: "NOT_FOUND",
+                message: "Project not found",
+            });
+        }
+
         const publishResponse = await new ProjectHelpers().publishOnPlatforms(project, user_id);
 
         await super.updateProjectById(
@@ -103,6 +110,13 @@ export default class ProjectController extends ProjectService {
         ctx: Context,
     ) {
         const project = await super.getProjectById(input.project_id, ctx.user._id);
+
+        if (!project) {
+            throw new TRPCError({
+                code: "NOT_FOUND",
+                message: "Project not found",
+            });
+        }
 
         const updateResponse = await new ProjectHelpers().updateOnPlatforms(project, ctx.user._id);
 
@@ -148,6 +162,13 @@ export default class ProjectController extends ProjectService {
         const { project_id, scheduled_at, platforms } = input;
 
         const project = await super.getProjectById(project_id, ctx.user._id);
+
+        if (!project) {
+            throw new TRPCError({
+                code: "NOT_FOUND",
+                message: "Project not found",
+            });
+        }
 
         /* This code block is checking if the number of platforms that the user has is equal to the
         number of platforms that the project has with a status of "SUCCESS". If they are equal, it
@@ -266,7 +287,8 @@ export default class ProjectController extends ProjectService {
         },
         ctx: Context,
     ) {
-        const { name } = await super.getFolderById(input.folder_id, ctx.user._id);
+        const folder = await super.getFolderById(input.folder_id, ctx.user._id);
+
         const { projects, pagination } = await super.getProjectsByFolderId(
             input.pagination,
             input.folder_id,
@@ -276,7 +298,7 @@ export default class ProjectController extends ProjectService {
         return {
             status: "success",
             data: {
-                folder_name: name,
+                folder_name: folder?.name,
                 projects,
                 pagination,
             },
@@ -284,7 +306,7 @@ export default class ProjectController extends ProjectService {
     }
 
     async updateProjectHandler(
-        input: { id: Types.ObjectId; project: IProjectUpdate },
+        input: { id: Types.ObjectId; project: IProjectUpdateInput },
         ctx: Context,
     ) {
         const project = await super.getProjectById(input.id, ctx.user._id);

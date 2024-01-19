@@ -11,11 +11,9 @@ const HashnodeSchema = new Schema<IHashnode>(
         user_id: { type: Schema.Types.ObjectId, required: true, unique: true },
         api_key: { type: String, required: true, unique: true },
         username: { type: String, required: true, unique: true },
-        profile_pic: { type: String },
         blog_handle: { type: String },
         publication: {
             publication_id: { type: String, required: true },
-            publication_logo: { type: String },
         },
         settings: {
             enable_table_of_contents: { type: Boolean, required: true, default: false },

@@ -23,9 +23,7 @@ export default class AssetService extends ProjectService {
 
             const uuid = uuidv4();
 
-            const filePath = `${
-                user?._id.toString() ?? "default"
-            }/${uuid}_${originalname.replaceAll(/\s/g, "_")}`;
+            const filePath = `${user?._id.toString() ?? "default"}/${uuid}_${originalname}`;
 
             const params: PresignedPostOptions = {
                 Bucket: process.env.AWS_BUCKET_NAME,
@@ -97,7 +95,10 @@ export default class AssetService extends ProjectService {
         }
     }
 
-    async getAllAssetsByUserId(pagination: IPaginationOptions, user_id: Types.ObjectId) {
+    async getAllAssetsByUserId(
+        pagination: IPaginationOptions,
+        user_id: Types.ObjectId,
+    ): Promise<IAssetsResponse> {
         try {
             const total_rows = await Asset.countDocuments({ user_id }).exec();
             const total_pages = Math.ceil(total_rows / pagination.limit);
@@ -116,7 +117,7 @@ export default class AssetService extends ProjectService {
                     total_rows,
                     total_pages,
                 },
-            } as IAssetsResponse;
+            };
         } catch (error) {
             console.log(error);
 

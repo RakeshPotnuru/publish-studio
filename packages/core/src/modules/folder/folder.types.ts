@@ -3,13 +3,6 @@ import type { Types } from "mongoose";
 import type { IPagination } from "../../types/common.types";
 
 export interface IFolder {
-    _id?: Types.ObjectId;
-    user_id?: Types.ObjectId;
-    name: string;
-    projects?: Types.ObjectId[];
-}
-
-export interface IFolderResponse {
     _id: Types.ObjectId;
     user_id: Types.ObjectId;
     name: string;
@@ -19,6 +12,10 @@ export interface IFolderResponse {
 }
 
 export interface IFoldersResponse {
-    folders: IFolderResponse[];
+    folders: IFolder[];
     pagination: IPagination;
 }
+
+export type TFolderCreateInput = Pick<IFolder, "name" | "user_id">;
+
+export type TFolderUpdateInput = Pick<IFolder, "name">;

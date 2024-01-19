@@ -113,7 +113,7 @@ export function PlatformCard({
                             connected && (
                                 <Tooltip content="Connected" side="top">
                                     <span>
-                                        <Icons.Connected className="text-success" />
+                                        <Icons.Connected className="text-success text-sm" />
                                     </span>
                                 </Tooltip>
                             )

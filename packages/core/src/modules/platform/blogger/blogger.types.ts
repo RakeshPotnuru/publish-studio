@@ -1,15 +1,6 @@
 import type { Types } from "mongoose";
 
 export interface IBlogger {
-    _id?: Types.ObjectId;
-    user_id?: Types.ObjectId;
-    blog_id: string;
-    blog_url: string;
-    token: string;
-    status: boolean;
-}
-
-export interface IBloggerResponse {
     _id: Types.ObjectId;
     user_id: Types.ObjectId;
     blog_id: string;
@@ -20,7 +11,9 @@ export interface IBloggerResponse {
     updated_at: Date;
 }
 
-export interface IBloggerUserUpdate {
+export type TBloggerCreateInput = Omit<IBlogger, "_id" | "created_at" | "updated_at">;
+
+export interface IBloggerUpdateInput {
     blog_id: string;
     blog_url: string;
     status: boolean;
@@ -36,7 +29,7 @@ export interface IBloggerCreatePostInput {
     };
 }
 
-export type TBloggerUpdatePostInput = Partial<IBloggerCreatePostInput>;
+export type TBloggerUpdatePostInput = Partial<IBloggerCreatePostInput> & { post_id: string };
 
 export interface IBloggerUpdatePostOutput {
     isError: boolean;
