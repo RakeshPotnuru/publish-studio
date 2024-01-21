@@ -4,6 +4,7 @@ import type { Types } from "mongoose";
 
 import defaultConfig from "../../../config/app.config";
 import { constants } from "../../../config/constants";
+import type { IPaginationOptions } from "../../../types/common.types";
 import { decryptField } from "../../../utils/aws/kms";
 import User from "../../user/user.model";
 import Platform from "../platform.model";
@@ -206,11 +207,16 @@ export default class DevToService {
         }
     }
 
-    async getAllPosts(user_id: Types.ObjectId): Promise<IDevToGetAllPostsOutput[]> {
+    async getAllPosts(
+        pagination: IPaginationOptions,
+        user_id: Types.ObjectId,
+    ): Promise<IDevToGetAllPostsOutput[]> {
         try {
             const devTo = await this.devTo(user_id);
 
-            const response = await devTo?.get("/articles/me/all");
+            const response = await devTo?.get(
+                `/articles/me/all?page=${pagination.page}&per_page=${pagination.limit}`,
+            );
 
             return response?.data as IDevToGetAllPostsOutput[];
         } catch (error) {

@@ -25,6 +25,17 @@ const devtoRouter = router({
     disconnect: protectedProcedure.query(({ ctx }) =>
         new DevToController().deletePlatformHandler(ctx),
     ),
+
+    getAllPosts: protectedProcedure
+        .input(
+            z.object({
+                pagination: z.object({
+                    page: z.number().default(1),
+                    limit: z.number().default(10),
+                }),
+            }),
+        )
+        .query(({ input, ctx }) => new DevToController().getAllPostsHandler(input, ctx)),
 });
 
 export default devtoRouter;

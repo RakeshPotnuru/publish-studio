@@ -6,7 +6,7 @@ import {
 } from "@itsrakesh/ui";
 
 interface TooltipProps {
-    content: string;
+    content?: string;
     children: React.ReactNode;
     side?: "top" | "bottom" | "left" | "right";
     asChild?: boolean;
@@ -24,7 +24,7 @@ export function Tooltip({
         <TooltipProvider>
             <TooltipPrimitive>
                 <TooltipTrigger asChild={asChild}>{children}</TooltipTrigger>
-                <TooltipContent side={side} hidden={hidden}>
+                <TooltipContent side={side} hidden={hidden || !content}>
                     <p>{content}</p>
                 </TooltipContent>
             </TooltipPrimitive>

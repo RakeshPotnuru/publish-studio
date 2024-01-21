@@ -8,10 +8,14 @@ import GenerativeAIController from "../generative-ai/generative-ai.controller";
 import type { TPlatformName } from "../platform/platform.types";
 import ProjectHelpers from "./project.helpers";
 import ProjectService from "./project.service";
-import type { IProjectCreateInput, IProjectPlatform, IProjectUpdateInput } from "./project.types";
+import type {
+    IProjectPlatform,
+    IProjectUpdateInput,
+    TProjectCreateFormInput,
+} from "./project.types";
 
 export default class ProjectController extends ProjectService {
-    async createProjectHandler(input: IProjectCreateInput, ctx: Context) {
+    async createProjectHandler(input: TProjectCreateFormInput, ctx: Context) {
         const project = input;
 
         if (project.folder_id) {
@@ -27,12 +31,7 @@ export default class ProjectController extends ProjectService {
 
         const newProject = await super.createProject({
             user_id: ctx.user._id,
-            folder_id: project.folder_id,
-            name: project.name,
-            title: project.title,
-            description: project.description,
-            body: project.body,
-            status: project.status,
+            ...project,
         });
 
         try {
@@ -43,7 +42,7 @@ export default class ProjectController extends ProjectService {
             const text = project.description ?? project.title ?? project.name;
             if (text) {
                 const { data } = await genAI.generateCategoriesHandler({ text });
-                topics = data.categories;
+                topics = data.categories.length > 0 ? data.categories : undefined;
             }
 
             await super.updateProjectById(

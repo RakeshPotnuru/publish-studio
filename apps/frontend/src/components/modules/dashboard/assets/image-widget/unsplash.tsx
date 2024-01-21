@@ -31,6 +31,7 @@ export function Unsplash({ onImageInsert }: Readonly<UnsplashProps>) {
         },
         {
             enabled: false,
+            staleTime: 60000,
         },
     );
 
@@ -76,6 +77,7 @@ export function Unsplash({ onImageInsert }: Readonly<UnsplashProps>) {
                 }
                 pagination={{ pageIndex, pageSize }}
                 setPagination={setPagination}
+                totalResults={data?.data.photos.response?.total || 0}
                 handleInsert={handleInsert}
             />
         </div>

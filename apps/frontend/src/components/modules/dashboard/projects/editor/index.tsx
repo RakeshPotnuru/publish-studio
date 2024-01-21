@@ -3,13 +3,12 @@
 import { toast } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import { TableOfContent, TableOfContentDataItem } from "@tiptap-pro/extension-table-of-content";
-import { useEditor } from "@tiptap/react";
 import { memo, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
 import { IProject } from "@publish-studio/core";
 
-import { useFullscreenStatus } from "@/hooks/fullscreen-status";
+import { useFullscreenStatus } from "@/hooks/use-fullscreen-status";
 import { trpc } from "@/utils/trpc";
 import { Heading } from "../../../../ui/heading";
 import { Shell } from "../../../../ui/layouts/shell";
@@ -20,6 +19,7 @@ import { BubbleMenu } from "./menu/bubble-menu";
 import { FixedMenu } from "./menu/fixed-menu";
 import { ProjectToolbar } from "./project-toolbar";
 import { ToC } from "./toc";
+import { useEditor } from "@/hooks/use-editor";
 
 interface EditorProps extends React.HTMLAttributes<HTMLDivElement> {
     project: IProject;
@@ -28,49 +28,9 @@ interface EditorProps extends React.HTMLAttributes<HTMLDivElement> {
 const MemorizedToC = memo(ToC);
 
 export function Editor({ className, project, ...props }: Readonly<EditorProps>) {
-    const [items, setItems] = useState<TableOfContentDataItem[]>([]);
+    const { editor, isSaving, items } = useEditor(project);
 
     const isFullscreen = useFullscreenStatus();
-
-    const { mutateAsync: autoSaveProject, isLoading } = trpc.projects.update.useMutation({
-        onError: error => {
-            toast.error(error.message);
-        },
-    });
-
-    const handleAutosave = useDebouncedCallback(async (content: JSON) => {
-        try {
-            await autoSaveProject({
-                id: project._id,
-                project: {
-                    body: {
-                        json: content,
-                    },
-                },
-            });
-        } catch (error) {}
-    }, 3000);
-
-    const editor = useEditor({
-        extensions: [
-            ...extensions,
-            TableOfContent.configure({
-                onUpdate(content) {
-                    setItems(content);
-                },
-            }),
-        ],
-        editorProps: {
-            attributes: {
-                class: "bg-background min-h-screen rounded-3xl shadow-sm p-8 outline-none space-y-4",
-            },
-        },
-        autofocus: true,
-        onUpdate: ({ editor }) => {
-            handleAutosave(editor.state.doc.toJSON());
-        },
-        content: project.body?.json,
-    });
 
     if (!editor) return null;
 
@@ -85,7 +45,7 @@ export function Editor({ className, project, ...props }: Readonly<EditorProps>) 
                 <FixedMenu editor={editor} />
                 <BubbleMenu editor={editor} />
                 <EditorBody editor={editor} />
-                <EditorFooter editor={editor} isLoading={isLoading} />
+                <EditorFooter editor={editor} isLoading={isSaving} />
             </div>
             <div className="flex w-1/4 flex-col space-y-4">
                 <ProjectToolbar editor={editor} project={project} />

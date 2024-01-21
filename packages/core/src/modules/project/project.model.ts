@@ -40,12 +40,12 @@ const ProjectSchema = new Schema<IProject>(
             },
         ],
         tags: {
-            hashnode_tags: [
-                {
-                    name: { type: String },
-                    id: { type: String },
-                },
-            ],
+            // hashnode_tags: [
+            //     {
+            //         name: { type: String },
+            //         id: { type: String },
+            //     },
+            // ],
             devto_tags: [{ type: String }],
             medium_tags: [{ type: String }],
             ghost_tags: [

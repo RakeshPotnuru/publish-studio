@@ -1,5 +1,5 @@
 import { Icons } from "@/assets/icons";
-import { useFullscreenStatus } from "@/hooks/fullscreen-status";
+import { useFullscreenStatus } from "@/hooks/use-fullscreen-status";
 import { toggleFullscreen } from "@/utils/fullscreen-mode";
 import { MenuProps } from "../fixed-menu";
 import { MenuAction } from "../menu-action";

@@ -1,11 +1,13 @@
+import { Tooltip } from "@/components/ui/tooltip";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@itsrakesh/ui";
 
-interface ConnectDialogProps extends React.HTMLAttributes<HTMLDialogElement> {
+interface ImportDialogProps extends React.HTMLAttributes<HTMLDialogElement> {
     mode: "connect" | "edit";
     form: React.ReactNode;
     platform: string;
     open: boolean;
     onOpenChange: (open: boolean) => void;
+    tooltip?: string;
 }
 
 export function PlatformDialog({
@@ -13,12 +15,15 @@ export function PlatformDialog({
     form,
     platform,
     children,
+    tooltip,
     ...props
-}: Readonly<ConnectDialogProps>) {
+}: Readonly<ImportDialogProps>) {
     return (
         <Dialog {...props}>
-            <DialogTrigger asChild>{children}</DialogTrigger>
-            <DialogContent>
+            <Tooltip content={tooltip}>
+                <DialogTrigger asChild>{children}</DialogTrigger>
+            </Tooltip>
+            <DialogContent onCloseAutoFocus={e => e.preventDefault()}>
                 <DialogHeader>
                     <DialogTitle>
                         {mode === "connect" ? "Connect" : "Edit"} your {platform} account

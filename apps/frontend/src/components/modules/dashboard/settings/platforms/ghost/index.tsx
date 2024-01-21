@@ -8,40 +8,44 @@ import { trpc } from "@/utils/trpc";
 import { PlatformCard } from "../platform-card";
 import { GhostConnectForm } from "./connect-form";
 import { GhostEditForm } from "./edit-form";
+import { useState } from "react";
 
 export type TGhostStatus = (typeof constants.ghostStatuses)[keyof typeof constants.ghostStatuses];
 
 interface GhostProps {
     data?: IGhost;
     isLoading: boolean;
-    isOpen: boolean;
-    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export function Ghost({ data, isOpen, isLoading, setIsOpen }: Readonly<GhostProps>) {
+export function Ghost({ data, isLoading }: Readonly<GhostProps>) {
+    const [isOpen, setIsOpen] = useState(false);
+    const [isImportOpen, setIsImportOpen] = useState(false);
+
     const {
-        refetch: disconnectGhost,
-        isFetching: isDisconnectingGhost,
+        refetch: disconnect,
+        isFetching: isDisconnecting,
         error: disconnectError,
     } = trpc.platforms.ghost.disconnect.useQuery(undefined, {
         enabled: false,
     });
 
+    const handleDisconnect = async () => {
+        try {
+            await disconnect();
+        } catch (error) {
+            toast.error(disconnectError?.message ?? "Something went wrong.");
+        }
+    };
+
     return (
         <PlatformCard
-            onDisconnect={async () => {
-                try {
-                    await disconnectGhost();
-                } catch (error) {
-                    toast.error(disconnectError?.message ?? "Something went wrong.");
-                }
-            }}
+            onDisconnect={handleDisconnect}
             isOpen={isOpen}
             setIsOpen={setIsOpen}
             name="Ghost"
             icon={Images.ghostLogo}
             iconBg="bg-white"
-            isLoading={isLoading || isDisconnectingGhost}
+            isLoading={isLoading || isDisconnecting}
             connected={data !== undefined}
             username={data?.api_url.split("/")[2]}
             profile_url={data?.api_url}

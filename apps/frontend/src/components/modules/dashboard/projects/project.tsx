@@ -48,11 +48,14 @@ export function Project({ ...props }: ProjectProps) {
 
     const projectView = isFetching ? (
         <div className="flex flex-row space-x-4">
-            <div className="w-3/4 space-y-4">
-                <Skeleton className="bg-background h-14 w-full rounded-full" />
-                <Skeleton className="bg-background h-screen w-full rounded-3xl" />
+            <div className="*:bg-background w-3/4 space-y-4">
+                <Skeleton className="h-14 rounded-full" />
+                <Skeleton className="h-screen rounded-3xl" />
             </div>
-            <Skeleton className="bg-background h-screen w-1/4 rounded-3xl" />
+            <div className="*:bg-background flex w-1/4 flex-col space-y-4">
+                <Skeleton className="h-14 rounded-full" />
+                <Skeleton className="h-screen rounded-3xl" />
+            </div>
         </div>
     ) : (
         project && <Editor project={project} />

@@ -8,37 +8,41 @@ import { trpc } from "@/utils/trpc";
 import { PlatformCard } from "../platform-card";
 import { MediumConnectForm } from "./connect-form";
 import { MediumEditForm } from "./edit-form";
+import { useState } from "react";
 
 interface MediumToProps {
     data?: IMedium;
     isLoading: boolean;
-    isOpen: boolean;
-    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export function Medium({ data, isOpen, isLoading, setIsOpen }: Readonly<MediumToProps>) {
+export function Medium({ data, isLoading }: Readonly<MediumToProps>) {
+    const [isOpen, setIsOpen] = useState(false);
+    const [isImportOpen, setIsImportOpen] = useState(false);
+
     const {
-        refetch: disconnectMedium,
-        isFetching: isDisconnectingMedium,
+        refetch: disconnect,
+        isFetching: isDisconnecting,
         error: disconnectError,
     } = trpc.platforms.medium.disconnect.useQuery(undefined, {
         enabled: false,
     });
 
+    const handleDisconnect = async () => {
+        try {
+            await disconnect();
+        } catch (error) {
+            toast.error(disconnectError?.message ?? "Something went wrong.");
+        }
+    };
+
     return (
         <PlatformCard
-            onDisconnect={async () => {
-                try {
-                    await disconnectMedium();
-                } catch (error) {
-                    toast.error(disconnectError?.message ?? "Something went wrong.");
-                }
-            }}
+            onDisconnect={handleDisconnect}
             isOpen={isOpen}
             setIsOpen={setIsOpen}
             name="Medium"
             icon={Images.mediumLogo}
-            isLoading={isLoading || isDisconnectingMedium}
+            isLoading={isLoading || isDisconnecting}
             connected={data !== undefined}
             username={data?.username}
             profile_url={`https://medium.com/@${data?.username}`}

@@ -74,7 +74,7 @@ export function ProjectStats() {
         </Center>
     ) : (
         <div className="flex flex-col items-center space-y-4">
-            <h4 className="text-lg font-semibold">Your activity</h4>
+            <h4 className="text-lg font-semibold">Activity</h4>
             <div className="h-full">
                 {isFetching ? <Skeleton className="h-full w-80" /> : chartView}
             </div>

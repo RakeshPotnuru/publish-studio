@@ -23,6 +23,7 @@ import {
     Node as ProseMirrorNode,
     Schema as ProseMirrorSchema,
 } from "@tiptap/pm/model";
+import DOMPurify from "dompurify";
 import { marked } from "marked";
 
 const tableMap = new WeakMap<ProseMirrorNode, boolean>();
@@ -155,7 +156,7 @@ export function serialize(schema: ProseMirrorSchema, content: JSONContent) {
 }
 
 export function deserialize(schema: ProseMirrorSchema, content: string) {
-    const html = marked.parse(content);
+    const html = DOMPurify.sanitize(marked.parse(content));
 
     if (!html) return null;
 

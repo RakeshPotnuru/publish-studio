@@ -15,6 +15,7 @@ interface SearchBodyProps {
     }[];
     pagination: PaginationState;
     setPagination: React.Dispatch<React.SetStateAction<PaginationState>>;
+    totalResults: number;
     handleInsert: (photoId: string | number) => void;
 }
 
@@ -24,6 +25,7 @@ export function SearchBody({
     data,
     pagination,
     setPagination,
+    totalResults,
     handleInsert,
 }: Readonly<SearchBodyProps>) {
     const photosView =
@@ -62,7 +64,9 @@ export function SearchBody({
     return (
         <div className="space-y-4 rounded-lg border p-2">
             {error ? (
-                <ErrorBox title="Failed to fetch photos" description={error} />
+                <Center>
+                    <ErrorBox title="Failed to fetch photos" description={error} />
+                </Center>
             ) : (
                 searchBodyView
             )}
@@ -87,7 +91,12 @@ export function SearchBody({
                         })
                     }
                     variant="outline"
-                    disabled={data.length === 0 || isLoading || !data}
+                    disabled={
+                        data.length === 0 ||
+                        isLoading ||
+                        !data ||
+                        pagination.pageIndex * pagination.pageSize >= totalResults
+                    }
                 >
                     Next
                 </Button>

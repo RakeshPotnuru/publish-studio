@@ -78,7 +78,7 @@ export function TopicStats() {
         </Center>
     ) : (
         <div className="flex flex-col items-center space-y-4">
-            <h4 className="text-lg font-semibold">Your top topics</h4>
+            <h4 className="text-lg font-semibold">Top topics</h4>
             <div className="flow-row flex items-center space-x-6">
                 <div className="size-52">
                     {isFetching ? <Skeleton className="size-52 rounded-full" /> : chartView}

@@ -31,6 +31,41 @@ const projectRouter = router({
                     .nativeEnum(constants.project.status)
                     .optional()
                     .default(constants.project.status.DRAFT),
+                cover_image: z.string().optional(),
+                platforms: z
+                    .array(
+                        z.object({
+                            name: z.nativeEnum(constants.user.platforms),
+                            status: z
+                                .nativeEnum(constants.project.platformPublishStatuses)
+                                .optional(),
+                            published_url: z.string().optional(),
+                            id: z.string().optional(),
+                        }),
+                    )
+                    .optional(),
+                tags: z
+                    .object({
+                        devto_tags: z.array(z.string()).optional(),
+                        // hashnode_tags: z.array(z.object({
+                        //     name: z.string(),
+                        //     slug: z.string(),
+                        //     id: z.string(),
+                        // })).optional(),
+                        medium_tags: z.array(z.string()).optional(),
+                        ghost_tags: z
+                            .array(
+                                z.object({
+                                    name: z.string(),
+                                }),
+                            )
+                            .optional(),
+                        wordpress_tags: z.array(z.string()).optional(),
+                        blogger_tags: z.array(z.string()).optional(),
+                    })
+                    .optional(),
+                canonical_url: z.string().optional(),
+                published_at: z.date().optional(),
             }),
         )
         .mutation(({ input, ctx }) => new ProjectController().createProjectHandler(input, ctx)),

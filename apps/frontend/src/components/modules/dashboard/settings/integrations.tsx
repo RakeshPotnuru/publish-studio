@@ -21,13 +21,6 @@ import { WordPress } from "./platforms/wordpress";
 interface IntegrationsProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function Integrations({ ...props }: IntegrationsProps) {
-    const [isDevOpen, setIsDevOpen] = useState(false);
-    const [isMediumOpen, setIsMediumOpen] = useState(false);
-    const [isHashnodeOpen, setIsHashnodeOpen] = useState(false);
-    const [isGhostOpen, setIsGhostOpen] = useState(false);
-    const [isWordPressOpen, setIsWordPressOpen] = useState(false);
-    const [isBloggerOpen, setIsBloggerOpen] = useState(false);
-
     const { data, isFetching, error } = trpc.platforms.getAll.useQuery({
         pagination: { page: 1, limit: 10 },
     });
@@ -63,42 +56,12 @@ export function Integrations({ ...props }: IntegrationsProps) {
                 <Heading level={2}>Platforms</Heading>
                 {error && <ErrorBox title="Error" description={error.message} />}
                 <div className="grid grid-cols-2 gap-4">
-                    <Blogger
-                        isLoading={isFetching}
-                        isOpen={isBloggerOpen}
-                        setIsOpen={setIsBloggerOpen}
-                        data={blogger}
-                    />
-                    <DevTo
-                        isLoading={isFetching}
-                        isOpen={isDevOpen}
-                        setIsOpen={setIsDevOpen}
-                        data={devto}
-                    />
-                    <Ghost
-                        isLoading={isFetching}
-                        isOpen={isGhostOpen}
-                        setIsOpen={setIsGhostOpen}
-                        data={ghost}
-                    />
-                    <Hashnode
-                        isLoading={isFetching}
-                        isOpen={isHashnodeOpen}
-                        setIsOpen={setIsHashnodeOpen}
-                        data={hashnode}
-                    />
-                    <Medium
-                        isLoading={isFetching}
-                        isOpen={isMediumOpen}
-                        setIsOpen={setIsMediumOpen}
-                        data={medium}
-                    />
-                    <WordPress
-                        isLoading={isFetching}
-                        isOpen={isWordPressOpen}
-                        setIsOpen={setIsWordPressOpen}
-                        data={wordpress}
-                    />
+                    <Blogger isLoading={isFetching} data={blogger} />
+                    <DevTo isLoading={isFetching} data={devto} />
+                    <Ghost isLoading={isFetching} data={ghost} />
+                    <Hashnode isLoading={isFetching} data={hashnode} />
+                    <Medium isLoading={isFetching} data={medium} />
+                    <WordPress isLoading={isFetching} data={wordpress} />
                 </div>
             </div>
             <div className="space-y-4">

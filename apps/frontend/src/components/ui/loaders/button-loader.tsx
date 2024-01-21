@@ -16,7 +16,7 @@ export function ButtonLoader({ isLoading, children, isIcon = false }: ButtonLoad
                     "mr-2 size-4": !isIcon,
                 })}
             />
-            {!isIcon && "Please wait"}
+            {!isIcon && <span className="whitespace-nowrap">Please wait</span>}
         </>
     ) : (
         children

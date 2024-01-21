@@ -123,6 +123,7 @@ export const extensions = [
         },
     }),
     Image.configure({
+        inline: true,
         HTMLAttributes: {
             class: "cursor-move",
         },

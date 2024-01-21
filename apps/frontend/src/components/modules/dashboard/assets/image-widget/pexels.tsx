@@ -31,6 +31,7 @@ export function Pexels({ onImageInsert }: Readonly<PexelsProps>) {
         },
         {
             enabled: false,
+            staleTime: 60000,
         },
     );
 
@@ -77,6 +78,7 @@ export function Pexels({ onImageInsert }: Readonly<PexelsProps>) {
                 }
                 pagination={{ pageIndex, pageSize }}
                 setPagination={setPagination}
+                totalResults={data?.data.photos.total_results ?? 0}
                 handleInsert={handleInsert}
             />
         </div>

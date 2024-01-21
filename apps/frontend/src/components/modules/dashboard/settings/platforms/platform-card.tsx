@@ -9,6 +9,7 @@ import { Heading } from "@/components/ui/heading";
 import { Tooltip } from "@/components/ui/tooltip";
 import { trpc } from "@/utils/trpc";
 import { cn } from "@itsrakesh/utils";
+import { ImportDialog } from "./import-dialog";
 import { PlatformDialog } from "./platform-dialog";
 
 interface PlatformCardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -22,8 +23,11 @@ interface PlatformCardProps extends React.HTMLAttributes<HTMLDivElement> {
     editForm?: React.ReactNode;
     isOpen: boolean;
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    isImportOpen?: boolean;
+    setIsImportOpen?: React.Dispatch<React.SetStateAction<boolean>>;
     onDisconnect: () => void;
     iconBg?: string;
+    importComponent?: React.ReactNode;
 }
 
 export function PlatformCard({
@@ -37,8 +41,11 @@ export function PlatformCard({
     editForm,
     isOpen,
     setIsOpen,
+    isImportOpen,
+    setIsImportOpen,
     onDisconnect,
     iconBg,
+    importComponent,
     ...props
 }: Readonly<PlatformCardProps>) {
     const [askingForConfirmation, setAskingForConfirmation] = useState(false);
@@ -46,7 +53,7 @@ export function PlatformCard({
     const utils = trpc.useUtils();
 
     const actionView = connected ? (
-        <div className="flex flex-row space-x-1">
+        <div className="flex flex-row items-center space-x-1">
             {askingForConfirmation ? (
                 <AskForConfirmation
                     onCancel={() => setAskingForConfirmation(false)}
@@ -54,6 +61,9 @@ export function PlatformCard({
                         onDisconnect();
                         setAskingForConfirmation(false);
                         utils.platforms.getAll.invalidate();
+                    }}
+                    classNames={{
+                        container: "border rounded-lg p-2",
                     }}
                 />
             ) : (
@@ -65,19 +75,32 @@ export function PlatformCard({
                     Disconnect
                 </Button>
             )}
-            <div>
+            <div className="space-x-1">
                 <PlatformDialog
                     open={isOpen}
                     onOpenChange={setIsOpen}
                     mode="edit"
                     platform={name}
                     form={editForm}
+                    tooltip="Edit account"
                 >
                     <Button size="icon" variant="outline" className="h-8 w-8">
                         <Icons.Edit />
-                        <span className="sr-only">Edit your {name} account</span>
                     </Button>
                 </PlatformDialog>
+                {importComponent && (
+                    <ImportDialog
+                        open={isImportOpen ?? false}
+                        onOpenChange={setIsImportOpen ?? (() => {})}
+                        platform={name}
+                        component={importComponent}
+                        tooltip="Import posts"
+                    >
+                        <Button size="icon" variant="outline" className="h-8 w-8">
+                            <Icons.Import />
+                        </Button>
+                    </ImportDialog>
+                )}
             </div>
         </div>
     ) : (

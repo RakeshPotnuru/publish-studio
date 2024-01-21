@@ -9,47 +9,51 @@ import { trpc } from "@/utils/trpc";
 import { PlatformCard } from "../platform-card";
 import { WordPressConnectForm } from "./connect-form";
 import { WordPressEditForm } from "./edit-form";
+import { useState } from "react";
 
 interface WordPressProps {
     data?: IWordPress;
     isLoading: boolean;
-    isOpen: boolean;
-    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export function WordPress({ data, isOpen, isLoading, setIsOpen }: Readonly<WordPressProps>) {
+export function WordPress({ data, isLoading }: Readonly<WordPressProps>) {
+    const [isOpen, setIsOpen] = useState(false);
+    const [isImportOpen, setIsImportOpen] = useState(false);
+
     const {
-        refetch: disconnectWordPress,
-        isFetching: isDisconnectingWordPress,
+        refetch: disconnect,
+        isFetching: isDisconnecting,
         data: disconnectResponse,
         error: disconnectError,
     } = trpc.platforms.wordpress.disconnect.useQuery(undefined, {
         enabled: false,
     });
 
+    const handleDisconnect = async () => {
+        try {
+            await disconnect();
+            toast.success(disconnectResponse?.data.message, {
+                action: {
+                    label: "Open",
+                    onClick: () => {
+                        window.open(siteConfig.links.wordpressConnectedApps, "_blank");
+                    },
+                },
+            });
+        } catch (error) {
+            toast.error(disconnectError?.message ?? "Something went wrong.");
+        }
+    };
+
     return (
         <PlatformCard
-            onDisconnect={async () => {
-                try {
-                    await disconnectWordPress();
-                    toast.success(disconnectResponse?.data.message, {
-                        action: {
-                            label: "Open",
-                            onClick: () => {
-                                window.open(siteConfig.links.wordpressConnectedApps, "_blank");
-                            },
-                        },
-                    });
-                } catch (error) {
-                    toast.error(disconnectError?.message ?? "Something went wrong.");
-                }
-            }}
+            onDisconnect={handleDisconnect}
             isOpen={isOpen}
             setIsOpen={setIsOpen}
             name="WordPress"
             icon={Images.wordpressLogo}
             iconBg="bg-white"
-            isLoading={isLoading || isDisconnectingWordPress}
+            isLoading={isLoading || isDisconnecting}
             connected={data !== undefined}
             username={data?.blog_url.split("/")[2]}
             profile_url={data?.blog_url}
