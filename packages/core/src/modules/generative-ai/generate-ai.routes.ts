@@ -23,6 +23,10 @@ const generativeAIRouter = router({
             .mutation(({ input, ctx }) =>
                 new GenerativeAIController().generateOutlineHandler(input, ctx),
             ),
+
+        categories: proProtectedProcedure
+            .input(z.object({ text: z.string() }))
+            .mutation(({ input }) => new GenerativeAIController().generateCategoriesHandler(input)),
     }),
 });
 

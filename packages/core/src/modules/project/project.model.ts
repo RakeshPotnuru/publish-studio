@@ -70,7 +70,7 @@ const ProjectSchema = new Schema<IProject>(
                 anger: Number,
             },
         },
-        topics: [{ type: String }],
+        categories: [{ type: String }],
         scheduled_at: {
             type: Date,
         },

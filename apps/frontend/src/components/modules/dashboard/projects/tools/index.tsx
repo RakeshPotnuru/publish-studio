@@ -9,7 +9,7 @@ import {
 
 import type { IProject } from "@publish-studio/core";
 
-import { MenuProps } from "@/components/modules/dashboard/projects/editor/menu/fixed-menu";
+import { MenuProps } from "@/components/editor/menu/fixed-menu";
 import { Tooltip } from "@/components/ui/tooltip";
 import { DownloadProject } from "./download-project";
 import { GenerateOutline } from "./generate-outline";

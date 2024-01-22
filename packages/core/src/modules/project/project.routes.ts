@@ -149,6 +149,7 @@ const projectRouter = router({
                         })
                         .optional(),
                     canonical_url: z.string().optional(),
+                    categories: z.array(z.string()).optional(),
                     scheduled_at: z.string().pipe(z.coerce.date()).optional(),
                 }),
             }),

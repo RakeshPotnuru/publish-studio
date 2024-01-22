@@ -8,7 +8,7 @@ import { useParams } from "next/navigation";
 import { forwardRef } from "react";
 
 import { Icons } from "@/assets/icons";
-import { Editor } from "@/components/modules/dashboard/projects/editor";
+import { Editor } from "@/components/editor";
 import { ErrorBox } from "@/components/ui/error-box";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";

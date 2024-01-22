@@ -37,18 +37,18 @@ export default class ProjectController extends ProjectService {
         try {
             const genAI = new GenerativeAIController();
 
-            let topics: string[] | undefined;
+            let categories: string[] | undefined;
 
             const text = project.description ?? project.title ?? project.name;
             if (text) {
                 const { data } = await genAI.generateCategoriesHandler({ text });
-                topics = data.categories.length > 0 ? data.categories : undefined;
+                categories = data.categories.length > 0 ? data.categories : undefined;
             }
 
             await super.updateProjectById(
                 newProject._id,
                 {
-                    topics: topics,
+                    categories,
                 },
                 ctx.user._id,
             );

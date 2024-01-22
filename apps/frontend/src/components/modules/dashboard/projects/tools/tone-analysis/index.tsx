@@ -10,7 +10,7 @@ import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { ProButton } from "@/components/ui/pro-button";
 import fleschReadingEaseScore from "@/utils/flesch-reading-ease-score";
 import { trpc } from "@/utils/trpc";
-import type { MenuProps } from "../../editor/menu/fixed-menu";
+import type { MenuProps } from "../../../../../editor/menu/fixed-menu";
 import { Analysis, IToneAnalysis, TEmotionScores } from "./analysis";
 
 interface ToneAnalysisProps extends MenuProps {

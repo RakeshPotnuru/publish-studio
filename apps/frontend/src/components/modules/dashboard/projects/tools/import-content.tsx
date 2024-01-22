@@ -27,8 +27,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Icons } from "@/assets/icons";
-import { MenuProps } from "@/components/modules/dashboard/projects/editor/menu/fixed-menu";
-import { deserialize } from "@/components/modules/dashboard/projects/editor/transform-markdown";
+import { MenuProps } from "@/components/editor/menu/fixed-menu";
+import { deserialize } from "@/components/editor/transform-markdown";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";

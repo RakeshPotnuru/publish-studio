@@ -8,7 +8,7 @@ import { Images } from "@/assets/images";
 import { constants } from "@/config/constants";
 import { useEditor } from "@/hooks/use-editor";
 import { trpc } from "@/utils/trpc";
-import { deserialize } from "../../../projects/editor/transform-markdown";
+import { deserialize } from "../../../../../editor/transform-markdown";
 import { ImportPostsBody } from "../import-dialog";
 import { PlatformCard } from "../platform-card";
 import { DevConnectForm } from "./connect-form";

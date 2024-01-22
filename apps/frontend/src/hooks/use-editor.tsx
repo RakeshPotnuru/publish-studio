@@ -8,7 +8,7 @@ import { useDebouncedCallback } from "use-debounce";
 
 import type { IProject } from "@publish-studio/core";
 
-import { extensions } from "@/components/modules/dashboard/projects/editor/extensions";
+import { extensions } from "@/components/editor/extensions";
 import { trpc } from "@/utils/trpc";
 
 export function useEditor(project?: IProject) {

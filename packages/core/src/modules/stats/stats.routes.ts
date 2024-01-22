@@ -4,13 +4,13 @@ import { protectedProcedure, router } from "../../trpc";
 import StatsController from "./stats.controller";
 
 const statsRouter = router({
-    getTopics: protectedProcedure
+    getCategories: protectedProcedure
         .input(
             z.object({
                 limit: z.number().optional(),
             }),
         )
-        .query(({ input, ctx }) => new StatsController().getTopicStatsHandler(ctx, input)),
+        .query(({ input, ctx }) => new StatsController().getCategoryStatsHandler(ctx, input)),
 
     getProjects: protectedProcedure
         .input(

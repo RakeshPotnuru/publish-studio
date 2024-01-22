@@ -1,25 +1,20 @@
 "use client";
 
-import { toast } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
-import { TableOfContent, TableOfContentDataItem } from "@tiptap-pro/extension-table-of-content";
-import { memo, useState } from "react";
-import { useDebouncedCallback } from "use-debounce";
+import { memo } from "react";
 
 import { IProject } from "@publish-studio/core";
 
+import { useEditor } from "@/hooks/use-editor";
 import { useFullscreenStatus } from "@/hooks/use-fullscreen-status";
-import { trpc } from "@/utils/trpc";
-import { Heading } from "../../../../ui/heading";
-import { Shell } from "../../../../ui/layouts/shell";
+import { Heading } from "../ui/heading";
+import { Shell } from "../ui/layouts/shell";
 import { EditorBody } from "./editor-body";
 import { EditorFooter } from "./editor-footer";
-import { extensions } from "./extensions";
 import { BubbleMenu } from "./menu/bubble-menu";
 import { FixedMenu } from "./menu/fixed-menu";
 import { ProjectToolbar } from "./project-toolbar";
 import { ToC } from "./toc";
-import { useEditor } from "@/hooks/use-editor";
 
 interface EditorProps extends React.HTMLAttributes<HTMLDivElement> {
     project: IProject;

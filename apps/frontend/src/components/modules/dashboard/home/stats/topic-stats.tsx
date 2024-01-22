@@ -3,15 +3,15 @@ import Chart, { ArcElement, ChartData, ChartOptions } from "chart.js/auto";
 import { useTheme } from "next-themes";
 import { Doughnut } from "react-chartjs-2";
 
-import type { ITopicStats } from "@publish-studio/core";
+import type { ICategoryStats } from "@publish-studio/core";
 
 import { Center } from "@/components/ui/center";
 import { ErrorBox } from "@/components/ui/error-box";
 import { trpc } from "@/utils/trpc";
 
-const generateChartData = (topics: ITopicStats[]): ChartData<"doughnut"> => {
-    const labels = topics.map(({ topic }) => topic);
-    const data = topics.map(({ count }) => count);
+const generateChartData = (categories: ICategoryStats[]): ChartData<"doughnut"> => {
+    const labels = categories.map(({ category }) => category);
+    const data = categories.map(({ count }) => count);
 
     return {
         labels,
@@ -29,7 +29,7 @@ Chart.register(ArcElement);
 export function TopicStats() {
     const { theme } = useTheme();
 
-    const { data, isFetching, error } = trpc.stats.getTopics.useQuery({});
+    const { data, isFetching, error } = trpc.stats.getCategories.useQuery({});
 
     const chartData = generateChartData(data?.data.stats || []);
 
@@ -78,7 +78,7 @@ export function TopicStats() {
         </Center>
     ) : (
         <div className="flex flex-col items-center space-y-4">
-            <h4 className="text-lg font-semibold">Top topics</h4>
+            <h4 className="text-lg font-semibold">Top categories</h4>
             <div className="flow-row flex items-center space-x-6">
                 <div className="size-52">
                     {isFetching ? <Skeleton className="size-52 rounded-full" /> : chartView}

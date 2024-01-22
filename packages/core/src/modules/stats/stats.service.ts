@@ -1,21 +1,21 @@
 import type { Types } from "mongoose";
 
 import Project from "../project/project.model";
-import type { IProjectStats, ITopicStats } from "./stats.types";
+import type { ICategoryStats, IProjectStats } from "./stats.types";
 
 export default class StatsService {
-    async getTopicStats(user_id: Types.ObjectId, limit = 5): Promise<ITopicStats[]> {
+    async getCategoryStats(user_id: Types.ObjectId, limit = 5): Promise<ICategoryStats[]> {
         const data = await Project.aggregate([
             { $match: { user_id } },
-            { $unwind: "$topics" },
-            { $group: { _id: "$topics", count: { $sum: 1 } } },
+            { $unwind: "$categories" },
+            { $group: { _id: "$categories", count: { $sum: 1 } } },
             { $sort: { count: -1, _id: 1 } },
             { $limit: limit },
         ]);
 
-        return data.map(topic => ({
-            topic: topic._id as string,
-            count: topic.count as number,
+        return data.map(category => ({
+            category: category._id as string,
+            count: category.count as number,
         }));
     }
 

@@ -4,10 +4,10 @@ import type { IProject } from "@publish-studio/core";
 
 import { Icons } from "@/assets/icons";
 import { shortenText } from "@/utils/text-shortener";
-import { PublishPost } from "../publish-post";
-import { RenameProject } from "../rename-project";
-import { ProjectSettings } from "../settings";
-import { ProjectTools } from "../tools";
+import { PublishPost } from "../modules/dashboard/projects/publish-post";
+import { RenameProject } from "../modules/dashboard/projects/rename-project";
+import { ProjectSettings } from "../modules/dashboard/projects/settings";
+import { ProjectTools } from "../modules/dashboard/projects/tools";
 import { MenuProps } from "./menu/fixed-menu";
 
 interface ProjectToolbarProps extends MenuProps {

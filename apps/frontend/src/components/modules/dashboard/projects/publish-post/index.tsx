@@ -37,7 +37,7 @@ import { Tooltip } from "@/components/ui/tooltip";
 import { constants } from "@/config/constants";
 import useUserStore from "@/lib/store/user";
 import { trpc } from "@/utils/trpc";
-import { MenuProps } from "../editor/menu/fixed-menu";
+import { MenuProps } from "../../../../editor/menu/fixed-menu";
 import { CharactersLengthViewer } from "./characters-length-viewer";
 import { EmptyState } from "./empty-state";
 import { formSchema } from "./form-schema";

@@ -2,8 +2,8 @@ import type { Context } from "../../trpc";
 import StatsService from "./stats.service";
 
 export default class StatsController extends StatsService {
-    async getTopicStatsHandler(ctx: Context, input?: { limit?: number }) {
-        const stats = await super.getTopicStats(ctx.user._id, input?.limit);
+    async getCategoryStatsHandler(ctx: Context, input?: { limit?: number }) {
+        const stats = await super.getCategoryStats(ctx.user._id, input?.limit);
 
         return {
             status: "success",

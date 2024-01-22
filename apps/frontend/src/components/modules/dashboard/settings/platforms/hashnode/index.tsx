@@ -11,7 +11,7 @@ import { constants } from "@/config/constants";
 import { useEditor } from "@/hooks/use-editor";
 import { shortenText } from "@/utils/text-shortener";
 import { trpc } from "@/utils/trpc";
-import { deserialize } from "../../../projects/editor/transform-markdown";
+import { deserialize } from "../../../../../editor/transform-markdown";
 import { PlatformCard } from "../platform-card";
 import { HashnodeConnectForm } from "./connect-form";
 import { HashnodeEditForm } from "./edit-form";

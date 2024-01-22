@@ -2,8 +2,8 @@ import { Separator } from "@itsrakesh/ui";
 import { useState } from "react";
 
 import fleschReadingEaseScore, { IReadabilityScore } from "@/utils/flesch-reading-ease-score";
-import { Icons } from "../../../../../assets/icons";
-import { Tooltip } from "../../../../ui/tooltip";
+import { Icons } from "../../assets/icons";
+import { Tooltip } from "../ui/tooltip";
 import type { MenuProps } from "./menu/fixed-menu";
 
 interface EditorFooterProps extends React.HTMLAttributes<HTMLDivElement> {

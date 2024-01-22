@@ -5,7 +5,7 @@ import { NodeHtmlMarkdown } from "node-html-markdown";
 import type { IProject } from "@publish-studio/core";
 
 import { Icons } from "@/assets/icons";
-import type { MenuProps } from "@/components/modules/dashboard/projects/editor/menu/fixed-menu";
+import type { MenuProps } from "@/components/editor/menu/fixed-menu";
 import { Heading } from "@/components/ui/heading";
 
 interface DownloadProjectProps extends MenuProps {

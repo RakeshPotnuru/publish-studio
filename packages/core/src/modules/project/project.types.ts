@@ -39,7 +39,7 @@ export interface IProject {
         sentiment?: TSentimentLabel;
         emotion?: IEmotionScores;
     };
-    topics?: string[];
+    categories?: string[];
     scheduled_at?: Date;
     published_at?: Date;
     created_at: Date;
