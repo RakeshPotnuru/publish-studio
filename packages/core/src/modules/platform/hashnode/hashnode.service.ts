@@ -11,6 +11,7 @@ import Hashnode from "./hashnode.model";
 import type {
     IHashnode,
     IHashnodeCreatePostInput,
+    IHashnodeGetAllPostsOutput,
     IHashnodeUpdatePostOutput,
     IHashnodeUserOutput,
     THashnodeCreateInput,
@@ -247,6 +248,76 @@ export default class HashnodeService {
             console.log(error);
 
             return { isError: true };
+        }
+    }
+
+    async getAllPosts(
+        pagination: {
+            limit: number;
+            end_cursor?: string;
+        },
+        user_id: Types.ObjectId,
+    ): Promise<IHashnodeGetAllPostsOutput> {
+        try {
+            const platform = await this.getPlatform(user_id);
+
+            if (!platform) {
+                throw new TRPCError({
+                    code: "NOT_FOUND",
+                    message: "Account not found. Please connect your Hashnode account to continue.",
+                });
+            }
+
+            const hashnode = await this.hashnode(user_id);
+
+            const response = await hashnode?.post("", {
+                query: `query Publication($id: ObjectId, $limit: Int!, $after: String) {
+                            publication(id: $id) {
+                                posts(first: $limit, after: $after) {
+                                    edges {
+                                        node {
+                                            id
+                                            title
+                                            url
+                                            canonicalUrl
+                                            coverImage {
+                                                url
+                                            }
+                                            brief
+                                            content {
+                                                markdown
+                                            }
+                                            publishedAt
+                                            seo {
+                                                title
+                                                description
+                                            }
+
+                                        }
+                                    }
+                                    pageInfo {
+                                        endCursor
+                                        hasNextPage
+                                    }
+                                    totalDocuments
+                                }
+                            }
+                        }`,
+                variables: {
+                    id: platform.publication.publication_id,
+                    limit: pagination.limit,
+                    after: pagination.end_cursor,
+                },
+            });
+
+            return response?.data as IHashnodeGetAllPostsOutput;
+        } catch (error) {
+            console.log(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "An error occurred while fetching posts. Please try again later.",
+            });
         }
     }
 }

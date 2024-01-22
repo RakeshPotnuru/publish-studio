@@ -91,9 +91,9 @@ export function ImportPosts() {
 
     useEffect(() => {
         if (data?.data.posts.nextPageToken) {
-            setPageTokens([...pageTokens, data?.data.posts.nextPageToken]);
+            setPageTokens([...pageTokens, data.data.posts.nextPageToken]);
         }
-    }, [data?.data.posts.nextPageToken]);
+    }, [data?.data.posts.nextPageToken, pageTokens]);
 
     const posts = data?.data.posts.items ?? [];
 

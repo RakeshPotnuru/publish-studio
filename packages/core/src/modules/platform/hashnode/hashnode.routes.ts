@@ -33,6 +33,17 @@ const hashnodeRouter = router({
     disconnect: protectedProcedure.query(({ ctx }) =>
         new HashnodeController().deletePlatformHandler(ctx),
     ),
+
+    getAllPosts: protectedProcedure
+        .input(
+            z.object({
+                pagination: z.object({
+                    limit: z.number().default(10),
+                    end_cursor: z.string().optional(),
+                }),
+            }),
+        )
+        .query(({ input, ctx }) => new HashnodeController().getAllPostsHandler(input, ctx)),
 });
 
 export default hashnodeRouter;

@@ -194,7 +194,8 @@ export default class HashnodeController extends HashnodeService {
             {
                 title: post.title ?? post.name,
                 contentMarkdown: post.body.markdown,
-                tags: post.tags?.hashnode_tags ?? [],
+                // tags: post.tags?.hashnode_tags ?? [],
+                tags: [],
                 publicationId: platform.publication.publication_id,
                 settings: {
                     delisted: platform.settings.delisted,
@@ -252,7 +253,8 @@ export default class HashnodeController extends HashnodeService {
                 post_id,
                 title: post.title,
                 contentMarkdown: post.body?.markdown,
-                tags: post.tags?.hashnode_tags ?? [],
+                // tags: post.tags?.hashnode_tags ?? [],
+                tags: [],
                 coverImageOptions: {
                     coverImageURL: post.cover_image,
                 },
@@ -265,6 +267,20 @@ export default class HashnodeController extends HashnodeService {
             status: "success",
             data: {
                 post: updatedPost,
+            },
+        };
+    }
+
+    async getAllPostsHandler(
+        input: { pagination: { limit: number; end_cursor?: string } },
+        ctx: Context,
+    ) {
+        const posts = await super.getAllPosts(input.pagination, ctx.user._id);
+
+        return {
+            status: "success",
+            data: {
+                posts,
             },
         };
     }

@@ -92,3 +92,37 @@ export type THashnodeCreatePostOutput = IOutput extends { isError: false }
 export interface IHashnodeUpdatePostOutput {
     isError: boolean;
 }
+
+export interface IHashnodeGetAllPostsOutput {
+    data: {
+        publication: {
+            posts: {
+                totalDocuments: number;
+                pageInfo: {
+                    hasNextPage: boolean;
+                    endCursor: string;
+                };
+                edges: {
+                    node: {
+                        id: string;
+                        title: string;
+                        url: string;
+                        canonicalUrl: string;
+                        coverImage: {
+                            url: string;
+                        };
+                        brief: string;
+                        content: {
+                            markdown: string;
+                        };
+                        publishedAt: Date;
+                        seo: {
+                            title: null | string;
+                            description: null | string;
+                        };
+                    };
+                }[];
+            };
+        };
+    };
+}
