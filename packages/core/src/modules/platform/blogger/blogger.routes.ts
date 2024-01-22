@@ -27,6 +27,17 @@ const bloggerRouter = router({
     getBlogs: protectedProcedure.query(({ ctx }) =>
         new BloggerController().getBloggerBlogsHandler(ctx),
     ),
+
+    getAllPosts: protectedProcedure
+        .input(
+            z.object({
+                pagination: z.object({
+                    limit: z.number().default(10),
+                    page_token: z.string().optional(),
+                }),
+            }),
+        )
+        .query(({ input, ctx }) => new BloggerController().getAllPostsHandler(input, ctx)),
 });
 
 export default bloggerRouter;

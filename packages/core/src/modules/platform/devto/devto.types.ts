@@ -50,7 +50,7 @@ export interface IDevToGetAllPostsOutput {
     title: string;
     description: string;
     published: boolean;
-    published_at: Date;
+    published_at: string;
     url: string;
     body_markdown: string;
     cover_image?: string;

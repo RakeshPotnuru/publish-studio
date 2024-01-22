@@ -34,3 +34,15 @@ export type TBloggerUpdatePostInput = Partial<IBloggerCreatePostInput> & { post_
 export interface IBloggerUpdatePostOutput {
     isError: boolean;
 }
+
+export interface IBloggerGetAllPostsOutput {
+    items?: {
+        id: string;
+        title: string;
+        content: string;
+        published: string;
+        url: string;
+        labels?: string[];
+    }[];
+    nextPageToken?: string;
+}

@@ -12,6 +12,7 @@ import Blogger from "./blogger.model";
 import type {
     IBlogger,
     IBloggerCreatePostInput,
+    IBloggerGetAllPostsOutput,
     IBloggerUpdateInput,
     IBloggerUpdatePostOutput,
     TBloggerCreateInput,
@@ -123,12 +124,8 @@ export default class BloggerService {
         }
     }
 
-    async deletePlatform(user_id: Types.ObjectId, token: string): Promise<IBlogger | null> {
+    async deletePlatform(user_id: Types.ObjectId): Promise<IBlogger | null> {
         try {
-            const decryptedToken = await decryptField(token);
-
-            await this.oauth2Client.revokeToken(decryptedToken);
-
             await User.findByIdAndUpdate(user_id, {
                 $pull: {
                     platforms: this.PLATFORM,
@@ -287,5 +284,39 @@ export default class BloggerService {
         return {
             isError: false,
         };
+    }
+
+    async getAllPosts(
+        pagination: {
+            limit: number;
+            page_token?: string;
+        },
+        user_id: Types.ObjectId,
+    ): Promise<IBloggerGetAllPostsOutput> {
+        const platform = await this.getPlatform(user_id);
+
+        if (!platform) {
+            throw new TRPCError({
+                code: "NOT_FOUND",
+                message: "Platform not found.",
+            });
+        }
+
+        const blogger = await this.blogger(user_id);
+
+        const response = await blogger?.posts.list({
+            blogId: platform.blog_id,
+            maxResults: pagination.limit,
+            pageToken: pagination.page_token,
+        });
+
+        if (response?.statusText !== "OK") {
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "An error occurred while fetching posts. Please try again later.",
+            });
+        }
+
+        return response.data as IBloggerGetAllPostsOutput;
     }
 }

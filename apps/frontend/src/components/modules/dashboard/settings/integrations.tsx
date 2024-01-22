@@ -1,12 +1,7 @@
 "use client";
 
-import { Button } from "@itsrakesh/ui";
-import Image from "next/image";
-import { useState } from "react";
-
 import type { IPlatform } from "@publish-studio/core";
 
-import { Images } from "@/assets/images";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
 import { constants } from "@/config/constants";
@@ -62,21 +57,6 @@ export function Integrations({ ...props }: IntegrationsProps) {
                     <Hashnode isLoading={isFetching} data={hashnode} />
                     <Medium isLoading={isFetching} data={medium} />
                     <WordPress isLoading={isFetching} data={wordpress} />
-                </div>
-            </div>
-            <div className="space-y-4">
-                <Heading level={2}>Import your content</Heading>
-                <div className="flex flex-wrap gap-4">
-                    <Button variant="outline" className="flex h-min flex-col space-y-2">
-                        <Image
-                            src={Images.mediumLogo}
-                            alt="Medium"
-                            width={50}
-                            height={50}
-                            className="rounded-lg"
-                        />
-                        <span>Medium</span>
-                    </Button>
                 </div>
             </div>
         </div>

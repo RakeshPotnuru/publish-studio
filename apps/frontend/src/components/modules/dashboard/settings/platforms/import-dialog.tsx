@@ -132,7 +132,7 @@ export function ImportPostsBody({
                     onClick={() =>
                         setPagination({
                             pageIndex: pageIndex - 1,
-                            pageSize: pageSize,
+                            pageSize,
                         })
                     }
                     variant="outline"
@@ -144,7 +144,7 @@ export function ImportPostsBody({
                     onClick={() =>
                         setPagination({
                             pageIndex: pageIndex + 1,
-                            pageSize: pageSize,
+                            pageSize,
                         })
                     }
                     variant="outline"

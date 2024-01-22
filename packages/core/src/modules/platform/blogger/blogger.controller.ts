@@ -36,7 +36,7 @@ export default class BloggerController extends BloggerService {
         const platform = await super.getPlatformByBlogId(response.blogs?.[0].id);
 
         if (platform) {
-            await super.deletePlatform(platform.user_id, platform.token);
+            await super.deletePlatform(platform.user_id);
         }
 
         const newPlatform = super.createPlatform({
@@ -59,7 +59,7 @@ export default class BloggerController extends BloggerService {
         const platform = await super.getPlatformByBlogId(input.blog_id);
 
         if (platform) {
-            await super.deletePlatform(platform.user_id, platform.token);
+            await super.deletePlatform(platform.user_id);
         }
 
         const updatedPlatform = await super.updatePlatform(input, ctx.user._id);
@@ -82,7 +82,7 @@ export default class BloggerController extends BloggerService {
             });
         }
 
-        await super.deletePlatform(ctx.user._id, platform.token);
+        await super.deletePlatform(ctx.user._id);
 
         return {
             status: "success",
@@ -160,6 +160,25 @@ export default class BloggerController extends BloggerService {
             status: "success",
             data: {
                 post: updatedPost,
+            },
+        };
+    }
+
+    async getAllPostsHandler(
+        input: {
+            pagination: {
+                limit: number;
+                page_token?: string;
+            };
+        },
+        ctx: Context,
+    ) {
+        const posts = await super.getAllPosts(input.pagination, ctx.user._id);
+
+        return {
+            status: "success",
+            data: {
+                posts,
             },
         };
     }
