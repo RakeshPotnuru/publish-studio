@@ -3,6 +3,7 @@ import type { Types } from "mongoose";
 
 import { constants } from "../../../config/constants";
 import type { Context } from "../../../trpc";
+import type { IPaginationOptions } from "../../../types/common.types";
 import type { IProject, IProjectPlatform } from "../../project/project.types";
 import WordPressService from "./wordpress.service";
 import type { IWordPressUpdateInput } from "./wordpress.types";
@@ -139,6 +140,17 @@ export default class WordPressController extends WordPressService {
             status: "success",
             data: {
                 post: updatedPost,
+            },
+        };
+    }
+
+    async getAllPostsHandler(input: { pagination: IPaginationOptions }, ctx: Context) {
+        const posts = await super.getAllPosts(input.pagination, ctx.user._id);
+
+        return {
+            status: "success",
+            data: {
+                posts,
             },
         };
     }

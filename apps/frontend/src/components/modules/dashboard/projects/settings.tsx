@@ -26,6 +26,8 @@ export function ProjectSettings({ children, project, ...props }: Readonly<Projec
                     <SheetTitle>Settings</SheetTitle>
                     <SheetDescription>Your project settings.</SheetDescription>
                 </SheetHeader>
+                {/* Change topics */}
+                {/* Delete project */}
             </SheetContent>
         </Sheet>
     );

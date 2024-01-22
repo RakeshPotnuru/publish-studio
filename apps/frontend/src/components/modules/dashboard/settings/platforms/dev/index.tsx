@@ -1,4 +1,5 @@
 import { toast } from "@itsrakesh/ui";
+import { PaginationState } from "@tanstack/react-table";
 import { useState } from "react";
 
 import type { IDevTo } from "@publish-studio/core";
@@ -7,7 +8,6 @@ import { Images } from "@/assets/images";
 import { constants } from "@/config/constants";
 import { useEditor } from "@/hooks/use-editor";
 import { trpc } from "@/utils/trpc";
-import { PaginationState } from "@tanstack/react-table";
 import { deserialize } from "../../../projects/editor/transform-markdown";
 import { ImportPostsBody } from "../import-dialog";
 import { PlatformCard } from "../platform-card";
@@ -137,8 +137,8 @@ export function ImportPosts() {
                 id: post.id.toString(),
                 title: post.title,
             }))}
-            importedPosts={importedPosts.map(String)}
-            importingPost={importingPost?.toString()}
+            importedPosts={importedPosts}
+            importingPost={importingPost ?? undefined}
             handleImport={handleImport}
             pageIndex={pageIndex}
             pageSize={pageSize}

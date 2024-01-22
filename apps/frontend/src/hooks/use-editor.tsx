@@ -1,10 +1,10 @@
-import { useEditor as useTiptapEditor } from "@tiptap/react";
 import { toast } from "@itsrakesh/ui";
-import { useDebouncedCallback } from "use-debounce";
-import { useState } from "react";
 import TableOfContent, {
     type TableOfContentDataItem,
 } from "@tiptap-pro/extension-table-of-content";
+import { useEditor as useTiptapEditor } from "@tiptap/react";
+import { useState } from "react";
+import { useDebouncedCallback } from "use-debounce";
 
 import type { IProject } from "@publish-studio/core";
 
@@ -53,7 +53,7 @@ export function useEditor(project?: IProject) {
         onUpdate: ({ editor }) => {
             handleAutosave(editor.state.doc.toJSON());
         },
-        content: project?.body?.json,
+        content: project?.body?.json ?? project?.body?.html,
     });
 
     return {

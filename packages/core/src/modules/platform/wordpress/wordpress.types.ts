@@ -59,3 +59,20 @@ export type IWordPressCreatePostOutput = IOutput extends { isError: false }
 export interface IWordPressUpdatePostOutput {
     isError: boolean;
 }
+
+export interface IWordPressGetAllPostsOutput {
+    ID: number;
+    URL: string;
+    title: string;
+    excerpt: string;
+    date: Date;
+    content: string;
+    status: TWordPressStatus;
+    tags?: Record<
+        string,
+        {
+            name: string;
+        }
+    >;
+    featured_image?: string;
+}

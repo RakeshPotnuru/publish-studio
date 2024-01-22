@@ -53,7 +53,7 @@ export interface IDevToGetAllPostsOutput {
     published_at: Date;
     url: string;
     body_markdown: string;
-    cover_image: string;
+    cover_image?: string;
     tag_list: string[];
     canonical_url: string;
 }

@@ -1,8 +1,3 @@
-import { Center } from "@/components/ui/center";
-import { ErrorBox } from "@/components/ui/error-box";
-import { ButtonLoader } from "@/components/ui/loaders/button-loader";
-import { Tooltip } from "@/components/ui/tooltip";
-import { shortenText } from "@/utils/text-shortener";
 import {
     Button,
     Dialog,
@@ -14,7 +9,12 @@ import {
     Skeleton,
 } from "@itsrakesh/ui";
 import { PaginationState } from "@tanstack/react-table";
-import error from "next/error";
+
+import { Center } from "@/components/ui/center";
+import { ErrorBox } from "@/components/ui/error-box";
+import { ButtonLoader } from "@/components/ui/loaders/button-loader";
+import { Tooltip } from "@/components/ui/tooltip";
+import { shortenText } from "@/utils/text-shortener";
 
 interface ImportDialogProps extends React.HTMLAttributes<HTMLDialogElement> {
     component: React.ReactNode;

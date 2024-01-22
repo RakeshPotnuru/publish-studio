@@ -10,7 +10,6 @@ import type { Context } from "../../trpc";
 import type { IPaginationOptions } from "../../types/common.types";
 import type { IFile } from "../../types/file.types";
 import s3 from "../../utils/aws/s3";
-import Project from "../project/project.model";
 import ProjectService from "../project/project.service";
 import Asset from "./asset.model";
 import type { IAsset, IAssetsResponse } from "./asset.types";
@@ -51,12 +50,6 @@ export default class AssetService extends ProjectService {
                 mimetype: mimetype,
                 key: filePath,
             });
-
-            if (project_id) {
-                await Project.findByIdAndUpdate(project_id, {
-                    $push: { assets: newAsset._id },
-                }).exec();
-            }
 
             return {
                 url: post.url,
@@ -129,12 +122,11 @@ export default class AssetService extends ProjectService {
     }
 
     /**
-     * The function `deleteAssets` deletes assets from a user's account and associated projects.
-     * @param ids - An array of asset IDs that need to be deleted.
-     * @param {Types.ObjectId | undefined} user_id - The `user_id` parameter is the ID of the user who
-     * owns the assets. It is of type `Types.ObjectId | undefined`, which means it can either be a
-     * valid `ObjectId` or `undefined`.
-     * @returns the result of the `Asset.deleteMany({ _id: { : ids } }).exec()` operation.
+     * Deletes assets with the given IDs for a specific user.
+     * @param {Types.ObjectId[]} ids - The IDs of the assets to delete.
+     * @param {Types.ObjectId} user_id - The ID of the user.
+     * @returns {Promise<DeleteResult>} - A promise that resolves when the assets are deleted.
+     * @throws {TRPCError} - If an error occurs while deleting the assets.
      */
     async deleteAssets(ids: Types.ObjectId[], user_id: Types.ObjectId) {
         try {
@@ -150,7 +142,7 @@ export default class AssetService extends ProjectService {
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while deleting the asset. Please try again later.",
+                message: "An error occurred while deleting the assets. Please try again later.",
             });
         }
     }

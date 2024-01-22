@@ -177,7 +177,6 @@ export default class GenerativeAIService extends ProjectService {
             });
 
             const response = result.response;
-            console.log(response.text());
 
             return response.text();
         } catch (error) {

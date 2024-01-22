@@ -30,7 +30,7 @@ export default class PlatformService {
                     total_rows,
                     total_pages,
                 },
-            };
+            } as IPlatformsResponse;
         } catch (error) {
             console.log(error);
 

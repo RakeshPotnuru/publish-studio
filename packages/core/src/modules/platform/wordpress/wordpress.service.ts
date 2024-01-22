@@ -6,12 +6,14 @@ import defaultConfig from "../../../config/app.config";
 import { constants } from "../../../config/constants";
 import Platform from "../../../modules/platform/platform.model";
 import User from "../../../modules/user/user.model";
+import type { IPaginationOptions } from "../../../types/common.types";
 import { decryptField } from "../../../utils/aws/kms";
 import WordPress from "./wordpress.model";
 import type {
     IWordPress,
     IWordPressCreatePostInput,
     IWordPressCreatePostOutput,
+    IWordPressGetAllPostsOutput,
     IWordPressSiteOutput,
     IWordPressUpdateInput,
     IWordPressUpdatePostInput,
@@ -220,6 +222,28 @@ export default class WordPressService {
             console.log(error);
 
             return { isError: true };
+        }
+    }
+
+    async getAllPosts(
+        pagination: IPaginationOptions,
+        user_id: Types.ObjectId,
+    ): Promise<IWordPressGetAllPostsOutput[]> {
+        try {
+            const wordpress = await this.wordpress(user_id);
+
+            const response = await wordpress?.get(
+                `/me/posts?fields=ID,URL,title,excerpt,date,content,status,tags,featured_image&number=${pagination.limit}&page=${pagination.page}`,
+            );
+
+            return response?.data.posts as IWordPressGetAllPostsOutput[];
+        } catch (error) {
+            console.log(error);
+
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "An error occurred while getting the posts.",
+            });
         }
     }
 }
