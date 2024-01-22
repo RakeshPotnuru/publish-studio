@@ -6,6 +6,7 @@ import defaultConfig from "../../../config/app.config";
 import { constants } from "../../../config/constants";
 import Platform from "../../../modules/platform/platform.model";
 import User from "../../../modules/user/user.model";
+import type { IPaginationOptions } from "../../../types/common.types";
 import { decryptField } from "../../../utils/aws/kms";
 import Ghost from "./ghost.model";
 import type {
@@ -188,5 +189,20 @@ export default class GhostService {
         return {
             isError: false,
         };
+    }
+
+    async getAllPosts(pagination: IPaginationOptions, user_id: Types.ObjectId) {
+        const ghost = await this.ghost(user_id);
+
+        const response = await ghost?.posts.browse(pagination).fetch();
+
+        if (!response?.success) {
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "An error occurred while fetching the posts. Please try again later.",
+            });
+        }
+
+        return response.data;
     }
 }

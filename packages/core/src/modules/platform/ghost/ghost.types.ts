@@ -16,6 +16,8 @@ export interface IGhost {
 
 export type TGhostCreateInput = Omit<IGhost, "_id" | "created_at" | "updated_at">;
 
+export type TGhostCreateFormInput = Omit<TGhostCreateInput, "user_id">;
+
 export type TGhostUpdateInput = Partial<TGhostCreateInput>;
 
 export interface IGhostSiteOutput {

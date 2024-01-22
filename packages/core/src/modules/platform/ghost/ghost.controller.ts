@@ -3,13 +3,14 @@ import type { Types } from "mongoose";
 
 import { constants } from "../../../config/constants";
 import type { Context } from "../../../trpc";
+import type { IPaginationOptions } from "../../../types/common.types";
 import { encryptField } from "../../../utils/aws/kms";
 import type { IProject, IProjectPlatform } from "../../project/project.types";
 import GhostService from "./ghost.service";
-import type { IGhost, TGhostUpdateInput } from "./ghost.types";
+import type { TGhostCreateFormInput, TGhostUpdateInput } from "./ghost.types";
 
 export default class GhostController extends GhostService {
-    async createPlatformHandler(input: IGhost, ctx: Context) {
+    async createPlatformHandler(input: TGhostCreateFormInput, ctx: Context) {
         const site = await super.getGhostSite(input.api_url, input.admin_api_key);
 
         if (!site.success) {
@@ -207,6 +208,17 @@ export default class GhostController extends GhostService {
             status: "success",
             data: {
                 post: updatedPost,
+            },
+        };
+    }
+
+    async getAllPostsHandler(input: { pagination: IPaginationOptions }, ctx: Context) {
+        const posts = await super.getAllPosts(input.pagination, ctx.user._id);
+
+        return {
+            status: "success",
+            data: {
+                posts,
             },
         };
     }
