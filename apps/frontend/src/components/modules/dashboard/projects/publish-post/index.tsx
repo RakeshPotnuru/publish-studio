@@ -289,7 +289,7 @@ export function PublishPost({
                                     <div className="min-h-[10rem] overflow-auto border p-2 shadow-inner">
                                         <Image
                                             src={coverImage}
-                                            alt="Post title"
+                                            alt={project.title ?? project.name}
                                             width={1000}
                                             height={500}
                                         />
