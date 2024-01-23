@@ -76,6 +76,10 @@ module.exports = {
                     DEFAULT: "#111111",
                     foreground: "#FFFFFF",
                 },
+                imagekit: {
+                    DEFAULT: "#0450D2",
+                    foreground: "#FFFFFF",
+                },
                 pdf: {
                     DEFAULT: "#FF0000",
                     foreground: "#FFFFFF",

@@ -114,7 +114,12 @@ export function Profile({ ...props }: ProfileProps) {
                         <Heading>Profile</Heading>
                         {isEditing ? (
                             <div className="flex flex-row space-x-4">
-                                <Button variant="outline" onClick={() => setIsEditing(false)}>
+                                <Button
+                                    variant="outline"
+                                    onClick={() => {
+                                        setIsEditing(false), form.reset();
+                                    }}
+                                >
                                     Cancel
                                 </Button>
                                 <Button
@@ -147,7 +152,7 @@ export function Profile({ ...props }: ProfileProps) {
                                         variant="secondary"
                                         size="icon"
                                         onClick={() => setOpen(true)}
-                                        className="absolute right-0 top-0 opacity-80 hover:opacity-100"
+                                        className="absolute left-[2px] top-[2px] rounded-full opacity-80 hover:opacity-100"
                                     >
                                         <Icons.Edit size={20} />
                                     </Button>

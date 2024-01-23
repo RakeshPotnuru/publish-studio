@@ -271,3 +271,18 @@
     cursor: ew-resize;
     cursor: col-resize;
 }
+
+#image-kit-container button {
+    background-color: hsl(0, 79%, 63%);
+    border-radius: 0.375rem;
+    padding: 0.5rem 1rem;
+    color: hsl(210 40% 98%);
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    height: 2.25rem;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+#image-kit-container button:hover {
+    opacity: 80%;
+}

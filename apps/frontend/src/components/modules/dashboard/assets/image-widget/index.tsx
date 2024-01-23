@@ -12,6 +12,7 @@ import { useState } from "react";
 
 import { Images } from "@/assets/images";
 import { Assets } from "@/components/modules/dashboard/assets";
+import { ImageKit } from "./imagekit";
 import { Pexels } from "./pexels";
 import { Unsplash } from "./unsplash";
 
@@ -38,7 +39,7 @@ interface ImageWidgetProps extends React.HTMLAttributes<HTMLDialogElement> {
     onImageInsert?: (options: TInsertImageOptions) => void;
 }
 
-export type TProvider = "unsplash" | "pexels" | "assets";
+export type TProvider = "unsplash" | "pexels" | "assets" | "imagekit";
 
 export function ImageWidget({ isWidget, onImageInsert, ...props }: Readonly<ImageWidgetProps>) {
     const [provider, setProvider] = useState<TProvider>();
@@ -99,6 +100,23 @@ export function ImageWidget({ isWidget, onImageInsert, ...props }: Readonly<Imag
                     >
                         My Assets
                     </Button>
+                    <Button
+                        onClick={() => {
+                            setProvider("imagekit");
+                        }}
+                        className={cn("bg-imagekit-foreground h-24 hover:opacity-80", {
+                            "h-9": provider,
+                            "opacity-50": provider !== "imagekit",
+                        })}
+                    >
+                        <Image
+                            src={Images.imagekitLogo}
+                            alt="ImageKit"
+                            width={100}
+                            height={50}
+                            className="h-8 w-auto"
+                        />
+                    </Button>
                 </div>
                 {provider && (
                     <div>
@@ -110,6 +128,9 @@ export function ImageWidget({ isWidget, onImageInsert, ...props }: Readonly<Imag
                         )}
                         {provider === "assets" && (
                             <Assets isWidget={isWidget} onImageInsert={onImageInsert} />
+                        )}
+                        {provider === "imagekit" && onImageInsert && (
+                            <ImageKit onImageInsert={onImageInsert} />
                         )}
                     </div>
                 )}
