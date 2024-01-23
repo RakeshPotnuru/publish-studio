@@ -28,7 +28,7 @@ interface ImageKitProps {
 export function ImageKit({ onImageInsert }: Readonly<ImageKitProps>) {
     import("imagekit-media-library-widget").then(({ default: IKMediaLibraryWidget }) => {
         const config = {
-            container: "#image-kit-container",
+            container: "#imagekit-container",
             className: "media-library-widget",
             containerDimensions: {
                 height: "100%",
@@ -42,7 +42,6 @@ export function ImageKit({ onImageInsert }: Readonly<ImageKitProps>) {
         };
 
         const callback = (payload: IPayload) => {
-            console.log(payload);
             if (payload.eventType === "INSERT") {
                 const { data } = payload;
                 const file = data[0];
@@ -60,7 +59,7 @@ export function ImageKit({ onImageInsert }: Readonly<ImageKitProps>) {
 
     return (
         <div className="rounded-lg border p-2">
-            <div id="image-kit-container" className="h-[70dvh] w-[70dvw]" />
+            <div id="imagekit-container" className="h-[70dvh] w-[70dvw]" />
         </div>
     );
 }

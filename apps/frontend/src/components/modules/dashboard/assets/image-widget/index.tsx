@@ -8,10 +8,12 @@ import {
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import Image from "next/image";
+import Script from "next/script";
 import { useState } from "react";
 
 import { Images } from "@/assets/images";
 import { Assets } from "@/components/modules/dashboard/assets";
+import { Cloudinary } from "./cloudinary";
 import { ImageKit } from "./imagekit";
 import { Pexels } from "./pexels";
 import { Unsplash } from "./unsplash";
@@ -39,102 +41,128 @@ interface ImageWidgetProps extends React.HTMLAttributes<HTMLDialogElement> {
     onImageInsert?: (options: TInsertImageOptions) => void;
 }
 
-export type TProvider = "unsplash" | "pexels" | "assets" | "imagekit";
+export type TProvider = "Unsplash" | "Pexels" | "Assets" | "ImageKit" | "Cloudinary";
 
 export function ImageWidget({ isWidget, onImageInsert, ...props }: Readonly<ImageWidgetProps>) {
     const [provider, setProvider] = useState<TProvider>();
 
     return (
-        <Dialog {...props}>
-            <DialogContent className="min-w-max">
-                <DialogHeader>
-                    <DialogTitle>Pick an image</DialogTitle>
-                    <DialogDescription>
-                        Choose from third-party image providers or your assets.
-                    </DialogDescription>
-                </DialogHeader>
-                <div className="grid grid-cols-3 gap-2">
-                    <Button
-                        onClick={() => {
-                            setProvider("unsplash");
-                        }}
-                        className={cn("bg-unsplash h-24 hover:opacity-80", {
-                            "h-9": provider,
-                            "opacity-50": provider !== "unsplash",
-                        })}
-                    >
-                        <Image
-                            src={Images.unsplashLogo}
-                            alt="Unsplash"
-                            width={100}
-                            height={50}
-                            className="h-6 w-auto"
-                        />
-                    </Button>
-                    <Button
-                        onClick={() => {
-                            setProvider("pexels");
-                        }}
-                        className={cn("bg-pexels h-24 hover:opacity-80", {
-                            "h-9": provider,
-                            "opacity-50": provider !== "pexels",
-                        })}
-                    >
-                        <Image
-                            src={Images.pexelsLogo}
-                            alt="Pexels"
-                            width={100}
-                            height={50}
-                            className="h-8 w-auto"
-                        />
-                    </Button>
-                    <Button
-                        onClick={() => {
-                            setProvider("assets");
-                        }}
-                        variant="outline"
-                        className={cn("h-24", {
-                            "h-9": provider,
-                            "opacity-50": provider !== "assets",
-                        })}
-                    >
-                        My Assets
-                    </Button>
-                    <Button
-                        onClick={() => {
-                            setProvider("imagekit");
-                        }}
-                        className={cn("bg-imagekit-foreground h-24 hover:opacity-80", {
-                            "h-9": provider,
-                            "opacity-50": provider !== "imagekit",
-                        })}
-                    >
-                        <Image
-                            src={Images.imagekitLogo}
-                            alt="ImageKit"
-                            width={100}
-                            height={50}
-                            className="h-8 w-auto"
-                        />
-                    </Button>
-                </div>
-                {provider && (
-                    <div>
-                        {provider === "unsplash" && onImageInsert && (
-                            <Unsplash onImageInsert={onImageInsert} />
-                        )}
-                        {provider === "pexels" && onImageInsert && (
-                            <Pexels onImageInsert={onImageInsert} />
-                        )}
-                        {provider === "assets" && (
-                            <Assets isWidget={isWidget} onImageInsert={onImageInsert} />
-                        )}
-                        {provider === "imagekit" && onImageInsert && (
-                            <ImageKit onImageInsert={onImageInsert} />
-                        )}
+        <>
+            <Dialog {...props}>
+                <DialogContent className="min-w-max">
+                    <DialogHeader>
+                        <DialogTitle>Pick an image {provider && `from ${provider}`}</DialogTitle>
+                        <DialogDescription>
+                            Choose from third-party image providers or your assets.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid grid-cols-3 gap-2 rounded-lg border p-2">
+                        <Button
+                            onClick={() => {
+                                setProvider("Unsplash");
+                            }}
+                            className={cn("bg-unsplash h-24 hover:opacity-80", {
+                                "h-9": provider,
+                                "opacity-50": provider === "Unsplash",
+                            })}
+                        >
+                            <Image
+                                src={Images.unsplashLogo}
+                                alt="Unsplash"
+                                width={100}
+                                height={50}
+                                className="h-6 w-auto"
+                            />
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                setProvider("Pexels");
+                            }}
+                            className={cn("bg-pexels h-24 hover:opacity-80", {
+                                "h-9": provider,
+                                "opacity-50": provider === "Pexels",
+                            })}
+                        >
+                            <Image
+                                src={Images.pexelsLogo}
+                                alt="Pexels"
+                                width={100}
+                                height={50}
+                                className="h-8 w-auto"
+                            />
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                setProvider("ImageKit");
+                            }}
+                            className={cn("bg-imagekit-foreground h-24 hover:opacity-80", {
+                                "h-9": provider,
+                                "opacity-50": provider === "ImageKit",
+                            })}
+                        >
+                            <Image
+                                src={Images.imagekitLogo}
+                                alt="ImageKit"
+                                width={100}
+                                height={50}
+                                className="h-6 w-auto"
+                            />
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                setProvider("Cloudinary");
+                            }}
+                            className={cn("bg-cloudinary h-24 hover:opacity-80", {
+                                "h-9": provider,
+                                "opacity-50": provider === "Cloudinary",
+                            })}
+                        >
+                            <Image
+                                src={Images.cloudinaryLogo}
+                                alt="Cloudinary"
+                                width={100}
+                                height={50}
+                                className="h-6 w-auto"
+                            />
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                setProvider("Assets");
+                            }}
+                            variant="outline"
+                            className={cn("h-24", {
+                                "h-9": provider,
+                                "opacity-50": provider === "Assets",
+                            })}
+                        >
+                            My Assets
+                        </Button>
                     </div>
-                )}
-            </DialogContent>
-        </Dialog>
+                    {provider && (
+                        <div>
+                            {provider === "Unsplash" && onImageInsert && (
+                                <Unsplash onImageInsert={onImageInsert} />
+                            )}
+                            {provider === "Pexels" && onImageInsert && (
+                                <Pexels onImageInsert={onImageInsert} />
+                            )}
+                            {provider === "Assets" && (
+                                <Assets isWidget={isWidget} onImageInsert={onImageInsert} />
+                            )}
+                            {provider === "ImageKit" && onImageInsert && (
+                                <ImageKit onImageInsert={onImageInsert} />
+                            )}
+                            {provider === "Cloudinary" && onImageInsert && (
+                                <Cloudinary onImageInsert={onImageInsert} />
+                            )}
+                        </div>
+                    )}
+                </DialogContent>
+            </Dialog>
+            <Script
+                src="https://media-library.cloudinary.com/global/all.js"
+                strategy="lazyOnload"
+            />
+        </>
     );
 }

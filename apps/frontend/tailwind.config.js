@@ -80,6 +80,10 @@ module.exports = {
                     DEFAULT: "#0450D2",
                     foreground: "#FFFFFF",
                 },
+                cloudinary: {
+                    DEFAULT: "#3348C5",
+                    foreground: "#FFFFFF",
+                },
                 pdf: {
                     DEFAULT: "#FF0000",
                     foreground: "#FFFFFF",

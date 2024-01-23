@@ -135,6 +135,7 @@ export function Profile({ ...props }: ProfileProps) {
                                     onClick={() => setIsEditing(true)}
                                     variant="ghost"
                                     size="icon"
+                                    disabled={isLoading}
                                 >
                                     <Icons.EditProfile size={25} />
                                 </Button>
