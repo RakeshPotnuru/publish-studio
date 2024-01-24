@@ -15,7 +15,7 @@ const adapter = {
         script: string,
         keys: string[],
         args: TArgs,
-    ) => redis.eval(script, keys.length, ...keys, ...(args ?? []).map(String)) as Promise<TData>,
+    ) => redis.eval(script, keys.length, ...keys, ...args.map(String)) as Promise<TData>,
 };
 
 export const rateLimiter = (limiter: RatelimitConfig["limiter"]) => {

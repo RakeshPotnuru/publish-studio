@@ -126,7 +126,7 @@ export default class GhostController extends GhostService {
 
         const tags =
             post.tags?.ghost_tags &&
-            post.tags?.ghost_tags.map(tag => {
+            post.tags.ghost_tags.map(tag => {
                 return {
                     name: tag.name,
                 };
@@ -145,11 +145,11 @@ export default class GhostController extends GhostService {
 
         return {
             name: constants.user.platforms.GHOST,
-            status: newPost?.success
+            status: newPost.success
                 ? constants.project.platformPublishStatuses.SUCCESS
                 : constants.project.platformPublishStatuses.ERROR,
-            published_url: newPost?.success ? newPost?.data.url : undefined,
-            id: newPost?.success ? newPost?.data.id : undefined,
+            published_url: newPost.success ? newPost.data.url : undefined,
+            id: newPost.success ? newPost.data.id : undefined,
         };
     }
 
@@ -167,7 +167,7 @@ export default class GhostController extends GhostService {
 
         const tags =
             post.tags?.ghost_tags &&
-            post.tags?.ghost_tags.map(tag => {
+            post.tags.ghost_tags.map(tag => {
                 return {
                     name: tag.name,
                 };
@@ -175,7 +175,7 @@ export default class GhostController extends GhostService {
 
         const existingPost = await super.getPost(post_id, user_id);
 
-        const updatedPost = await (existingPost?.success
+        const updatedPost = await (existingPost.success
             ? super.updatePost(
                   {
                       post_id: post_id,

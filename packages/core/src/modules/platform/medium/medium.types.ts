@@ -21,16 +21,20 @@ export type TMediumCreateInput = Omit<IMedium, "_id" | "created_at" | "updated_a
 
 export type TMediumToUpdateInput = Partial<TMediumCreateInput>;
 
-export interface IMediumUserOutput {
-    errors: {
-        message: string;
-        code: 6003 | 6000;
-    }[];
-    id: string;
-    username: string;
-    image_url: string;
-    url: string;
-}
+export type IMediumUserOutput =
+    | {
+          errors: null;
+          id: string;
+          username: string;
+          image_url: string;
+          url: string;
+      }
+    | {
+          errors: {
+              message: string;
+              code: 6003 | 6000;
+          }[];
+      };
 
 export interface IMediumCreatePostInput {
     title: string;

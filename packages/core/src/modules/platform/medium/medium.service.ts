@@ -178,9 +178,9 @@ export default class MediumService {
         try {
             const medium = await this.medium(user_id);
 
-            const response = await medium?.post("/users/" + author_id + "/posts", post);
+            const response = await medium.post("/users/" + author_id + "/posts", post);
 
-            return response?.data as TMediumCreatePostOutput;
+            return response.data as TMediumCreatePostOutput;
         } catch (error) {
             console.log(error);
 

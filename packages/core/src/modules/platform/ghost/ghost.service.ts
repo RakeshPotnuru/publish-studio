@@ -147,7 +147,7 @@ export default class GhostService {
     async getPost(post_id: string, user_id: Types.ObjectId) {
         const ghost = await this.ghost(user_id);
 
-        return await ghost?.posts.read({ id: post_id }).fetch();
+        return await ghost.posts.read({ id: post_id }).fetch();
     }
 
     /* This method is used exactly twice before creating or updating site in `GhostController()` class
@@ -177,7 +177,7 @@ export default class GhostService {
     async publishPost(post: IGhostCreatePostInput, user_id: Types.ObjectId) {
         const ghost = await this.ghost(user_id);
 
-        return await ghost?.posts.add({ ...post }, { source: "html" });
+        return await ghost.posts.add({ ...post }, { source: "html" });
     }
 
     async updatePost(
@@ -186,9 +186,9 @@ export default class GhostService {
     ): Promise<IGhostUpdatePostOutput> {
         const ghost = await this.ghost(user_id);
 
-        const response = await ghost?.posts.edit(post.post_id, { ...post }, { source: "html" });
+        const response = await ghost.posts.edit(post.post_id, { ...post }, { source: "html" });
 
-        if (!response?.success) {
+        if (!response.success) {
             return {
                 isError: true,
             };
@@ -202,9 +202,9 @@ export default class GhostService {
     async getAllPosts(pagination: IPaginationOptions, user_id: Types.ObjectId) {
         const ghost = await this.ghost(user_id);
 
-        const response = await ghost?.posts.browse(pagination).fetch();
+        const response = await ghost.posts.browse(pagination).fetch();
 
-        if (!response?.success) {
+        if (!response.success) {
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
                 message: "An error occurred while fetching the posts. Please try again later.",

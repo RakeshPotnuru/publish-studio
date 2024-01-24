@@ -175,7 +175,7 @@ export default class ProjectController extends ProjectService {
         `TRPCError` with a code of "BAD_REQUEST" and a message stating that the project is already
         published. */
         if (
-            ctx.user?.platforms?.length ===
+            ctx.user.platforms?.length ===
             project.platforms?.filter(
                 platform => platform.status === constants.project.platformPublishStatuses.SUCCESS,
             ).length

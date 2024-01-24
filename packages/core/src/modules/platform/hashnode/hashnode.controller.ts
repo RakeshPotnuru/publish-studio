@@ -15,7 +15,7 @@ export default class HashnodeController extends HashnodeService {
     ) {
         const user = await super.getHashnodeUser(input.api_key);
 
-        if (user.errors || !user.data) {
+        if (!user.data) {
             if (user.errors[0].extensions.code === "UNAUTHENTICATED") {
                 throw new TRPCError({
                     code: "UNAUTHORIZED",
@@ -72,7 +72,7 @@ export default class HashnodeController extends HashnodeService {
         if (input.api_key) {
             const user = await super.getHashnodeUser(input.api_key);
 
-            if (user.errors || !user.data) {
+            if (!user.data) {
                 if (user.errors[0].extensions.code === "UNAUTHENTICATED") {
                     throw new TRPCError({
                         code: "UNAUTHORIZED",
@@ -108,9 +108,9 @@ export default class HashnodeController extends HashnodeService {
                         publication_id: user.data.me.publications.edges[0].node.id,
                     },
                     settings: {
-                        enable_table_of_contents: input.settings?.enable_table_of_contents,
-                        send_newsletter: input.settings?.send_newsletter,
-                        delisted: input.settings?.delisted,
+                        enable_table_of_contents: input.settings.enable_table_of_contents,
+                        send_newsletter: input.settings.send_newsletter,
+                        delisted: input.settings.delisted,
                     },
                 },
                 ctx.user._id,

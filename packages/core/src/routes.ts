@@ -2,6 +2,7 @@ import assetRouter from "./modules/asset/asset.routes";
 import authRouter from "./modules/auth/auth.routes";
 import folderRouter from "./modules/folder/folder.routes";
 import generativeAIRouter from "./modules/generative-ai/generate-ai.routes";
+import cloudinaryRouter from "./modules/integration/cloudinary/cloudinary.routes";
 import pexelsRouter from "./modules/integration/pexels/pexels.routes";
 import unsplashRouter from "./modules/integration/unsplash/unsplash.routes";
 import nluRouter from "./modules/nlu/nlu.routes";
@@ -25,6 +26,7 @@ const appRouter = router({
     nlu: nluRouter,
     pexels: pexelsRouter,
     unsplash: unsplashRouter,
+    cloudinary: cloudinaryRouter,
 });
 
 export type AppRouter = typeof appRouter;

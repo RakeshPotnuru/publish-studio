@@ -201,7 +201,7 @@ export default class HashnodeService {
         try {
             const hashnode = await this.hashnode(user_id);
 
-            const response = await hashnode?.post("", {
+            const response = await hashnode.post("", {
                 query: `mutation PublishPost($input: PublishPostInput!) {
                             publishPost(input: $input) {
                                 post {
@@ -215,7 +215,7 @@ export default class HashnodeService {
                 },
             });
 
-            return response?.data as THashnodeCreatePostOutput;
+            return response.data as THashnodeCreatePostOutput;
         } catch (error) {
             console.log(error);
 
@@ -230,7 +230,7 @@ export default class HashnodeService {
         try {
             const hashnode = await this.hashnode(user_id);
 
-            const response = await hashnode?.post("", {
+            const response = await hashnode.post("", {
                 query: `mutation UpdatePost($input: UpdatePostInput!) {
                             updatePost(input: $input) {
                                 post {
@@ -247,7 +247,7 @@ export default class HashnodeService {
                 },
             });
 
-            return response?.data as IHashnodeUpdatePostOutput;
+            return response.data as IHashnodeUpdatePostOutput;
         } catch (error) {
             console.log(error);
 
@@ -274,7 +274,7 @@ export default class HashnodeService {
 
             const hashnode = await this.hashnode(user_id);
 
-            const response = await hashnode?.post("", {
+            const response = await hashnode.post("", {
                 query: `query Publication($id: ObjectId, $limit: Int!, $after: String) {
                             publication(id: $id) {
                                 posts(first: $limit, after: $after) {
@@ -314,7 +314,7 @@ export default class HashnodeService {
                 },
             });
 
-            return response?.data as IHashnodeGetAllPostsOutput;
+            return response.data as IHashnodeGetAllPostsOutput;
         } catch (error) {
             console.log(error);
 

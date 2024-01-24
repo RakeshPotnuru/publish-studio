@@ -16,7 +16,8 @@ export const t = initTRPC.context<Context>().create({
 });
 
 const isAuthenticated = t.middleware(({ next, ctx }) => {
-    if (!ctx.user) {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (!ctx.user._id) {
         throw new TRPCError({
             code: "UNAUTHORIZED",
             message: "You must be logged in to access this resource",

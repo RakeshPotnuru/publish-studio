@@ -177,11 +177,11 @@ export default class DevToService {
         try {
             const devTo = await this.devTo(user_id);
 
-            const response = await devTo?.post("/articles", {
+            const response = await devTo.post("/articles", {
                 article: post,
             });
 
-            return response?.data as TDevToCreatePostOutput;
+            return response.data as TDevToCreatePostOutput;
         } catch (error) {
             console.log(error);
 
@@ -196,11 +196,11 @@ export default class DevToService {
         try {
             const devTo = await this.devTo(user_id);
 
-            const response = await devTo?.put(`/articles/${post.post_id}`, {
+            const response = await devTo.put(`/articles/${post.post_id}`, {
                 article: post,
             });
 
-            return response?.data as IDevToUpdatePostOutput;
+            return response.data as IDevToUpdatePostOutput;
         } catch (error) {
             console.log(error);
 
@@ -215,11 +215,11 @@ export default class DevToService {
         try {
             const devTo = await this.devTo(user_id);
 
-            const response = await devTo?.get(
+            const response = await devTo.get(
                 `/articles/me/all?page=${pagination.page}&per_page=${pagination.limit}`,
             );
-            console.log(response?.data);
-            return response?.data as IDevToGetAllPostsOutput[];
+            console.log(response.data);
+            return response.data as IDevToGetAllPostsOutput[];
         } catch (error) {
             console.log(error);
 

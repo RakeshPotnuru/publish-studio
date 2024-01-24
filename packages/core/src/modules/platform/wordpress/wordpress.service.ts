@@ -193,9 +193,9 @@ export default class WordPressService {
         try {
             const wordpress = await this.wordpress(user_id);
 
-            const response = await wordpress?.post(`/sites/${post.blog_id}/posts/new`, post);
+            const response = await wordpress.post(`/sites/${post.blog_id}/posts/new`, post);
 
-            return response?.data as IWordPressCreatePostOutput;
+            return response.data as IWordPressCreatePostOutput;
         } catch (error) {
             console.log(error);
 
@@ -210,12 +210,12 @@ export default class WordPressService {
         try {
             const wordpress = await this.wordpress(user_id);
 
-            const response = await wordpress?.post(
+            const response = await wordpress.post(
                 `/sites/${post.blog_id}/posts/${post.post_id}`,
                 post,
             );
 
-            return response?.data as IWordPressUpdatePostOutput;
+            return response.data as IWordPressUpdatePostOutput;
         } catch (error) {
             console.log(error);
 
@@ -230,11 +230,11 @@ export default class WordPressService {
         try {
             const wordpress = await this.wordpress(user_id);
 
-            const response = await wordpress?.get(
+            const response = await wordpress.get(
                 `/me/posts?fields=ID,URL,title,excerpt,date,content,status,tags,featured_image&number=${pagination.limit}&page=${pagination.page}`,
             );
 
-            return response?.data.posts as IWordPressGetAllPostsOutput[];
+            return response.data.posts as IWordPressGetAllPostsOutput[];
         } catch (error) {
             console.log(error);
 

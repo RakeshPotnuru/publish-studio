@@ -202,11 +202,11 @@ export default class BloggerService {
     async getBloggerBlogs(user_id: Types.ObjectId) {
         const blogs = await (
             await this.blogger(user_id)
-        )?.blogs.listByUser({
+        ).blogs.listByUser({
             userId: "self",
         });
 
-        if (!blogs?.data.items || blogs?.data.items.length === 0) {
+        if (!blogs.data.items || blogs.data.items.length === 0) {
             throw new TRPCError({
                 code: "NOT_FOUND",
                 message: "No blogs found for the user.",
@@ -279,7 +279,7 @@ export default class BloggerService {
     async publishPost(post: IBloggerCreatePostInput, user_id: Types.ObjectId) {
         const blogger = await this.blogger(user_id);
 
-        return await blogger?.posts.insert(post);
+        return await blogger.posts.insert(post);
     }
 
     async updatePost(
@@ -288,12 +288,12 @@ export default class BloggerService {
     ): Promise<IBloggerUpdatePostOutput> {
         const blogger = await this.blogger(user_id);
 
-        const response = await blogger?.posts.update({
+        const response = await blogger.posts.update({
             postId: post.post_id,
             ...post,
         });
 
-        if (response?.statusText !== "OK") {
+        if (response.statusText !== "OK") {
             return {
                 isError: true,
             };
@@ -322,13 +322,13 @@ export default class BloggerService {
 
         const blogger = await this.blogger(user_id);
 
-        const response = await blogger?.posts.list({
+        const response = await blogger.posts.list({
             blogId: platform.blog_id,
             maxResults: pagination.limit,
             pageToken: pagination.page_token,
         });
 
-        if (response?.statusText !== "OK") {
+        if (response.statusText !== "OK") {
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
                 message: "An error occurred while fetching posts. Please try again later.",

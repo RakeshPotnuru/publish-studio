@@ -9,7 +9,7 @@ import stripe from "../../utils/stripe";
 import UserService from "../user/user.service";
 import type { IUser } from "../user/user.types";
 import Payment from "./payment.model";
-import type { IPayment } from "./payment.types";
+import type { IPayment, TPaymentCreateInput } from "./payment.types";
 
 export default class PaymentService extends UserService {
     async updateCustomer(user: IUser, customer_id: string) {
@@ -60,8 +60,8 @@ export default class PaymentService extends UserService {
     async createCheckoutSession(ctx: Context) {
         try {
             const params: Stripe.Checkout.SessionCreateParams = {
-                customer: ctx.user?.stripe_customer_id,
-                customer_email: ctx.user?.email,
+                customer: ctx.user.stripe_customer_id,
+                customer_email: ctx.user.email,
                 mode: "subscription",
                 line_items: [
                     {
@@ -99,7 +99,7 @@ export default class PaymentService extends UserService {
         }
     }
 
-    async createPayment(payment: IPayment) {
+    async createPayment(payment: TPaymentCreateInput) {
         try {
             return await Payment.create(payment);
         } catch (error) {

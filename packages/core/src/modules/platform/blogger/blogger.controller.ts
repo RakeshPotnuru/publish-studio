@@ -34,7 +34,7 @@ export default class BloggerController extends BloggerService {
         const response = await super.getTokenAndBlogs(code);
 
         const platform = await super.getPlatformWithToken({
-            blog_id: response.blogs?.[0].id,
+            blog_id: response.blogs[0].id,
         });
 
         if (platform && !platform.user_id.equals(ctx.user._id)) {
@@ -43,7 +43,7 @@ export default class BloggerController extends BloggerService {
 
         await super.createPlatform({
             user_id: ctx.user._id,
-            blog_id: response.blogs?.[0].id,
+            blog_id: response.blogs[0].id,
             blog_url: response.blogs[0].url,
             token: response.token,
             status: true,
@@ -129,11 +129,11 @@ export default class BloggerController extends BloggerService {
         return {
             name: constants.user.platforms.BLOGGER,
             status:
-                newPost?.statusText === "OK"
+                newPost.statusText === "OK"
                     ? constants.project.platformPublishStatuses.SUCCESS
                     : constants.project.platformPublishStatuses.ERROR,
-            published_url: newPost?.data.url ?? undefined,
-            id: newPost?.data.id ?? undefined,
+            published_url: newPost.data.url ?? undefined,
+            id: newPost.data.id ?? undefined,
         };
     }
 

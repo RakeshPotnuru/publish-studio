@@ -227,13 +227,6 @@ export default class AuthController extends UserService {
     async connectGoogleHandler(input: { id_token: string }, ctx: Context) {
         const payload = await verifyGoogleToken(input.id_token);
 
-        if (!payload) {
-            throw new TRPCError({
-                code: "UNAUTHORIZED",
-                message: "Invalid Google token",
-            });
-        }
-
         const user = await super.getUserByEmail(payload.email);
 
         if (!user) {
@@ -321,7 +314,7 @@ export default class AuthController extends UserService {
             });
         }
 
-        if (user && !user.is_verified) {
+        if (!user.is_verified) {
             throw new TRPCError({
                 code: "BAD_REQUEST",
                 message: constants.errorCauses.VERIFICATION_PENDING,
@@ -490,7 +483,7 @@ export default class AuthController extends UserService {
         try {
             const { req, res, user } = ctx;
 
-            await redisClient.del(String(user?._id));
+            await redisClient.del(String(user._id));
 
             setCookie("access_token", "", { req, res, maxAge: -1 });
             setCookie("refresh_token", "", { req, res, maxAge: -1 });

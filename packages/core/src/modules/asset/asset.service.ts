@@ -4,7 +4,7 @@ import type { PresignedPostOptions } from "@aws-sdk/s3-presigned-post";
 import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidV4 } from "uuid";
 
 import type { Context } from "../../trpc";
 import type { IPaginationOptions } from "../../types/common.types";
@@ -20,9 +20,9 @@ export default class AssetService extends ProjectService {
             const { mimetype, originalname, size } = file;
             const { user } = ctx;
 
-            const uuid = uuidv4();
+            const uuid = uuidV4();
 
-            const filePath = `${user?._id.toString() ?? "default"}/${uuid}_${originalname}`;
+            const filePath = `${user._id.toString()}/${uuid}_${originalname}`;
 
             const params: PresignedPostOptions = {
                 Bucket: process.env.AWS_BUCKET_NAME,
@@ -45,7 +45,7 @@ export default class AssetService extends ProjectService {
                 original_file_name: originalname,
                 hosted_url: hostedUrl,
                 project_id: project_id,
-                user_id: user?._id,
+                user_id: user._id,
                 size: size,
                 mimetype: mimetype,
                 key: filePath,
