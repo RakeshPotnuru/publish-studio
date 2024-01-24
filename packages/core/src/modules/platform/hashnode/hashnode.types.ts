@@ -22,7 +22,7 @@ export interface IHashnode {
 
 export type THashnodeCreateInput = Omit<IHashnode, "_id" | "created_at" | "updated_at">;
 
-export type THashnodeToUpdateInput = Partial<THashnodeCreateInput>;
+export type THashnodeUpdateInput = Partial<THashnodeCreateInput>;
 
 export interface IHashnodeUserOutput {
     data: {

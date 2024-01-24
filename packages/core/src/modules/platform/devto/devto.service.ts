@@ -5,7 +5,6 @@ import type { Types } from "mongoose";
 import defaultConfig from "../../../config/app.config";
 import { constants } from "../../../config/constants";
 import type { IPaginationOptions } from "../../../types/common.types";
-import { decryptField } from "../../../utils/aws/kms";
 import User from "../../user/user.model";
 import Platform from "../platform.model";
 import DevTo from "./devto.model";
@@ -25,21 +24,22 @@ export default class DevToService {
     private readonly PLATFORM = constants.user.platforms.DEVTO;
 
     private async devTo(user_id: Types.ObjectId) {
+        const platform = await DevTo.findOne({ user_id }).exec();
+
+        if (!platform) {
+            throw new TRPCError({
+                code: "NOT_FOUND",
+                message: "Platform not found",
+            });
+        }
+
         try {
-            const platform = await this.getPlatform(user_id);
-
-            if (!platform) {
-                return;
-            }
-
-            const decryptedAPIKey = await decryptField(platform.api_key);
-
             return axios.create({
                 baseURL: defaultConfig.devto_api_url,
                 timeout: 10_000,
                 headers: {
                     "Content-Type": "application/json",
-                    "api-key": decryptedAPIKey,
+                    "api-key": platform.api_key,
                 },
             });
         } catch (error) {
@@ -52,7 +52,7 @@ export default class DevToService {
         }
     }
 
-    async createPlatform(platform: TDevToCreateInput): Promise<IDevTo> {
+    async createPlatform(platform: TDevToCreateInput): Promise<boolean> {
         try {
             const newPlatform = await DevTo.create(platform);
 
@@ -68,7 +68,7 @@ export default class DevToService {
                 data: newPlatform._id,
             });
 
-            return newPlatform;
+            return true;
         } catch (error) {
             console.log(error);
 
@@ -79,14 +79,13 @@ export default class DevToService {
         }
     }
 
-    async updatePlatform(
-        platform: TDevToUpdateInput,
-        user_id: Types.ObjectId,
-    ): Promise<IDevTo | null> {
+    async updatePlatform(platform: TDevToUpdateInput, user_id: Types.ObjectId): Promise<boolean> {
         try {
-            return await DevTo.findOneAndUpdate({ user_id }, platform, {
-                new: true,
-            }).exec();
+            const doc = await DevTo.findOne({ user_id }).exec();
+            doc?.set(platform);
+            await doc?.save();
+
+            return true;
         } catch (error) {
             console.log(error);
 
@@ -97,7 +96,7 @@ export default class DevToService {
         }
     }
 
-    async deletePlatform(user_id: Types.ObjectId): Promise<IDevTo | null> {
+    async deletePlatform(user_id: Types.ObjectId): Promise<boolean> {
         try {
             await Platform.findOneAndDelete({
                 user_id,
@@ -110,7 +109,9 @@ export default class DevToService {
                 },
             }).exec();
 
-            return await DevTo.findOneAndDelete({ user_id }).exec();
+            await DevTo.findOneAndDelete({ user_id }).select("-api_key").exec();
+
+            return true;
         } catch (error) {
             console.log(error);
 
@@ -122,9 +123,9 @@ export default class DevToService {
         }
     }
 
-    async getPlatform(user_id: Types.ObjectId): Promise<IDevTo | null> {
+    async getPlatform(user_id: Types.ObjectId): Promise<Omit<IDevTo, "api_key"> | null> {
         try {
-            return await DevTo.findOne({ user_id }).exec();
+            return await DevTo.findOne({ user_id }).select("-api_key").exec();
         } catch (error) {
             console.log(error);
 
@@ -135,9 +136,9 @@ export default class DevToService {
         }
     }
 
-    async getPlatformByUsername(username: string): Promise<IDevTo | null> {
+    async getPlatformByUsername(username: string): Promise<Omit<IDevTo, "api_key"> | null> {
         try {
-            return await DevTo.findOne({ username }).exec();
+            return await DevTo.findOne({ username }).select("-api_key").exec();
         } catch (error) {
             console.log(error);
 
@@ -217,7 +218,7 @@ export default class DevToService {
             const response = await devTo?.get(
                 `/articles/me/all?page=${pagination.page}&per_page=${pagination.limit}`,
             );
-
+            console.log(response?.data);
             return response?.data as IDevToGetAllPostsOutput[];
         } catch (error) {
             console.log(error);

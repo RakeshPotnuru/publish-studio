@@ -4,7 +4,6 @@ import type { Types } from "mongoose";
 
 import defaultConfig from "../../../config/app.config";
 import { constants } from "../../../config/constants";
-import { decryptField } from "../../../utils/aws/kms";
 import Platform from "../../platform/platform.model";
 import User from "../../user/user.model";
 import Hashnode from "./hashnode.model";
@@ -16,29 +15,30 @@ import type {
     IHashnodeUserOutput,
     THashnodeCreateInput,
     THashnodeCreatePostOutput,
-    THashnodeToUpdateInput,
     THashnodeToUpdatePost,
+    THashnodeUpdateInput,
 } from "./hashnode.types";
 
 export default class HashnodeService {
     private readonly PLATFORM = constants.user.platforms.HASHNODE;
 
     private async hashnode(user_id: Types.ObjectId) {
+        const platform = await Hashnode.findOne({ user_id }).exec();
+
+        if (!platform) {
+            throw new TRPCError({
+                code: "NOT_FOUND",
+                message: "Platform not found",
+            });
+        }
+
         try {
-            const platform = await this.getPlatform(user_id);
-
-            if (!platform?.api_key) {
-                return;
-            }
-
-            const decryptedAPIKey = await decryptField(platform.api_key);
-
             return axios.create({
                 baseURL: defaultConfig.hashnode_api_url,
                 timeout: 10_000,
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: decryptedAPIKey,
+                    Authorization: platform.api_key,
                 },
             });
         } catch (error) {
@@ -51,7 +51,7 @@ export default class HashnodeService {
         }
     }
 
-    async createPlatform(user: THashnodeCreateInput): Promise<IHashnode> {
+    async createPlatform(user: THashnodeCreateInput): Promise<boolean> {
         try {
             const newPlatform = await Hashnode.create(user);
 
@@ -67,7 +67,7 @@ export default class HashnodeService {
                 data: newPlatform._id,
             });
 
-            return newPlatform;
+            return true;
         } catch (error) {
             console.log(error);
 
@@ -79,13 +79,15 @@ export default class HashnodeService {
     }
 
     async updatePlatform(
-        user: THashnodeToUpdateInput,
+        platform: THashnodeUpdateInput,
         user_id: Types.ObjectId,
-    ): Promise<IHashnode | null> {
+    ): Promise<boolean> {
         try {
-            return await Hashnode.findOneAndUpdate({ user_id }, user, {
-                new: true,
-            }).exec();
+            const doc = await Hashnode.findOne({ user_id }).exec();
+            doc?.set(platform);
+            await doc?.save();
+
+            return true;
         } catch (error) {
             console.log(error);
 
@@ -96,7 +98,7 @@ export default class HashnodeService {
         }
     }
 
-    async deletePlatform(user_id: Types.ObjectId): Promise<IHashnode | null> {
+    async deletePlatform(user_id: Types.ObjectId): Promise<boolean> {
         try {
             await Platform.findOneAndDelete({
                 user_id,
@@ -109,7 +111,9 @@ export default class HashnodeService {
                 },
             }).exec();
 
-            return await Hashnode.findOneAndDelete({ user_id }).exec();
+            await Hashnode.findOneAndDelete({ user_id }).exec();
+
+            return true;
         } catch (error) {
             console.log(error);
 
@@ -121,9 +125,9 @@ export default class HashnodeService {
         }
     }
 
-    async getPlatform(user_id: Types.ObjectId): Promise<IHashnode | null> {
+    async getPlatform(user_id: Types.ObjectId): Promise<Omit<IHashnode, "api_key"> | null> {
         try {
-            return await Hashnode.findOne({ user_id }).exec();
+            return await Hashnode.findOne({ user_id }).select("-api_key").exec();
         } catch (error) {
             console.log(error);
 
@@ -134,9 +138,9 @@ export default class HashnodeService {
         }
     }
 
-    async getPlatformByUsername(username: string) {
+    async getPlatformByUsername(username: string): Promise<Omit<IHashnode, "api_key"> | null> {
         try {
-            return await Hashnode.findOne({ username }).exec();
+            return await Hashnode.findOne({ username }).select("-api_key").exec();
         } catch (error) {
             console.log(error);
 

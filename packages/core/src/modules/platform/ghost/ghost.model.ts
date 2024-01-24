@@ -1,9 +1,7 @@
-import { TRPCError } from "@trpc/server";
-import type { Document } from "mongoose";
 import mongoose, { Schema } from "mongoose";
+import { fieldEncryption } from "mongoose-field-encryption";
 
 import { constants } from "../../../config/constants";
-import { encryptField } from "../../../utils/aws/kms";
 import type { IGhost } from "./ghost.types";
 
 const GhostSchema = new Schema<IGhost>(
@@ -26,25 +24,10 @@ const GhostSchema = new Schema<IGhost>(
     },
 );
 
-type TGhostDocument = IGhost & Document;
-
-/* The code `GhostSchema.pre<TGhostDocument>("save", async function (next) { ... })` is a pre-save
-middleware to encrypt "admin_api_key" before saving. */
-GhostSchema.pre<TGhostDocument>("save", async function (next) {
-    if (this.isModified("admin_api_key")) {
-        try {
-            const encryptedAdminApiKey = await encryptField(this.admin_api_key);
-            this.admin_api_key = encryptedAdminApiKey;
-        } catch (error) {
-            console.log(error);
-
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while encrypting the admin API key.",
-            });
-        }
-    }
-    next();
+GhostSchema.plugin(fieldEncryption, {
+    fields: ["admin_api_key"],
+    secret: process.env.ENCRYPTION_SECRET,
+    encryptNull: false,
 });
 
 export default mongoose.model(constants.user.platforms.GHOST, GhostSchema);

@@ -26,6 +26,7 @@ import { ErrorBox } from "@/components/ui/error-box";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
+import { Center } from "@/components/ui/center";
 
 interface DevEditFormProps extends React.HTMLAttributes<HTMLDivElement> {
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -80,7 +81,11 @@ export function DevEditForm({ status, setIsOpen, ...props }: Readonly<DevEditFor
             })}
             {...props}
         >
-            {error && <ErrorBox title="Could not update Dev" description={error} />}
+            {error && (
+                <Center>
+                    <ErrorBox title="Could not update Dev" description={error} />
+                </Center>
+            )}
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                     <FormField

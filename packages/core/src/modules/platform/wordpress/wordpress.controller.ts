@@ -14,11 +14,11 @@ export default class WordPressController extends WordPressService {
 
         const platform = await super.getPlatformByBlogId(site.blog_id);
 
-        if (platform) {
+        if (platform && !platform.user_id.equals(ctx.user._id)) {
             await super.deletePlatform(platform.user_id);
         }
 
-        const newPlatform = super.createPlatform({
+        await super.createPlatform({
             user_id: ctx.user._id,
             blog_url: site.blog_url,
             blog_id: site.blog_id,
@@ -30,18 +30,18 @@ export default class WordPressController extends WordPressService {
         return {
             status: "success",
             data: {
-                platform: newPlatform,
+                message: "Platform connected successfully.",
             },
         };
     }
 
     async updatePlatformHandler(input: IWordPressUpdateInput, ctx: Context) {
-        const updatedPlatform = await super.updatePlatform(input, ctx.user._id);
+        await super.updatePlatform(input, ctx.user._id);
 
         return {
             status: "success",
             data: {
-                platform: updatedPlatform,
+                message: "Platform updated successfully.",
             },
         };
     }

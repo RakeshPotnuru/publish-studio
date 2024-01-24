@@ -22,6 +22,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Icons } from "@/assets/icons";
+import { Center } from "@/components/ui/center";
 import { ErrorBox } from "@/components/ui/error-box";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { siteConfig } from "@/config/site";
@@ -80,7 +81,11 @@ export function DevConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFormP
             })}
             {...props}
         >
-            {error && <ErrorBox title="Could not connect Dev" description={error} />}
+            {error && (
+                <Center>
+                    <ErrorBox title="Could not connect Dev" description={error} />
+                </Center>
+            )}
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                     <FormField

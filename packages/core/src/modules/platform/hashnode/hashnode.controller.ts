@@ -4,7 +4,6 @@ import type { Types } from "mongoose";
 import defaultConfig from "../../../config/app.config";
 import { constants } from "../../../config/constants";
 import type { Context } from "../../../trpc";
-import { encryptField } from "../../../utils/aws/kms";
 import type { IProject, IProjectPlatform } from "../../project/project.types";
 import HashnodeService from "./hashnode.service";
 import type { IHashnodeDefaultSettings } from "./hashnode.types";
@@ -39,7 +38,7 @@ export default class HashnodeController extends HashnodeService {
 
         const platform = await super.getPlatformByUsername(user.data.me.username);
 
-        if (platform) {
+        if (platform && !platform.user_id.equals(ctx.user._id)) {
             await super.deletePlatform(platform.user_id);
         }
 
@@ -96,13 +95,11 @@ export default class HashnodeController extends HashnodeService {
 
             const platform = await super.getPlatformByUsername(user.data.me.username);
 
-            if (platform) {
+            if (platform && !platform.user_id.equals(ctx.user._id)) {
                 await super.deletePlatform(platform.user_id);
             }
 
-            input.api_key = await encryptField(input.api_key);
-
-            const updatedPlatform = await super.updatePlatform(
+            await super.updatePlatform(
                 {
                     api_key: input.api_key,
                     username: user.data.me.username,
@@ -122,7 +119,7 @@ export default class HashnodeController extends HashnodeService {
             return {
                 status: "success",
                 data: {
-                    platform: updatedPlatform,
+                    message: "Platform updated successfully.",
                 },
             };
         }

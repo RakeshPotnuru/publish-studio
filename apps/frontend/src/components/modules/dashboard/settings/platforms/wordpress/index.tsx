@@ -31,6 +31,7 @@ export function WordPress({ data, isLoading }: Readonly<WordPressProps>) {
     } = trpc.platforms.wordpress.disconnect.useQuery(undefined, {
         enabled: false,
     });
+    const utils = trpc.useUtils();
 
     const handleDisconnect = async () => {
         try {
@@ -43,6 +44,7 @@ export function WordPress({ data, isLoading }: Readonly<WordPressProps>) {
                     },
                 },
             });
+            utils.platforms.getAll.invalidate();
         } catch (error) {
             toast.error(disconnectError?.message ?? "Something went wrong.");
         }

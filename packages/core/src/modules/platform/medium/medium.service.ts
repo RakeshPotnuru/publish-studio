@@ -4,7 +4,6 @@ import type { Types } from "mongoose";
 
 import defaultConfig from "../../../config/app.config";
 import { constants } from "../../../config/constants";
-import { decryptField } from "../../../utils/aws/kms";
 import User from "../../user/user.model";
 import Platform from "../platform.model";
 import Medium from "./medium.model";
@@ -21,21 +20,22 @@ export default class MediumService {
     private readonly PLATFORM = constants.user.platforms.MEDIUM;
 
     private async medium(user_id: Types.ObjectId) {
+        const platform = await Medium.findOne({ user_id }).exec();
+
+        if (!platform) {
+            throw new TRPCError({
+                code: "NOT_FOUND",
+                message: "Platform not found",
+            });
+        }
+
         try {
-            const platform = await this.getPlatform(user_id);
-
-            if (!platform) {
-                return;
-            }
-
-            const decryptedAPIKey = await decryptField(platform.api_key);
-
             return axios.create({
                 baseURL: defaultConfig.medium_api_url,
                 timeout: 10_000,
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${decryptedAPIKey}`,
+                    Authorization: `Bearer ${platform.api_key}`,
                 },
             });
         } catch (error) {
@@ -48,7 +48,7 @@ export default class MediumService {
         }
     }
 
-    async createPlatform(user: TMediumCreateInput): Promise<IMedium> {
+    async createPlatform(user: TMediumCreateInput): Promise<boolean> {
         try {
             const newPlatform = await Medium.create(user);
 
@@ -64,7 +64,7 @@ export default class MediumService {
                 data: newPlatform._id,
             });
 
-            return newPlatform;
+            return true;
         } catch (error) {
             console.log(error);
 
@@ -76,13 +76,15 @@ export default class MediumService {
     }
 
     async updatePlatform(
-        user: TMediumToUpdateInput,
+        platform: TMediumToUpdateInput,
         user_id: Types.ObjectId,
-    ): Promise<IMedium | null> {
+    ): Promise<boolean> {
         try {
-            return await Medium.findOneAndUpdate({ user_id }, user, {
-                new: true,
-            }).exec();
+            const doc = await Medium.findOne({ user_id }).exec();
+            doc?.set(platform);
+            await doc?.save();
+
+            return true;
         } catch (error) {
             console.log(error);
 
@@ -93,7 +95,7 @@ export default class MediumService {
         }
     }
 
-    async deletePlatform(user_id: Types.ObjectId): Promise<IMedium | null> {
+    async deletePlatform(user_id: Types.ObjectId): Promise<boolean> {
         try {
             await Platform.findOneAndDelete({
                 user_id,
@@ -106,7 +108,9 @@ export default class MediumService {
                 },
             }).exec();
 
-            return await Medium.findOneAndDelete({ user_id }).exec();
+            await Medium.findOneAndDelete({ user_id }).exec();
+
+            return true;
         } catch (error) {
             console.log(error);
 
@@ -118,9 +122,9 @@ export default class MediumService {
         }
     }
 
-    async getPlatform(user_id: Types.ObjectId): Promise<IMedium | null> {
+    async getPlatform(user_id: Types.ObjectId): Promise<Omit<IMedium, "api_key"> | null> {
         try {
-            return await Medium.findOne({ user_id }).exec();
+            return await Medium.findOne({ user_id }).select("-api_key").exec();
         } catch (error) {
             console.log(error);
 
@@ -131,9 +135,9 @@ export default class MediumService {
         }
     }
 
-    async getPlatformByUsername(username: string): Promise<IMedium | null> {
+    async getPlatformByUsername(username: string): Promise<Omit<IMedium, "api_key"> | null> {
         try {
-            return await Medium.findOne({ username }).exec();
+            return await Medium.findOne({ username }).select("-api_key").exec();
         } catch (error) {
             console.log(error);
 

@@ -58,7 +58,6 @@ interface NavbarProps extends React.HTMLAttributes<HTMLElement> {}
 export function Navbar({ className, ...props }: NavbarProps) {
     const [_, __, removeCookie] = useCookies(["ps_access_token"]);
 
-    const { mutateAsync: logout } = trpc.auth.logout.useMutation();
     const { user, setUser, setIsLoading } = useUserStore();
 
     const { isFetching } = trpc.auth.getMe.useQuery(undefined, {
@@ -71,8 +70,6 @@ export function Navbar({ className, ...props }: NavbarProps) {
 
     const handleLogout = async () => {
         try {
-            await logout();
-
             removeCookie("ps_access_token");
 
             window.google?.accounts.id.disableAutoSelect();

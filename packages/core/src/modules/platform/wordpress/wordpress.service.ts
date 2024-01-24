@@ -7,7 +7,6 @@ import { constants } from "../../../config/constants";
 import Platform from "../../../modules/platform/platform.model";
 import User from "../../../modules/user/user.model";
 import type { IPaginationOptions } from "../../../types/common.types";
-import { decryptField } from "../../../utils/aws/kms";
 import WordPress from "./wordpress.model";
 import type {
     IWordPress,
@@ -27,21 +26,22 @@ export default class WordPressService {
     private readonly API_VERSION = "v1.1";
 
     private async wordpress(user_id: Types.ObjectId) {
+        const platform = await WordPress.findOne({ user_id }).exec();
+
+        if (!platform) {
+            throw new TRPCError({
+                code: "NOT_FOUND",
+                message: "Platform not found",
+            });
+        }
+
         try {
-            const platform = await this.getPlatform(user_id);
-
-            if (!platform) {
-                return;
-            }
-
-            const decryptedToken = await decryptField(platform.token);
-
             return axios.create({
                 baseURL: `${this.API_URL}/rest/${this.API_VERSION}/`,
                 timeout: 10_000,
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${decryptedToken}`,
+                    Authorization: `Bearer ${platform.token}`,
                 },
             });
         } catch (error) {
@@ -54,7 +54,7 @@ export default class WordPressService {
         }
     }
 
-    async createPlatform(platform: TWordPressCreateInput): Promise<IWordPress> {
+    async createPlatform(platform: TWordPressCreateInput): Promise<boolean> {
         try {
             const newPlatform = await WordPress.create(platform);
 
@@ -70,7 +70,7 @@ export default class WordPressService {
                 data: newPlatform._id,
             });
 
-            return newPlatform;
+            return true;
         } catch (error) {
             console.log(error);
 
@@ -84,17 +84,13 @@ export default class WordPressService {
     async updatePlatform(
         platform: IWordPressUpdateInput,
         user_id: Types.ObjectId,
-    ): Promise<IWordPress | null> {
+    ): Promise<boolean> {
         try {
-            return await WordPress.findOneAndUpdate(
-                {
-                    user_id,
-                },
-                platform,
-                {
-                    new: true,
-                },
-            ).exec();
+            const doc = await WordPress.findOne({ user_id }).exec();
+            doc?.set(platform);
+            await doc?.save();
+
+            return true;
         } catch (error) {
             console.log(error);
 
@@ -105,7 +101,7 @@ export default class WordPressService {
         }
     }
 
-    async deletePlatform(user_id: Types.ObjectId): Promise<IWordPress | null> {
+    async deletePlatform(user_id: Types.ObjectId): Promise<boolean> {
         try {
             // Note: There's no way I can disconnect this application from user's connected applications
             await Platform.findOneAndDelete({
@@ -119,7 +115,9 @@ export default class WordPressService {
                 },
             }).exec();
 
-            return await WordPress.findOneAndDelete({ user_id }).exec();
+            await WordPress.findOneAndDelete({ user_id }).exec();
+
+            return true;
         } catch (error) {
             console.log(error);
 

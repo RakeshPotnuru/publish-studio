@@ -7,7 +7,6 @@ import { constants } from "../../../config/constants";
 import Platform from "../../../modules/platform/platform.model";
 import User from "../../../modules/user/user.model";
 import type { IPaginationOptions } from "../../../types/common.types";
-import { decryptField } from "../../../utils/aws/kms";
 import Ghost from "./ghost.model";
 import type {
     IGhost,
@@ -23,16 +22,21 @@ export default class GhostService {
     private readonly GHOST_API_VERSION = "v5.72.1";
 
     private async ghost(user_id: Types.ObjectId) {
+        const platform = await Ghost.findOne({ user_id }).exec();
+
+        if (!platform) {
+            throw new TRPCError({
+                code: "NOT_FOUND",
+                message: "Platform not found",
+            });
+        }
+
         try {
-            const platform = await this.getPlatform(user_id);
-
-            if (!platform) {
-                return;
-            }
-
-            const decryptedAPIKey = await decryptField(platform.admin_api_key);
-
-            return new TSGhostAdminAPI(platform.api_url, decryptedAPIKey, this.GHOST_API_VERSION);
+            return new TSGhostAdminAPI(
+                platform.api_url,
+                platform.admin_api_key,
+                this.GHOST_API_VERSION,
+            );
         } catch (error) {
             console.log(error);
 
@@ -43,7 +47,7 @@ export default class GhostService {
         }
     }
 
-    async createPlatform(platform: TGhostCreateInput): Promise<IGhost> {
+    async createPlatform(platform: TGhostCreateInput): Promise<boolean> {
         try {
             const newPlatform = await Ghost.create(platform);
 
@@ -59,7 +63,7 @@ export default class GhostService {
                 data: newPlatform._id,
             });
 
-            return newPlatform;
+            return true;
         } catch (error) {
             console.log(error);
 
@@ -70,11 +74,13 @@ export default class GhostService {
         }
     }
 
-    async updatePlatform(user: TGhostUpdateInput, user_id: Types.ObjectId): Promise<IGhost | null> {
+    async updatePlatform(platform: TGhostUpdateInput, user_id: Types.ObjectId): Promise<boolean> {
         try {
-            return await Ghost.findOneAndUpdate({ user_id }, user, {
-                new: true,
-            }).exec();
+            const doc = await Ghost.findOne({ user_id }).exec();
+            doc?.set(platform);
+            await doc?.save();
+
+            return true;
         } catch (error) {
             console.log(error);
 
@@ -85,7 +91,7 @@ export default class GhostService {
         }
     }
 
-    async deletePlatform(user_id: Types.ObjectId): Promise<IGhost | null> {
+    async deletePlatform(user_id: Types.ObjectId): Promise<boolean> {
         try {
             await Platform.findOneAndDelete({
                 user_id,
@@ -98,7 +104,9 @@ export default class GhostService {
                 },
             }).exec();
 
-            return await Ghost.findOneAndDelete({ user_id }).exec();
+            await Ghost.findOneAndDelete({ user_id }).exec();
+
+            return true;
         } catch (error) {
             console.log(error);
 

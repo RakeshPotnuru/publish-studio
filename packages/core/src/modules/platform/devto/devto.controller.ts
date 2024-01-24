@@ -4,7 +4,6 @@ import type { Types } from "mongoose";
 import { constants } from "../../../config/constants";
 import type { Context } from "../../../trpc";
 import type { IPaginationOptions } from "../../../types/common.types";
-import { encryptField } from "../../../utils/aws/kms";
 import type { IProject, IProjectPlatform } from "../../project/project.types";
 import DevToService from "./devto.service";
 
@@ -14,11 +13,11 @@ export default class DevToController extends DevToService {
 
         const platform = await super.getPlatformByUsername(user.username);
 
-        if (platform) {
+        if (platform && !platform.user_id.equals(ctx.user._id)) {
             await super.deletePlatform(platform.user_id);
         }
 
-        const newPlatform = await super.createPlatform({
+        await super.createPlatform({
             user_id: ctx.user._id,
             api_key: input.api_key,
             username: user.username,
@@ -28,7 +27,7 @@ export default class DevToController extends DevToService {
         return {
             status: "success",
             data: {
-                platform: newPlatform,
+                message: "Platform connected successfully.",
             },
         };
     }
@@ -39,13 +38,11 @@ export default class DevToController extends DevToService {
 
             const platform = await super.getPlatformByUsername(user.username);
 
-            if (platform) {
+            if (platform && !platform.user_id.equals(ctx.user._id)) {
                 await super.deletePlatform(platform.user_id);
             }
 
-            input.api_key = await encryptField(input.api_key);
-
-            const updatedPlatform = await super.updatePlatform(
+            await super.updatePlatform(
                 {
                     api_key: input.api_key,
                     username: user.username,
@@ -57,12 +54,12 @@ export default class DevToController extends DevToService {
             return {
                 status: "success",
                 data: {
-                    platform: updatedPlatform,
+                    message: "Platform updated successfully.",
                 },
             };
         }
 
-        const updatedPlatform = await super.updatePlatform(
+        await super.updatePlatform(
             {
                 status: input.status,
             },
@@ -72,7 +69,7 @@ export default class DevToController extends DevToService {
         return {
             status: "success",
             data: {
-                platform: updatedPlatform,
+                message: "Platform updated successfully.",
             },
         };
     }

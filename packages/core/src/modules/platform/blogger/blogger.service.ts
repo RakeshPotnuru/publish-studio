@@ -7,7 +7,6 @@ import defaultConfig from "../../../config/app.config";
 import { constants } from "../../../config/constants";
 import Platform from "../../../modules/platform/platform.model";
 import User from "../../../modules/user/user.model";
-import { decryptField } from "../../../utils/aws/kms";
 import Blogger from "./blogger.model";
 import type {
     IBlogger,
@@ -46,17 +45,18 @@ export default class BloggerService {
     }
 
     private async blogger(user_id: Types.ObjectId) {
+        const platform = await Blogger.findOne({ user_id }).exec();
+
+        if (!platform) {
+            throw new TRPCError({
+                code: "NOT_FOUND",
+                message: "Platform not found",
+            });
+        }
+
         try {
-            const platform = await this.getPlatform(user_id);
-
-            if (!platform) {
-                return;
-            }
-
-            const decryptedToken = await decryptField(platform.token);
-
             this.oauth2Client.setCredentials({
-                refresh_token: decryptedToken,
+                refresh_token: platform.token,
             });
 
             return blogger.blogger({
@@ -73,7 +73,7 @@ export default class BloggerService {
         }
     }
 
-    async createPlatform(platform: TBloggerCreateInput): Promise<IBlogger> {
+    async createPlatform(platform: TBloggerCreateInput): Promise<boolean> {
         try {
             const newPlatform = await Blogger.create(platform);
 
@@ -89,7 +89,7 @@ export default class BloggerService {
                 data: newPlatform._id,
             });
 
-            return newPlatform;
+            return true;
         } catch (error) {
             console.log(error);
 
@@ -100,20 +100,13 @@ export default class BloggerService {
         }
     }
 
-    async updatePlatform(
-        platform: IBloggerUpdateInput,
-        user_id: Types.ObjectId,
-    ): Promise<IBlogger | null> {
+    async updatePlatform(platform: IBloggerUpdateInput, user_id: Types.ObjectId): Promise<boolean> {
         try {
-            return await Blogger.findOneAndUpdate(
-                {
-                    user_id,
-                },
-                platform,
-                {
-                    new: true,
-                },
-            ).exec();
+            const doc = await Blogger.findOne({ user_id }).exec();
+            doc?.set(platform);
+            await doc?.save();
+
+            return true;
         } catch (error) {
             console.log(error);
 
@@ -124,8 +117,10 @@ export default class BloggerService {
         }
     }
 
-    async deletePlatform(user_id: Types.ObjectId): Promise<IBlogger | null> {
+    async deletePlatform(token: string, user_id: Types.ObjectId): Promise<boolean> {
         try {
+            await this.oauth2Client.revokeToken(token);
+
             await User.findByIdAndUpdate(user_id, {
                 $pull: {
                     platforms: this.PLATFORM,
@@ -137,9 +132,11 @@ export default class BloggerService {
                 name: this.PLATFORM,
             }).exec();
 
-            return await Blogger.findOneAndDelete({
+            await Blogger.findOneAndDelete({
                 user_id,
             }).exec();
+
+            return true;
         } catch (error) {
             console.log(error);
 
@@ -151,11 +148,13 @@ export default class BloggerService {
         }
     }
 
-    async getPlatform(user_id: Types.ObjectId): Promise<IBlogger | null> {
+    async getPlatform(user_id: Types.ObjectId): Promise<Omit<IBlogger, "token"> | null> {
         try {
             return await Blogger.findOne({
                 user_id,
-            }).exec();
+            })
+                .select("-token")
+                .exec();
         } catch (error) {
             console.log(error);
 
@@ -166,10 +165,29 @@ export default class BloggerService {
         }
     }
 
-    async getPlatformByBlogId(blog_id: string): Promise<IBlogger | null> {
+    async getPlatformWithToken(options: {
+        user_id?: Types.ObjectId;
+        blog_id?: string;
+    }): Promise<IBlogger | null> {
+        const { user_id, blog_id } = options;
+
+        if (!user_id && !blog_id) {
+            throw new TRPCError({
+                code: "BAD_REQUEST",
+                message: "Either user_id or blog_id is required.",
+            });
+        }
+
         try {
             return await Blogger.findOne({
-                blog_id,
+                $or: [
+                    {
+                        user_id: user_id,
+                    },
+                    {
+                        blog_id: blog_id,
+                    },
+                ],
             }).exec();
         } catch (error) {
             console.log(error);

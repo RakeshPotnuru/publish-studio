@@ -31,10 +31,12 @@ export function Blogger({ data, isLoading }: Readonly<BloggerProps>) {
     } = trpc.platforms.blogger.disconnect.useQuery(undefined, {
         enabled: false,
     });
+    const utils = trpc.useUtils();
 
     const handleDisconnect = async () => {
         try {
             await disconnect();
+            utils.platforms.getAll.invalidate();
         } catch (error) {
             toast.error(disconnectError?.message ?? "Something went wrong.");
         }

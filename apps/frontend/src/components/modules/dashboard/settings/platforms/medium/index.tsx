@@ -17,7 +17,6 @@ interface MediumToProps {
 
 export function Medium({ data, isLoading }: Readonly<MediumToProps>) {
     const [isOpen, setIsOpen] = useState(false);
-    const [isImportOpen, setIsImportOpen] = useState(false);
 
     const {
         refetch: disconnect,
@@ -26,10 +25,12 @@ export function Medium({ data, isLoading }: Readonly<MediumToProps>) {
     } = trpc.platforms.medium.disconnect.useQuery(undefined, {
         enabled: false,
     });
+    const utils = trpc.useUtils();
 
     const handleDisconnect = async () => {
         try {
             await disconnect();
+            utils.platforms.getAll.invalidate();
         } catch (error) {
             toast.error(disconnectError?.message ?? "Something went wrong.");
         }

@@ -4,7 +4,6 @@ import type { Types } from "mongoose";
 import { constants } from "../../../config/constants";
 import type { Context } from "../../../trpc";
 import type { IPaginationOptions } from "../../../types/common.types";
-import { encryptField } from "../../../utils/aws/kms";
 import type { IProject, IProjectPlatform } from "../../project/project.types";
 import GhostService from "./ghost.service";
 import type { TGhostCreateFormInput, TGhostUpdateInput } from "./ghost.types";
@@ -22,11 +21,11 @@ export default class GhostController extends GhostService {
 
         const platform = await super.getPlatformByAPIUrl(input.api_url);
 
-        if (platform) {
+        if (platform && !platform.user_id.equals(ctx.user._id)) {
             await super.deletePlatform(platform.user_id);
         }
 
-        const newPlatform = await super.createPlatform({
+        await super.createPlatform({
             user_id: ctx.user._id,
             api_url: input.api_url,
             admin_api_key: input.admin_api_key,
@@ -36,7 +35,7 @@ export default class GhostController extends GhostService {
         return {
             status: "success",
             data: {
-                user: newPlatform,
+                message: "Platform connected successfully.",
             },
         };
     }
@@ -54,13 +53,11 @@ export default class GhostController extends GhostService {
 
             const platform = await super.getPlatformByAPIUrl(input.api_url);
 
-            if (platform) {
+            if (platform && !platform.user_id.equals(ctx.user._id)) {
                 await super.deletePlatform(platform.user_id);
             }
 
-            input.admin_api_key = await encryptField(input.admin_api_key);
-
-            const updatedPlatform = await super.updatePlatform(
+            await super.updatePlatform(
                 {
                     api_url: input.api_url,
                     admin_api_key: input.admin_api_key,
@@ -72,12 +69,12 @@ export default class GhostController extends GhostService {
             return {
                 status: "success",
                 data: {
-                    user: updatedPlatform,
+                    message: "Platform connected successfully.",
                 },
             };
         }
 
-        const updatedPlatform = await super.updatePlatform(
+        await super.updatePlatform(
             {
                 status: input.status,
             },
@@ -87,15 +84,15 @@ export default class GhostController extends GhostService {
         return {
             status: "success",
             data: {
-                user: updatedPlatform,
+                message: "Platform updated successfully.",
             },
         };
     }
 
     async deletePlatformHandler(ctx: Context) {
-        const user = await super.getPlatform(ctx.user._id);
+        const platform = await super.getPlatform(ctx.user._id);
 
-        if (!user) {
+        if (!platform) {
             throw new TRPCError({
                 code: "NOT_FOUND",
                 message: "Platform not found.",

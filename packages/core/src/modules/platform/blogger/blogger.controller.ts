@@ -33,13 +33,15 @@ export default class BloggerController extends BloggerService {
     async createPlatformHandler(code: string, ctx: Context) {
         const response = await super.getTokenAndBlogs(code);
 
-        const platform = await super.getPlatformByBlogId(response.blogs?.[0].id);
+        const platform = await super.getPlatformWithToken({
+            blog_id: response.blogs?.[0].id,
+        });
 
-        if (platform) {
-            await super.deletePlatform(platform.user_id);
+        if (platform && !platform.user_id.equals(ctx.user._id)) {
+            await super.deletePlatform(platform.token, platform.user_id);
         }
 
-        const newPlatform = super.createPlatform({
+        await super.createPlatform({
             user_id: ctx.user._id,
             blog_id: response.blogs?.[0].id,
             blog_url: response.blogs[0].url,
@@ -50,30 +52,34 @@ export default class BloggerController extends BloggerService {
         return {
             status: "success",
             data: {
-                platform: newPlatform,
+                message: "Platform connected successfully.",
             },
         };
     }
 
     async updatePlatformHandler(input: IBloggerUpdateInput, ctx: Context) {
-        const platform = await super.getPlatformByBlogId(input.blog_id);
+        const platform = await super.getPlatformWithToken({
+            blog_id: input.blog_id,
+        });
 
-        if (platform) {
-            await super.deletePlatform(platform.user_id);
+        if (platform && !platform.user_id.equals(ctx.user._id)) {
+            await super.deletePlatform(platform.token, platform.user_id);
         }
 
-        const updatedPlatform = await super.updatePlatform(input, ctx.user._id);
+        await super.updatePlatform(input, ctx.user._id);
 
         return {
             status: "success",
             data: {
-                platform: updatedPlatform,
+                message: "Platform updated successfully.",
             },
         };
     }
 
     async deletePlatformHandler(ctx: Context) {
-        const platform = await super.getPlatform(ctx.user._id);
+        const platform = await super.getPlatformWithToken({
+            user_id: ctx.user._id,
+        });
 
         if (!platform) {
             throw new TRPCError({
@@ -82,7 +88,7 @@ export default class BloggerController extends BloggerService {
             });
         }
 
-        await super.deletePlatform(ctx.user._id);
+        await super.deletePlatform(platform.token, ctx.user._id);
 
         return {
             status: "success",

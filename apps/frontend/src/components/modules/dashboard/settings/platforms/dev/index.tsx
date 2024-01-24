@@ -30,10 +30,12 @@ export function DevTo({ data, isLoading }: Readonly<DevToProps>) {
     } = trpc.platforms.devto.disconnect.useQuery(undefined, {
         enabled: false,
     });
+    const utils = trpc.useUtils();
 
     const handleDisconnect = async () => {
         try {
             await disconnect();
+            utils.platforms.getAll.invalidate();
         } catch (error) {
             toast.error(disconnectError?.message ?? "Something went wrong.");
         }

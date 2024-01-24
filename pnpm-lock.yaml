@@ -282,9 +282,6 @@ importers:
 
   packages/core:
     dependencies:
-      '@aws-sdk/client-kms':
-        specifier: ^3.454.0
-        version: 3.454.0
       '@aws-sdk/client-s3':
         specifier: ^3.456.0
         version: 3.456.0
@@ -348,6 +345,9 @@ importers:
       mongoose:
         specifier: ^8.0.1
         version: 8.0.1
+      mongoose-field-encryption:
+        specifier: ^7.0.1
+        version: 7.0.1(mongoose@8.0.1)
       pexels:
         specifier: ^1.4.0
         version: 1.4.0
@@ -505,53 +505,6 @@ packages:
       '@aws-sdk/types': 3.451.0
       '@aws-sdk/util-utf8-browser': 3.259.0
       tslib: 1.14.1
-    dev: false
-
-  /@aws-sdk/client-kms@3.454.0:
-    resolution: {integrity: sha512-EKjkF9zyLstZV30t+IprJxPxmxkbdDWILv3j91HKOzAZiRMOsc+eUq+YZ23+7FEuYVXCCRee3IAT+6DwFBhlHA==}
-    engines: {node: '>=14.0.0'}
-    dependencies:
-      '@aws-crypto/sha256-browser': 3.0.0
-      '@aws-crypto/sha256-js': 3.0.0
-      '@aws-sdk/client-sts': 3.454.0
-      '@aws-sdk/core': 3.451.0
-      '@aws-sdk/credential-provider-node': 3.451.0
-      '@aws-sdk/middleware-host-header': 3.451.0
-      '@aws-sdk/middleware-logger': 3.451.0
-      '@aws-sdk/middleware-recursion-detection': 3.451.0
-      '@aws-sdk/middleware-signing': 3.451.0
-      '@aws-sdk/middleware-user-agent': 3.451.0
-      '@aws-sdk/region-config-resolver': 3.451.0
-      '@aws-sdk/types': 3.451.0
-      '@aws-sdk/util-endpoints': 3.451.0
-      '@aws-sdk/util-user-agent-browser': 3.451.0
-      '@aws-sdk/util-user-agent-node': 3.451.0
-      '@smithy/config-resolver': 2.0.19
-      '@smithy/fetch-http-handler': 2.2.7
-      '@smithy/hash-node': 2.0.16
-      '@smithy/invalid-dependency': 2.0.14
-      '@smithy/middleware-content-length': 2.0.16
-      '@smithy/middleware-endpoint': 2.2.1
-      '@smithy/middleware-retry': 2.0.21
-      '@smithy/middleware-serde': 2.0.14
-      '@smithy/middleware-stack': 2.0.8
-      '@smithy/node-config-provider': 2.1.6
-      '@smithy/node-http-handler': 2.1.10
-      '@smithy/protocol-http': 3.0.10
-      '@smithy/smithy-client': 2.1.16
-      '@smithy/types': 2.6.0
-      '@smithy/url-parser': 2.0.14
-      '@smithy/util-base64': 2.0.1
-      '@smithy/util-body-length-browser': 2.0.0
-      '@smithy/util-body-length-node': 2.1.0
-      '@smithy/util-defaults-mode-browser': 2.0.20
-      '@smithy/util-defaults-mode-node': 2.0.26
-      '@smithy/util-endpoints': 1.0.5
-      '@smithy/util-retry': 2.0.7
-      '@smithy/util-utf8': 2.0.2
-      tslib: 2.6.2
-    transitivePeerDependencies:
-      - aws-crt
     dev: false
 
   /@aws-sdk/client-s3@3.456.0:
@@ -5886,7 +5839,7 @@ packages:
   /axios@1.6.2:
     resolution: {integrity: sha512-7i24Ri4pmDRfJTR7LDBhsOTtcm+9kjX5WiY1X3wIisx6G9So3pfMkEiU7emUBe46oceVImccTEM3k6C5dbVW8A==}
     dependencies:
-      follow-redirects: 1.15.3
+      follow-redirects: 1.15.3(debug@4.3.4)
       form-data: 4.0.0
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
@@ -6576,17 +6529,6 @@ packages:
       ms: 2.0.0
     dev: false
 
-  /debug@3.2.7:
-    resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
-    peerDependencies:
-      supports-color: '*'
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
-    dependencies:
-      ms: 2.1.3
-    dev: true
-
   /debug@3.2.7(supports-color@5.5.0):
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
     peerDependencies:
@@ -7011,7 +6953,7 @@ packages:
       eslint: 8.54.0
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@5.62.0)(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.0)(eslint@8.54.0)
-      eslint-plugin-import: 2.29.0(@typescript-eslint/parser@5.62.0)(eslint-import-resolver-typescript@3.6.1)(eslint@8.54.0)
+      eslint-plugin-import: 2.29.0(@typescript-eslint/parser@5.59.9)(eslint@8.54.0)
       eslint-plugin-jsx-a11y: 6.7.1(eslint@8.54.0)
       eslint-plugin-react: 7.33.2(eslint@8.54.0)
       eslint-plugin-react-hooks: 4.6.0(eslint@8.54.0)
@@ -7033,7 +6975,7 @@ packages:
   /eslint-import-resolver-node@0.3.9:
     resolution: {integrity: sha512-WFj2isz22JahUv+B788TlO3N6zL3nNJGU8CcZbPZvVEkBPaJdCV4vy5wyghty5ROFbCRnm132v8BScu5/1BQ8g==}
     dependencies:
-      debug: 3.2.7
+      debug: 3.2.7(supports-color@5.5.0)
       is-core-module: 2.13.1
       resolve: 1.22.8
     transitivePeerDependencies:
@@ -7051,7 +6993,7 @@ packages:
       enhanced-resolve: 5.15.0
       eslint: 8.54.0
       eslint-module-utils: 2.8.0(@typescript-eslint/parser@5.62.0)(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@8.54.0)
-      eslint-plugin-import: 2.29.0(@typescript-eslint/parser@5.62.0)(eslint-import-resolver-typescript@3.6.1)(eslint@8.54.0)
+      eslint-plugin-import: 2.29.0(@typescript-eslint/parser@5.59.9)(eslint@8.54.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.7.2
       is-core-module: 2.13.1
@@ -7060,6 +7002,35 @@ packages:
       - '@typescript-eslint/parser'
       - eslint-import-resolver-node
       - eslint-import-resolver-webpack
+      - supports-color
+    dev: true
+
+  /eslint-module-utils@2.8.0(@typescript-eslint/parser@5.59.9)(eslint-import-resolver-node@0.3.9)(eslint@8.54.0):
+    resolution: {integrity: sha512-aWajIYfsqCKRDgUfjEXNN/JlrzauMuSEy5sbd7WXbtW3EH6A6MpwEh42c7qD+MqQo9QMJ6fWLAeIJynx0g6OAw==}
+    engines: {node: '>=4'}
+    peerDependencies:
+      '@typescript-eslint/parser': '*'
+      eslint: '*'
+      eslint-import-resolver-node: '*'
+      eslint-import-resolver-typescript: '*'
+      eslint-import-resolver-webpack: '*'
+    peerDependenciesMeta:
+      '@typescript-eslint/parser':
+        optional: true
+      eslint:
+        optional: true
+      eslint-import-resolver-node:
+        optional: true
+      eslint-import-resolver-typescript:
+        optional: true
+      eslint-import-resolver-webpack:
+        optional: true
+    dependencies:
+      '@typescript-eslint/parser': 5.59.9(eslint@8.54.0)(typescript@5.3.2)
+      debug: 3.2.7(supports-color@5.5.0)
+      eslint: 8.54.0
+      eslint-import-resolver-node: 0.3.9
+    transitivePeerDependencies:
       - supports-color
     dev: true
 
@@ -7085,7 +7056,7 @@ packages:
         optional: true
     dependencies:
       '@typescript-eslint/parser': 5.62.0(eslint@8.54.0)(typescript@5.3.2)
-      debug: 3.2.7
+      debug: 3.2.7(supports-color@5.5.0)
       eslint: 8.54.0
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@5.62.0)(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.0)(eslint@8.54.0)
@@ -7122,7 +7093,7 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-plugin-import@2.29.0(@typescript-eslint/parser@5.62.0)(eslint-import-resolver-typescript@3.6.1)(eslint@8.54.0):
+  /eslint-plugin-import@2.29.0(@typescript-eslint/parser@5.59.9)(eslint@8.54.0):
     resolution: {integrity: sha512-QPOO5NO6Odv5lpoTkddtutccQjysJuFxoPS7fAHO+9m9udNHvTCPSAMW9zGAYj8lAIdr40I8yPCdUYrncXtrwg==}
     engines: {node: '>=4'}
     peerDependencies:
@@ -7132,16 +7103,16 @@ packages:
       '@typescript-eslint/parser':
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.62.0(eslint@8.54.0)(typescript@5.3.2)
+      '@typescript-eslint/parser': 5.59.9(eslint@8.54.0)(typescript@5.3.2)
       array-includes: 3.1.7
       array.prototype.findlastindex: 1.2.3
       array.prototype.flat: 1.3.2
       array.prototype.flatmap: 1.3.2
-      debug: 3.2.7
+      debug: 3.2.7(supports-color@5.5.0)
       doctrine: 2.1.0
       eslint: 8.54.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.8.0(@typescript-eslint/parser@5.62.0)(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@8.54.0)
+      eslint-module-utils: 2.8.0(@typescript-eslint/parser@5.59.9)(eslint-import-resolver-node@0.3.9)(eslint@8.54.0)
       hasown: 2.0.0
       is-core-module: 2.13.1
       is-glob: 4.0.3
@@ -7683,16 +7654,6 @@ packages:
   /flatted@3.2.9:
     resolution: {integrity: sha512-36yxDn5H7OFZQla0/jFJmbIKTdZAQHngCedGxiMmpNfEZM0sdEeT+WczLQrjK6D7o2aiyLYDnkw0R3JK0Qv1RQ==}
     dev: true
-
-  /follow-redirects@1.15.3:
-    resolution: {integrity: sha512-1VzOtuEM8pC9SFU1E+8KfTjZyMztRsgEfwQl44z8A25uy13jSzTj6dyK2Df52iV0vgHCfBwLhDWevLn95w5v6Q==}
-    engines: {node: '>=4.0'}
-    peerDependencies:
-      debug: '*'
-    peerDependenciesMeta:
-      debug:
-        optional: true
-    dev: false
 
   /follow-redirects@1.15.3(debug@4.3.4):
     resolution: {integrity: sha512-1VzOtuEM8pC9SFU1E+8KfTjZyMztRsgEfwQl44z8A25uy13jSzTj6dyK2Df52iV0vgHCfBwLhDWevLn95w5v6Q==}
@@ -9651,6 +9612,14 @@ packages:
       '@mongodb-js/saslprep': 1.1.1
       bson: 6.2.0
       mongodb-connection-string-url: 2.6.0
+    dev: false
+
+  /mongoose-field-encryption@7.0.1(mongoose@8.0.1):
+    resolution: {integrity: sha512-PWNn1EkmtF8Sjguioe/TpW+6CWmNQwcQpKD3UAUVM1JtPmb4jOA7WqIQVJZCsnQuOqhBfCcpVvOJdOTvB6Q9dQ==}
+    peerDependencies:
+      mongoose: '>=7.4.0'
+    dependencies:
+      mongoose: 8.0.1
     dev: false
 
   /mongoose@8.0.1:

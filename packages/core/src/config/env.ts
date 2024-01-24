@@ -25,7 +25,6 @@ const ZodEnvironmentVariables = z.object({
     AWS_ACCESS_KEY: z.string(),
     AWS_SECRET_ACCESS_KEY: z.string(),
     AWS_REGION: z.string(),
-    AWS_KMS_KEY_ID: z.string(),
     AWS_SES_AUTO_FROM_EMAIL: z.string(),
     AWS_SES_PERSONAL_FROM_EMAIL: z.string(),
     WHITELIST_ORIGINS: z.string().optional(),
@@ -44,6 +43,7 @@ const ZodEnvironmentVariables = z.object({
     PEXELS_API_KEY: z.string(),
     UNSPLASH_ACCESS_KEY: z.string(),
     HCAPTCHA_SECRET: z.string(),
+    ENCRYPTION_SECRET: z.string(),
 });
 
 ZodEnvironmentVariables.parse(process.env);

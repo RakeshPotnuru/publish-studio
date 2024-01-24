@@ -4,7 +4,6 @@ import type { Types } from "mongoose";
 import defaultConfig from "../../../config/app.config";
 import { constants } from "../../../config/constants";
 import type { Context } from "../../../trpc";
-import { encryptField } from "../../../utils/aws/kms";
 import type { IProject, IProjectPlatform } from "../../project/project.types";
 import MediumService from "./medium.service";
 import type { TMediumStatus } from "./medium.types";
@@ -29,11 +28,11 @@ export default class MediumController extends MediumService {
 
         const platform = await super.getPlatformByUsername(user.username);
 
-        if (platform) {
+        if (platform && !platform.user_id.equals(ctx.user._id)) {
             await super.deletePlatform(platform.user_id);
         }
 
-        const newPlatform = await super.createPlatform({
+        await super.createPlatform({
             user_id: ctx.user._id,
             api_key: input.api_key,
             username: user.username,
@@ -45,7 +44,7 @@ export default class MediumController extends MediumService {
         return {
             status: "success",
             data: {
-                platform: newPlatform,
+                message: "Platform connected successfully.",
             },
         };
     }
@@ -70,13 +69,11 @@ export default class MediumController extends MediumService {
 
             const platform = await super.getPlatformByUsername(user.username);
 
-            if (platform) {
+            if (platform && !platform.user_id.equals(ctx.user._id)) {
                 await super.deletePlatform(platform.user_id);
             }
 
-            input.api_key = await encryptField(input.api_key);
-
-            const updatedPlatform = await super.updatePlatform(
+            await super.updatePlatform(
                 {
                     api_key: input.api_key,
                     username: user.username,
@@ -90,12 +87,12 @@ export default class MediumController extends MediumService {
             return {
                 status: "success",
                 data: {
-                    platform: updatedPlatform,
+                    message: "Platform updated successfully.",
                 },
             };
         }
 
-        const updatedPlatform = await super.updatePlatform(
+        await super.updatePlatform(
             {
                 status: input.status,
                 notify_followers: input.notify_followers,
@@ -106,7 +103,7 @@ export default class MediumController extends MediumService {
         return {
             status: "success",
             data: {
-                platform: updatedPlatform,
+                message: "Platform updated successfully.",
             },
         };
     }
