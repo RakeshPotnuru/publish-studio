@@ -11,6 +11,7 @@ export const siteConfig = {
         mediumAPIKeyGuide: "https://docs.publishstudio.one/platforms/medium#api-key",
         hashnodeAPIKeyGuide: "https://docs.publishstudio.one/platforms/hashnode#api-key",
         ghostAPIKeyGuide: "https://docs.publishstudio.one/platforms/ghost#api-key",
+        cloudinaryAPIKeyGuide: "https://docs.publishstudio.one/integrations/cloudinary#api-key",
         apiKeysSecureStorage: "https://docs.publishstudio.one/platforms#secure-storage-of-api-keys",
         devTags: "https://dev.to/tags",
         mediumTags: "https://medium.com/topics",
@@ -92,10 +93,10 @@ export const siteConfig = {
                 description: "Configure your appearance settings",
                 link: "/settings/appearance",
             },
-            integrations: {
-                title: "Integrations",
-                description: "Configure your integrations",
-                link: "/settings/integrations",
+            connections: {
+                title: "Connections",
+                description: "Configure your connections",
+                link: "/settings/connections",
             },
         },
     },

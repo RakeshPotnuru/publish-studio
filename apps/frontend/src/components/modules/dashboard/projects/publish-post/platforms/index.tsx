@@ -121,7 +121,7 @@ export const PlatformsField = ({
                                 className="h-max p-0 text-xs"
                                 asChild
                             >
-                                <Link href={siteConfig.pages.settings.integrations.link}>
+                                <Link href={siteConfig.pages.settings.connections.link}>
                                     Connect more
                                 </Link>
                             </Button>

@@ -74,6 +74,48 @@ export function ImportPostsBody({
     importedPosts,
     handleImport,
 }: Readonly<ImportPostsBodyProps>) {
+    const bodyView = posts.length ? (
+        posts.map(post => (
+            <div key={post.id}>
+                <div className="flex items-center justify-between space-x-2 px-2">
+                    <p title={post.title} className="text-sm">
+                        {pageIndex * pageSize + posts.indexOf(post) + 1}.{" "}
+                        {shortenText(post.title, 50)}
+                    </p>
+                    <Button
+                        onClick={() => handleImport(post.id)}
+                        variant={importedPosts.includes(post.id) ? "success" : "secondary"}
+                        size="sm"
+                        disabled={isLoading || importedPosts.includes(post.id)}
+                    >
+                        {importedPosts.includes(post.id) ? (
+                            "Imported"
+                        ) : (
+                            <ButtonLoader isLoading={isLoading && importingPost === post.id}>
+                                Import
+                            </ButtonLoader>
+                        )}
+                    </Button>
+                </div>
+                {posts.indexOf(post) !== posts.length - 1 && <Separator className="mt-2" />}
+            </div>
+        ))
+    ) : (
+        <Center className="text-muted-foreground h-24">No results</Center>
+    );
+
+    const bodyPendingView = isFetching
+        ? Array.from({ length: 10 }).map((_, index) => (
+              <div key={`skeleton-${index + 1}`}>
+                  <div className="flex items-center justify-between space-x-2 px-2">
+                      <Skeleton className="h-8 w-3/4" />
+                      <Skeleton className="h-8 w-3/12" />
+                  </div>
+                  {index !== 9 && <Separator className="mt-2" />}
+              </div>
+          ))
+        : bodyView;
+
     return (
         <div className="space-y-4">
             <div className="space-y-2 rounded-lg border py-2">
@@ -81,50 +123,8 @@ export function ImportPostsBody({
                     <Center>
                         <ErrorBox title="Failed to fetch posts" description={error} />
                     </Center>
-                ) : isFetching ? (
-                    Array.from({ length: 10 }).map((_, index) => (
-                        <div key={`skeleton-${index + 1}`}>
-                            <div className="flex items-center justify-between space-x-2 px-2">
-                                <Skeleton className="h-8 w-3/4" />
-                                <Skeleton className="h-8 w-3/12" />
-                            </div>
-                            {index !== 9 && <Separator className="mt-2" />}
-                        </div>
-                    ))
-                ) : posts.length ? (
-                    posts.map(post => (
-                        <div key={post.id}>
-                            <div className="flex items-center justify-between space-x-2 px-2">
-                                <p title={post.title} className="text-sm">
-                                    {pageIndex * pageSize + posts.indexOf(post) + 1}.{" "}
-                                    {shortenText(post.title, 50)}
-                                </p>
-                                <Button
-                                    onClick={() => handleImport(post.id)}
-                                    variant={
-                                        importedPosts.includes(post.id) ? "success" : "secondary"
-                                    }
-                                    size="sm"
-                                    disabled={isLoading || importedPosts.includes(post.id)}
-                                >
-                                    {importedPosts.includes(post.id) ? (
-                                        "Imported"
-                                    ) : (
-                                        <ButtonLoader
-                                            isLoading={isLoading && importingPost === post.id}
-                                        >
-                                            Import
-                                        </ButtonLoader>
-                                    )}
-                                </Button>
-                            </div>
-                            {posts.indexOf(post) !== posts.length - 1 && (
-                                <Separator className="mt-2" />
-                            )}
-                        </div>
-                    ))
                 ) : (
-                    <Center className="text-muted-foreground h-24">No results</Center>
+                    bodyPendingView
                 )}
             </div>
             <div className="flex justify-between">
@@ -145,6 +145,121 @@ export function ImportPostsBody({
                         setPagination({
                             pageIndex: pageIndex + 1,
                             pageSize,
+                        })
+                    }
+                    variant="outline"
+                    disabled={posts.length === 0 || isFetching || posts.length < pageSize}
+                >
+                    Next
+                </Button>
+            </div>
+        </div>
+    );
+}
+
+interface ImportPostsBodyWithoutPreviousProps {
+    posts: {
+        id: string;
+        title: string;
+    }[];
+    isFetching: boolean;
+    error?: string;
+    setPagination: (state: { pageSize: number; end_cursor?: string }) => void;
+    cursors: string[];
+    pageSize: number;
+    end_cursor?: string;
+    isLoading: boolean;
+    importingPost?: string;
+    importedPosts: string[];
+    handleImport: (id: string) => void;
+}
+
+export function ImportPostsBodyWithoutPrevious({
+    posts,
+    isFetching,
+    error,
+    setPagination,
+    cursors,
+    pageSize,
+    end_cursor,
+    isLoading,
+    importingPost,
+    importedPosts,
+    handleImport,
+}: Readonly<ImportPostsBodyWithoutPreviousProps>) {
+    const bodyView = posts.length ? (
+        posts.map(post => (
+            <div key={post.id}>
+                <div className="flex items-center justify-between space-x-2 px-2">
+                    <p title={post.title} className="text-sm">
+                        {posts.indexOf(post) +
+                            (cursors.indexOf(end_cursor ?? "") + 1) * pageSize +
+                            1}
+                        . {shortenText(post.title, 50)}
+                    </p>
+                    <Button
+                        onClick={() => handleImport(post.id)}
+                        variant={importedPosts.includes(post.id) ? "success" : "secondary"}
+                        size="sm"
+                        disabled={isLoading || importedPosts.includes(post.id)}
+                    >
+                        {importedPosts.includes(post.id) ? (
+                            "Imported"
+                        ) : (
+                            <ButtonLoader isLoading={isLoading && importingPost === post.id}>
+                                Import
+                            </ButtonLoader>
+                        )}
+                    </Button>
+                </div>
+                {posts.indexOf(post) !== posts.length - 1 && <Separator className="mt-2" />}
+            </div>
+        ))
+    ) : (
+        <Center className="text-muted-foreground h-24">No results</Center>
+    );
+
+    const bodyPendingView = isFetching
+        ? Array.from({ length: 10 }).map((_, index) => (
+              <div key={`skeleton-${index + 1}`}>
+                  <div className="flex items-center justify-between space-x-2 px-2">
+                      <Skeleton className="h-8 w-3/4" />
+                      <Skeleton className="h-8 w-3/12" />
+                  </div>
+                  {index !== 9 && <Separator className="mt-2" />}
+              </div>
+          ))
+        : bodyView;
+
+    return (
+        <div className="space-y-4">
+            <div className="space-y-2 rounded-lg border py-2">
+                {error ? (
+                    <Center>
+                        <ErrorBox title="Failed to fetch posts" description={error} />
+                    </Center>
+                ) : (
+                    bodyPendingView
+                )}
+            </div>
+            <div className="flex justify-between">
+                <Button
+                    onClick={() =>
+                        setPagination({
+                            pageSize,
+                            end_cursor: cursors[cursors.indexOf(end_cursor ?? "") - 1],
+                        })
+                    }
+                    variant="outline"
+                    disabled={isFetching || cursors.indexOf(end_cursor ?? "") === -1}
+                >
+                    Previous
+                </Button>
+                <Button
+                    onClick={() =>
+                        setPagination({
+                            pageSize,
+                            end_cursor: cursors[cursors.length - 1],
                         })
                     }
                     variant="outline"

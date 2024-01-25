@@ -8,8 +8,8 @@ import { Images } from "@/assets/images";
 import { constants } from "@/config/constants";
 import { useEditor } from "@/hooks/use-editor";
 import { trpc } from "@/utils/trpc";
+import { ConnectionCard } from "../../connection-card";
 import { ImportPostsBody } from "../import-dialog";
-import { PlatformCard } from "../platform-card";
 import { GhostConnectForm } from "./connect-form";
 import { GhostEditForm } from "./edit-form";
 
@@ -43,13 +43,13 @@ export function Ghost({ data, isLoading }: Readonly<GhostProps>) {
     };
 
     return (
-        <PlatformCard
+        <ConnectionCard
             onDisconnect={handleDisconnect}
             isOpen={isOpen}
             setIsOpen={setIsOpen}
             name="Ghost"
             icon={Images.ghostLogo}
-            iconBg="bg-white"
+            iconClassName="bg-white"
             isLoading={isLoading || isDisconnecting}
             connected={data !== undefined}
             username={data?.api_url.split("/")[2]}

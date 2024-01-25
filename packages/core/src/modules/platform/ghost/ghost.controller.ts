@@ -35,7 +35,7 @@ export default class GhostController extends GhostService {
         return {
             status: "success",
             data: {
-                message: "Platform connected successfully.",
+                message: "Your Ghost account has been connected successfully.",
             },
         };
     }
@@ -69,7 +69,7 @@ export default class GhostController extends GhostService {
             return {
                 status: "success",
                 data: {
-                    message: "Platform connected successfully.",
+                    message: "Your Ghost account has been updated successfully.",
                 },
             };
         }
@@ -84,7 +84,7 @@ export default class GhostController extends GhostService {
         return {
             status: "success",
             data: {
-                message: "Platform updated successfully.",
+                message: "Your Ghost account has been updated successfully.",
             },
         };
     }

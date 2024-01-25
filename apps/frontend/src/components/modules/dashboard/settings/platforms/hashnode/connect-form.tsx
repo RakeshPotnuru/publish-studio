@@ -47,8 +47,8 @@ export function HashnodeConnectForm({ setIsOpen, ...props }: Readonly<HashnodeCo
 
     const { mutateAsync: connect, isLoading: isConnecting } =
         trpc.platforms.hashnode.connect.useMutation({
-            onSuccess: () => {
-                toast.success("Your Hashnode account has been connected successfully.");
+            onSuccess: ({ data }) => {
+                toast.success(data.message);
                 utils.platforms.getAll.invalidate();
                 setIsOpen(false);
             },

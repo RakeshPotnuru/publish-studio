@@ -117,10 +117,8 @@ export default class BloggerService {
         }
     }
 
-    async deletePlatform(token: string, user_id: Types.ObjectId): Promise<boolean> {
+    async deletePlatform(user_id: Types.ObjectId): Promise<boolean> {
         try {
-            await this.oauth2Client.revokeToken(token);
-
             await User.findByIdAndUpdate(user_id, {
                 $pull: {
                     platforms: this.PLATFORM,
@@ -165,30 +163,13 @@ export default class BloggerService {
         }
     }
 
-    async getPlatformWithToken(options: {
-        user_id?: Types.ObjectId;
-        blog_id?: string;
-    }): Promise<IBlogger | null> {
-        const { user_id, blog_id } = options;
-
-        if (!user_id && !blog_id) {
-            throw new TRPCError({
-                code: "BAD_REQUEST",
-                message: "Either user_id or blog_id is required.",
-            });
-        }
-
+    async getPlatformByBlogId(blog_id: string): Promise<Omit<IBlogger, "token"> | null> {
         try {
             return await Blogger.findOne({
-                $or: [
-                    {
-                        user_id: user_id,
-                    },
-                    {
-                        blog_id: blog_id,
-                    },
-                ],
-            }).exec();
+                blog_id,
+            })
+                .select("-token")
+                .exec();
         } catch (error) {
             console.log(error);
 

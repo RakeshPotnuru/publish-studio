@@ -13,7 +13,7 @@ const mediumRouter = router({
                 notify_followers: z.boolean(),
             }),
         )
-        .mutation(({ input, ctx }) => new MediumController().createUserHandler(input, ctx)),
+        .mutation(({ input, ctx }) => new MediumController().createPlatformHandler(input, ctx)),
 
     update: protectedProcedure
         .input(

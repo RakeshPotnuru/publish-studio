@@ -9,8 +9,8 @@ import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { useEditor } from "@/hooks/use-editor";
 import { trpc } from "@/utils/trpc";
+import { ConnectionCard } from "../../connection-card";
 import { ImportPostsBody } from "../import-dialog";
-import { PlatformCard } from "../platform-card";
 import { WordPressConnectForm } from "./connect-form";
 import { WordPressEditForm } from "./edit-form";
 
@@ -51,13 +51,13 @@ export function WordPress({ data, isLoading }: Readonly<WordPressProps>) {
     };
 
     return (
-        <PlatformCard
+        <ConnectionCard
             onDisconnect={handleDisconnect}
             isOpen={isOpen}
             setIsOpen={setIsOpen}
             name="WordPress"
             icon={Images.wordpressLogo}
-            iconBg="bg-white"
+            iconClassName="bg-white"
             isLoading={isLoading || isDisconnecting}
             connected={data !== undefined}
             username={data?.blog_url.split("/")[2]}

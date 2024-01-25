@@ -53,8 +53,8 @@ export function MediumEditForm({
     const utils = trpc.useUtils();
 
     const { mutateAsync: edit, isLoading: isUpdating } = trpc.platforms.medium.update.useMutation({
-        onSuccess: () => {
-            toast.success("Your Medium account has been updated successfully.");
+        onSuccess: ({ data }) => {
+            toast.success(data.message);
             utils.platforms.getAll.invalidate();
             setIsOpen(false);
         },

@@ -11,8 +11,6 @@ import {
     HoverCardContent,
     HoverCardTrigger,
     Input,
-    RadioGroup,
-    RadioGroupItem,
     toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
@@ -22,58 +20,69 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Icons } from "@/assets/icons";
+import { Center } from "@/components/ui/center";
 import { ErrorBox } from "@/components/ui/error-box";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
-import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
 
-interface DevConnectFormProps extends React.HTMLAttributes<HTMLDivElement> {
+interface CloudinaryFormProps extends React.HTMLAttributes<HTMLDivElement> {
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    type: "edit" | "connect";
 }
 
 const formSchema = z.object({
-    admin_api_key: z.string().min(1, { message: "Admin API key is required" }),
-    api_url: z.string().min(1, { message: "API URL is required" }).url({
-        message: "API URL must be a valid URL",
-    }),
-    status: z.nativeEnum(constants.ghostStatuses).default(constants.ghostStatuses.DRAFT),
+    api_key: z.string().min(1, { message: "API key is required" }),
+    cloud_name: z.string().min(1, { message: "Cloud name is required" }),
 });
 
-export function GhostConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFormProps>) {
+export function CloudinaryForm({ setIsOpen, type, ...props }: Readonly<CloudinaryFormProps>) {
     const [error, setError] = useState<string | null>(null);
 
     const utils = trpc.useUtils();
 
-    const { mutateAsync: connect, isLoading: isConnecting } =
-        trpc.platforms.ghost.connect.useMutation({
-            onSuccess: ({ data }) => {
-                toast.success(data.message);
-                utils.platforms.getAll.invalidate();
-                setIsOpen(false);
-            },
-            onError: error => {
-                setError(error.message);
-            },
-        });
+    const { mutateAsync: connect, isLoading: isConnecting } = trpc.cloudinary.connect.useMutation({
+        onSuccess: ({ data }) => {
+            toast.success(data.message);
+            utils.cloudinary.get.invalidate();
+            setIsOpen(false);
+        },
+        onError: error => {
+            setError(error.message);
+        },
+    });
+
+    const { mutateAsync: edit, isLoading: isUpdating } = trpc.cloudinary.update.useMutation({
+        onSuccess: ({ data }) => {
+            toast.success(data.message);
+            utils.cloudinary.get.invalidate();
+            setIsOpen(false);
+        },
+        onError: error => {
+            setError(error.message);
+        },
+    });
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            admin_api_key: "",
-            api_url: "",
-            status: constants.ghostStatuses.DRAFT,
+            api_key: "",
+            cloud_name: "",
         },
     });
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         try {
             setError(null);
-            await connect(data);
+            if (type === "connect") {
+                await connect(data);
+            } else {
+                await edit(data);
+            }
         } catch (error) {}
     };
 
-    const isLoading = form.formState.isSubmitting || isConnecting;
+    const isLoading = form.formState.isSubmitting || isConnecting || isUpdating;
 
     return (
         <div
@@ -82,18 +91,22 @@ export function GhostConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFor
             })}
             {...props}
         >
-            {error && <ErrorBox title="Could not connect Ghost" description={error} />}
+            {error && (
+                <Center>
+                    <ErrorBox title={`Could not ${type} cloudinary`} description={error} />
+                </Center>
+            )}
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                     <FormField
                         control={form.control}
-                        name="admin_api_key"
+                        name="api_key"
                         disabled={isLoading}
                         render={({ field }) => (
                             <FormItem>
                                 <div className="space-y-1">
                                     <FormLabel className="flex flex-row space-x-1">
-                                        <span>Admin API key</span>{" "}
+                                        <span>API key</span>{" "}
                                         <HoverCard>
                                             <HoverCardTrigger asChild>
                                                 <Button
@@ -111,7 +124,9 @@ export function GhostConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFor
                                                     asChild
                                                 >
                                                     <Link
-                                                        href={siteConfig.links.ghostAPIKeyGuide}
+                                                        href={
+                                                            siteConfig.links.cloudinaryAPIKeyGuide
+                                                        }
                                                         target="_blank"
                                                     >
                                                         Learn
@@ -154,13 +169,13 @@ export function GhostConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFor
                     />
                     <FormField
                         control={form.control}
-                        name="api_url"
+                        name="cloud_name"
                         disabled={isLoading}
                         render={({ field }) => (
                             <FormItem>
                                 <div className="space-y-1">
                                     <FormLabel className="flex flex-row space-x-1">
-                                        <span>API URL</span>{" "}
+                                        <span>Cloud name</span>{" "}
                                         <HoverCard>
                                             <HoverCardTrigger asChild>
                                                 <Button
@@ -178,59 +193,43 @@ export function GhostConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFor
                                                     asChild
                                                 >
                                                     <Link
-                                                        href={siteConfig.links.ghostAPIKeyGuide}
+                                                        href={
+                                                            siteConfig.links.cloudinaryAPIKeyGuide
+                                                        }
                                                         target="_blank"
                                                     >
                                                         Learn
                                                     </Link>
                                                 </Button>{" "}
-                                                how to get your API URL.
+                                                how to get your cloud name.
                                             </HoverCardContent>
                                         </HoverCard>
                                     </FormLabel>
+                                    <p className="text-muted-foreground text-xs">
+                                        Your cloud name will be encrypted and stored securely.{" "}
+                                        <Button
+                                            type="button"
+                                            variant="link"
+                                            size="sm"
+                                            className="h-max p-0"
+                                            asChild
+                                        >
+                                            <Link
+                                                href={siteConfig.links.apiKeysSecureStorage}
+                                                target="_blank"
+                                            >
+                                                Learn more
+                                            </Link>
+                                        </Button>
+                                    </p>
                                 </div>
                                 <FormControl>
                                     <Input
-                                        type="url"
-                                        placeholder="https://demo.ghost.io"
+                                        type="password"
+                                        placeholder="*******"
                                         autoComplete="off"
                                         {...field}
                                     />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="status"
-                        disabled={isLoading}
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Set default publish status for Ghost</FormLabel>
-                                <FormControl>
-                                    <RadioGroup
-                                        onValueChange={field.onChange}
-                                        defaultValue={field.value}
-                                        className="flex flex-row space-x-2"
-                                    >
-                                        <FormItem className="flex items-center space-x-3 space-y-0">
-                                            <FormControl>
-                                                <RadioGroupItem
-                                                    value={constants.ghostStatuses.DRAFT}
-                                                />
-                                            </FormControl>
-                                            <FormLabel className="font-normal">Draft</FormLabel>
-                                        </FormItem>
-                                        <FormItem className="flex items-center space-x-3 space-y-0">
-                                            <FormControl>
-                                                <RadioGroupItem
-                                                    value={constants.ghostStatuses.PUBLISHED}
-                                                />
-                                            </FormControl>
-                                            <FormLabel className="font-normal">Published</FormLabel>
-                                        </FormItem>
-                                    </RadioGroup>
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -241,7 +240,9 @@ export function GhostConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFor
                         disabled={!form.formState.isDirty || isLoading}
                         className="w-full"
                     >
-                        <ButtonLoader isLoading={isLoading}>Connect</ButtonLoader>
+                        <ButtonLoader isLoading={isLoading}>
+                            {type === "connect" ? "Connect" : "Update"}
+                        </ButtonLoader>
                     </Button>
                 </form>
             </Form>

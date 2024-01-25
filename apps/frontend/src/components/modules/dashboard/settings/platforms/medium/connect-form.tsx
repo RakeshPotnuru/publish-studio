@@ -45,8 +45,8 @@ export function MediumConnectForm({ setIsOpen, ...props }: Readonly<MediumConnec
 
     const { mutateAsync: connect, isLoading: isConnecting } =
         trpc.platforms.medium.connect.useMutation({
-            onSuccess: () => {
-                toast.success("Your Medium account has been connected successfully.");
+            onSuccess: ({ data }) => {
+                toast.success(data.message);
                 utils.platforms.getAll.invalidate();
                 setIsOpen(false);
             },

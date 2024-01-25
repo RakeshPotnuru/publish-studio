@@ -9,7 +9,7 @@ import MediumService from "./medium.service";
 import type { TMediumStatus } from "./medium.types";
 
 export default class MediumController extends MediumService {
-    async createUserHandler(
+    async createPlatformHandler(
         input: {
             api_key: string;
             status: TMediumStatus;
@@ -44,7 +44,7 @@ export default class MediumController extends MediumService {
         return {
             status: "success",
             data: {
-                message: "Platform connected successfully.",
+                message: "Your Medium account has been connected successfully.",
             },
         };
     }
@@ -87,7 +87,7 @@ export default class MediumController extends MediumService {
             return {
                 status: "success",
                 data: {
-                    message: "Platform updated successfully.",
+                    message: "Your Medium account has been updated successfully.",
                 },
             };
         }
@@ -103,7 +103,7 @@ export default class MediumController extends MediumService {
         return {
             status: "success",
             data: {
-                message: "Platform updated successfully.",
+                message: "Your Medium account has been updated successfully.",
             },
         };
     }

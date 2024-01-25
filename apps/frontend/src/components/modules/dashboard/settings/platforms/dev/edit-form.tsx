@@ -44,8 +44,8 @@ export function DevEditForm({ status, setIsOpen, ...props }: Readonly<DevEditFor
     const utils = trpc.useUtils();
 
     const { mutateAsync: edit, isLoading: isUpdating } = trpc.platforms.devto.update.useMutation({
-        onSuccess: () => {
-            toast.success("Your Dev account has been updated successfully.");
+        onSuccess: ({ data }) => {
+            toast.success(data.message);
             utils.platforms.getAll.invalidate();
             setIsOpen(false);
         },

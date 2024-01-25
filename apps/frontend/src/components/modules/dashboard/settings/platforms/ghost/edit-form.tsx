@@ -47,8 +47,8 @@ export function GhostEditForm({ status, setIsOpen, ...props }: Readonly<DevEditF
     const utils = trpc.useUtils();
 
     const { mutateAsync: edit, isLoading: isUpdating } = trpc.platforms.ghost.update.useMutation({
-        onSuccess: () => {
-            toast.success("Your Ghost account has been updated successfully.");
+        onSuccess: ({ data }) => {
+            toast.success(data.message);
             utils.platforms.getAll.invalidate();
             setIsOpen(false);
         },
@@ -193,7 +193,6 @@ export function GhostEditForm({ status, setIsOpen, ...props }: Readonly<DevEditF
                                         type="url"
                                         placeholder="https://demo.ghost.io"
                                         autoComplete="off"
-                                        autoFocus
                                         {...field}
                                     />
                                 </FormControl>

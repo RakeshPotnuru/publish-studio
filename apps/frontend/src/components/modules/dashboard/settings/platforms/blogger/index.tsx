@@ -1,17 +1,14 @@
-import { Button, Separator, Skeleton, toast } from "@itsrakesh/ui";
+import { toast } from "@itsrakesh/ui";
 import { useEffect, useState } from "react";
 
 import type { IBlogger } from "@publish-studio/core";
 
 import { Images } from "@/assets/images";
-import { Center } from "@/components/ui/center";
-import { ErrorBox } from "@/components/ui/error-box";
-import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { constants } from "@/config/constants";
 import { useEditor } from "@/hooks/use-editor";
-import { shortenText } from "@/utils/text-shortener";
 import { trpc } from "@/utils/trpc";
-import { PlatformCard } from "../platform-card";
+import { ConnectionCard } from "../../connection-card";
+import { ImportPostsBodyWithoutPrevious } from "../import-dialog";
 import { BloggerConnectForm } from "./connect-form";
 import { BloggerEditForm } from "./edit-form";
 
@@ -43,7 +40,7 @@ export function Blogger({ data, isLoading }: Readonly<BloggerProps>) {
     };
 
     return (
-        <PlatformCard
+        <ConnectionCard
             onDisconnect={handleDisconnect}
             isOpen={isOpen}
             setIsOpen={setIsOpen}
@@ -142,86 +139,21 @@ export function ImportPosts() {
     };
 
     return (
-        <div className="space-y-4">
-            <div className="space-y-2 rounded-lg border py-2">
-                {error ? (
-                    <Center>
-                        <ErrorBox title="Failed to fetch posts" description={error.message} />
-                    </Center>
-                ) : isFetching ? (
-                    Array.from({ length: 10 }).map((_, index) => (
-                        <div key={`skeleton-${index + 1}`}>
-                            <div className="flex items-center justify-between space-x-2 px-2">
-                                <Skeleton className="h-8 w-3/4" />
-                                <Skeleton className="h-8 w-3/12" />
-                            </div>
-                            {index !== 9 && <Separator className="mt-2" />}
-                        </div>
-                    ))
-                ) : posts.length ? (
-                    posts.map(post => (
-                        <div key={post.id}>
-                            <div className="flex items-center justify-between space-x-2 px-2">
-                                <p title={post.title} className="text-sm">
-                                    {posts.indexOf(post) +
-                                        (pageTokens.indexOf(page_token ?? "") + 1) * pageSize +
-                                        1}
-                                    . {shortenText(post.title, 50)}
-                                </p>
-                                <Button
-                                    onClick={() => handleImport(post.id)}
-                                    variant={
-                                        importedPosts.includes(post.id) ? "success" : "secondary"
-                                    }
-                                    size="sm"
-                                    disabled={isLoading || importedPosts.includes(post.id)}
-                                >
-                                    {importedPosts.includes(post.id) ? (
-                                        "Imported"
-                                    ) : (
-                                        <ButtonLoader
-                                            isLoading={isLoading && importingPost === post.id}
-                                        >
-                                            Import
-                                        </ButtonLoader>
-                                    )}
-                                </Button>
-                            </div>
-                            {posts.indexOf(post) !== posts.length - 1 && (
-                                <Separator className="mt-2" />
-                            )}
-                        </div>
-                    ))
-                ) : (
-                    <Center className="text-muted-foreground h-24">No results</Center>
-                )}
-            </div>
-            <div className="flex justify-between">
-                <Button
-                    onClick={() =>
-                        setPagination({
-                            pageSize,
-                            page_token: pageTokens[pageTokens.indexOf(page_token ?? "") - 1],
-                        })
-                    }
-                    variant="outline"
-                    disabled={isFetching || pageTokens.indexOf(page_token ?? "") === -1}
-                >
-                    Previous
-                </Button>
-                <Button
-                    onClick={() =>
-                        setPagination({
-                            pageSize,
-                            page_token: pageTokens[pageTokens.length - 1],
-                        })
-                    }
-                    variant="outline"
-                    disabled={posts.length === 0 || isFetching || posts.length < pageSize}
-                >
-                    Next
-                </Button>
-            </div>
-        </div>
+        <ImportPostsBodyWithoutPrevious
+            posts={posts.map(post => ({
+                id: post.id,
+                title: post.title,
+            }))}
+            isFetching={isFetching}
+            error={error?.message}
+            setPagination={setPagination}
+            cursors={pageTokens}
+            pageSize={pageSize}
+            end_cursor={page_token}
+            isLoading={isLoading}
+            importingPost={importingPost ?? undefined}
+            importedPosts={importedPosts}
+            handleImport={handleImport}
+        />
     );
 }

@@ -56,8 +56,8 @@ export function HashnodeEditForm({
 
     const { mutateAsync: edit, isLoading: isUpdating } = trpc.platforms.hashnode.update.useMutation(
         {
-            onSuccess: () => {
-                toast.success("Your Hashnode account has been updated successfully.");
+            onSuccess: ({ data }) => {
+                toast.success(data.message);
                 utils.platforms.getAll.invalidate();
                 setIsOpen(false);
             },

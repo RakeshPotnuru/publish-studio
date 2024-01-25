@@ -1,18 +1,15 @@
-import { Button, Separator, Skeleton, toast } from "@itsrakesh/ui";
+import { toast } from "@itsrakesh/ui";
 import { useEffect, useState } from "react";
 
 import type { IHashnode } from "@publish-studio/core";
 
 import { Images } from "@/assets/images";
-import { Center } from "@/components/ui/center";
-import { ErrorBox } from "@/components/ui/error-box";
-import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { constants } from "@/config/constants";
 import { useEditor } from "@/hooks/use-editor";
-import { shortenText } from "@/utils/text-shortener";
 import { trpc } from "@/utils/trpc";
 import { deserialize } from "../../../../../editor/transform-markdown";
-import { PlatformCard } from "../platform-card";
+import { ConnectionCard } from "../../connection-card";
+import { ImportPostsBodyWithoutPrevious } from "../import-dialog";
 import { HashnodeConnectForm } from "./connect-form";
 import { HashnodeEditForm } from "./edit-form";
 
@@ -44,7 +41,7 @@ export function Hashnode({ data, isLoading }: Readonly<HashnodeToProps>) {
     };
 
     return (
-        <PlatformCard
+        <ConnectionCard
             onDisconnect={handleDisconnect}
             isOpen={isOpen}
             setIsOpen={setIsOpen}
@@ -97,9 +94,12 @@ export function ImportPosts() {
 
     useEffect(() => {
         if (data?.data.posts.data.publication.posts.pageInfo.endCursor) {
-            setCursors([...cursors, data.data.posts.data.publication.posts.pageInfo.endCursor]);
+            setCursors(prevCursors => [
+                ...prevCursors,
+                data.data.posts.data.publication.posts.pageInfo.endCursor,
+            ]);
         }
-    }, [data?.data.posts.data.publication.posts.pageInfo.endCursor, cursors]);
+    }, [data?.data.posts.data.publication.posts.pageInfo.endCursor]);
 
     const posts = data?.data.posts.data.publication.posts.edges ?? [];
 
@@ -145,88 +145,21 @@ export function ImportPosts() {
     };
 
     return (
-        <div className="space-y-4">
-            <div className="space-y-2 rounded-lg border py-2">
-                {error ? (
-                    <Center>
-                        <ErrorBox title="Failed to fetch posts" description={error.message} />
-                    </Center>
-                ) : isFetching ? (
-                    Array.from({ length: 10 }).map((_, index) => (
-                        <div key={`skeleton-${index + 1}`}>
-                            <div className="flex items-center justify-between space-x-2 px-2">
-                                <Skeleton className="h-8 w-3/4" />
-                                <Skeleton className="h-8 w-3/12" />
-                            </div>
-                            {index !== 9 && <Separator className="mt-2" />}
-                        </div>
-                    ))
-                ) : posts.length ? (
-                    posts.map(post => (
-                        <div key={post.node.id}>
-                            <div className="flex items-center justify-between space-x-2 px-2">
-                                <p title={post.node.title} className="text-sm">
-                                    {posts.indexOf(post) +
-                                        (cursors.indexOf(end_cursor ?? "") + 1) * pageSize +
-                                        1}
-                                    . {shortenText(post.node.title, 50)}
-                                </p>
-                                <Button
-                                    onClick={() => handleImport(post.node.id)}
-                                    variant={
-                                        importedPosts.includes(post.node.id)
-                                            ? "success"
-                                            : "secondary"
-                                    }
-                                    size="sm"
-                                    disabled={isLoading || importedPosts.includes(post.node.id)}
-                                >
-                                    {importedPosts.includes(post.node.id) ? (
-                                        "Imported"
-                                    ) : (
-                                        <ButtonLoader
-                                            isLoading={isLoading && importingPost === post.node.id}
-                                        >
-                                            Import
-                                        </ButtonLoader>
-                                    )}
-                                </Button>
-                            </div>
-                            {posts.indexOf(post) !== posts.length - 1 && (
-                                <Separator className="mt-2" />
-                            )}
-                        </div>
-                    ))
-                ) : (
-                    <Center className="text-muted-foreground h-24">No results</Center>
-                )}
-            </div>
-            <div className="flex justify-between">
-                <Button
-                    onClick={() =>
-                        setPagination({
-                            pageSize,
-                            end_cursor: cursors[cursors.indexOf(end_cursor ?? "") - 1],
-                        })
-                    }
-                    variant="outline"
-                    disabled={isFetching || cursors.indexOf(end_cursor ?? "") === -1}
-                >
-                    Previous
-                </Button>
-                <Button
-                    onClick={() =>
-                        setPagination({
-                            pageSize,
-                            end_cursor: cursors[cursors.length - 1],
-                        })
-                    }
-                    variant="outline"
-                    disabled={posts.length === 0 || isFetching || posts.length < pageSize}
-                >
-                    Next
-                </Button>
-            </div>
-        </div>
+        <ImportPostsBodyWithoutPrevious
+            posts={posts.map(post => ({
+                id: post.node.id,
+                title: post.node.title,
+            }))}
+            isFetching={isFetching}
+            error={error?.message}
+            setPagination={setPagination}
+            cursors={cursors}
+            pageSize={pageSize}
+            end_cursor={end_cursor}
+            isLoading={isLoading}
+            importingPost={importingPost ?? undefined}
+            importedPosts={importedPosts}
+            handleImport={handleImport}
+        />
     );
 }

@@ -1,5 +1,6 @@
 export type { IAsset } from "../modules/asset/asset.types";
 export type { IFolder } from "../modules/folder/folder.types";
+export type { ICloudinary } from "../modules/integration/cloudinary/cloudinary.types";
 export type { IBlogger } from "../modules/platform/blogger/blogger.types";
 export type { IDevTo } from "../modules/platform/devto/devto.types";
 export type { IGhost } from "../modules/platform/ghost/ghost.types";

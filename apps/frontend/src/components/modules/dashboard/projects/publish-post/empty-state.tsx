@@ -12,7 +12,7 @@ export function EmptyState() {
                 get your content rolling.
             </p>
             <Button asChild>
-                <Link href={siteConfig.pages.settings.integrations.link}>
+                <Link href={siteConfig.pages.settings.connections.link}>
                     <Icons.Connect className="mr-2 size-4" />
                     Connect
                 </Link>

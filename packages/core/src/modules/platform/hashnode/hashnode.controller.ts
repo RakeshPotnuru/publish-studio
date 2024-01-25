@@ -42,7 +42,7 @@ export default class HashnodeController extends HashnodeService {
             await super.deletePlatform(platform.user_id);
         }
 
-        const newPlatform = await super.createPlatform({
+        await super.createPlatform({
             user_id: ctx.user._id,
             api_key: input.api_key,
             username: user.data.me.username,
@@ -60,7 +60,7 @@ export default class HashnodeController extends HashnodeService {
         return {
             status: "success",
             data: {
-                platform: newPlatform,
+                message: "Your Hashnode account has been connected successfully.",
             },
         };
     }
@@ -119,12 +119,12 @@ export default class HashnodeController extends HashnodeService {
             return {
                 status: "success",
                 data: {
-                    message: "Platform updated successfully.",
+                    message: "Your Hashnode account has been updated successfully.",
                 },
             };
         }
 
-        const updatedPlatform = await super.updatePlatform(
+        await super.updatePlatform(
             {
                 settings: {
                     enable_table_of_contents: input.settings.enable_table_of_contents,
@@ -138,7 +138,7 @@ export default class HashnodeController extends HashnodeService {
         return {
             status: "success",
             data: {
-                platform: updatedPlatform,
+                message: "Your Hashnode account has been updated successfully.",
             },
         };
     }

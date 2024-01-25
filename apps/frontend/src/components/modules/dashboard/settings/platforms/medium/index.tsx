@@ -5,10 +5,10 @@ import type { IMedium } from "@publish-studio/core";
 import { Images } from "@/assets/images";
 import { constants } from "@/config/constants";
 import { trpc } from "@/utils/trpc";
-import { PlatformCard } from "../platform-card";
+import { useState } from "react";
+import { ConnectionCard } from "../../connection-card";
 import { MediumConnectForm } from "./connect-form";
 import { MediumEditForm } from "./edit-form";
-import { useState } from "react";
 
 interface MediumToProps {
     data?: IMedium;
@@ -37,7 +37,7 @@ export function Medium({ data, isLoading }: Readonly<MediumToProps>) {
     };
 
     return (
-        <PlatformCard
+        <ConnectionCard
             onDisconnect={handleDisconnect}
             isOpen={isOpen}
             setIsOpen={setIsOpen}

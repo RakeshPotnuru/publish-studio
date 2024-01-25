@@ -17,14 +17,14 @@ export function ConnectWP() {
     const utils = trpc.useUtils();
 
     const { mutateAsync: connect } = trpc.platforms.wordpress.connect.useMutation({
-        onSuccess() {
-            toast.success("Your WordPress account has been connected successfully.");
+        onSuccess({ data }) {
+            toast.success(data.message);
             utils.platforms.getAll.invalidate();
-            router.push(siteConfig.pages.settings.integrations.link);
+            router.push(siteConfig.pages.settings.connections.link);
         },
         onError(error) {
             toast.error(error.message);
-            router.replace(siteConfig.pages.settings.integrations.link);
+            router.replace(siteConfig.pages.settings.connections.link);
         },
     });
 
@@ -40,7 +40,7 @@ export function ConnectWP() {
 
     useEffect(() => {
         if (!code) {
-            router.replace(siteConfig.pages.settings.integrations.link);
+            router.replace(siteConfig.pages.settings.connections.link);
         }
 
         handleConnect();

@@ -44,8 +44,8 @@ export function DevConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFormP
 
     const { mutateAsync: connect, isLoading: isConnecting } =
         trpc.platforms.devto.connect.useMutation({
-            onSuccess: () => {
-                toast.success("Your Dev account has been connected successfully.");
+            onSuccess: ({ data }) => {
+                toast.success(data.message);
                 utils.platforms.getAll.invalidate();
                 setIsOpen(false);
             },

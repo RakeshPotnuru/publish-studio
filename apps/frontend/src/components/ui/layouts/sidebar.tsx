@@ -69,9 +69,9 @@ export function Sidebar({ className, ...props }: SidebarProps) {
                                 icon={<Icons.Appearance />}
                             />
                             <SidebarItem
-                                label="Integrations"
-                                link="/settings/integrations"
-                                icon={<Icons.Integrations />}
+                                label="Connections"
+                                link="/settings/connections"
+                                icon={<Icons.Connections />}
                             />
                         </>
                     ) : (

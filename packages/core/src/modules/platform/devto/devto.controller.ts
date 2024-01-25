@@ -27,7 +27,7 @@ export default class DevToController extends DevToService {
         return {
             status: "success",
             data: {
-                message: "Platform connected successfully.",
+                message: "Your Dev account has been connected successfully.",
             },
         };
     }
@@ -54,7 +54,7 @@ export default class DevToController extends DevToService {
             return {
                 status: "success",
                 data: {
-                    message: "Platform updated successfully.",
+                    message: "Your Dev account has been updated successfully.",
                 },
             };
         }
@@ -69,7 +69,7 @@ export default class DevToController extends DevToService {
         return {
             status: "success",
             data: {
-                message: "Platform updated successfully.",
+                message: "Your Dev account has been updated successfully.",
             },
         };
     }

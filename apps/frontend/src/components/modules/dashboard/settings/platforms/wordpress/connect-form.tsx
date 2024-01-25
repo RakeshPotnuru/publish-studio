@@ -25,7 +25,7 @@ export function WordPressConnectForm() {
                             process.env.NEXT_PUBLIC_WORDPRESS_CLIENT_ID
                         }&redirect_uri=${
                             process.env.NEXT_PUBLIC_CLIENT_URL
-                        }/settings/integrations/connect-wp&response_type=code&scope=${scopes.join(
+                        }/settings/connections/connect-wp&response_type=code&scope=${scopes.join(
                             "%20",
                         )}`,
                     );

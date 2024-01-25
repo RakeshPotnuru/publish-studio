@@ -11,7 +11,7 @@ export default class CloudinaryController extends CloudinaryService {
         return {
             status: "success",
             data: {
-                message: "Integration connected successfully.",
+                message: "Your Cloudinary account has been connected successfully.",
             },
         };
     }
@@ -22,7 +22,7 @@ export default class CloudinaryController extends CloudinaryService {
         return {
             status: "success",
             data: {
-                message: "Integration updated successfully.",
+                message: "Your Cloudinary account has been updated successfully.",
             },
         };
     }
@@ -33,7 +33,18 @@ export default class CloudinaryController extends CloudinaryService {
         return {
             status: "success",
             data: {
-                message: "Integration disconnected successfully.",
+                message: "Your Cloudinary account has been disconnected successfully.",
+            },
+        };
+    }
+
+    async getIntegrationHandler(ctx: Context) {
+        const integration = await super.getIntegration(ctx.user._id);
+
+        return {
+            status: "success",
+            data: {
+                integration,
             },
         };
     }

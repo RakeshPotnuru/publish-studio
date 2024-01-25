@@ -68,8 +68,8 @@ export function BloggerEditForm({ setIsOpen, ...props }: Readonly<BloggerEditFor
     });
 
     const { mutateAsync: edit, isLoading: isUpdating } = trpc.platforms.blogger.update.useMutation({
-        onSuccess: () => {
-            toast.success("Your Blogger account has been updated successfully.");
+        onSuccess: ({ data }) => {
+            toast.success(data.message);
             utils.platforms.getAll.invalidate();
             setIsOpen(false);
         },

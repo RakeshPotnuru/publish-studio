@@ -2,10 +2,12 @@
 
 import type { IPlatform } from "@publish-studio/core";
 
+import { Center } from "@/components/ui/center";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
 import { constants } from "@/config/constants";
 import { trpc } from "@/utils/trpc";
+import { Cloudinary } from "./integrations/cloudinary";
 import { Blogger } from "./platforms/blogger";
 import { DevTo } from "./platforms/dev";
 import { Ghost } from "./platforms/ghost";
@@ -15,8 +17,12 @@ import { WordPress } from "./platforms/wordpress";
 
 interface IntegrationsProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export function Integrations({ ...props }: IntegrationsProps) {
-    const { data, isFetching, error } = trpc.platforms.getAll.useQuery({
+export function Connections({ ...props }: IntegrationsProps) {
+    const {
+        data,
+        isFetching,
+        error: platformsError,
+    } = trpc.platforms.getAll.useQuery({
         pagination: { page: 1, limit: 10 },
     });
 
@@ -39,17 +45,27 @@ export function Integrations({ ...props }: IntegrationsProps) {
         platform => platform.name === constants.user.platforms.BLOGGER,
     )?.data;
 
+    const {
+        data: cloudinary,
+        isFetching: isCloudinaryLoading,
+        error: cloudinaryError,
+    } = trpc.cloudinary.get.useQuery();
+
     return (
         <div className="space-y-8" {...props}>
             <div className="space-y-2">
-                <Heading>Integrations</Heading>
+                <Heading>Connections</Heading>
                 <p className="text-muted-foreground">
                     Configure your platforms and other integrations
                 </p>
             </div>
             <div className="space-y-4">
                 <Heading level={2}>Platforms</Heading>
-                {error && <ErrorBox title="Error" description={error.message} />}
+                {platformsError && (
+                    <Center>
+                        <ErrorBox title="Error" description={platformsError.message} />
+                    </Center>
+                )}
                 <div className="grid grid-cols-2 gap-4">
                     <Blogger isLoading={isFetching} data={blogger} />
                     <DevTo isLoading={isFetching} data={devto} />
@@ -57,6 +73,20 @@ export function Integrations({ ...props }: IntegrationsProps) {
                     <Hashnode isLoading={isFetching} data={hashnode} />
                     <Medium isLoading={isFetching} data={medium} />
                     <WordPress isLoading={isFetching} data={wordpress} />
+                </div>
+            </div>
+            <div className="space-y-4">
+                <Heading level={2}>Integrations</Heading>
+                {cloudinaryError && (
+                    <Center>
+                        <ErrorBox title="Error" description={cloudinaryError.message} />
+                    </Center>
+                )}
+                <div className="grid grid-cols-2 gap-4">
+                    <Cloudinary
+                        isLoading={isCloudinaryLoading}
+                        data={cloudinary?.data.integration ?? undefined}
+                    />
                 </div>
             </div>
         </div>

@@ -1,4 +1,13 @@
-import { Button, Skeleton } from "@itsrakesh/ui";
+import {
+    Button,
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+    Skeleton,
+} from "@itsrakesh/ui";
+import { cn } from "@itsrakesh/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -8,11 +17,9 @@ import { AskForConfirmation } from "@/components/ui/ask-for-confirmation";
 import { Heading } from "@/components/ui/heading";
 import { Tooltip } from "@/components/ui/tooltip";
 import { trpc } from "@/utils/trpc";
-import { cn } from "@itsrakesh/utils";
-import { ImportDialog } from "./import-dialog";
-import { PlatformDialog } from "./platform-dialog";
+import { ImportDialog } from "./platforms/import-dialog";
 
-interface PlatformCardProps extends React.HTMLAttributes<HTMLDivElement> {
+interface ConnectionCardProps extends React.HTMLAttributes<HTMLDivElement> {
     name: string;
     icon: string;
     isLoading: boolean;
@@ -26,11 +33,11 @@ interface PlatformCardProps extends React.HTMLAttributes<HTMLDivElement> {
     isImportOpen?: boolean;
     setIsImportOpen?: React.Dispatch<React.SetStateAction<boolean>>;
     onDisconnect: () => void;
-    iconBg?: string;
+    iconClassName?: React.HTMLProps<HTMLElement>["className"];
     importComponent?: React.ReactNode;
 }
 
-export function PlatformCard({
+export function ConnectionCard({
     name,
     icon,
     isLoading,
@@ -44,10 +51,10 @@ export function PlatformCard({
     isImportOpen,
     setIsImportOpen,
     onDisconnect,
-    iconBg,
+    iconClassName,
     importComponent,
     ...props
-}: Readonly<PlatformCardProps>) {
+}: Readonly<ConnectionCardProps>) {
     const [askingForConfirmation, setAskingForConfirmation] = useState(false);
 
     const utils = trpc.useUtils();
@@ -76,7 +83,7 @@ export function PlatformCard({
                 </Button>
             )}
             <div className="space-x-1">
-                <PlatformDialog
+                <ConnectionDialog
                     open={isOpen}
                     onOpenChange={setIsOpen}
                     mode="edit"
@@ -87,7 +94,7 @@ export function PlatformCard({
                     <Button size="icon" variant="outline" className="h-8 w-8">
                         <Icons.Edit />
                     </Button>
-                </PlatformDialog>
+                </ConnectionDialog>
                 {importComponent && (
                     <ImportDialog
                         open={isImportOpen ?? false}
@@ -105,7 +112,7 @@ export function PlatformCard({
         </div>
     ) : (
         <div>
-            <PlatformDialog
+            <ConnectionDialog
                 open={isOpen}
                 onOpenChange={setIsOpen}
                 mode="connect"
@@ -113,7 +120,7 @@ export function PlatformCard({
                 form={connectForm}
             >
                 <Button size="sm">Connect</Button>
-            </PlatformDialog>
+            </ConnectionDialog>
         </div>
     );
 
@@ -125,7 +132,7 @@ export function PlatformCard({
                     alt={name}
                     width={50}
                     height={50}
-                    className={cn("rounded-lg", iconBg)}
+                    className={cn("rounded-lg", iconClassName)}
                 />
                 <div className="flex flex-col justify-center">
                     <Heading level={3} className="flex flex-row items-center space-x-1">
@@ -162,5 +169,39 @@ export function PlatformCard({
             </div>
             {isLoading ? <Skeleton className="h-8 w-20" /> : actionView}
         </div>
+    );
+}
+
+interface ConnectionDialogProps extends React.HTMLAttributes<HTMLDialogElement> {
+    mode: "connect" | "edit";
+    form: React.ReactNode;
+    platform: string;
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    tooltip?: string;
+}
+
+function ConnectionDialog({
+    mode,
+    form,
+    platform,
+    children,
+    tooltip,
+    ...props
+}: Readonly<ConnectionDialogProps>) {
+    return (
+        <Dialog {...props}>
+            <Tooltip content={tooltip}>
+                <DialogTrigger asChild>{children}</DialogTrigger>
+            </Tooltip>
+            <DialogContent onCloseAutoFocus={e => e.preventDefault()}>
+                <DialogHeader>
+                    <DialogTitle>
+                        {mode === "connect" ? "Connect" : "Edit"} your {platform} account
+                    </DialogTitle>
+                </DialogHeader>
+                {form}
+            </DialogContent>
+        </Dialog>
     );
 }

@@ -29,6 +29,10 @@ const cloudinaryRouter = router({
     disconnect: protectedProcedure.query(({ ctx }) =>
         new CloudinaryController().deleteIntegrationHandler(ctx),
     ),
+
+    get: protectedProcedure.query(({ ctx }) =>
+        new CloudinaryController().getIntegrationHandler(ctx),
+    ),
 });
 
 export default cloudinaryRouter;

@@ -39,7 +39,7 @@ export const GeneralIcons = {
     Published: IoCheckmarkDoneCircleSharp,
     RowActions: PiDotsThreeBold,
     Appearance: FaPaintRoller,
-    Integrations: FaPuzzlePiece,
+    Connections: FaPuzzlePiece,
     Connected: BsFillPatchCheckFill,
     Question: AiFillQuestionCircle,
     Profile: CgProfile,

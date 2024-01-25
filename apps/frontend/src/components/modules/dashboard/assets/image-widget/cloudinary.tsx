@@ -1,5 +1,13 @@
 import { useLayoutEffect } from "react";
 
+import { Icons } from "@/assets/icons";
+import { Center } from "@/components/ui/center";
+import { ErrorBox } from "@/components/ui/error-box";
+import { DotsLoader } from "@/components/ui/loaders/dots-loader";
+import { siteConfig } from "@/config/site";
+import { trpc } from "@/utils/trpc";
+import { Button } from "@itsrakesh/ui";
+import Link from "next/link";
 import { TInsertImageOptions } from ".";
 
 declare global {
@@ -48,35 +56,68 @@ interface CloudinaryProps {
 }
 
 export function Cloudinary({ onImageInsert }: Readonly<CloudinaryProps>) {
+    const { data, isFetching, error } = trpc.cloudinary.get.useQuery();
+
     useLayoutEffect(() => {
-        const mediaLibrary = window.cloudinary?.openMediaLibrary(
-            {
-                cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-                api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
-                remove_header: true,
-                insert_caption: "Insert & Close",
-                inline_container: "#cloudinary-container",
-                multiple: false,
-            },
-            {
-                insertHandler: function (data: IPayload) {
-                    const file = data.assets[0];
-                    const fileName = file.public_id.split("/").pop() ?? file.public_id;
-                    onImageInsert({
-                        src: file.url,
-                        alt: fileName,
-                        title: fileName,
-                        hasCaption: false,
-                    });
+        if (isFetching || error) return;
+
+        if (data?.data.integration) {
+            const mediaLibrary = window.cloudinary?.openMediaLibrary(
+                {
+                    cloud_name: data?.data.integration?.cloud_name,
+                    api_key: data?.data.integration?.api_key,
+                    remove_header: true,
+                    insert_caption: "Insert & Close",
+                    inline_container: "#cloudinary-container",
+                    multiple: false,
                 },
-            },
-        );
-        mediaLibrary?.show();
-    }, [onImageInsert]);
+                {
+                    insertHandler: function (data: IPayload) {
+                        const file = data.assets[0];
+                        const fileName = file.public_id.split("/").pop() ?? file.public_id;
+                        onImageInsert({
+                            src: file.url,
+                            alt: fileName,
+                            title: fileName,
+                            hasCaption: false,
+                        });
+                    },
+                },
+            );
+            mediaLibrary?.show();
+        }
+    }, [onImageInsert, isFetching, error, data]);
+
+    const bodyView = data?.data.integration ? (
+        <div id="cloudinary-container" className="h-[70dvh] w-[70dvw]" />
+    ) : (
+        <Center className="h-24">
+            <Button asChild>
+                <Link href={siteConfig.pages.settings.connections.link}>
+                    <Icons.Connect className="mr-2" />
+                    Connect cloudinary
+                </Link>
+            </Button>
+        </Center>
+    );
+
+    const bodyPendingView = isFetching ? (
+        <Center className="h-24">
+            <DotsLoader />
+        </Center>
+    ) : (
+        bodyView
+    );
 
     return (
         <div className="rounded-lg border p-2">
-            <div id="cloudinary-container" className="h-[70dvh] w-[70dvw]" />
+            {error ? (
+                <Center className="h-24">
+                    <ErrorBox title="Error" description={error.message} />
+                </Center>
+            ) : (
+                bodyPendingView
+            )}
         </div>
     );
 }

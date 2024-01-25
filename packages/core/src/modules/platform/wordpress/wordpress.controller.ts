@@ -30,7 +30,7 @@ export default class WordPressController extends WordPressService {
         return {
             status: "success",
             data: {
-                message: "Platform connected successfully.",
+                message: "Your WordPress account has been connected successfully.",
             },
         };
     }
@@ -41,7 +41,7 @@ export default class WordPressController extends WordPressService {
         return {
             status: "success",
             data: {
-                message: "Platform updated successfully.",
+                message: "Your WordPress account has been updated successfully.",
             },
         };
     }

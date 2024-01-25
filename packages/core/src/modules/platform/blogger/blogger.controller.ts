@@ -33,12 +33,10 @@ export default class BloggerController extends BloggerService {
     async createPlatformHandler(code: string, ctx: Context) {
         const response = await super.getTokenAndBlogs(code);
 
-        const platform = await super.getPlatformWithToken({
-            blog_id: response.blogs[0].id,
-        });
+        const platform = await super.getPlatformByBlogId(response.blogs[0].id);
 
         if (platform && !platform.user_id.equals(ctx.user._id)) {
-            await super.deletePlatform(platform.token, platform.user_id);
+            await super.deletePlatform(platform.user_id);
         }
 
         await super.createPlatform({
@@ -52,18 +50,16 @@ export default class BloggerController extends BloggerService {
         return {
             status: "success",
             data: {
-                message: "Platform connected successfully.",
+                message: "Your Blogger account has been connected successfully.",
             },
         };
     }
 
     async updatePlatformHandler(input: IBloggerUpdateInput, ctx: Context) {
-        const platform = await super.getPlatformWithToken({
-            blog_id: input.blog_id,
-        });
+        const platform = await super.getPlatformByBlogId(input.blog_id);
 
         if (platform && !platform.user_id.equals(ctx.user._id)) {
-            await super.deletePlatform(platform.token, platform.user_id);
+            await super.deletePlatform(platform.user_id);
         }
 
         await super.updatePlatform(input, ctx.user._id);
@@ -71,15 +67,13 @@ export default class BloggerController extends BloggerService {
         return {
             status: "success",
             data: {
-                message: "Platform updated successfully.",
+                message: "Your Blogger account has been updated successfully.",
             },
         };
     }
 
     async deletePlatformHandler(ctx: Context) {
-        const platform = await super.getPlatformWithToken({
-            user_id: ctx.user._id,
-        });
+        const platform = await super.getPlatform(ctx.user._id);
 
         if (!platform) {
             throw new TRPCError({
@@ -88,7 +82,7 @@ export default class BloggerController extends BloggerService {
             });
         }
 
-        await super.deletePlatform(platform.token, ctx.user._id);
+        await super.deletePlatform(ctx.user._id);
 
         return {
             status: "success",

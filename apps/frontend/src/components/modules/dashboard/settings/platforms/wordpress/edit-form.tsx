@@ -47,8 +47,8 @@ export function WordPressEditForm({
 
     const { mutateAsync: edit, isLoading: isUpdating } =
         trpc.platforms.wordpress.update.useMutation({
-            onSuccess: () => {
-                toast.success("Your WordPress account has been updated successfully.");
+            onSuccess: ({ data }) => {
+                toast.success(data.message);
                 utils.platforms.getAll.invalidate();
                 setIsOpen(false);
             },
