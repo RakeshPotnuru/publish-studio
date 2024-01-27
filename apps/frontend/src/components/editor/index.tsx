@@ -8,7 +8,7 @@ import { IProject } from "@publish-studio/core";
 import { useEditor } from "@/hooks/use-editor";
 import { useFullscreenStatus } from "@/hooks/use-fullscreen-status";
 import { Heading } from "../ui/heading";
-import { Shell } from "../ui/layouts/shell";
+import { Shell } from "../ui/shell";
 import { EditorBody } from "./editor-body";
 import { EditorFooter } from "./editor-footer";
 import { BubbleMenu } from "./menu/bubble-menu";

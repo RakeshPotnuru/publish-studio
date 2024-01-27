@@ -20,7 +20,7 @@ import { Images } from "@/assets/images";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
-import formatTimestamp from "@/utils/format-timestamp";
+import { intlFormatDistance } from "date-fns";
 import { formSchema } from "../form-schema";
 import { Blogger } from "./blogger";
 import { Dev } from "./dev";
@@ -264,7 +264,13 @@ export const PlatformsField = ({
                                                         {scheduledAt &&
                                                         new Date(scheduledAt) > new Date() ? (
                                                             <p className="text-muted-foreground text-sm">
-                                                                {formatTimestamp(scheduledAt)}
+                                                                {intlFormatDistance(
+                                                                    new Date(scheduledAt),
+                                                                    new Date(),
+                                                                    {
+                                                                        style: "short",
+                                                                    },
+                                                                )}
                                                             </p>
                                                         ) : (
                                                             <Button

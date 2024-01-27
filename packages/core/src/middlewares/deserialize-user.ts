@@ -12,8 +12,6 @@ export const deserializeUser = async ({ req, res }: CreateExpressContextOptions)
         let access_token = "";
         if (req.headers.authorization?.startsWith("Bearer")) {
             access_token = req.headers.authorization.split(" ")[1];
-        } else if (req.cookies?.access_token) {
-            access_token = req.cookies.access_token;
         }
 
         const notAuthenticated = {
@@ -40,7 +38,7 @@ export const deserializeUser = async ({ req, res }: CreateExpressContextOptions)
             return notAuthenticated;
         }
 
-        // Check if the user still exist
+        // Check if the user still exists
         const user = await User.findById(JSON.parse(session)._id).exec();
 
         if (!user) {

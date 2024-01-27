@@ -43,13 +43,13 @@ export default class AuthController extends UserService {
     }
 
     private async sendVerificationEmail(email: string, token: string) {
-        const verification_url = `${defaultConfig.client_url}/verify-email?token=${token}`;
+        const verificationUrl = `${defaultConfig.client_url}/verify-email?token=${token}`;
 
         await sendEmail(
             [email],
             constants.emailTemplates.VERIFY_EMAIL,
             {
-                verification_url: verification_url,
+                verification_url: verificationUrl,
             },
             process.env.AWS_SES_AUTO_FROM_EMAIL,
         );
@@ -64,13 +64,13 @@ export default class AuthController extends UserService {
 
     private async sendResetPasswordEmail(email: string, token: string) {
         try {
-            const reset_password_url = `${defaultConfig.client_url}/reset-password?token=${token}`;
+            const resetPasswordUrl = `${defaultConfig.client_url}/reset-password?token=${token}`;
 
             await sendEmail(
                 [email],
                 constants.emailTemplates.RESET_PASSWORD,
                 {
-                    reset_password_url: reset_password_url,
+                    reset_password_url: resetPasswordUrl,
                 },
                 process.env.AWS_SES_AUTO_FROM_EMAIL,
             );
@@ -206,12 +206,12 @@ export default class AuthController extends UserService {
             });
         }
 
-        const hashed_password = await bycrypt.hash(input.password, 12);
+        const hashedPassword = await bycrypt.hash(input.password, 12);
         const newUser = await super.createUser({
             first_name: input.first_name,
             last_name: input.last_name,
             email: input.email,
-            password: hashed_password,
+            password: hashedPassword,
             profile_pic: input.profile_pic,
             user_type: input.user_type,
         });

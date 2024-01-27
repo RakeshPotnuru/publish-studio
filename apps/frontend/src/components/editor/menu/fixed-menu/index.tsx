@@ -2,7 +2,7 @@ import { type Editor } from "@tiptap/react";
 import { useState } from "react";
 
 import { Icons } from "@/assets/icons";
-import { MenuShell } from "@/components/ui/layouts/shell";
+import { MenuShell } from "@/components/ui/shell";
 import { FullscreenAction } from "../actions/fullscreen-action";
 import { HistoryActions } from "../actions/history-actions";
 import { ImageAction } from "../actions/image-action";

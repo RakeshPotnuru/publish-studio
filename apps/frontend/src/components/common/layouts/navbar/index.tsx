@@ -11,9 +11,6 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
     Skeleton,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
@@ -24,11 +21,12 @@ import { useCookies } from "react-cookie";
 import { siteConfig } from "@/config/site";
 import useUserStore from "@/lib/store/user";
 import { trpc } from "@/utils/trpc";
-import { Icons } from "../../../assets/icons";
-import { Images } from "../../../assets/images";
-import { ProBorder } from "../pro-border";
-import { ProButton } from "../pro-button";
-import { Tooltip } from "../tooltip";
+import { Icons } from "../../../../assets/icons";
+import { Images } from "../../../../assets/images";
+import { ProBorder } from "../../../ui/pro-border";
+import { ProButton } from "../../../ui/pro-button";
+import { Tooltip } from "../../../ui/tooltip";
+import { Notifications } from "./notifications";
 
 const NavItem = ({
     icon,
@@ -47,7 +45,7 @@ const NavItem = ({
                 </Button>
             </DropdownMenuTrigger>
         </Tooltip>
-        <DropdownMenuContent className="w-48" forceMount>
+        <DropdownMenuContent className="w-48" onCloseAutoFocus={e => e.preventDefault()} forceMount>
             {children}
         </DropdownMenuContent>
     </DropdownMenu>
@@ -111,20 +109,7 @@ export function Navbar({ className, ...props }: NavbarProps) {
                         </Link>
                     </DropdownMenuItem>
                 </NavItem>
-                <Popover>
-                    <Tooltip content="Notifications">
-                        <PopoverTrigger asChild>
-                            <Button size="icon" variant="ghost" className="rounded-full">
-                                <Icons.Notification className="size-5" />
-                            </Button>
-                        </PopoverTrigger>
-                    </Tooltip>
-                    <PopoverContent className="w-96" forceMount>
-                        <div className="text-muted-foreground flex h-20 items-center justify-center text-sm">
-                            No new notifications
-                        </div>
-                    </PopoverContent>
-                </Popover>
+                <Notifications />
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="relative size-8 rounded-full">

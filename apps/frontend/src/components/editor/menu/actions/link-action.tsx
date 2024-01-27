@@ -85,6 +85,7 @@ export function LinkAction({ editor, isBubbleMenu }: Readonly<MenuProps>) {
                                                 <Input
                                                     type="text"
                                                     placeholder="https://example.com"
+                                                    autoComplete="off"
                                                     {...field}
                                                 />
                                             </FormControl>

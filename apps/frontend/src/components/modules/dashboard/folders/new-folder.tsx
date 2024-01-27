@@ -20,6 +20,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { Center } from "@/components/ui/center";
 import { ErrorBox } from "@/components/ui/error-box";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { Tooltip } from "@/components/ui/tooltip";
@@ -54,6 +55,8 @@ export function NewFolderDialog({
 
     const router = useRouter();
 
+    const { mutateAsync: newNotification } = trpc.notifications.create.useMutation();
+
     const { mutateAsync: createFolder, isLoading } = trpc.folders.create.useMutation({
         onSuccess({ data }) {
             toast.success("Folder created successfully.");
@@ -78,6 +81,10 @@ export function NewFolderDialog({
         try {
             setError(null);
             await createFolder(data);
+            await newNotification({
+                message: "New folder created",
+                type: "folder",
+            });
         } catch (error) {}
     };
 
@@ -95,7 +102,11 @@ export function NewFolderDialog({
                         "animate-shake": error,
                     })}
                 >
-                    {error && <ErrorBox title="Could not create folder" description={error} />}
+                    {error && (
+                        <Center>
+                            <ErrorBox title="Could not create folder" description={error} />
+                        </Center>
+                    )}
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                             <FormField
@@ -109,6 +120,7 @@ export function NewFolderDialog({
                                                 type="text"
                                                 placeholder="Enter a name for your folder"
                                                 autoFocus
+                                                autoComplete="off"
                                                 {...field}
                                             />
                                         </FormControl>

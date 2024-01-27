@@ -6,6 +6,7 @@ import cloudinaryRouter from "./modules/integration/cloudinary/cloudinary.routes
 import pexelsRouter from "./modules/integration/pexels/pexels.routes";
 import unsplashRouter from "./modules/integration/unsplash/unsplash.routes";
 import nluRouter from "./modules/nlu/nlu.routes";
+import notificationRouter from "./modules/notification/notification.routes";
 import paymentRouter from "./modules/payment/payment.routes";
 import platformRouter from "./modules/platform/platform.routes";
 import projectRouter from "./modules/project/project.routes";
@@ -27,6 +28,7 @@ const appRouter = router({
     pexels: pexelsRouter,
     unsplash: unsplashRouter,
     cloudinary: cloudinaryRouter,
+    notifications: notificationRouter,
 });
 
 export type AppRouter = typeof appRouter;

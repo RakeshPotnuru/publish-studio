@@ -59,7 +59,7 @@ export const GeneralIcons = {
     Offline: BsFillCloudSlashFill,
     Calendar: IoCalendar,
     Loading: TbLoader,
-    LoadingDot: GoDotFill,
+    Dot: GoDotFill,
     Magic: FaWandMagicSparkles,
     Support: MdOutlineSupport,
     Tools: FaTools,

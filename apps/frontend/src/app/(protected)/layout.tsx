@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { Navbar } from "@/components/ui/layouts/navbar";
+import { Navbar } from "@/components/common/layouts/navbar";
 import { NetworkStatusToast } from "@/components/ui/network-status-toast";
 import { siteConfig } from "@/config/site";
 

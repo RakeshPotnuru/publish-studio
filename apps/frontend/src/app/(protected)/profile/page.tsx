@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { Profile } from "@/components/modules/dashboard/profile";
-import { Shell } from "@/components/ui/layouts/shell";
+import { Shell } from "@/components/ui/shell";
 
 export const metadata: Metadata = {
     title: "Profile",

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
-import { Shell } from "@/components/ui/layouts/shell";
-import { Sidebar } from "@/components/ui/layouts/sidebar";
+import { Sidebar } from "@/components/common/layouts/sidebar";
+import { Shell } from "@/components/ui/shell";
 import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {

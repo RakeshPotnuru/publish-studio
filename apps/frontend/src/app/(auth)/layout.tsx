@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 
-import { Footer } from "@/components/ui/layouts/footer";
+import { Footer } from "@/components/common/layouts/footer";
 import { siteConfig } from "@/config/site";
 
 declare global {

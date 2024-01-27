@@ -9,6 +9,7 @@ import { renderTrpcPanel } from "trpc-panel";
 
 import "./config/env";
 import "./utils/db";
+import "./wss";
 
 import defaultConfig from "./config/app.config";
 import appRouter from "./routes";
