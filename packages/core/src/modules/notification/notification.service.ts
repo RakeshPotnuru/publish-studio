@@ -1,20 +1,13 @@
 import { TRPCError } from "@trpc/server";
+import type { Types } from "mongoose";
 
-import redisClient from "../../utils/redis";
-import type { INotification } from "./notification.types";
+import Notification from "./notification.model";
+import type { INotification, TNotificationCreateInput } from "./notification.types";
 
 export default class NotificationService {
-    async createNotification(notification: INotification) {
+    async createNotification(notification: TNotificationCreateInput): Promise<INotification> {
         try {
-            await redisClient.set(
-                `notification:${notification.user_id}:${notification.id}`,
-                JSON.stringify(notification),
-                {
-                    EX: (new Date(notification.expires_at).getTime() - Date.now()) / 1000,
-                },
-            );
-
-            return true;
+            return await Notification.create(notification);
         } catch (error) {
             console.log(error);
 
@@ -25,19 +18,9 @@ export default class NotificationService {
         }
     }
 
-    async markRead(notifications: INotification[]) {
+    async markRead(ids: Types.ObjectId[], user_id: Types.ObjectId): Promise<boolean> {
         try {
-            for (const notification of notifications) {
-                await redisClient.set(
-                    `notification:${notification.user_id}:${notification.id}`,
-                    JSON.stringify(notification),
-                    {
-                        EX: Math.round(
-                            (new Date(notification.expires_at).getTime() - Date.now()) / 1000,
-                        ),
-                    },
-                );
-            }
+            await Notification.updateMany({ _id: { $in: ids }, user_id }, { status: "read" });
 
             return true;
         } catch (error) {
@@ -52,9 +35,7 @@ export default class NotificationService {
 
     async getNotification(id: string, user_id: string): Promise<INotification | null> {
         try {
-            const notification = await redisClient.get(`notification:${user_id}:${id}`);
-
-            return notification ? (JSON.parse(notification) as INotification) : null;
+            return await Notification.findOne({ _id: id, user_id });
         } catch (error) {
             console.log(error);
 
@@ -65,44 +46,9 @@ export default class NotificationService {
         }
     }
 
-    async getNotificationsByUserId(user_id: string): Promise<INotification[] | null> {
+    async getNotifications(user_id: string): Promise<INotification[] | null> {
         try {
-            const notifications = await redisClient.keys(`notification:${user_id}:*`);
-
-            return (await Promise.all(
-                notifications.map(async notification => {
-                    const parsedNotification = await redisClient.get(notification);
-
-                    return parsedNotification
-                        ? (JSON.parse(parsedNotification) as INotification)
-                        : null;
-                }),
-            )) as INotification[];
-        } catch (error) {
-            console.log(error);
-
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while getting the notifications",
-            });
-        }
-    }
-
-    async getNotificationsByIds(ids: string[], user_id: string): Promise<INotification[] | null> {
-        try {
-            const notifications = await redisClient.keys(
-                `notification:${user_id}:${ids.join("|")}`,
-            );
-
-            return (await Promise.all(
-                notifications.map(async notification => {
-                    const parsedNotification = await redisClient.get(notification);
-
-                    return parsedNotification
-                        ? (JSON.parse(parsedNotification) as INotification)
-                        : null;
-                }),
-            )) as INotification[];
+            return await Notification.find({ user_id }).sort({ created_at: -1 });
         } catch (error) {
             console.log(error);
 

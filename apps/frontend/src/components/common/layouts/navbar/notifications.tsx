@@ -27,14 +27,14 @@ export function Notifications() {
     const { data, isFetching, error } = trpc.notifications.getAll.useQuery();
 
     useEffect(() => {
-        if (data) {
-            setNotifications(data);
+        if (data?.data.notifications) {
+            setNotifications(data.data.notifications);
         }
     }, [data]);
 
-    trpc.notifications.onSend.useSubscription(undefined, {
+    trpc.notifications.onCreate.useSubscription(undefined, {
         onData(data) {
-            setNotifications(prev => [...prev, data]);
+            setNotifications(prev => [data, ...prev]);
             setTimeout(() => {
                 setIsNewNotification(true);
                 setTimeout(() => {
@@ -46,12 +46,12 @@ export function Notifications() {
 
     const { mutateAsync: markAsRead } = trpc.notifications.markRead.useMutation();
 
-    const handleMarkAsRead = async (ids: INotification["id"][]) => {
+    const handleMarkAsRead = async (ids: INotification["_id"][]) => {
         try {
             await markAsRead(ids);
             setNotifications(prev =>
                 prev.map(notification => {
-                    if (ids.includes(notification.id)) {
+                    if (ids.includes(notification._id)) {
                         notification.status = "read";
                     }
                     return notification;
@@ -90,7 +90,7 @@ export function Notifications() {
                     <Button
                         onClick={() =>
                             handleMarkAsRead(
-                                notifications.filter(n => n.status !== "read").map(n => n.id),
+                                notifications.filter(n => n.status !== "read").map(n => n._id),
                             )
                         }
                         variant="ghost"
@@ -120,7 +120,7 @@ export function Notifications() {
                         <div className="space-y-4">
                             {notifications.map(notification => (
                                 <div
-                                    key={notification.id}
+                                    key={notification._id.toString()}
                                     className="space-y-2 rounded-md border p-2"
                                 >
                                     <div className="grid grid-cols-6 items-center justify-between space-x-2">
@@ -128,7 +128,7 @@ export function Notifications() {
 
                                         {notification.status === "sent" && (
                                             <Button
-                                                onClick={() => handleMarkAsRead([notification.id])}
+                                                onClick={() => handleMarkAsRead([notification._id])}
                                                 variant="ghost"
                                                 size="icon"
                                             >

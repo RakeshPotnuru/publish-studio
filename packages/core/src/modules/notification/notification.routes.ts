@@ -1,6 +1,7 @@
 import EventEmitter from "node:events";
 
 import { observable } from "@trpc/server/observable";
+import type { Types } from "mongoose";
 import { z } from "zod";
 
 import { protectedProcedure, router, t } from "../../trpc";
@@ -19,32 +20,32 @@ const notificationRouter = router({
             }),
         )
         .mutation(async ({ input, ctx }) => {
-            const notification = await new NotificationController().createNotificationHandler(
+            const { data } = await new NotificationController().createNotificationHandler(
                 input,
                 ctx,
             );
 
-            ee.emit("create", notification);
+            ee.emit("create", data.notification);
 
-            return notification;
+            return data.notification;
         }),
 
-    onSend: t.procedure.subscription(() => {
+    onCreate: t.procedure.subscription(() => {
         return observable<INotification>(emit => {
-            const onSend = (data: INotification) => {
+            const onCreate = (data: INotification) => {
                 emit.next(data);
             };
 
-            ee.on("create", onSend);
+            ee.on("create", onCreate);
 
             return () => {
-                ee.off("create", onSend);
+                ee.off("create", onCreate);
             };
         });
     }),
 
     markRead: protectedProcedure
-        .input(z.array(z.string()))
+        .input(z.array(z.custom<Types.ObjectId>()))
         .mutation(({ input, ctx }) => new NotificationController().markReadHandler(input, ctx)),
 
     getAll: protectedProcedure.query(({ ctx }) =>

@@ -55,8 +55,6 @@ export function NewFolderDialog({
 
     const router = useRouter();
 
-    const { mutateAsync: newNotification } = trpc.notifications.create.useMutation();
-
     const { mutateAsync: createFolder, isLoading } = trpc.folders.create.useMutation({
         onSuccess({ data }) {
             toast.success("Folder created successfully.");
@@ -81,10 +79,6 @@ export function NewFolderDialog({
         try {
             setError(null);
             await createFolder(data);
-            await newNotification({
-                message: "New folder created",
-                type: "folder",
-            });
         } catch (error) {}
     };
 
