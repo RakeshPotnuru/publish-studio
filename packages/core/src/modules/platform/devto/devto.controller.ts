@@ -4,7 +4,8 @@ import type { Types } from "mongoose";
 import { constants } from "../../../config/constants";
 import type { Context } from "../../../trpc";
 import type { IPaginationOptions } from "../../../types/common.types";
-import type { IProject, IProjectPlatform } from "../../project/project.types";
+import type { TPostUpdateInput } from "../../post/post.types";
+import type { IProject } from "../../project/project.types";
 import DevToService from "./devto.service";
 
 export default class DevToController extends DevToService {
@@ -97,14 +98,14 @@ export default class DevToController extends DevToService {
     async createPostHandler(
         input: { post: IProject },
         user_id: Types.ObjectId,
-    ): Promise<IProjectPlatform> {
+    ): Promise<TPostUpdateInput> {
         const platform = await super.getPlatform(user_id);
 
         if (!platform) {
-            throw new TRPCError({
-                code: "NOT_FOUND",
-                message: "Platform not found. Please connect your Dev.to account to continue.",
-            });
+            return {
+                platform: constants.user.platforms.DEVTO,
+                status: constants.postStatus.ERROR,
+            };
         }
 
         const { post } = input;
@@ -124,16 +125,16 @@ export default class DevToController extends DevToService {
 
         if (newPost.isError || !newPost.url || !newPost.id) {
             return {
-                name: constants.user.platforms.DEVTO,
-                status: constants.project.platformPublishStatuses.ERROR,
+                platform: constants.user.platforms.DEVTO,
+                status: constants.postStatus.ERROR,
             };
         }
 
         return {
-            name: constants.user.platforms.DEVTO,
-            status: constants.project.platformPublishStatuses.SUCCESS,
+            platform: constants.user.platforms.DEVTO,
+            status: constants.postStatus.SUCCESS,
             published_url: newPost.url,
-            id: newPost.id.toString(),
+            post_id: newPost.id.toString(),
         };
     }
 

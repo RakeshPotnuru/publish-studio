@@ -72,10 +72,10 @@ export function PublishPost({
             },
         });
 
-    const { mutateAsync: publishPost, isLoading: isPostPublishing } =
-        trpc.projects.post.schedule.useMutation({
-            onSuccess: () => {
-                toast("Post added to queue successfully. You will be notified when published.", {
+    const { mutateAsync: publishPost, isLoading: isPostPublishing } = trpc.post.publish.useMutation(
+        {
+            onSuccess: ({ data }) => {
+                toast(data.message, {
                     action: {
                         label: "Refresh",
                         onClick: () => {
@@ -88,18 +88,18 @@ export function PublishPost({
             onError: error => {
                 toast.error(error.message);
             },
-        });
+        },
+    );
 
-    const { mutateAsync: updatePost, isLoading: isPostUpdating } =
-        trpc.projects.post.update.useMutation({
-            onSuccess: () => {
-                toast.success("Post updated successfully.");
-                handleRefresh();
-            },
-            onError: error => {
-                toast.error(error.message);
-            },
-        });
+    const { mutateAsync: updatePost, isLoading: isPostUpdating } = trpc.post.edit.useMutation({
+        onSuccess: ({ data }) => {
+            toast.success(data.message);
+            handleRefresh();
+        },
+        onError: error => {
+            toast.error(error.message);
+        },
+    });
 
     const { mutateAsync: generateTitle, isLoading: isTitleGenerating } =
         trpc.genAI.generate.title.useMutation({
@@ -192,6 +192,11 @@ export function PublishPost({
     };
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
+        if (editor.storage.characterCount.characters() === 0) {
+            toast.error("Please write some content before publishing.");
+            return;
+        }
+
         try {
             handleSave(data);
 
@@ -270,7 +275,7 @@ export function PublishPost({
     const isLoading =
         form.formState.isSubmitting || isProjectSaving || isPostPublishing || isPostUpdating;
 
-    const publishPostView =
+    const bodyView =
         user?.platforms && user.platforms.length > 0 ? (
             <>
                 <Form {...form}>
@@ -417,12 +422,12 @@ export function PublishPost({
                                 />
                                 <PlatformsField
                                     form={form}
-                                    connectedPlatforms={user.platforms}
+                                    connected_platforms={user.platforms}
                                     isLoading={isLoading}
-                                    publishedPlatforms={project.platforms}
                                     onSubmit={onSubmit}
                                     onRefresh={handleRefresh}
-                                    scheduledAt={project.scheduled_at}
+                                    scheduled_at={project.scheduled_at}
+                                    project_id={project._id}
                                 />
                                 <FormField
                                     control={form.control}
@@ -547,7 +552,7 @@ export function PublishPost({
                         <DotsLoader />
                     </div>
                 ) : (
-                    publishPostView
+                    bodyView
                 )}
             </SheetContent>
         </Sheet>

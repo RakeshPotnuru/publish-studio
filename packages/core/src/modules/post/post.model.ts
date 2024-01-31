@@ -1,0 +1,23 @@
+import mongoose, { Schema } from "mongoose";
+
+import { constants } from "../../config/constants";
+
+const PostSchema = new Schema(
+    {
+        user_id: { type: Schema.Types.ObjectId, required: true },
+        project_id: { type: Schema.Types.ObjectId, required: true },
+        post_id: { type: String },
+        platform: { type: String, enum: constants.user.platforms, required: true },
+        status: { type: String, enum: constants.postStatus },
+        published_url: { type: String },
+        published_at: { type: Date },
+    },
+    {
+        timestamps: {
+            createdAt: "created_at",
+            updatedAt: "updated_at",
+        },
+    },
+);
+
+export default mongoose.model("Post", PostSchema);

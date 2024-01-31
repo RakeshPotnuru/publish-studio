@@ -37,7 +37,7 @@ const formSchema = z.object({
     api_url: z.string().min(1, { message: "API URL is required" }).url({
         message: "API URL must be a valid URL",
     }),
-    status: z.nativeEnum(constants.ghostStatuses).default(constants.ghostStatuses.DRAFT),
+    status: z.nativeEnum(constants.ghostStatus).default(constants.ghostStatus.DRAFT),
 });
 
 export function GhostConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFormProps>) {
@@ -62,7 +62,7 @@ export function GhostConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFor
         defaultValues: {
             admin_api_key: "",
             api_url: "",
-            status: constants.ghostStatuses.DRAFT,
+            status: constants.ghostStatus.DRAFT,
         },
     });
 
@@ -217,7 +217,7 @@ export function GhostConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFor
                                         <FormItem className="flex items-center space-x-3 space-y-0">
                                             <FormControl>
                                                 <RadioGroupItem
-                                                    value={constants.ghostStatuses.DRAFT}
+                                                    value={constants.ghostStatus.DRAFT}
                                                 />
                                             </FormControl>
                                             <FormLabel className="font-normal">Draft</FormLabel>
@@ -225,7 +225,7 @@ export function GhostConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFor
                                         <FormItem className="flex items-center space-x-3 space-y-0">
                                             <FormControl>
                                                 <RadioGroupItem
-                                                    value={constants.ghostStatuses.PUBLISHED}
+                                                    value={constants.ghostStatus.PUBLISHED}
                                                 />
                                             </FormControl>
                                             <FormLabel className="font-normal">Published</FormLabel>

@@ -38,7 +38,7 @@ interface MediumEditFormProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const formSchema = z.object({
     api_key: z.string().optional(),
-    status: z.nativeEnum(constants.mediumStatuses),
+    status: z.nativeEnum(constants.mediumStatus),
     notify_followers: z.string(),
 });
 
@@ -177,7 +177,7 @@ export function MediumEditForm({
                                         <FormItem className="flex items-center space-x-3 space-y-0">
                                             <FormControl>
                                                 <RadioGroupItem
-                                                    value={constants.mediumStatuses.DRAFT}
+                                                    value={constants.mediumStatus.DRAFT}
                                                 />
                                             </FormControl>
                                             <FormLabel className="font-normal">Draft</FormLabel>
@@ -185,7 +185,7 @@ export function MediumEditForm({
                                         <FormItem className="flex items-center space-x-3 space-y-0">
                                             <FormControl>
                                                 <RadioGroupItem
-                                                    value={constants.mediumStatuses.PUBLIC}
+                                                    value={constants.mediumStatus.PUBLIC}
                                                 />
                                             </FormControl>
                                             <FormLabel className="font-normal">Public</FormLabel>
@@ -193,7 +193,7 @@ export function MediumEditForm({
                                         <FormItem className="flex items-center space-x-3 space-y-0">
                                             <FormControl>
                                                 <RadioGroupItem
-                                                    value={constants.mediumStatuses.UNLISTED}
+                                                    value={constants.mediumStatus.UNLISTED}
                                                 />
                                             </FormControl>
                                             <FormLabel className="font-normal">Unlisted</FormLabel>

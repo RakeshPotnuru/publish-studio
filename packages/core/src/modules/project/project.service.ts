@@ -3,7 +3,7 @@ import type { Types } from "mongoose";
 
 import type { IPaginationOptions } from "../../types/common.types";
 import Folder from "../folder/folder.model";
-import FolderService from "../folder/folder.service";
+import Post from "../post/post.model";
 import Project from "./project.model";
 import type {
     IProject,
@@ -12,7 +12,7 @@ import type {
     TProjectCreateInput,
 } from "./project.types";
 
-export default class ProjectService extends FolderService {
+export default class ProjectService {
     async createProject(project: TProjectCreateInput): Promise<IProject> {
         try {
             const newProject = await Project.create(project);
@@ -123,28 +123,6 @@ export default class ProjectService extends FolderService {
         user_id: Types.ObjectId,
     ) {
         try {
-            await Promise.all(
-                (project.platforms ?? []).map(async platform => {
-                    const filter = { _id: id, user_id, "platforms.name": platform.name };
-                    const update = {
-                        $set: {
-                            "platforms.$.status": platform.status,
-                            "platforms.$.published_url": platform.published_url,
-                            "platforms.$.id": platform.id,
-                        },
-                    };
-
-                    const result = await Project.findOneAndUpdate(filter, update).exec();
-
-                    if (!result) {
-                        await Project.updateOne(
-                            { _id: id, user_id },
-                            { $addToSet: { platforms: platform } },
-                        ).exec();
-                    }
-                }),
-            );
-
             return (await Project.findOneAndUpdate(
                 { _id: id, user_id },
                 {
@@ -153,6 +131,7 @@ export default class ProjectService extends FolderService {
                         title: project.title,
                         description: project.description,
                         folder_id: project.folder_id,
+                        platforms: project.platforms,
                         tags: project.tags,
                         cover_image: project.cover_image,
                         canonical_url: project.canonical_url,
@@ -181,6 +160,10 @@ export default class ProjectService extends FolderService {
 
     async deleteProjects(ids: Types.ObjectId[], user_id: Types.ObjectId) {
         try {
+            for (const id of ids) {
+                await Post.deleteMany({ project_id: id });
+            }
+
             return await Project.deleteMany({ user_id, _id: { $in: ids } }).exec();
         } catch (error) {
             console.log(error);

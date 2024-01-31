@@ -7,16 +7,6 @@ import type { TPlatformName } from "../platform/platform.types";
 
 export type TProjectStatus =
     (typeof constants.project.status)[keyof typeof constants.project.status];
-export type TPlatformPublishStatus =
-    (typeof constants.project.platformPublishStatuses)[keyof typeof constants.project.platformPublishStatuses];
-
-export interface IProjectPlatform {
-    name: TPlatformName;
-    status?: TPlatformPublishStatus;
-    published_url?: string;
-    id?: string;
-    _id?: Types.ObjectId;
-}
 
 export interface IProject {
     _id: Types.ObjectId;
@@ -32,7 +22,7 @@ export interface IProject {
     };
     status: TProjectStatus;
     cover_image?: string;
-    platforms?: IProjectPlatform[];
+    platforms?: TPlatformName[];
     tags?: ITags;
     canonical_url?: string;
     tone_analysis?: {
@@ -72,10 +62,4 @@ export interface ITags {
     ghost_tags?: { name: string; _id?: Types.ObjectId }[];
     wordpress_tags?: string[];
     blogger_tags?: string[];
-}
-
-export interface IPost {
-    project_id: Types.ObjectId;
-    scheduled_at: Date;
-    user_id: Types.ObjectId;
 }

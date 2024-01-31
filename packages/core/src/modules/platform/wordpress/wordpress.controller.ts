@@ -4,7 +4,8 @@ import type { Types } from "mongoose";
 import { constants } from "../../../config/constants";
 import type { Context } from "../../../trpc";
 import type { IPaginationOptions } from "../../../types/common.types";
-import type { IProject, IProjectPlatform } from "../../project/project.types";
+import type { TPostUpdateInput } from "../../post/post.types";
+import type { IProject } from "../../project/project.types";
 import WordPressService from "./wordpress.service";
 import type { IWordPressUpdateInput } from "./wordpress.types";
 
@@ -24,7 +25,7 @@ export default class WordPressController extends WordPressService {
             blog_id: site.blog_id,
             token: site.access_token,
             publicize: false,
-            status: constants.wordpressStatuses.DRAFT,
+            status: constants.wordpressStatus.DRAFT,
         });
 
         return {
@@ -70,14 +71,14 @@ export default class WordPressController extends WordPressService {
     async createPostHandler(
         input: { post: IProject },
         user_id: Types.ObjectId,
-    ): Promise<IProjectPlatform> {
+    ): Promise<TPostUpdateInput> {
         const platform = await super.getPlatform(user_id);
 
         if (!platform) {
-            throw new TRPCError({
-                code: "NOT_FOUND",
-                message: "Platform not found. Please connect your WordPress account to continue.",
-            });
+            return {
+                platform: constants.user.platforms.DEVTO,
+                status: constants.postStatus.ERROR,
+            };
         }
 
         const { post } = input;
@@ -97,16 +98,16 @@ export default class WordPressController extends WordPressService {
 
         if (newPost.isError || !newPost.URL || !newPost.ID) {
             return {
-                name: constants.user.platforms.WORDPRESS,
-                status: constants.project.platformPublishStatuses.ERROR,
+                platform: constants.user.platforms.DEVTO,
+                status: constants.postStatus.ERROR,
             };
         }
 
         return {
-            name: constants.user.platforms.WORDPRESS,
-            status: constants.project.platformPublishStatuses.SUCCESS,
+            platform: constants.user.platforms.WORDPRESS,
+            status: constants.postStatus.SUCCESS,
             published_url: newPost.URL,
-            id: newPost.ID.toString(),
+            post_id: newPost.ID.toString(),
         };
     }
 

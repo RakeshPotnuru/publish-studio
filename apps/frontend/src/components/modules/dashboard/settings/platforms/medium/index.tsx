@@ -31,6 +31,7 @@ export function Medium({ data, isLoading }: Readonly<MediumToProps>) {
         try {
             await disconnect();
             utils.platforms.getAll.invalidate();
+            utils.auth.getMe.invalidate();
         } catch (error) {
             toast.error(disconnectError?.message ?? "Something went wrong.");
         }
@@ -50,7 +51,7 @@ export function Medium({ data, isLoading }: Readonly<MediumToProps>) {
             editForm={
                 <MediumEditForm
                     setIsOpen={setIsOpen}
-                    status={data?.status ?? constants.mediumStatuses.DRAFT}
+                    status={data?.status ?? constants.mediumStatus.DRAFT}
                     notify_followers={data?.notify_followers.toString() ?? "false"}
                 />
             }

@@ -22,7 +22,7 @@ export const formSchema = z.object({
             constants.project.description.MAX_LENGTH,
             `Description must not exceed ${constants.project.description.MAX_LENGTH} characters.`,
         ),
-    platforms: z.array(z.object({ name: z.nativeEnum(constants.user.platforms) })),
+    platforms: z.array(z.nativeEnum(constants.user.platforms)),
     tags: z.object({
         // hashnode_tags: z
         //     .string()

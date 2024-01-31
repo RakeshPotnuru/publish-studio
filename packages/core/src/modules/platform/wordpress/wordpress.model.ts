@@ -13,9 +13,9 @@ const WordPressSchema = new Schema<IWordPress>(
         publicize: { type: Boolean, required: true, default: false },
         status: {
             type: String,
-            enum: constants.wordpressStatuses,
+            enum: constants.wordpressStatus,
             required: true,
-            default: constants.wordpressStatuses.DRAFT,
+            default: constants.wordpressStatus.DRAFT,
         },
     },
     {

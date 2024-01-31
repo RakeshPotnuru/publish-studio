@@ -2,7 +2,7 @@ import type { Types } from "mongoose";
 
 import type { constants } from "../../../config/constants";
 
-export type TGhostStatus = (typeof constants.ghostStatuses)[keyof typeof constants.ghostStatuses];
+export type TGhostStatus = (typeof constants.ghostStatus)[keyof typeof constants.ghostStatus];
 
 export interface IGhost {
     _id: Types.ObjectId;

@@ -3,7 +3,7 @@ import type { Types } from "mongoose";
 import type { constants } from "../../../config/constants";
 
 export type TWordPressStatus =
-    (typeof constants.wordpressStatuses)[keyof typeof constants.wordpressStatuses];
+    (typeof constants.wordpressStatus)[keyof typeof constants.wordpressStatus];
 
 export interface IWordPress {
     _id: Types.ObjectId;

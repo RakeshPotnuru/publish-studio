@@ -39,7 +39,7 @@ export function Notifications() {
                 setIsNewNotification(true);
                 setTimeout(() => {
                     setIsNewNotification(false);
-                }, 3000);
+                }, 10000);
             }, 100);
         },
     });
@@ -60,27 +60,76 @@ export function Notifications() {
         } catch (error) {}
     };
 
+    const bodyView = notifications.length ? (
+        <ScrollArea className="h-96">
+            <div className="space-y-4">
+                {notifications.map(notification => (
+                    <div
+                        key={notification._id.toString()}
+                        className="space-y-2 rounded-md border p-2"
+                    >
+                        <div className="grid grid-cols-6 items-center justify-between space-x-2">
+                            <p className="col-span-5 text-sm">{notification.message}</p>
+
+                            {notification.status === "sent" && (
+                                <Button
+                                    onClick={() => handleMarkAsRead([notification._id])}
+                                    variant="ghost"
+                                    size="icon"
+                                >
+                                    <Icons.Check />
+                                </Button>
+                            )}
+                        </div>
+                        <p className="text-muted-foreground flex flex-row items-center text-xs">
+                            {notification.status === "sent" && (
+                                <Icons.Dot className="text-success" />
+                            )}{" "}
+                            {intlFormatDistance(new Date(notification.created_at), new Date(), {
+                                style: "narrow",
+                            })}
+                        </p>
+                    </div>
+                ))}
+            </div>
+        </ScrollArea>
+    ) : (
+        <Center className="text-muted-foreground h-24 text-sm">No new notifications</Center>
+    );
+
+    const bodyPendingView = isFetching ? (
+        <div className="space-y-4">
+            {[...Array(5)].map((_, index) => (
+                <Skeleton key={`skeleton-${index + 1}`} className="h-16 w-full" />
+            ))}
+        </div>
+    ) : (
+        bodyView
+    );
+
     const numUnread = notifications.filter(notification => notification.status !== "read").length;
 
-    const tooltip = isFetching
-        ? "Loading notifications..."
-        : numUnread > 0
-        ? `You have ${numUnread} unread notification${numUnread > 1 ? "s" : ""}`
-        : `You have no unread notifications`;
+    const tooltip =
+        numUnread > 0
+            ? `You have ${numUnread} unread notification${numUnread > 1 && "s"}`
+            : `You have no unread notifications`;
 
     return (
         <Popover>
             <Tooltip content={tooltip}>
                 <PopoverTrigger asChild>
-                    <Button size="icon" variant="ghost" className="rounded-full">
-                        <Icons.Notification className="size-5" />
-                        {numUnread > 0 && (
-                            <Icons.Dot
-                                className={cn("text-success absolute right-[124px] top-[35px]", {
-                                    "animate-ping": isNewNotification,
-                                })}
-                            />
-                        )}
+                    <Button
+                        size="icon"
+                        variant="ghost"
+                        className={cn("rounded-full", {
+                            "border-success border": numUnread > 0,
+                        })}
+                    >
+                        <Icons.Notification
+                            className={cn("size-5", {
+                                "animate-ring origin-center": isNewNotification,
+                            })}
+                        />
                     </Button>
                 </PopoverTrigger>
             </Tooltip>
@@ -109,53 +158,8 @@ export function Notifications() {
                             description={error.message}
                         />
                     </Center>
-                ) : isFetching ? (
-                    <div className="space-y-4">
-                        {[...Array(5)].map((_, index) => (
-                            <Skeleton key={`skeleton-${index + 1}`} className="h-16 w-full" />
-                        ))}
-                    </div>
-                ) : notifications.length ? (
-                    <ScrollArea className="h-96">
-                        <div className="space-y-4">
-                            {notifications.map(notification => (
-                                <div
-                                    key={notification._id.toString()}
-                                    className="space-y-2 rounded-md border p-2"
-                                >
-                                    <div className="grid grid-cols-6 items-center justify-between space-x-2">
-                                        <p className="col-span-5 text-sm">{notification.message}</p>
-
-                                        {notification.status === "sent" && (
-                                            <Button
-                                                onClick={() => handleMarkAsRead([notification._id])}
-                                                variant="ghost"
-                                                size="icon"
-                                            >
-                                                <Icons.Check />
-                                            </Button>
-                                        )}
-                                    </div>
-                                    <p className="text-muted-foreground flex flex-row items-center text-xs">
-                                        {notification.status === "sent" && (
-                                            <Icons.Dot className="text-success" />
-                                        )}{" "}
-                                        {intlFormatDistance(
-                                            new Date(notification.created_at),
-                                            new Date(),
-                                            {
-                                                style: "narrow",
-                                            },
-                                        )}
-                                    </p>
-                                </div>
-                            ))}
-                        </div>
-                    </ScrollArea>
                 ) : (
-                    <Center className="text-muted-foreground h-24 text-sm">
-                        No new notifications
-                    </Center>
+                    bodyPendingView
                 )}
             </PopoverContent>
         </Popover>

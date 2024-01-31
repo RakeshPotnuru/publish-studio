@@ -4,7 +4,8 @@ import type { Types } from "mongoose";
 import defaultConfig from "../../../config/app.config";
 import { constants } from "../../../config/constants";
 import type { Context } from "../../../trpc";
-import type { IProject, IProjectPlatform } from "../../project/project.types";
+import type { TPostUpdateInput } from "../../post/post.types";
+import type { IProject } from "../../project/project.types";
 import MediumService from "./medium.service";
 import type { TMediumStatus } from "./medium.types";
 
@@ -131,14 +132,14 @@ export default class MediumController extends MediumService {
     async createPostHandler(
         input: { post: IProject },
         user_id: Types.ObjectId,
-    ): Promise<IProjectPlatform> {
+    ): Promise<TPostUpdateInput> {
         const platform = await super.getPlatform(user_id);
 
         if (!platform) {
-            throw new TRPCError({
-                code: "NOT_FOUND",
-                message: "Account not found. Please connect your Medium account to continue.",
-            });
+            return {
+                platform: constants.user.platforms.DEVTO,
+                status: constants.postStatus.ERROR,
+            };
         }
 
         const { post } = input;
@@ -158,16 +159,16 @@ export default class MediumController extends MediumService {
 
         if (newPost.isError || !newPost.data) {
             return {
-                name: constants.user.platforms.MEDIUM,
-                status: constants.project.platformPublishStatuses.ERROR,
+                platform: constants.user.platforms.DEVTO,
+                status: constants.postStatus.ERROR,
             };
         }
 
         return {
-            name: constants.user.platforms.MEDIUM,
-            status: constants.project.platformPublishStatuses.SUCCESS,
+            platform: constants.user.platforms.MEDIUM,
+            status: constants.postStatus.SUCCESS,
             published_url: newPost.data.url,
-            id: newPost.data.id,
+            post_id: newPost.data.id,
         };
     }
 }

@@ -13,7 +13,7 @@ import { ImportPostsBody } from "../import-dialog";
 import { GhostConnectForm } from "./connect-form";
 import { GhostEditForm } from "./edit-form";
 
-export type TGhostStatus = (typeof constants.ghostStatuses)[keyof typeof constants.ghostStatuses];
+export type TGhostStatus = (typeof constants.ghostStatus)[keyof typeof constants.ghostStatus];
 
 interface GhostProps {
     data?: IGhost;
@@ -37,6 +37,7 @@ export function Ghost({ data, isLoading }: Readonly<GhostProps>) {
         try {
             await disconnect();
             utils.platforms.getAll.invalidate();
+            utils.auth.getMe.invalidate();
         } catch (error) {
             toast.error(disconnectError?.message ?? "Something went wrong.");
         }
@@ -57,7 +58,7 @@ export function Ghost({ data, isLoading }: Readonly<GhostProps>) {
             editForm={
                 <GhostEditForm
                     setIsOpen={setIsOpen}
-                    status={data?.status ?? constants.ghostStatuses.DRAFT}
+                    status={data?.status ?? constants.ghostStatus.DRAFT}
                     api_url={data?.api_url ?? ""}
                 />
             }

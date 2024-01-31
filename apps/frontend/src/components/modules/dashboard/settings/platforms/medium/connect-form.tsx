@@ -34,7 +34,7 @@ interface MediumConnectFormProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const formSchema = z.object({
     api_key: z.string().min(1, { message: "API key is required" }),
-    status: z.nativeEnum(constants.mediumStatuses).default(constants.mediumStatuses.DRAFT),
+    status: z.nativeEnum(constants.mediumStatus).default(constants.mediumStatus.DRAFT),
     notify_followers: z.string().default("false"),
 });
 
@@ -59,7 +59,7 @@ export function MediumConnectForm({ setIsOpen, ...props }: Readonly<MediumConnec
         resolver: zodResolver(formSchema),
         defaultValues: {
             api_key: "",
-            status: constants.mediumStatuses.DRAFT,
+            status: constants.mediumStatus.DRAFT,
             notify_followers: "false",
         },
     });
@@ -169,7 +169,7 @@ export function MediumConnectForm({ setIsOpen, ...props }: Readonly<MediumConnec
                                         <FormItem className="flex items-center space-x-3 space-y-0">
                                             <FormControl>
                                                 <RadioGroupItem
-                                                    value={constants.mediumStatuses.DRAFT}
+                                                    value={constants.mediumStatus.DRAFT}
                                                 />
                                             </FormControl>
                                             <FormLabel className="font-normal">Draft</FormLabel>
@@ -177,7 +177,7 @@ export function MediumConnectForm({ setIsOpen, ...props }: Readonly<MediumConnec
                                         <FormItem className="flex items-center space-x-3 space-y-0">
                                             <FormControl>
                                                 <RadioGroupItem
-                                                    value={constants.mediumStatuses.PUBLIC}
+                                                    value={constants.mediumStatus.PUBLIC}
                                                 />
                                             </FormControl>
                                             <FormLabel className="font-normal">Public</FormLabel>
@@ -185,7 +185,7 @@ export function MediumConnectForm({ setIsOpen, ...props }: Readonly<MediumConnec
                                         <FormItem className="flex items-center space-x-3 space-y-0">
                                             <FormControl>
                                                 <RadioGroupItem
-                                                    value={constants.mediumStatuses.UNLISTED}
+                                                    value={constants.mediumStatus.UNLISTED}
                                                 />
                                             </FormControl>
                                             <FormLabel className="font-normal">Unlisted</FormLabel>

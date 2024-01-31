@@ -38,7 +38,7 @@ interface DevEditFormProps extends React.HTMLAttributes<HTMLDivElement> {
 const formSchema = z.object({
     admin_api_key: z.string().optional(),
     api_url: z.string().url().optional(),
-    status: z.nativeEnum(constants.ghostStatuses).optional(),
+    status: z.nativeEnum(constants.ghostStatus).optional(),
 });
 
 export function GhostEditForm({ status, setIsOpen, ...props }: Readonly<DevEditFormProps>) {
@@ -216,7 +216,7 @@ export function GhostEditForm({ status, setIsOpen, ...props }: Readonly<DevEditF
                                         <FormItem className="flex items-center space-x-3 space-y-0">
                                             <FormControl>
                                                 <RadioGroupItem
-                                                    value={constants.ghostStatuses.DRAFT}
+                                                    value={constants.ghostStatus.DRAFT}
                                                 />
                                             </FormControl>
                                             <FormLabel className="font-normal">Draft</FormLabel>
@@ -224,7 +224,7 @@ export function GhostEditForm({ status, setIsOpen, ...props }: Readonly<DevEditF
                                         <FormItem className="flex items-center space-x-3 space-y-0">
                                             <FormControl>
                                                 <RadioGroupItem
-                                                    value={constants.ghostStatuses.PUBLISHED}
+                                                    value={constants.ghostStatus.PUBLISHED}
                                                 />
                                             </FormControl>
                                             <FormLabel className="font-normal">Published</FormLabel>

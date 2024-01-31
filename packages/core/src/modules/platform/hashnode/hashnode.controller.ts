@@ -4,7 +4,8 @@ import type { Types } from "mongoose";
 import defaultConfig from "../../../config/app.config";
 import { constants } from "../../../config/constants";
 import type { Context } from "../../../trpc";
-import type { IProject, IProjectPlatform } from "../../project/project.types";
+import type { TPostUpdateInput } from "../../post/post.types";
+import type { IProject } from "../../project/project.types";
 import HashnodeService from "./hashnode.service";
 import type { IHashnodeDefaultSettings } from "./hashnode.types";
 
@@ -168,14 +169,14 @@ export default class HashnodeController extends HashnodeService {
             post: IProject;
         },
         user_id: Types.ObjectId,
-    ): Promise<IProjectPlatform> {
+    ): Promise<TPostUpdateInput> {
         const platform = await super.getPlatform(user_id);
 
         if (!platform) {
-            throw new TRPCError({
-                code: "NOT_FOUND",
-                message: "Account not found. Please connect your Hashnode account to continue.",
-            });
+            return {
+                platform: constants.user.platforms.DEVTO,
+                status: constants.postStatus.ERROR,
+            };
         }
 
         const { post } = input;
@@ -209,8 +210,8 @@ export default class HashnodeController extends HashnodeService {
 
         if (newPost.isError || !newPost.data) {
             return {
-                name: constants.user.platforms.HASHNODE,
-                status: constants.project.platformPublishStatuses.ERROR,
+                platform: constants.user.platforms.DEVTO,
+                status: constants.postStatus.ERROR,
             };
         }
 
@@ -220,10 +221,10 @@ export default class HashnodeController extends HashnodeService {
         const postSlug = newPost.data.publishPost.post.slug;
 
         return {
-            name: constants.user.platforms.HASHNODE,
-            status: constants.project.platformPublishStatuses.SUCCESS,
+            platform: constants.user.platforms.HASHNODE,
+            status: constants.postStatus.SUCCESS,
             published_url: `${blogHandle}/${postSlug}`,
-            id: newPost.data.publishPost.post.id,
+            post_id: newPost.data.publishPost.post.id,
         };
     }
 

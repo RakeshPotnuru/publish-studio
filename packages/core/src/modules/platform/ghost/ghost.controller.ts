@@ -4,7 +4,8 @@ import type { Types } from "mongoose";
 import { constants } from "../../../config/constants";
 import type { Context } from "../../../trpc";
 import type { IPaginationOptions } from "../../../types/common.types";
-import type { IProject, IProjectPlatform } from "../../project/project.types";
+import type { TPostUpdateInput } from "../../post/post.types";
+import type { IProject } from "../../project/project.types";
 import GhostService from "./ghost.service";
 import type { TGhostCreateFormInput, TGhostUpdateInput } from "./ghost.types";
 
@@ -112,14 +113,14 @@ export default class GhostController extends GhostService {
     async createPostHandler(
         input: { post: IProject },
         user_id: Types.ObjectId,
-    ): Promise<IProjectPlatform> {
+    ): Promise<TPostUpdateInput> {
         const platform = await super.getPlatform(user_id);
 
         if (!platform) {
-            throw new TRPCError({
-                code: "NOT_FOUND",
-                message: "Platform not found. Please connect your Ghost account to continue.",
-            });
+            return {
+                platform: constants.user.platforms.DEVTO,
+                status: constants.postStatus.ERROR,
+            };
         }
 
         const { post } = input;
@@ -143,13 +144,18 @@ export default class GhostController extends GhostService {
             user_id,
         );
 
+        if (!newPost.success) {
+            return {
+                platform: constants.user.platforms.DEVTO,
+                status: constants.postStatus.ERROR,
+            };
+        }
+
         return {
-            name: constants.user.platforms.GHOST,
-            status: newPost.success
-                ? constants.project.platformPublishStatuses.SUCCESS
-                : constants.project.platformPublishStatuses.ERROR,
-            published_url: newPost.success ? newPost.data.url : undefined,
-            id: newPost.success ? newPost.data.id : undefined,
+            platform: constants.user.platforms.GHOST,
+            status: constants.postStatus.SUCCESS,
+            published_url: newPost.data.url,
+            post_id: newPost.data.id,
         };
     }
 

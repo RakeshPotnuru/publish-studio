@@ -3,7 +3,8 @@ import type { Types } from "mongoose";
 
 import { constants } from "../../../config/constants";
 import type { Context } from "../../../trpc";
-import type { IProject, IProjectPlatform } from "../../project/project.types";
+import type { TPostUpdateInput } from "../../post/post.types";
+import type { IProject } from "../../project/project.types";
 import BloggerService from "./blogger.service";
 import type { IBloggerUpdateInput } from "./blogger.types";
 
@@ -95,14 +96,14 @@ export default class BloggerController extends BloggerService {
     async createPostHandler(
         input: { post: IProject },
         user_id: Types.ObjectId,
-    ): Promise<IProjectPlatform> {
+    ): Promise<TPostUpdateInput> {
         const platform = await super.getPlatform(user_id);
 
         if (!platform) {
-            throw new TRPCError({
-                code: "NOT_FOUND",
-                message: "Platform not found. Please connect your Blogger account to continue.",
-            });
+            return {
+                platform: constants.user.platforms.DEVTO,
+                status: constants.postStatus.ERROR,
+            };
         }
 
         const { post } = input;
@@ -120,14 +121,18 @@ export default class BloggerController extends BloggerService {
             user_id,
         );
 
+        if (newPost.statusText !== "OK") {
+            return {
+                platform: constants.user.platforms.DEVTO,
+                status: constants.postStatus.ERROR,
+            };
+        }
+
         return {
-            name: constants.user.platforms.BLOGGER,
-            status:
-                newPost.statusText === "OK"
-                    ? constants.project.platformPublishStatuses.SUCCESS
-                    : constants.project.platformPublishStatuses.ERROR,
+            platform: constants.user.platforms.BLOGGER,
+            status: constants.postStatus.SUCCESS,
             published_url: newPost.data.url ?? undefined,
-            id: newPost.data.id ?? undefined,
+            post_id: newPost.data.id ?? undefined,
         };
     }
 

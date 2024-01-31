@@ -14,7 +14,7 @@ enum projectStatus {
     SCHEDULED = "scheduled",
 }
 
-enum platformPublishStatuses {
+enum postStatus {
     SUCCESS = "success",
     ERROR = "error",
     PENDING = "pending",
@@ -67,7 +67,6 @@ const project = {
         },
     },
     status: projectStatus,
-    platformPublishStatuses,
     tone_analysis: {
         input: {
             MIN_LENGTH: 10,
@@ -155,18 +154,18 @@ const errorCauses = {
     VERIFICATION_PENDING: "verification_pending",
 };
 
-enum mediumStatuses {
+enum mediumStatus {
     PUBLIC = "public",
     UNLISTED = "unlisted",
     DRAFT = "draft",
 }
 
-enum ghostStatuses {
+enum ghostStatus {
     PUBLISHED = "published",
     DRAFT = "draft",
 }
 
-enum wordpressStatuses {
+enum wordpressStatus {
     PUBLISH = "publish",
     PRIVATE = "private",
     DRAFT = "draft",
@@ -182,7 +181,8 @@ export const constants = {
     emailTemplates,
     asset,
     errorCauses,
-    mediumStatuses,
-    ghostStatuses,
-    wordpressStatuses,
+    mediumStatus,
+    ghostStatus,
+    wordpressStatus,
+    postStatus,
 };

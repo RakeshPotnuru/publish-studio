@@ -6,8 +6,8 @@ import superjson from "superjson";
 import { constants } from "./config/constants";
 import { deserializeUser } from "./middlewares/deserialize-user";
 
-export const createContext = ({ req, res }: CreateExpressContextOptions) => {
-    return deserializeUser({ req, res });
+export const createContext = async ({ req, res }: CreateExpressContextOptions) => {
+    return await deserializeUser({ req, res });
 };
 
 export type Context = inferAsyncReturnType<typeof createContext>;

@@ -218,7 +218,7 @@ export default class DevToService {
             const response = await devTo.get(
                 `/articles/me/all?page=${pagination.page}&per_page=${pagination.limit}`,
             );
-            console.log(response.data);
+
             return response.data as IDevToGetAllPostsOutput[];
         } catch (error) {
             console.log(error);

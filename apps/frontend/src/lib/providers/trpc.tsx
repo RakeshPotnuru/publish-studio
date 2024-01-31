@@ -80,7 +80,7 @@ export function TRPCProvider({ children }: Readonly<{ children: React.ReactNode 
         <trpc.Provider client={trpcClient} queryClient={queryClient}>
             <QueryClientProvider client={queryClient}>
                 {children}
-                <ReactQueryDevtools position="bottom-right" />
+                <ReactQueryDevtools position="bottom-left" />
             </QueryClientProvider>
         </trpc.Provider>
     );

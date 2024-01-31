@@ -2,8 +2,7 @@ import type { Types } from "mongoose";
 
 import type { constants } from "../../../config/constants";
 
-export type TMediumStatus =
-    (typeof constants.mediumStatuses)[keyof typeof constants.mediumStatuses];
+export type TMediumStatus = (typeof constants.mediumStatus)[keyof typeof constants.mediumStatus];
 
 export interface IMedium {
     _id: Types.ObjectId;

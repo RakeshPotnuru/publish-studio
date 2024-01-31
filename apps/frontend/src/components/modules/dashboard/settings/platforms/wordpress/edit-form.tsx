@@ -31,7 +31,7 @@ interface WordPressEditFormProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const formSchema = z.object({
     api_key: z.string().optional(),
-    status: z.nativeEnum(constants.wordpressStatuses),
+    status: z.nativeEnum(constants.wordpressStatus),
     publicize: z.string(),
 });
 
@@ -104,7 +104,7 @@ export function WordPressEditForm({
                                         <FormItem className="flex items-center space-x-3 space-y-0">
                                             <FormControl>
                                                 <RadioGroupItem
-                                                    value={constants.wordpressStatuses.DRAFT}
+                                                    value={constants.wordpressStatus.DRAFT}
                                                 />
                                             </FormControl>
                                             <FormLabel className="font-normal">Draft</FormLabel>
@@ -112,7 +112,7 @@ export function WordPressEditForm({
                                         <FormItem className="flex items-center space-x-3 space-y-0">
                                             <FormControl>
                                                 <RadioGroupItem
-                                                    value={constants.wordpressStatuses.PUBLISH}
+                                                    value={constants.wordpressStatus.PUBLISH}
                                                 />
                                             </FormControl>
                                             <FormLabel className="font-normal">Publish</FormLabel>
@@ -120,7 +120,7 @@ export function WordPressEditForm({
                                         <FormItem className="flex items-center space-x-3 space-y-0">
                                             <FormControl>
                                                 <RadioGroupItem
-                                                    value={constants.wordpressStatuses.PRIVATE}
+                                                    value={constants.wordpressStatus.PRIVATE}
                                                 />
                                             </FormControl>
                                             <FormLabel className="font-normal">Private</FormLabel>
@@ -128,7 +128,7 @@ export function WordPressEditForm({
                                         <FormItem className="flex items-center space-x-3 space-y-0">
                                             <FormControl>
                                                 <RadioGroupItem
-                                                    value={constants.wordpressStatuses.PENDING}
+                                                    value={constants.wordpressStatus.PENDING}
                                                 />
                                             </FormControl>
                                             <FormLabel className="font-normal">Pending</FormLabel>

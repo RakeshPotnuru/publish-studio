@@ -2,7 +2,7 @@ import type { Types } from "mongoose";
 import { z } from "zod";
 
 import { constants } from "../../config/constants";
-import { proProtectedProcedure, protectedProcedure, router } from "../../trpc";
+import { protectedProcedure, router } from "../../trpc";
 import ProjectController from "./project.controller";
 
 const projectRouter = router({
@@ -32,18 +32,7 @@ const projectRouter = router({
                     .optional()
                     .default(constants.project.status.DRAFT),
                 cover_image: z.string().optional(),
-                platforms: z
-                    .array(
-                        z.object({
-                            name: z.nativeEnum(constants.user.platforms),
-                            status: z
-                                .nativeEnum(constants.project.platformPublishStatuses)
-                                .optional(),
-                            published_url: z.string().optional(),
-                            id: z.string().optional(),
-                        }),
-                    )
-                    .optional(),
+                platforms: z.array(z.nativeEnum(constants.user.platforms)).optional(),
                 tags: z
                     .object({
                         devto_tags: z.array(z.string()).optional(),
@@ -159,39 +148,6 @@ const projectRouter = router({
     delete: protectedProcedure
         .input(z.array(z.custom<Types.ObjectId>()))
         .mutation(({ input, ctx }) => new ProjectController().deleteProjectsHandler(input, ctx)),
-
-    post: router({
-        schedule: protectedProcedure
-            .input(
-                z.object({
-                    project_id: z.custom<Types.ObjectId>(),
-                    scheduled_at: z.date(),
-                    platforms: z
-                        .array(
-                            z.object({
-                                name: z.nativeEnum(constants.user.platforms),
-                            }),
-                        )
-                        .min(1),
-                }),
-            )
-            .mutation(({ input, ctx }) => new ProjectController().schedulePostHandler(input, ctx)),
-
-        update: proProtectedProcedure
-            .input(
-                z.object({
-                    project_id: z.custom<Types.ObjectId>(),
-                    platforms: z
-                        .array(
-                            z.object({
-                                name: z.nativeEnum(constants.user.platforms),
-                            }),
-                        )
-                        .min(1),
-                }),
-            )
-            .mutation(({ input, ctx }) => new ProjectController().updatePostHandler(input, ctx)),
-    }),
 });
 
 export default projectRouter;

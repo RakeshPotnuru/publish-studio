@@ -11,9 +11,9 @@ const GhostSchema = new Schema<IGhost>(
         admin_api_key: { type: String, required: true, unique: true },
         status: {
             type: String,
-            enum: constants.ghostStatuses,
+            enum: constants.ghostStatus,
             required: true,
-            default: constants.ghostStatuses.DRAFT,
+            default: constants.ghostStatus.DRAFT,
         },
     },
     {

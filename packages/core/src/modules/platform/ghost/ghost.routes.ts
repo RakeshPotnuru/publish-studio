@@ -11,7 +11,7 @@ const ghostRouter = router({
             z.object({
                 api_url: z.string(),
                 admin_api_key: z.string(),
-                status: z.nativeEnum(constants.ghostStatuses),
+                status: z.nativeEnum(constants.ghostStatus),
             }),
         )
         .mutation(({ input, ctx }) => new GhostController().createPlatformHandler(input, ctx)),

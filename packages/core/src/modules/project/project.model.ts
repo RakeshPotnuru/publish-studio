@@ -31,14 +31,10 @@ const ProjectSchema = new Schema<IProject>(
             default: constants.project.status.DRAFT,
         },
         cover_image: String,
-        platforms: [
-            {
-                name: { type: String, enum: constants.user.platforms, required: true },
-                status: { type: String, enum: constants.project.platformPublishStatuses },
-                published_url: String,
-                id: String,
-            },
-        ],
+        platforms: {
+            type: [String],
+            enum: constants.user.platforms,
+        },
         tags: {
             // hashnode_tags: [
             //     {

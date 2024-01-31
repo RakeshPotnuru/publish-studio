@@ -45,6 +45,7 @@ export function WordPress({ data, isLoading }: Readonly<WordPressProps>) {
                 },
             });
             utils.platforms.getAll.invalidate();
+            utils.auth.getMe.invalidate();
         } catch (error) {
             toast.error(disconnectError?.message ?? "Something went wrong.");
         }
@@ -65,7 +66,7 @@ export function WordPress({ data, isLoading }: Readonly<WordPressProps>) {
             editForm={
                 <WordPressEditForm
                     setIsOpen={setIsOpen}
-                    status={data?.status ?? constants.wordpressStatuses.DRAFT}
+                    status={data?.status ?? constants.wordpressStatus.DRAFT}
                     publicize={data?.publicize.toString() ?? "false"}
                 />
             }

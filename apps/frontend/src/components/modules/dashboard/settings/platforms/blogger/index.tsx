@@ -34,6 +34,7 @@ export function Blogger({ data, isLoading }: Readonly<BloggerProps>) {
         try {
             await disconnect();
             utils.platforms.getAll.invalidate();
+            utils.auth.getMe.invalidate();
         } catch (error) {
             toast.error(disconnectError?.message ?? "Something went wrong.");
         }

@@ -12,9 +12,9 @@ const MediumSchema = new Schema<IMedium>(
         author_id: { type: String, required: true },
         status: {
             type: String,
-            enum: constants.mediumStatuses,
+            enum: constants.mediumStatus,
             required: true,
-            default: constants.mediumStatuses.DRAFT,
+            default: constants.mediumStatus.DRAFT,
         },
         notify_followers: { type: Boolean, required: true, default: false },
     },
