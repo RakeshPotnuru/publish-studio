@@ -1,5 +1,9 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Button,
@@ -11,9 +15,6 @@ import {
     FormMessage,
     Input,
 } from "@itsrakesh/ui";
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -24,6 +25,7 @@ import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { Shake } from "@/components/ui/shake";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
+
 import { Captcha } from "./captcha";
 import { ShowPassword } from "./show-password";
 
@@ -90,7 +92,7 @@ export function ResetPasswordForm() {
             setError(null);
             setEmail(data.email);
             await sendResetPasswordEmail(data);
-        } catch (error) {}
+        } catch {}
     };
 
     const handleResend = async () => {
@@ -101,7 +103,7 @@ export function ResetPasswordForm() {
         try {
             setError(null);
             await sendResetPasswordEmail({ email });
-        } catch (error) {}
+        } catch {}
     };
 
     const isEmailStepLoading =
@@ -142,7 +144,7 @@ export function ResetPasswordForm() {
         try {
             setError(null);
             await resetPassword({ token, password: data.password });
-        } catch (error) {}
+        } catch {}
     };
 
     const isPasswordStepLoading =

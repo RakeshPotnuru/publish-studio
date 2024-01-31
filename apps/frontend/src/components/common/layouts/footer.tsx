@@ -1,12 +1,13 @@
 "use client";
 
+import Link from "next/link";
+
 import { Button } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
-import Link from "next/link";
 
 import { siteConfig } from "@/config/site";
 
-interface FooterProps extends React.HTMLAttributes<HTMLElement> {}
+type FooterProps = React.HTMLAttributes<HTMLElement>;
 
 export function Footer({ className, ...props }: FooterProps) {
     return (

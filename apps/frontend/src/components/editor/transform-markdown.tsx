@@ -1,4 +1,4 @@
-import { JSONContent } from "@tiptap/core";
+import type { JSONContent } from "@tiptap/core";
 import Blockquote from "@tiptap/extension-blockquote";
 import Bold from "@tiptap/extension-bold";
 import BulletList from "@tiptap/extension-bullet-list";
@@ -12,17 +12,17 @@ import ListItem from "@tiptap/extension-list-item";
 import OrderedList from "@tiptap/extension-ordered-list";
 import Paragraph from "@tiptap/extension-paragraph";
 import Strike from "@tiptap/extension-strike";
+import type { MarkdownSerializerState } from "@tiptap/pm/markdown";
 import {
-    MarkdownSerializerState,
-    MarkdownSerializer as ProseMirrorMarkdownSerializer,
     defaultMarkdownSerializer,
+    MarkdownSerializer as ProseMirrorMarkdownSerializer,
 } from "@tiptap/pm/markdown";
-import {
-    DOMParser as ProseMirrorDOMParser,
+import type {
     Mark as ProseMirrorMark,
     Node as ProseMirrorNode,
     Schema as ProseMirrorSchema,
 } from "@tiptap/pm/model";
+import { DOMParser as ProseMirrorDOMParser } from "@tiptap/pm/model";
 import DOMPurify from "dompurify";
 import { marked } from "marked";
 
@@ -67,11 +67,7 @@ export function isPlainURL(
 ) {
     if (link.attrs.title || !/^\w+:/.test(link.attrs.href)) return false;
     const content = parent.child(index + (side < 0 ? -1 : 0));
-    if (
-        !content.isText ||
-        content.text !== link.attrs.href ||
-        content.marks[content.marks.length - 1] !== link
-    )
+    if (!content.isText || content.text !== link.attrs.href || content.marks.at(-1) !== link)
         return false;
     if (index === (side < 0 ? 1 : parent.childCount - 1)) return true;
     const next = parent.child(index + (side < 0 ? -2 : 1));
@@ -155,7 +151,7 @@ export function serialize(schema: ProseMirrorSchema, content: JSONContent) {
     });
 }
 
-export function deserialize(schema: ProseMirrorSchema, content: string) {
+export function deserialize(schema: ProseMirrorSchema, content: string): JSON | null {
     const html = DOMPurify.sanitize(marked.parse(content));
 
     if (!html) return null;

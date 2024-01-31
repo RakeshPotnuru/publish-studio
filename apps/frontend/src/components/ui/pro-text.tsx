@@ -1,4 +1,4 @@
-interface ProTextProps extends React.HTMLAttributes<HTMLSpanElement> {}
+type ProTextProps = React.HTMLAttributes<HTMLSpanElement>;
 
 export function ProText({ children, ...props }: ProTextProps) {
     return (

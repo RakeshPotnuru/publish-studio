@@ -1,11 +1,12 @@
-import { Checkbox } from "@itsrakesh/ui";
-import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 
+import { Checkbox } from "@itsrakesh/ui";
 import type { IFolder } from "@publish-studio/core";
+import type { ColumnDef } from "@tanstack/react-table";
 
 import { siteConfig } from "@/config/site";
 import { shortenText } from "@/utils/text-shortener";
+
 import { RowActions } from "./row-actions";
 
 export const columns: ColumnDef<IFolder>[] = [

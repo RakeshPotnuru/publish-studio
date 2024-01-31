@@ -1,7 +1,10 @@
-import { Separator } from "@itsrakesh/ui";
 import { useState } from "react";
 
-import fleschReadingEaseScore, { IReadabilityScore } from "@/utils/flesch-reading-ease-score";
+import { Separator } from "@itsrakesh/ui";
+
+import type { IReadabilityScore } from "@/utils/flesch-reading-ease-score";
+import fleschReadingEaseScore from "@/utils/flesch-reading-ease-score";
+
 import { Icons } from "../../assets/icons";
 import { Tooltip } from "../ui/tooltip";
 import type { MenuProps } from "./menu/fixed-menu";
@@ -26,12 +29,13 @@ export function EditorFooter({ editor, isLoading }: MenuProps & EditorFooterProp
         const text = state.doc.textBetween(from, to, "");
         const words = text.split(" ").filter(word => word !== "");
 
-        if (view.state.selection.empty)
+        if (state.selection.empty) {
             return {
                 text: "",
                 characterCount: editor.storage.characterCount.characters(),
                 wordCount: editor.storage.characterCount.words(),
             };
+        }
 
         return {
             text: text,

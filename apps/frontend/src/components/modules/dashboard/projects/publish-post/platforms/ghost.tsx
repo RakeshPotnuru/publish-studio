@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import {
     Button,
     FormControl,
@@ -8,13 +10,13 @@ import {
     FormMessage,
     Input,
 } from "@itsrakesh/ui";
-import Link from "next/link";
-import { UseFormReturn } from "react-hook-form";
-import { z } from "zod";
+import type { UseFormReturn } from "react-hook-form";
+import type { z } from "zod";
 
 import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
-import { formSchema } from "../form-schema";
+
+import type { formSchema } from "../form-schema";
 
 interface GhostProps {
     form: UseFormReturn<z.infer<typeof formSchema>>;

@@ -1,14 +1,15 @@
-import { Badge, Checkbox } from "@itsrakesh/ui";
-import { ColumnDef } from "@tanstack/react-table";
-import { formatDistanceToNow } from "date-fns";
 import Image from "next/image";
 
+import { Badge, Checkbox } from "@itsrakesh/ui";
 import type { IAsset } from "@publish-studio/core";
+import type { ColumnDef } from "@tanstack/react-table";
+import { formatDistanceToNow } from "date-fns";
 
 import { DataTableColumnHeader } from "@/components/ui/data-table";
-import { formatFileSize } from "@/utils/file-size";
+import { formatFileSize } from "@/utils/format-file-size";
 import imageLoader from "@/utils/image-loader";
 import { shortenText } from "@/utils/text-shortener";
+
 import { AssetDialog } from "./asset";
 import { RowActions } from "./row-actions";
 

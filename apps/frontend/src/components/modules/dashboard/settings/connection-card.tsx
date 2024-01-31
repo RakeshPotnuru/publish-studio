@@ -1,3 +1,7 @@
+import { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+
 import {
     Button,
     Dialog,
@@ -8,15 +12,13 @@ import {
     Skeleton,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
-import Image from "next/image";
-import Link from "next/link";
-import { useState } from "react";
 
 import { Icons } from "@/assets/icons";
 import { AskForConfirmation } from "@/components/ui/ask-for-confirmation";
 import { Heading } from "@/components/ui/heading";
 import { Tooltip } from "@/components/ui/tooltip";
 import { trpc } from "@/utils/trpc";
+
 import { ImportDialog } from "./platforms/import-dialog";
 
 interface ConnectionCardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -64,10 +66,10 @@ export function ConnectionCard({
             {askingForConfirmation ? (
                 <AskForConfirmation
                     onCancel={() => setAskingForConfirmation(false)}
-                    onConfirm={() => {
+                    onConfirm={async () => {
                         onDisconnect();
                         setAskingForConfirmation(false);
-                        utils.platforms.getAll.invalidate();
+                        await utils.platforms.getAll.invalidate();
                     }}
                     classNames={{
                         container: "border rounded-lg p-2",
@@ -98,7 +100,7 @@ export function ConnectionCard({
                 {importComponent && (
                     <ImportDialog
                         open={isImportOpen ?? false}
-                        onOpenChange={setIsImportOpen ?? (() => {})}
+                        onOpenChange={setIsImportOpen}
                         platform={name}
                         component={importComponent}
                         tooltip="Import posts"

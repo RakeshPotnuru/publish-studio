@@ -1,5 +1,6 @@
 "use client";
 
+import type { AppRouter } from "@publish-studio/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
@@ -13,15 +14,14 @@ import {
 import { useCookies } from "react-cookie";
 import superjson from "superjson";
 
-import { AppRouter } from "@publish-studio/core";
 import { trpc } from "../../utils/trpc";
 
 const wsClient = createWSClient({
-    url: `ws://localhost:4001/`,
+    url: "ws://localhost:4001/",
 });
 
 export function TRPCProvider({ children }: Readonly<{ children: React.ReactNode }>) {
-    const [cookies, _] = useCookies(["ps_access_token"]);
+    const [cookies] = useCookies(["ps_access_token"]);
 
     const queryClient = new QueryClient({
         defaultOptions: {
@@ -35,8 +35,7 @@ export function TRPCProvider({ children }: Readonly<{ children: React.ReactNode 
     });
 
     if (!process.env.NEXT_PUBLIC_TRPC_API_URL) {
-        console.error("NEXT_PUBLIC_TRPC_API_URL is not set");
-        process.exit(1);
+        throw new Error("NEXT_PUBLIC_TRPC_API_URL is not set");
     }
 
     const token = cookies.ps_access_token;
@@ -52,13 +51,13 @@ export function TRPCProvider({ children }: Readonly<{ children: React.ReactNode 
                 true: wsLink<AppRouter>({ client: wsClient }),
                 false: httpBatchLink({
                     url: process.env.NEXT_PUBLIC_TRPC_API_URL,
-                    async headers() {
+                    headers() {
                         if (!token) {
                             return {};
                         }
 
                         return {
-                            Authorization: `Bearer ${token}`,
+                            Authorization: `Bearer ${token as string}`,
                         };
                     },
                     fetch: async (input, init?) => {

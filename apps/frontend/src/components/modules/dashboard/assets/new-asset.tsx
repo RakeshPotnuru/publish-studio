@@ -1,3 +1,6 @@
+import { useRef, useState } from "react";
+import { useParams } from "next/navigation";
+
 import {
     Button,
     Dialog,
@@ -10,19 +13,16 @@ import {
     toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
+import type { IAsset } from "@publish-studio/core";
 import axios from "axios";
 import mongoose from "mongoose";
-import { useParams } from "next/navigation";
-import { useRef, useState } from "react";
-
-import type { IAsset } from "@publish-studio/core";
 
 import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { Tooltip } from "@/components/ui/tooltip";
 import { constants } from "@/config/constants";
-import { formatFileSize } from "@/utils/file-size";
+import { formatFileSize } from "@/utils/format-file-size";
 import { shortenText } from "@/utils/text-shortener";
 import { trpc } from "@/utils/trpc";
 
@@ -145,9 +145,9 @@ export function NewAssetDialog({
 
         try {
             const formData = new FormData();
-            Object.entries(data.submitTo.fields).forEach(([field, value]) => {
+            for (const [field, value] of Object.entries(data.submitTo.fields)) {
                 formData.append(field, value);
-            });
+            }
             formData.append("file", file);
 
             await axios.post(data.submitTo.url, formData);
@@ -156,7 +156,7 @@ export function NewAssetDialog({
 
             utils.assets.getAll.invalidate();
             setOpen(false);
-        } catch (error) {
+        } catch {
             await deleteAsset([data.asset._id]);
         }
     };

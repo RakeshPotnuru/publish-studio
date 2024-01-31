@@ -1,14 +1,10 @@
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Button,
     Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-    Input,
     ScrollArea,
     Sheet,
     SheetContent,
@@ -17,32 +13,27 @@ import {
     SheetHeader,
     SheetTitle,
     SheetTrigger,
-    Textarea,
     toast,
 } from "@itsrakesh/ui";
-import Image from "next/image";
-import { NodeHtmlMarkdown } from "node-html-markdown";
-import { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
 import type { IProject } from "@publish-studio/core";
+import { NodeHtmlMarkdown } from "node-html-markdown";
+import { useForm } from "react-hook-form";
+import type { z } from "zod";
 
 import { Icons } from "@/assets/icons";
 import { ImageWidget } from "@/components/modules/dashboard/assets/image-widget";
-import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { DotsLoader } from "@/components/ui/loaders/dots-loader";
-import { ProButton } from "@/components/ui/pro-button";
-import { Tooltip } from "@/components/ui/tooltip";
-import { constants } from "@/config/constants";
 import useUserStore from "@/lib/store/user";
 import { trpc } from "@/utils/trpc";
-import { MenuProps } from "../../../../editor/menu/fixed-menu";
-import { CharactersLengthViewer } from "./characters-length-viewer";
+
+import type { MenuProps } from "../../../../editor/menu/fixed-menu";
+import { Actions } from "./actions";
 import { EmptyState } from "./empty-state";
+import { CanonicalUrl } from "./fields/canonical-url";
+import { Description } from "./fields/description";
+import { Title } from "./fields/title";
 import { formSchema } from "./form-schema";
 import { PlatformsField } from "./platforms";
-import { SchedulePost } from "./schedule-post";
 
 interface PublishPostProps extends React.HTMLAttributes<HTMLDialogElement> {
     project: IProject;
@@ -56,70 +47,11 @@ export function PublishPost({
 }: Readonly<PublishPostProps & MenuProps>) {
     const [coverImage, setCoverImage] = useState<string>();
     const [openImageWidget, setOpenImageWidget] = useState<boolean>(false);
+    const [isPostUpdating, setIsPostUpdating] = useState<boolean>(false);
 
-    const { user, isLoading: isUserLoading } = useUserStore();
     const utils = trpc.useUtils();
+    const { user, isLoading: isUserLoading } = useUserStore();
     const tooltipRef = useRef<HTMLButtonElement>(null);
-
-    const { mutateAsync: saveProject, isLoading: isProjectSaving } =
-        trpc.projects.update.useMutation({
-            onSuccess: () => {
-                toast.success("Project saved successfully.");
-                handleRefresh();
-            },
-            onError: error => {
-                toast.error(error.message);
-            },
-        });
-
-    const { mutateAsync: publishPost, isLoading: isPostPublishing } = trpc.post.publish.useMutation(
-        {
-            onSuccess: ({ data }) => {
-                toast(data.message, {
-                    action: {
-                        label: "Refresh",
-                        onClick: () => {
-                            handleRefresh();
-                        },
-                    },
-                });
-                handleRefresh();
-            },
-            onError: error => {
-                toast.error(error.message);
-            },
-        },
-    );
-
-    const { mutateAsync: updatePost, isLoading: isPostUpdating } = trpc.post.edit.useMutation({
-        onSuccess: ({ data }) => {
-            toast.success(data.message);
-            handleRefresh();
-        },
-        onError: error => {
-            toast.error(error.message);
-        },
-    });
-
-    const { mutateAsync: generateTitle, isLoading: isTitleGenerating } =
-        trpc.genAI.generate.title.useMutation({
-            onSuccess: ({ data }) => {
-                form.setValue("title", data.title, { shouldDirty: true });
-            },
-            onError: error => {
-                toast.error(error.message);
-            },
-        });
-
-    const { mutateAsync: generateDescription, isLoading: isDescriptionGenerating } =
-        trpc.genAI.generate.description.useMutation({
-            onSuccess: ({ data }) => {
-                form.setValue("description", data.description, { shouldDirty: true });
-            },
-            onError: error => {
-                toast.error(error.message);
-            },
-        });
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -143,18 +75,45 @@ export function PublishPost({
     const getBody = () => {
         const nhm = new NodeHtmlMarkdown();
 
-        if (editor) {
-            return {
-                html: editor.getHTML(),
-                markdown: nhm.translate(editor.getHTML()),
-            };
-        }
-
         return {
-            html: "",
-            markdown: "",
+            html: editor.getHTML(),
+            markdown: nhm.translate(editor.getHTML()),
         };
     };
+
+    const { mutateAsync: saveProject, isLoading: isProjectSaving } =
+        trpc.projects.update.useMutation({
+            onSuccess: async () => {
+                toast.success("Project saved successfully.");
+                await handleRefresh();
+            },
+            onError: error => {
+                toast.error(error.message);
+            },
+        });
+
+    const { mutateAsync: publishPost, isLoading: isPostPublishing } = trpc.post.publish.useMutation(
+        {
+            onSuccess: async ({ data }) => {
+                toast(data.message, {
+                    action: {
+                        label: "Refresh",
+                        onClick: async () => {
+                            await handleRefresh();
+                        },
+                    },
+                });
+                await handleRefresh();
+            },
+            onError: error => {
+                toast.error(error.message);
+            },
+        },
+    );
+
+    async function handleRefresh() {
+        await utils.projects.getById.invalidate();
+    }
 
     const handleSave = async (data: z.infer<typeof formSchema>) => {
         try {
@@ -165,21 +124,21 @@ export function PublishPost({
                     tags: {
                         // hashnode_tags: data.tags.hashnode_tags.split(","),
                         devto_tags: data.tags.devto_tags?.split(",").shift()?.length
-                            ? data.tags.devto_tags?.split(",")
+                            ? data.tags.devto_tags.split(",")
                             : undefined,
                         medium_tags: data.tags.medium_tags?.split(",").shift()?.length
-                            ? data.tags.medium_tags?.split(",")
+                            ? data.tags.medium_tags.split(",")
                             : undefined,
                         ghost_tags: data.tags.ghost_tags?.split(",").shift()?.length
-                            ? data.tags.ghost_tags?.split(",").map(tag => {
+                            ? data.tags.ghost_tags.split(",").map(tag => {
                                   return { name: tag };
                               })
                             : undefined,
                         wordpress_tags: data.tags.wordpress_tags?.split(",").shift()?.length
-                            ? data.tags.wordpress_tags?.split(",")
+                            ? data.tags.wordpress_tags.split(",")
                             : undefined,
                         blogger_tags: data.tags.blogger_tags?.split(",").shift()?.length
-                            ? data.tags.blogger_tags?.split(",")
+                            ? data.tags.blogger_tags.split(",")
                             : undefined,
                     },
                     body: {
@@ -188,7 +147,9 @@ export function PublishPost({
                     },
                 },
             });
-        } catch (error) {}
+        } catch {
+            // Ignore
+        }
     };
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
@@ -198,78 +159,35 @@ export function PublishPost({
         }
 
         try {
-            handleSave(data);
+            await handleSave(data);
 
             await publishPost({
                 ...data,
                 project_id: project._id,
                 scheduled_at: new Date(),
             });
-        } catch (error) {}
+        } catch {
+            // Ignore
+        }
     };
-
-    const handleSchedule = async (data: z.infer<typeof formSchema>, date: Date) => {
-        try {
-            handleSave(data);
-
-            await publishPost({
-                ...data,
-                project_id: project._id,
-                scheduled_at: date,
-            });
-        } catch (error) {}
-    };
-
-    const handleUpdate = async (data: z.infer<typeof formSchema>) => {
-        try {
-            await handleSave(data);
-
-            await updatePost({
-                ...data,
-                project_id: project._id,
-            });
-        } catch (error) {}
-    };
-
-    const handleGenerateTitle = async () => {
-        try {
-            await generateTitle({
-                project_id: project._id,
-            });
-        } catch (error) {}
-    };
-
-    const handleGenerateDescription = async () => {
-        try {
-            await generateDescription({
-                project_id: project._id,
-            });
-        } catch (error) {}
-    };
-
-    function handleRefresh() {
-        utils.projects.getById.invalidate();
-    }
 
     useEffect(() => {
-        if (project) {
-            form.reset({
-                cover_image: project.cover_image,
-                title: project.title,
-                description: project.description,
-                platforms: project.platforms,
-                tags: {
-                    // hashnode_tags: project.tags?.hashnode_tags?.join(","),
-                    devto_tags: project.tags?.devto_tags?.join(","),
-                    medium_tags: project.tags?.medium_tags?.join(","),
-                    ghost_tags: project.tags?.ghost_tags?.map(tag => tag.name).join(","),
-                    wordpress_tags: project.tags?.wordpress_tags?.join(","),
-                    blogger_tags: project.tags?.blogger_tags?.join(","),
-                },
-                canonical_url: project.canonical_url,
-            });
-            setCoverImage(project.cover_image);
-        }
+        form.reset({
+            cover_image: project.cover_image,
+            title: project.title,
+            description: project.description,
+            platforms: project.platforms,
+            tags: {
+                // hashnode_tags: project.tags?.hashnode_tags?.join(","),
+                devto_tags: project.tags?.devto_tags?.join(","),
+                medium_tags: project.tags?.medium_tags?.join(","),
+                ghost_tags: project.tags?.ghost_tags?.map(tag => tag.name).join(","),
+                wordpress_tags: project.tags?.wordpress_tags?.join(","),
+                blogger_tags: project.tags?.blogger_tags?.join(","),
+            },
+            canonical_url: project.canonical_url,
+        });
+        setCoverImage(project.cover_image);
     }, [project, form]);
 
     const isLoading =
@@ -300,225 +218,43 @@ export function PublishPost({
                                         />
                                     </div>
                                 )}
-                                <FormField
-                                    control={form.control}
-                                    name="title"
-                                    disabled={isLoading}
-                                    render={({ field }) => (
-                                        <FormItem className="w-full">
-                                            <FormLabel>Title</FormLabel>
-                                            <div className="flex items-center space-x-1">
-                                                <Tooltip content="Generate title">
-                                                    <ProButton
-                                                        ref={tooltipRef}
-                                                        type="button"
-                                                        onClick={handleGenerateTitle}
-                                                        size="icon"
-                                                        disabled={isTitleGenerating || isLoading}
-                                                        featureText="generate SEO optimized title"
-                                                    >
-                                                        <ButtonLoader
-                                                            isLoading={isTitleGenerating}
-                                                            isIcon
-                                                        >
-                                                            <Icons.Magic className="size-4" />
-                                                        </ButtonLoader>
-                                                    </ProButton>
-                                                </Tooltip>
-                                                <FormControl>
-                                                    <Input
-                                                        type="text"
-                                                        placeholder="Post title"
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                            </div>
-                                            {field.value && (
-                                                <CharactersLengthViewer
-                                                    maxLength={constants.project.title.MAX_LENGTH}
-                                                    length={field.value.length}
-                                                    recommendedLength={{
-                                                        min: constants.project.title
-                                                            .RECOMMENDED_MIN_LENGTH,
-                                                        max: constants.project.title
-                                                            .RECOMMENDED_MAX_LENGTH,
-                                                    }}
-                                                />
-                                            )}
-                                            <FormDescription>
-                                                Recommended length is between{" "}
-                                                {constants.project.title.RECOMMENDED_MIN_LENGTH}-
-                                                {constants.project.title.RECOMMENDED_MAX_LENGTH}{" "}
-                                                characters.
-                                            </FormDescription>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
+                                <Title
+                                    form={form}
+                                    isLoading={isLoading}
+                                    projectId={project._id}
+                                    tooltipRef={tooltipRef}
                                 />
-                                <FormField
-                                    control={form.control}
-                                    name="description"
-                                    disabled={isLoading}
-                                    render={({ field }) => (
-                                        <FormItem className="w-full">
-                                            <FormLabel>Description</FormLabel>
-                                            <div className="flex items-start space-x-1">
-                                                <Tooltip content="Generate description">
-                                                    <ProButton
-                                                        ref={tooltipRef}
-                                                        type="button"
-                                                        onClick={handleGenerateDescription}
-                                                        size="icon"
-                                                        disabled={
-                                                            isDescriptionGenerating || isLoading
-                                                        }
-                                                        featureText="generate SEO optimized description"
-                                                    >
-                                                        <ButtonLoader
-                                                            isLoading={isDescriptionGenerating}
-                                                            isIcon
-                                                        >
-                                                            <Icons.Magic className="size-4" />
-                                                        </ButtonLoader>
-                                                    </ProButton>
-                                                </Tooltip>
-                                                <FormControl>
-                                                    <Textarea
-                                                        placeholder="Post description"
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                            </div>
-                                            {field.value && (
-                                                <CharactersLengthViewer
-                                                    maxLength={
-                                                        constants.project.description.MAX_LENGTH
-                                                    }
-                                                    length={field.value.length}
-                                                    recommendedLength={{
-                                                        min: constants.project.description
-                                                            .RECOMMENDED_MIN_LENGTH,
-                                                        max: constants.project.description
-                                                            .RECOMMENDED_MAX_LENGTH,
-                                                    }}
-                                                />
-                                            )}
-                                            <FormDescription>
-                                                Recommended length is between{" "}
-                                                {
-                                                    constants.project.description
-                                                        .RECOMMENDED_MIN_LENGTH
-                                                }
-                                                -
-                                                {
-                                                    constants.project.description
-                                                        .RECOMMENDED_MAX_LENGTH
-                                                }{" "}
-                                                characters.
-                                            </FormDescription>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
+                                <Description
+                                    form={form}
+                                    isLoading={isLoading}
+                                    projectId={project._id}
+                                    tooltipRef={tooltipRef}
                                 />
                                 <PlatformsField
                                     form={form}
-                                    connected_platforms={user.platforms}
+                                    connectedPlatforms={user.platforms}
                                     isLoading={isLoading}
                                     onSubmit={onSubmit}
                                     onRefresh={handleRefresh}
-                                    scheduled_at={project.scheduled_at}
-                                    project_id={project._id}
+                                    scheduledAt={project.scheduled_at}
+                                    projectId={project._id}
                                 />
-                                <FormField
-                                    control={form.control}
-                                    name="canonical_url"
-                                    disabled={isLoading}
-                                    render={({ field }) => (
-                                        <FormItem className="w-full">
-                                            <FormLabel>Canonical URL (Optional)</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    type="url"
-                                                    placeholder="https://example.com/post"
-                                                    {...field}
-                                                />
-                                            </FormControl>
-                                            <FormDescription>
-                                                Enter the original URL of the post if you are
-                                                republishing it.
-                                            </FormDescription>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
+                                <CanonicalUrl form={form} isLoading={isLoading} />
                             </div>
                         </ScrollArea>
                         <SheetFooter className="bg-background sticky bottom-0 py-4">
-                            <Tooltip content="Save changes">
-                                <Button
-                                    onClick={form.handleSubmit(handleSave)}
-                                    type="button"
-                                    variant="info"
-                                    size="icon"
-                                    disabled={!form.formState.isDirty || isLoading}
-                                >
-                                    <ButtonLoader isLoading={isProjectSaving} isIcon>
-                                        <Icons.Save className="size-4" />
-                                    </ButtonLoader>
-                                </Button>
-                            </Tooltip>
-                            {project.status === constants.project.status.PUBLISHED && (
-                                <ProButton
-                                    onClick={form.handleSubmit(handleUpdate)}
-                                    type="button"
-                                    disabled={
-                                        isLoading || project.updated_at === project.published_at
-                                    }
-                                    featureText="update published post in a single click"
-                                >
-                                    <ButtonLoader isLoading={isPostUpdating}>
-                                        Update Post
-                                    </ButtonLoader>
-                                </ProButton>
-                            )}
-                            {/* Hide when post is published to all user connected platforms */}
-                            {user.platforms.length !== project.platforms?.length && (
-                                <Button
-                                    type="submit"
-                                    disabled={
-                                        !form.formState.isDirty ||
-                                        isLoading ||
-                                        project.status === constants.project.status.SCHEDULED ||
-                                        form.getValues().platforms?.length === 0
-                                    }
-                                >
-                                    <ButtonLoader isLoading={isPostPublishing}>
-                                        Publish Now
-                                    </ButtonLoader>
-                                </Button>
-                            )}
-                            {project.status !== constants.project.status.PUBLISHED && (
-                                <SchedulePost
-                                    onConfirm={date => {
-                                        handleSchedule(form.getValues(), date);
-                                    }}
-                                >
-                                    <Button
-                                        type="button"
-                                        variant="secondary"
-                                        disabled={
-                                            !form.formState.isDirty ||
-                                            isLoading ||
-                                            project.status === constants.project.status.SCHEDULED ||
-                                            form.getValues().platforms?.length === 0
-                                        }
-                                    >
-                                        <ButtonLoader isLoading={isPostPublishing}>
-                                            Schedule <Icons.Schedule className="ml-2 size-4" />
-                                        </ButtonLoader>
-                                    </Button>
-                                </SchedulePost>
-                            )}
+                            <Actions
+                                form={form}
+                                isLoading={isLoading}
+                                project={project}
+                                handleRefresh={handleRefresh}
+                                handleSave={handleSave}
+                                isPostPublishing={isPostPublishing}
+                                isProjectSaving={isProjectSaving}
+                                publishPost={publishPost}
+                                user={user}
+                                setIsPostUpdating={setIsPostUpdating}
+                            />
                         </SheetFooter>
                     </form>
                 </Form>

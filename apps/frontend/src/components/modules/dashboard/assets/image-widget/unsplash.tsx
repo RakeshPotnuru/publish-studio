@@ -1,11 +1,14 @@
-import { PaginationState } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
-import { z } from "zod";
+
+import type { PaginationState } from "@tanstack/react-table";
+import type { z } from "zod";
 
 import { trpc } from "@/utils/trpc";
-import { TInsertImageOptions } from ".";
+
+import type { TInsertImageOptions } from ".";
 import { SearchBody } from "./search-body";
-import { SearchInput, formSchema } from "./search-input";
+import type { formSchema } from "./search-input";
+import { SearchInput } from "./search-input";
 
 interface UnsplashProps {
     onImageInsert: ({ ...options }: TInsertImageOptions) => void;
@@ -31,7 +34,7 @@ export function Unsplash({ onImageInsert }: Readonly<UnsplashProps>) {
         },
         {
             enabled: false,
-            staleTime: 60000,
+            staleTime: 60_000,
         },
     );
 

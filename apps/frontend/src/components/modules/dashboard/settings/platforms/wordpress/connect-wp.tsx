@@ -1,12 +1,13 @@
 "use client";
 
-import { toast } from "@itsrakesh/ui";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect } from "react";
+
+import { toast } from "@itsrakesh/ui";
 
 import { DotsLoader } from "@/components/ui/loaders/dots-loader";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
+import { useCallback, useEffect } from "react";
 
 export function ConnectWP() {
     const searchParams = useSearchParams();
@@ -17,12 +18,12 @@ export function ConnectWP() {
     const utils = trpc.useUtils();
 
     const { mutateAsync: connect } = trpc.platforms.wordpress.connect.useMutation({
-        onSuccess({ data }) {
+        onSuccess: async ({ data }) => {
             toast.success(data.message);
-            utils.platforms.getAll.invalidate();
+            await utils.platforms.getAll.invalidate();
             router.push(siteConfig.pages.settings.connections.link);
         },
-        onError(error) {
+        onError: error => {
             toast.error(error.message);
             router.replace(siteConfig.pages.settings.connections.link);
         },
@@ -43,7 +44,9 @@ export function ConnectWP() {
             router.replace(siteConfig.pages.settings.connections.link);
         }
 
-        handleConnect();
+        (async () => {
+            await handleConnect();
+        })();
     }, [code, handleConnect, router]);
 
     return (

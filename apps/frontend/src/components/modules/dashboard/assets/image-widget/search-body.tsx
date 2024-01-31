@@ -1,6 +1,7 @@
-import { Button, Skeleton } from "@itsrakesh/ui";
-import { PaginationState } from "@tanstack/react-table";
 import Image from "next/image";
+
+import { Button, Skeleton } from "@itsrakesh/ui";
+import type { PaginationState } from "@tanstack/react-table";
 
 import { Center } from "@/components/ui/center";
 import { ErrorBox } from "@/components/ui/error-box";
@@ -29,7 +30,7 @@ export function SearchBody({
     handleInsert,
 }: Readonly<SearchBodyProps>) {
     const photosView =
-        data.length !== 0 ? (
+        data.length > 0 ? (
             <div className="grid grid-cols-4 gap-2">
                 {data.map(photo => (
                     <slot
@@ -53,7 +54,7 @@ export function SearchBody({
 
     const searchBodyView = isLoading ? (
         <div className="grid grid-cols-4 gap-2">
-            {Array.from(Array(12).keys()).map(index => (
+            {[...Array.from({ length: 12 }).keys()].map(index => (
                 <Skeleton key={`skeleton-${index + 1}`} className="h-24 w-full" />
             ))}
         </div>

@@ -1,4 +1,7 @@
 import { useLayoutEffect } from "react";
+import Link from "next/link";
+
+import { Button } from "@itsrakesh/ui";
 
 import { Icons } from "@/assets/icons";
 import { Center } from "@/components/ui/center";
@@ -6,9 +9,8 @@ import { ErrorBox } from "@/components/ui/error-box";
 import { DotsLoader } from "@/components/ui/loaders/dots-loader";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
-import { Button } from "@itsrakesh/ui";
-import Link from "next/link";
-import { TInsertImageOptions } from ".";
+
+import type { TInsertImageOptions } from ".";
 
 declare global {
     interface Window {
@@ -64,8 +66,8 @@ export function Cloudinary({ onImageInsert }: Readonly<CloudinaryProps>) {
         if (data?.data.integration) {
             const mediaLibrary = window.cloudinary?.openMediaLibrary(
                 {
-                    cloud_name: data?.data.integration?.cloud_name,
-                    api_key: data?.data.integration?.api_key,
+                    cloud_name: data.data.integration.cloud_name,
+                    api_key: data.data.integration.api_key,
                     remove_header: true,
                     insert_caption: "Insert & Close",
                     inline_container: "#cloudinary-container",

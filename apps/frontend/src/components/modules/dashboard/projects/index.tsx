@@ -1,18 +1,20 @@
 "use client";
 
+import { useState } from "react";
+
 import { Button } from "@itsrakesh/ui";
-import { PaginationState } from "@tanstack/react-table";
+import type { PaginationState } from "@tanstack/react-table";
 
 import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
 import { trpc } from "@/utils/trpc";
-import { useState } from "react";
+
 import { columns } from "./columns";
 import { NewProject } from "./new-project";
 import { ProjectsTable } from "./table";
 
-interface ProjectsProps extends React.HTMLAttributes<HTMLDivElement> {}
+type ProjectsProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function Projects({ ...props }: ProjectsProps) {
     const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({

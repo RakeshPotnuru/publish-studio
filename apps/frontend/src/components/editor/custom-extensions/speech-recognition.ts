@@ -3,7 +3,7 @@
  **/
 
 import { Node } from "@tiptap/core";
-import { Commands } from "@tiptap/react";
+import type { Commands } from "@tiptap/react";
 
 declare global {
     interface Window {
@@ -86,7 +86,7 @@ const SpeechRecognition = SRNode.create<SpeechRecognitionOptions>({
                         );
 
                         // If the last recognized sentence is final, delete the last recognized sentence (currentResult) in the editor and rewrite the last recognized sentence (currentResult) in the editor without style
-                        if (event.results[event.results.length - 1].isFinal) {
+                        if (event.results.at(-1).isFinal) {
                             this.editor.commands.deleteRange({
                                 from: this.recognition.contentLength,
                                 to: this.editor.getText().length + 1,
@@ -98,7 +98,7 @@ const SpeechRecognition = SRNode.create<SpeechRecognitionOptions>({
 
                             // Redefine the variable contentLength taking into account the last recognized sentence
                             this.recognition.contentLength +=
-                                event.results[event.results.length - 1][0].transcript.length + 1;
+                                event.results.at(-1)[0].transcript.length + 1;
                         }
                     };
 

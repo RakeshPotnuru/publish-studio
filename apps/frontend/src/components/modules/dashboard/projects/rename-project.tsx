@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Button,
@@ -16,11 +18,9 @@ import {
     toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
-import { useState } from "react";
+import type { IProject } from "@publish-studio/core";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
-import type { IProject } from "@publish-studio/core";
 
 import { ErrorBox } from "@/components/ui/error-box";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
@@ -52,10 +52,10 @@ export function RenameProject({ children, project, ...props }: Readonly<RenamePr
     const utils = trpc.useUtils();
 
     const { mutateAsync: rename, isLoading: isRenaming } = trpc.projects.update.useMutation({
-        onSuccess: () => {
+        onSuccess: async () => {
             toast.success("Project renamed successfully");
             setOpen(false);
-            utils.projects.getById.invalidate();
+            await utils.projects.getById.invalidate();
         },
         onError: error => {
             setError(error.message);
@@ -78,7 +78,9 @@ export function RenameProject({ children, project, ...props }: Readonly<RenamePr
                     name: data.name,
                 },
             });
-        } catch (error) {}
+        } catch {
+            // Ignore
+        }
     };
 
     const isLoading = form.formState.isSubmitting || isRenaming;

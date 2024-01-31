@@ -1,5 +1,6 @@
-import { Button } from "@itsrakesh/ui";
 import { useRouter } from "next/navigation";
+
+import { Button } from "@itsrakesh/ui";
 
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { trpc } from "@/utils/trpc";
@@ -21,9 +22,11 @@ export function BloggerConnectForm() {
             const { data } = await getAuthUrl();
 
             if (data?.data.authUrl) {
-                router.push(data?.data.authUrl);
+                router.push(data.data.authUrl);
             }
-        } catch (error) {}
+        } catch {
+            // Ignore
+        }
     };
 
     return (

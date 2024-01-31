@@ -1,20 +1,23 @@
 "use client";
 
-import mongoose from "mongoose";
-import { useParams } from "next/navigation";
 import { useState } from "react";
+import { useParams } from "next/navigation";
+
+import { Button, Skeleton } from "@itsrakesh/ui";
+import type { PaginationState } from "@tanstack/react-table";
+import mongoose from "mongoose";
 
 import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
+import { useDocumentTitle } from "@/hooks/use-document-title";
 import { trpc } from "@/utils/trpc";
-import { Button, Skeleton } from "@itsrakesh/ui";
-import { PaginationState } from "@tanstack/react-table";
+
 import { columns } from "../projects/columns";
 import { NewProject } from "../projects/new-project";
 import { ProjectsTable } from "../projects/table";
 
-interface FolderProps extends React.HTMLAttributes<HTMLElement> {}
+type FolderProps = React.HTMLAttributes<HTMLElement>;
 
 export function Folder({ ...props }: FolderProps) {
     const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
@@ -33,10 +36,13 @@ export function Folder({ ...props }: FolderProps) {
         folder_id: folderId,
     });
 
+    useDocumentTitle(`Folders | ${data?.data.folder_name ?? "Not Found"}`);
+
     return (
         <div className="space-y-8" {...props}>
             <div className="flex items-center justify-between">
-                <Heading>
+                <Heading className="flex flex-row items-center">
+                    Folders <Icons.RightChevron />{" "}
                     {isFetching ? <Skeleton className="h-8 w-56" /> : data?.data.folder_name}
                 </Heading>
                 <NewProject folderId={folderId}>

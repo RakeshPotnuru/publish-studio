@@ -1,13 +1,14 @@
-import { toast } from "@itsrakesh/ui";
-import { PaginationState } from "@tanstack/react-table";
 import { useState } from "react";
 
+import { toast } from "@itsrakesh/ui";
 import type { IDevTo } from "@publish-studio/core";
+import type { PaginationState } from "@tanstack/react-table";
 
 import { Images } from "@/assets/images";
 import { constants } from "@/config/constants";
 import { useEditor } from "@/hooks/use-editor";
 import { trpc } from "@/utils/trpc";
+
 import { deserialize } from "../../../../../editor/transform-markdown";
 import { ConnectionCard } from "../../connection-card";
 import { ImportPostsBody } from "../import-dialog";
@@ -35,9 +36,9 @@ export function DevTo({ data, isLoading }: Readonly<DevToProps>) {
     const handleDisconnect = async () => {
         try {
             await disconnect();
-            utils.platforms.getAll.invalidate();
-            utils.auth.getMe.invalidate();
-        } catch (error) {
+            await utils.platforms.getAll.invalidate();
+            await utils.auth.getMe.invalidate();
+        } catch {
             toast.error(disconnectError?.message ?? "Something went wrong.");
         }
     };
@@ -52,7 +53,7 @@ export function DevTo({ data, isLoading }: Readonly<DevToProps>) {
             isLoading={isLoading || isDisconnecting}
             connected={data !== undefined}
             username={data?.username}
-            profile_url={`https://dev.to/@${data?.username}`}
+            profile_url={data && `https://dev.to/@${data.username}`}
             editForm={
                 <DevEditForm setIsOpen={setIsOpen} status={data?.status.toString() ?? "false"} />
             }
@@ -79,13 +80,23 @@ export function ImportPosts() {
             pagination: { page: pageIndex + 1, limit: pageSize },
         },
         {
-            staleTime: 60000,
+            staleTime: 60_000,
         },
     );
 
     const posts = data?.data.posts ?? [];
 
-    const { mutateAsync: importPost, isLoading } = trpc.projects.create.useMutation({
+    const { mutateAsync: createProject, isLoading: isCreatingProject } =
+        trpc.projects.create.useMutation({
+            onSuccess: () => {
+                toast.success("Project created.");
+            },
+            onError: error => {
+                toast.error(error.message);
+            },
+        });
+
+    const { mutateAsync: createPost, isLoading: isCreatingPost } = trpc.post.create.useMutation({
         onSuccess: () => {
             toast.success("Post imported successfully.");
         },
@@ -103,7 +114,12 @@ export function ImportPosts() {
 
             const json = deserialize(editor.schema, post.body_markdown);
 
-            await importPost({
+            if (!json) {
+                toast.error("Something went wrong.");
+                return;
+            }
+
+            const { data } = await createProject({
                 name: post.title,
                 title: post.title,
                 description: post.description,
@@ -115,22 +131,28 @@ export function ImportPosts() {
                 },
                 canonical_url: post.canonical_url,
                 cover_image: post.cover_image ?? undefined,
-                platforms: [
-                    {
-                        name: constants.user.platforms.DEVTO,
-                        id: post.id.toString(),
-                        published_url: post.url,
-                        status: constants.project.platformPublishStatuses.SUCCESS,
-                    },
-                ],
+                platforms: [constants.user.platforms.DEVTO],
                 published_at: new Date(post.published_at),
                 status: constants.project.status.PUBLISHED,
             });
 
+            await createPost({
+                platform: constants.user.platforms.DEVTO,
+                post_id: post.id.toString(),
+                project_id: data.project._id,
+                published_at: new Date(post.published_at),
+                published_url: post.url,
+                status: constants.postStatus.SUCCESS,
+            });
+
             setImportedPosts([...importedPosts, id]);
             setImportingPost(null);
-        } catch (error) {}
+        } catch {
+            // Ignore
+        }
     };
+
+    const isLoading = isCreatingPost || isCreatingProject;
 
     return (
         <ImportPostsBody

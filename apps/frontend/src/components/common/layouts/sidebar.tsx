@@ -1,16 +1,17 @@
 "use client";
 
-import { Button, ScrollArea } from "@itsrakesh/ui";
-import { cn } from "@itsrakesh/utils";
 import Link from "next/link";
 import { usePathname, useSelectedLayoutSegment } from "next/navigation";
+
+import { Button, ScrollArea } from "@itsrakesh/ui";
+import { cn } from "@itsrakesh/utils";
 
 import { Icons } from "@/assets/icons";
 import { NewAssetDialog } from "@/components/modules/dashboard/assets/new-asset";
 import { NewFolderDialog } from "@/components/modules/dashboard/folders/new-folder";
 import { NewProject } from "@/components/modules/dashboard/projects/new-project";
 
-interface SidebarProps extends React.HTMLAttributes<HTMLElement> {}
+type SidebarProps = React.HTMLAttributes<HTMLElement>;
 
 const SidebarItem = ({
     label,

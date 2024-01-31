@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
 import {
     Button,
     Sheet,
@@ -9,9 +12,6 @@ import {
     SheetTrigger,
     toast,
 } from "@itsrakesh/ui";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-
 import type { IProject } from "@publish-studio/core";
 
 import { Icons } from "@/assets/icons";
@@ -19,6 +19,7 @@ import { AskForConfirmation } from "@/components/ui/ask-for-confirmation";
 import { Tooltip } from "@/components/ui/tooltip";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
+
 import { UpdateCategories } from "./update-categories";
 
 export interface ProjectSettingsProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -32,10 +33,10 @@ export function ProjectSettings({ children, project, ...props }: Readonly<Projec
     const router = useRouter();
 
     const { mutateAsync: deleteProject, isLoading: isDeleting } = trpc.projects.delete.useMutation({
-        onSuccess: () => {
+        onSuccess: async () => {
             toast.success("Project deleted successfully");
-            utils.projects.getAll.invalidate();
-            utils.projects.getByFolderId.invalidate();
+            await utils.projects.getAll.invalidate();
+            await utils.projects.getByFolderId.invalidate();
             router.push(siteConfig.pages.dashboard.link);
         },
         onError: error => {
@@ -46,7 +47,9 @@ export function ProjectSettings({ children, project, ...props }: Readonly<Projec
     const handleDelete = async () => {
         try {
             await deleteProject([project._id]);
-        } catch (error) {}
+        } catch {
+            // Ignore
+        }
     };
 
     return (

@@ -1,3 +1,6 @@
+import { useState } from "react";
+import Link from "next/link";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Button,
@@ -16,17 +19,15 @@ import {
     toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
-import Link from "next/link";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Icons } from "@/assets/icons";
+import { Center } from "@/components/ui/center";
 import { ErrorBox } from "@/components/ui/error-box";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
-import { Center } from "@/components/ui/center";
 
 interface DevEditFormProps extends React.HTMLAttributes<HTMLDivElement> {
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -44,9 +45,9 @@ export function DevEditForm({ status, setIsOpen, ...props }: Readonly<DevEditFor
     const utils = trpc.useUtils();
 
     const { mutateAsync: edit, isLoading: isUpdating } = trpc.platforms.devto.update.useMutation({
-        onSuccess: ({ data }) => {
+        onSuccess: async ({ data }) => {
             toast.success(data.message);
-            utils.platforms.getAll.invalidate();
+            await utils.platforms.getAll.invalidate();
             setIsOpen(false);
         },
         onError: error => {
@@ -69,7 +70,9 @@ export function DevEditForm({ status, setIsOpen, ...props }: Readonly<DevEditFor
                 ...data,
                 status: data.status === "true",
             });
-        } catch (error) {}
+        } catch {
+            // Ignore
+        }
     };
 
     const isLoading = form.formState.isSubmitting || isUpdating;

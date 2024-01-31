@@ -1,6 +1,5 @@
-import { create } from "zustand";
-
 import type { IUser } from "@publish-studio/core";
+import { create } from "zustand";
 
 interface IUserState {
     user: IUser | null;

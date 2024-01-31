@@ -1,3 +1,6 @@
+import { useState } from "react";
+import Link from "next/link";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Button,
@@ -16,8 +19,6 @@ import {
     toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
-import Link from "next/link";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -47,9 +48,9 @@ export function HashnodeConnectForm({ setIsOpen, ...props }: Readonly<HashnodeCo
 
     const { mutateAsync: connect, isLoading: isConnecting } =
         trpc.platforms.hashnode.connect.useMutation({
-            onSuccess: ({ data }) => {
+            onSuccess: async ({ data }) => {
                 toast.success(data.message);
-                utils.platforms.getAll.invalidate();
+                await utils.platforms.getAll.invalidate();
                 setIsOpen(false);
             },
             onError: error => {
@@ -80,7 +81,9 @@ export function HashnodeConnectForm({ setIsOpen, ...props }: Readonly<HashnodeCo
                     delisted: data.settings.delisted === "true",
                 },
             });
-        } catch (error) {}
+        } catch {
+            // Ignore
+        }
     };
 
     const isLoading = form.formState.isSubmitting || isConnecting;

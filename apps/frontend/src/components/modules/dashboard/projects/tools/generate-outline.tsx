@@ -6,6 +6,7 @@ import { Heading } from "@/components/ui/heading";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { ProButton } from "@/components/ui/pro-button";
 import { trpc } from "@/utils/trpc";
+
 import type { MenuProps } from "../../../../editor/menu/fixed-menu";
 import { deserialize } from "../../../../editor/transform-markdown";
 
@@ -30,7 +31,9 @@ export function GenerateOutline({ editor, project_id }: Readonly<GenerateOutline
             await generateOutline({
                 project_id,
             });
-        } catch (error) {}
+        } catch {
+            // Ignore
+        }
     };
 
     return (

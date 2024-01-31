@@ -7,6 +7,7 @@ import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
 import { constants } from "@/config/constants";
 import { trpc } from "@/utils/trpc";
+
 import { Cloudinary } from "./integrations/cloudinary";
 import { Blogger } from "./platforms/blogger";
 import { DevTo } from "./platforms/dev";
@@ -15,7 +16,7 @@ import { Hashnode } from "./platforms/hashnode";
 import { Medium } from "./platforms/medium";
 import { WordPress } from "./platforms/wordpress";
 
-interface IntegrationsProps extends React.HTMLAttributes<HTMLDivElement> {}
+type IntegrationsProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function Connections({ ...props }: IntegrationsProps) {
     const {

@@ -1,12 +1,13 @@
 "use client";
 
-import { cn } from "@itsrakesh/utils";
 import { memo } from "react";
 
-import { IProject } from "@publish-studio/core";
+import { cn } from "@itsrakesh/utils";
+import type { IProject } from "@publish-studio/core";
 
 import { useEditor } from "@/hooks/use-editor";
 import { useFullscreenStatus } from "@/hooks/use-fullscreen-status";
+
 import { Heading } from "../ui/heading";
 import { Shell } from "../ui/shell";
 import { EditorBody } from "./editor-body";

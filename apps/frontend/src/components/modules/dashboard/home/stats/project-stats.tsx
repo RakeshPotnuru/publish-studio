@@ -1,10 +1,9 @@
 import { Skeleton } from "@itsrakesh/ui";
-import { ChartData, ChartOptions } from "chart.js/auto";
+import type { IProjectStats } from "@publish-studio/core";
+import type { ChartData, ChartOptions } from "chart.js/auto";
 import { format } from "date-fns";
 import { useTheme } from "next-themes";
 import { Line } from "react-chartjs-2";
-
-import type { IProjectStats } from "@publish-studio/core";
 
 import { Center } from "@/components/ui/center";
 import { ErrorBox } from "@/components/ui/error-box";
@@ -55,7 +54,7 @@ export function ProjectStats() {
                 ticks: {
                     precision: 0,
                 },
-                max: data?.data.stats[0]?.count && data?.data.stats[0].count < 10 ? 10 : undefined,
+                max: data?.data.stats[0]?.count && data.data.stats[0].count < 10 ? 10 : undefined,
             },
         },
     };

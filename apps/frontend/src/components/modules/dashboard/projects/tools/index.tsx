@@ -6,11 +6,11 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "@itsrakesh/ui";
-
 import type { IProject } from "@publish-studio/core";
 
-import { MenuProps } from "@/components/editor/menu/fixed-menu";
+import type { MenuProps } from "@/components/editor/menu/fixed-menu";
 import { Tooltip } from "@/components/ui/tooltip";
+
 import { DownloadProject } from "./download-project";
 import { GenerateOutline } from "./generate-outline";
 import { ImportMarkdown } from "./import-content";

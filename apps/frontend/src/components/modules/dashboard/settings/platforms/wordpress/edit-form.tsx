@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Button,
@@ -12,11 +14,9 @@ import {
     toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
-import { useState } from "react";
+import type { IWordPress } from "@publish-studio/core";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
-import type { IWordPress } from "@publish-studio/core";
 
 import { ErrorBox } from "@/components/ui/error-box";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
@@ -47,9 +47,9 @@ export function WordPressEditForm({
 
     const { mutateAsync: edit, isLoading: isUpdating } =
         trpc.platforms.wordpress.update.useMutation({
-            onSuccess: ({ data }) => {
+            onSuccess: async ({ data }) => {
                 toast.success(data.message);
-                utils.platforms.getAll.invalidate();
+                await utils.platforms.getAll.invalidate();
                 setIsOpen(false);
             },
             onError: error => {
@@ -73,7 +73,9 @@ export function WordPressEditForm({
                 ...data,
                 publicize: data.publicize === "true",
             });
-        } catch (error) {}
+        } catch {
+            // Ignore
+        }
     };
 
     const isLoading = isUpdating || form.formState.isSubmitting;

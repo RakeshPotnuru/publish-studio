@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import {
     Badge,
     Button,
@@ -14,8 +16,7 @@ import {
     Separator,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
-import { Column } from "@tanstack/react-table";
-import * as React from "react";
+import type { Column } from "@tanstack/react-table";
 
 import { Icons } from "../../../assets/icons";
 
@@ -43,7 +44,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                 <Button variant="outline" size="sm" className="h-8 border-dashed">
                     <Icons.CircleAdd className="mr-2 size-4" />
                     {title}
-                    {selectedValues?.size > 0 && (
+                    {selectedValues.size > 0 && (
                         <>
                             <Separator orientation="vertical" className="mx-2 h-4" />
                             <Badge
@@ -95,9 +96,9 @@ export function DataTableFacetedFilter<TData, TValue>({
                                             } else {
                                                 selectedValues.add(option.value);
                                             }
-                                            const filterValues = Array.from(selectedValues);
+                                            const filterValues = [...selectedValues];
                                             column?.setFilterValue(
-                                                filterValues.length ? filterValues : undefined,
+                                                filterValues.length > 0 ? filterValues : undefined,
                                             );
                                         }}
                                     >

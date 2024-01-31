@@ -1,8 +1,9 @@
+import { forwardRef } from "react";
+import Link from "next/link";
+
 import HCaptcha from "@hcaptcha/react-hcaptcha";
 import { Button } from "@itsrakesh/ui";
 import { useTheme } from "next-themes";
-import Link from "next/link";
-import { forwardRef } from "react";
 
 import { trpc } from "@/utils/trpc";
 
@@ -34,7 +35,7 @@ export const Captcha = forwardRef<HCaptcha, CaptchaProps>(
             try {
                 setIsLoading(true);
                 await verify(token);
-            } catch (error) {}
+            } catch {}
         };
 
         if (!process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY) {

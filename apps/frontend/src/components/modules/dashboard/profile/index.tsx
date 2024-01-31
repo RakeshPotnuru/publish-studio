@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Avatar,
@@ -18,7 +20,6 @@ import {
     toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
-import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -32,7 +33,7 @@ import { constants } from "@/config/constants";
 import useUserStore from "@/lib/store/user";
 import { trpc } from "@/utils/trpc";
 
-interface ProfileProps extends React.HTMLAttributes<HTMLDivElement> {}
+type ProfileProps = React.HTMLAttributes<HTMLDivElement>;
 
 const formSchema = z.object({
     first_name: z
@@ -85,7 +86,7 @@ export function Profile({ ...props }: ProfileProps) {
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         try {
             await editProfile(data);
-        } catch (error) {}
+        } catch {}
     };
 
     useEffect(() => {

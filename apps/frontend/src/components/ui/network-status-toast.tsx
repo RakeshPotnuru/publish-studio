@@ -1,7 +1,8 @@
 "use client";
 
-import { toast } from "@itsrakesh/ui";
 import { useEffect, useState } from "react";
+
+import { toast } from "@itsrakesh/ui";
 
 export function NetworkStatusToast() {
     const [online, setOnline] = useState(typeof window !== "undefined" && navigator.onLine);

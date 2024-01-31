@@ -1,5 +1,8 @@
 "use client";
 
+import { useState } from "react";
+import Link from "next/link";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Button,
@@ -11,8 +14,6 @@ import {
     FormMessage,
     Input,
 } from "@itsrakesh/ui";
-import Link from "next/link";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -24,6 +25,7 @@ import { Shake } from "@/components/ui/shake";
 import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
+
 import { Captcha } from "./captcha";
 import { GoogleAuth } from "./google-auth";
 import { ShowPassword } from "./show-password";
@@ -100,7 +102,7 @@ export function RegisterForm() {
         try {
             setError(null);
             await register(data);
-        } catch (error) {}
+        } catch {}
     };
 
     const isLoading = isRegistering || form.formState.isSubmitting || isCaptchaVerificationLoading;

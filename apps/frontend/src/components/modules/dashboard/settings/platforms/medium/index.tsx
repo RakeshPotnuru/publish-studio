@@ -1,11 +1,12 @@
-import { toast } from "@itsrakesh/ui";
+import { useState } from "react";
 
+import { toast } from "@itsrakesh/ui";
 import type { IMedium } from "@publish-studio/core";
 
 import { Images } from "@/assets/images";
 import { constants } from "@/config/constants";
 import { trpc } from "@/utils/trpc";
-import { useState } from "react";
+
 import { ConnectionCard } from "../../connection-card";
 import { MediumConnectForm } from "./connect-form";
 import { MediumEditForm } from "./edit-form";
@@ -30,9 +31,9 @@ export function Medium({ data, isLoading }: Readonly<MediumToProps>) {
     const handleDisconnect = async () => {
         try {
             await disconnect();
-            utils.platforms.getAll.invalidate();
-            utils.auth.getMe.invalidate();
-        } catch (error) {
+            await utils.platforms.getAll.invalidate();
+            await utils.auth.getMe.invalidate();
+        } catch {
             toast.error(disconnectError?.message ?? "Something went wrong.");
         }
     };
@@ -47,7 +48,7 @@ export function Medium({ data, isLoading }: Readonly<MediumToProps>) {
             isLoading={isLoading || isDisconnecting}
             connected={data !== undefined}
             username={data?.username}
-            profile_url={`https://medium.com/@${data?.username}`}
+            profile_url={data && `https://medium.com/@${data.username}`}
             editForm={
                 <MediumEditForm
                     setIsOpen={setIsOpen}

@@ -1,6 +1,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
-import Chart, { CategoryScale, ChartData, ChartOptions } from "chart.js/auto";
+import type { ChartData, ChartOptions } from "chart.js/auto";
+import Chart, { CategoryScale } from "chart.js/auto";
 import { useTheme } from "next-themes";
 import { Bar } from "react-chartjs-2";
 
@@ -24,10 +25,26 @@ interface AnalysisProps extends React.HTMLAttributes<HTMLDialogElement> {
 
 Chart.register(CategoryScale);
 
-const sentiments = [
-    { label: "😃 Positive", value: "positive", className: "text-success" },
-    { label: "😐 Neutral", value: "neutral", className: "text-neutral-500" },
-    { label: "😟 Negative", value: "negative", className: "text-destructive" },
+const sentiments: {
+    label: string;
+    value: TSentimentLabel;
+    className: string;
+}[] = [
+    {
+        label: "😃 Positive",
+        value: constants.project.tone_analysis.sentiments.POSITIVE,
+        className: "text-success",
+    },
+    {
+        label: "😐 Neutral",
+        value: constants.project.tone_analysis.sentiments.NEUTRAL,
+        className: "text-neutral-500",
+    },
+    {
+        label: "😟 Negative",
+        value: constants.project.tone_analysis.sentiments.NEGATIVE,
+        className: "text-destructive",
+    },
 ];
 const emotions = [
     { label: "😊 Joy", value: "joy", className: "text-[#FFD700]", color: "#FFD700" },
@@ -43,8 +60,8 @@ const sortEmotions = (emotion: TEmotionScores) => {
 
 const generateChartData = (emotion: TEmotionScores): ChartData<"bar"> => {
     const labels = Object.keys(emotion).map(key => {
-        const { label } = emotions.find(({ value }) => value === key)!;
-        return label;
+        const emotion = emotions.find(({ value }) => value === key);
+        return emotion?.label;
     });
 
     return {

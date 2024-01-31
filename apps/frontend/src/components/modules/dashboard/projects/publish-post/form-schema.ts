@@ -36,37 +36,26 @@ export const formSchema = z.object({
         //     .optional(),
         devto_tags: z
             .string()
-            .refine(
-                value => (value ?? "").split(",").length <= constants.project.tags.dev.MAX_LENGTH,
-                {
-                    message: `Maximum ${constants.project.tags.dev.MAX_LENGTH} tags allowed.`,
-                },
-            )
+            .refine(value => value.split(",").length <= constants.project.tags.dev.MAX_LENGTH, {
+                message: `Maximum ${constants.project.tags.dev.MAX_LENGTH} tags allowed.`,
+            })
             .optional(),
         medium_tags: z
             .string()
-            .refine(
-                value =>
-                    (value ?? "").split(",").length <= constants.project.tags.medium.MAX_LENGTH,
-                {
-                    message: `Maximum ${constants.project.tags.medium.MAX_LENGTH} tags allowed.`,
-                },
-            )
+            .refine(value => value.split(",").length <= constants.project.tags.medium.MAX_LENGTH, {
+                message: `Maximum ${constants.project.tags.medium.MAX_LENGTH} tags allowed.`,
+            })
             .optional(),
         ghost_tags: z
             .string()
-            .refine(
-                value => (value ?? "").split(",").length <= constants.project.tags.ghost.MAX_LENGTH,
-                {
-                    message: `Maximum ${constants.project.tags.ghost.MAX_LENGTH} tags allowed.`,
-                },
-            )
+            .refine(value => value.split(",").length <= constants.project.tags.ghost.MAX_LENGTH, {
+                message: `Maximum ${constants.project.tags.ghost.MAX_LENGTH} tags allowed.`,
+            })
             .optional(),
         wordpress_tags: z
             .string()
             .refine(
-                value =>
-                    (value ?? "").split(",").length <= constants.project.tags.wordpress.MAX_LENGTH,
+                value => value.split(",").length <= constants.project.tags.wordpress.MAX_LENGTH,
                 {
                     message: `Maximum ${constants.project.tags.wordpress.MAX_LENGTH} tags allowed.`,
                 },
@@ -74,13 +63,9 @@ export const formSchema = z.object({
             .optional(),
         blogger_tags: z
             .string()
-            .refine(
-                value =>
-                    (value ?? "").split(",").length <= constants.project.tags.blogger.MAX_LENGTH,
-                {
-                    message: `Maximum ${constants.project.tags.blogger.MAX_LENGTH} labels allowed.`,
-                },
-            )
+            .refine(value => value.split(",").length <= constants.project.tags.blogger.MAX_LENGTH, {
+                message: `Maximum ${constants.project.tags.blogger.MAX_LENGTH} labels allowed.`,
+            })
             .optional(),
     }),
     canonical_url: z.string().optional(),

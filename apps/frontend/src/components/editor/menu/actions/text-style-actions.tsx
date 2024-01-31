@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 import {
     Menubar,
     MenubarContent,
@@ -6,9 +8,9 @@ import {
     MenubarShortcut,
     MenubarTrigger,
 } from "@itsrakesh/ui";
-import { useEffect, useState } from "react";
 
 import getOs from "@/utils/get-os";
+
 import type { MenuProps } from "../fixed-menu";
 
 export function TextStyleActions({ editor }: Readonly<MenuProps>) {
@@ -22,22 +24,26 @@ export function TextStyleActions({ editor }: Readonly<MenuProps>) {
         const down = (e: KeyboardEvent) => {
             if ((e.metaKey || e.ctrlKey) && e.altKey) {
                 switch (e.key) {
-                    case "º":
+                    case "º": {
                         e.preventDefault();
                         setActiveTextStyle("Normal Text");
                         break;
-                    case "¡":
+                    }
+                    case "¡": {
                         e.preventDefault();
                         setActiveTextStyle("Heading 1");
                         break;
-                    case "™":
+                    }
+                    case "™": {
                         e.preventDefault();
                         setActiveTextStyle("Heading 2");
                         break;
-                    case "£":
+                    }
+                    case "£": {
                         e.preventDefault();
                         setActiveTextStyle("Heading 3");
                         break;
+                    }
                     default:
                 }
             }

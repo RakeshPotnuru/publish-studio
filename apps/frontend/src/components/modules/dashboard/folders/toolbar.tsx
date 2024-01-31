@@ -1,8 +1,8 @@
-import { Button, Input, toast } from "@itsrakesh/ui";
-import { Table } from "@tanstack/react-table";
 import { useState } from "react";
 
+import { Button, Input, toast } from "@itsrakesh/ui";
 import type { IFolder } from "@publish-studio/core";
+import type { Table } from "@tanstack/react-table";
 
 import { Icons } from "@/assets/icons";
 import { AskForConfirmation } from "@/components/ui/ask-for-confirmation";
@@ -38,7 +38,7 @@ export function Toolbar<TData>({ table }: Readonly<ToolbarProps<TData>>) {
             await deleteFolders(
                 table.getFilteredSelectedRowModel().rows.map(row => (row.original as IFolder)._id),
             );
-        } catch (error) {}
+        } catch {}
     };
 
     return (

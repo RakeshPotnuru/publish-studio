@@ -1,5 +1,6 @@
-import { Button } from "@itsrakesh/ui";
 import Link from "next/link";
+
+import { Button } from "@itsrakesh/ui";
 
 import { Icons } from "@/assets/icons";
 import { Center } from "@/components/ui/center";
@@ -8,6 +9,7 @@ import { Heading } from "@/components/ui/heading";
 import { FoldersLoader } from "@/components/ui/loaders/folders-loader";
 import { shortenText } from "@/utils/text-shortener";
 import { trpc } from "@/utils/trpc";
+
 import { NewProject } from "../projects/new-project";
 
 export function RecentProjects() {
@@ -26,7 +28,7 @@ export function RecentProjects() {
         </Center>
     ) : (
         <div className="grid grid-cols-4 gap-4 rounded-lg border p-4">
-            {projects.length ? (
+            {projects.length > 0 ? (
                 <>
                     {projects.slice(0, 5).map(project => (
                         <Button

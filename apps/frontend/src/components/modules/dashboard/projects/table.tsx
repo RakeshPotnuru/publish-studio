@@ -1,10 +1,14 @@
+import { useEffect, useMemo, useState } from "react";
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@itsrakesh/ui";
-import {
+import type {
     ColumnDef,
     ColumnFiltersState,
     PaginationState,
     SortingState,
     VisibilityState,
+} from "@tanstack/react-table";
+import {
     flexRender,
     getCoreRowModel,
     getFacetedRowModel,
@@ -14,10 +18,10 @@ import {
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table";
-import { useEffect, useMemo, useState } from "react";
 
 import { DataTablePagination } from "@/components/ui/data-table";
 import { TableLoader } from "@/components/ui/loaders/table-loader";
+
 import { Toolbar } from "./toolbar";
 
 interface ProjectsTableProps<TData, TValue> {
@@ -82,30 +86,31 @@ export function ProjectsTable<TData, TValue>({
         refetch();
     }, [refetch, pageIndex, pageSize]);
 
-    const tableBodyView = table.getRowModel().rows?.length ? (
-        table.getRowModel().rows.map(row => (
-            <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-                className="dark:hover:bg-zinc-800"
-            >
-                {row
-                    .getVisibleCells()
-                    .filter(cell => cell.column.id !== "_id")
-                    .map(cell => (
-                        <TableCell key={cell.id}>
-                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                        </TableCell>
-                    ))}
+    const tableBodyView =
+        table.getRowModel().rows.length > 0 ? (
+            table.getRowModel().rows.map(row => (
+                <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                    className="dark:hover:bg-zinc-800"
+                >
+                    {row
+                        .getVisibleCells()
+                        .filter(cell => cell.column.id !== "_id")
+                        .map(cell => (
+                            <TableCell key={cell.id}>
+                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            </TableCell>
+                        ))}
+                </TableRow>
+            ))
+        ) : (
+            <TableRow>
+                <TableCell colSpan={columns.length} className="h-24 text-center">
+                    No results
+                </TableCell>
             </TableRow>
-        ))
-    ) : (
-        <TableRow>
-            <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results
-            </TableCell>
-        </TableRow>
-    );
+        );
 
     return (
         <div className="space-y-4">
@@ -142,7 +147,7 @@ export function ProjectsTable<TData, TValue>({
                                                 .getAllColumns()
                                                 .filter(
                                                     column =>
-                                                        typeof column.accessorFn !== "undefined" &&
+                                                        column.accessorFn !== undefined &&
                                                         column.getCanHide(),
                                                 ).length
                                         }

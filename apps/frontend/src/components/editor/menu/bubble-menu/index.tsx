@@ -1,12 +1,13 @@
 import { BubbleMenu as TiptapBubbleMenu } from "@tiptap/react";
 
 import { MenuShell } from "@/components/ui/shell";
+
 import { LinkAction } from "../actions/link-action";
 import { MarkActions } from "../actions/mark-actions";
 import type { MenuProps } from "../fixed-menu";
 import { MenuSeparator } from "../menu-separator";
 
-interface BubbleMenuProps extends MenuProps {}
+type BubbleMenuProps = MenuProps;
 
 export function BubbleMenu({ editor }: BubbleMenuProps) {
     return (

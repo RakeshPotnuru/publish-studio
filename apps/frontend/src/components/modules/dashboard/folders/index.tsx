@@ -1,18 +1,20 @@
 "use client";
 
-import { Button } from "@itsrakesh/ui";
 import { useState } from "react";
+
+import { Button } from "@itsrakesh/ui";
+import type { PaginationState } from "@tanstack/react-table";
 
 import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
 import { trpc } from "@/utils/trpc";
-import { PaginationState } from "@tanstack/react-table";
+
 import { columns } from "./columns";
 import { NewFolderDialog } from "./new-folder";
 import { FoldersTable } from "./table";
 
-interface ProjectsProps extends React.HTMLAttributes<HTMLDivElement> {}
+type ProjectsProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function Folders({ ...props }: ProjectsProps) {
     const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({

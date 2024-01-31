@@ -1,8 +1,9 @@
 "use client";
 
-import { toast } from "@itsrakesh/ui";
-import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+
+import { toast } from "@itsrakesh/ui";
 
 import { DotsLoader } from "@/components/ui/loaders/dots-loader";
 import { siteConfig } from "@/config/site";
@@ -37,7 +38,7 @@ export function PaymentSuccess() {
 
         try {
             await fetchSession(sessionId);
-        } catch (error) {}
+        } catch {}
     }, [sessionId, fetchSession]);
 
     useEffect(() => {

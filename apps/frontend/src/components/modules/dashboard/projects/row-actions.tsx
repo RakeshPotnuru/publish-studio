@@ -1,3 +1,7 @@
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { useState } from "react";
+
 import {
     Button,
     DropdownMenu,
@@ -7,23 +11,30 @@ import {
     DropdownMenuTrigger,
     toast,
 } from "@itsrakesh/ui";
-import { Row } from "@tanstack/react-table";
-import mongoose from "mongoose";
-import Link from "next/link";
-import { useParams } from "next/navigation";
-import { useState } from "react";
-
 import type { IProject } from "@publish-studio/core";
+import type { Row } from "@tanstack/react-table";
+import mongoose from "mongoose";
 
 import { Icons } from "@/assets/icons";
 import { AskForConfirmation } from "@/components/ui/ask-for-confirmation";
 import { constants } from "@/config/constants";
 import { trpc } from "@/utils/trpc";
+
 import { MoveProject } from "./move-project";
 
 interface RowActionsProps<TData> {
     row: Row<TData & IProject>;
 }
+
+const cutTitle = (title: string) => {
+    const MAX_LENGTH = constants.project.title.MAX_LENGTH;
+
+    if (title.length > MAX_LENGTH) {
+        return title.slice(0, MAX_LENGTH);
+    }
+
+    return title;
+};
 
 export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
     const [askingForConfirmation, setAskingForConfirmation] = useState(false);
@@ -33,10 +44,10 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
     const utils = trpc.useUtils();
 
     const { mutateAsync: deleteProject, isLoading } = trpc.projects.delete.useMutation({
-        onSuccess: () => {
+        onSuccess: async () => {
             toast.success("Project deleted successfully");
-            utils.projects.getAll.invalidate();
-            utils.projects.getByFolderId.invalidate();
+            await utils.projects.getAll.invalidate();
+            await utils.projects.getByFolderId.invalidate();
         },
         onError: error => {
             toast.error(error.message);
@@ -45,10 +56,10 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
 
     const { mutateAsync: duplicateProject, isLoading: isDuplicating } =
         trpc.projects.create.useMutation({
-            onSuccess: () => {
+            onSuccess: async () => {
                 toast.success("Project created successfully");
-                utils.projects.getAll.invalidate();
-                utils.projects.getByFolderId.invalidate();
+                await utils.projects.getAll.invalidate();
+                await utils.projects.getByFolderId.invalidate();
             },
             onError: error => {
                 toast.error(error.message);
@@ -58,17 +69,9 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
     const handleDelete = async () => {
         try {
             await deleteProject([row.original._id]);
-        } catch (error) {}
-    };
-
-    const cutTitle = (title: string) => {
-        const MAX_LENGTH = constants.project.title.MAX_LENGTH;
-
-        if (title.length > MAX_LENGTH) {
-            return title.slice(0, MAX_LENGTH);
+        } catch {
+            // Ignore
         }
-
-        return title;
     };
 
     const handleDuplicate = async () => {
@@ -87,7 +90,9 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
                 },
                 folder_id: folder,
             });
-        } catch (error) {}
+        } catch {
+            // Ignore
+        }
     };
 
     return (
@@ -101,7 +106,7 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[160px]">
                     <DropdownMenuItem asChild>
-                        <Link href={`/projects/${row.original._id}`}>
+                        <Link href={`/projects/${row.original._id.toString()}`}>
                             <Icons.Edit className="mr-2 size-4" />
                             Edit
                         </Link>
@@ -148,7 +153,7 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
                                 }
                             }}
                             tabIndex={0}
-                            className="hover:bg-accent hover:text-destructive text-destructive relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+                            className="text-destructive hover:bg-accent hover:text-destructive relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
                         >
                             <Icons.Delete className="mr-2 size-4" />
                             Delete

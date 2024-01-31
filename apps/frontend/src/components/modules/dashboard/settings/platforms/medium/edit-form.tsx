@@ -1,3 +1,6 @@
+import { useState } from "react";
+import Link from "next/link";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Button,
@@ -16,12 +19,9 @@ import {
     toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
-import Link from "next/link";
-import { useState } from "react";
+import type { IMedium } from "@publish-studio/core";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
-import type { IMedium } from "@publish-studio/core";
 
 import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
@@ -53,9 +53,9 @@ export function MediumEditForm({
     const utils = trpc.useUtils();
 
     const { mutateAsync: edit, isLoading: isUpdating } = trpc.platforms.medium.update.useMutation({
-        onSuccess: ({ data }) => {
+        onSuccess: async ({ data }) => {
             toast.success(data.message);
-            utils.platforms.getAll.invalidate();
+            await utils.platforms.getAll.invalidate();
             setIsOpen(false);
         },
         onError: error => {
@@ -79,7 +79,9 @@ export function MediumEditForm({
                 ...data,
                 notify_followers: data.notify_followers === "true",
             });
-        } catch (error) {}
+        } catch {
+            // Ignore
+        }
     };
 
     const isLoading = isUpdating || form.formState.isSubmitting;

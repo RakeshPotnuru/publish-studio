@@ -1,12 +1,12 @@
+import { useState } from "react";
+
 import { toast } from "@itsrakesh/ui";
+import type { IProject } from "@publish-studio/core";
+import { useEditor as useTiptapEditor } from "@tiptap/react";
 import TableOfContent, {
     type TableOfContentDataItem,
 } from "@tiptap-pro/extension-table-of-content";
-import { useEditor as useTiptapEditor } from "@tiptap/react";
-import { useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-
-import type { IProject } from "@publish-studio/core";
 
 import { extensions } from "@/components/editor/extensions";
 import { trpc } from "@/utils/trpc";
@@ -32,7 +32,9 @@ export function useEditor(project?: IProject) {
                     },
                 },
             });
-        } catch (error) {}
+        } catch {
+            // Ignore
+        }
     }, 3000);
 
     const editor = useTiptapEditor({
@@ -50,8 +52,8 @@ export function useEditor(project?: IProject) {
             },
         },
         autofocus: true,
-        onUpdate: ({ editor }) => {
-            handleAutosave(editor.state.doc.toJSON());
+        onUpdate: async ({ editor }) => {
+            await handleAutosave(editor.state.doc.toJSON() as JSON);
         },
         content: project?.body?.json ?? project?.body?.html,
     });

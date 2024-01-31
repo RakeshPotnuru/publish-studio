@@ -1,17 +1,19 @@
 "use client";
 
-import { Button } from "@itsrakesh/ui";
-import { PaginationState } from "@tanstack/react-table";
 import { useState } from "react";
+
+import { Button } from "@itsrakesh/ui";
+import type { PaginationState } from "@tanstack/react-table";
 
 import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
 import { trpc } from "@/utils/trpc";
+
 import { columns } from "./columns";
+import type { TInsertImageOptions } from "./image-widget";
 import { NewAssetDialog } from "./new-asset";
 import { AssetsTable } from "./table";
-import { TInsertImageOptions } from "./image-widget";
 
 interface AssetsProps extends React.HTMLAttributes<HTMLElement> {
     isWidget?: boolean;

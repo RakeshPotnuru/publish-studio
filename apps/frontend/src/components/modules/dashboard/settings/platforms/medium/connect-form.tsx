@@ -1,3 +1,6 @@
+import { useState } from "react";
+import Link from "next/link";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Button,
@@ -16,8 +19,6 @@ import {
     toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
-import Link from "next/link";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -45,9 +46,9 @@ export function MediumConnectForm({ setIsOpen, ...props }: Readonly<MediumConnec
 
     const { mutateAsync: connect, isLoading: isConnecting } =
         trpc.platforms.medium.connect.useMutation({
-            onSuccess: ({ data }) => {
+            onSuccess: async ({ data }) => {
                 toast.success(data.message);
-                utils.platforms.getAll.invalidate();
+                await utils.platforms.getAll.invalidate();
                 setIsOpen(false);
             },
             onError: error => {
@@ -71,7 +72,9 @@ export function MediumConnectForm({ setIsOpen, ...props }: Readonly<MediumConnec
                 ...data,
                 notify_followers: data.notify_followers === "true",
             });
-        } catch (error) {}
+        } catch {
+            // Ignore
+        }
     };
 
     const isLoading = form.formState.isSubmitting || isConnecting;

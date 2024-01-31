@@ -1,9 +1,9 @@
 import { Skeleton } from "@itsrakesh/ui";
-import Chart, { ArcElement, ChartData, ChartOptions } from "chart.js/auto";
+import type { ICategoryStats } from "@publish-studio/core";
+import type { ChartData, ChartOptions } from "chart.js/auto";
+import Chart, { ArcElement } from "chart.js/auto";
 import { useTheme } from "next-themes";
 import { Doughnut } from "react-chartjs-2";
-
-import type { ICategoryStats } from "@publish-studio/core";
 
 import { Center } from "@/components/ui/center";
 import { ErrorBox } from "@/components/ui/error-box";
@@ -60,9 +60,7 @@ export function TopicStats() {
                 <div
                     className="mr-2 size-4"
                     style={{
-                        backgroundColor: (chartData.datasets?.[0].backgroundColor as string[])[
-                            index
-                        ],
+                        backgroundColor: (chartData.datasets[0].backgroundColor as string[])[index],
                     }}
                 />
                 <span>{label as string}</span>

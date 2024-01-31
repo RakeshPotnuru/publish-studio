@@ -1,4 +1,5 @@
 import { Icons } from "@/assets/icons";
+
 import { Center } from "../center";
 
 export function DotsLoader() {

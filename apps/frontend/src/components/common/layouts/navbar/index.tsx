@@ -1,5 +1,8 @@
 "use client";
 
+import Image from "next/image";
+import Link from "next/link";
+
 import {
     Avatar,
     AvatarFallback,
@@ -14,13 +17,12 @@ import {
     Skeleton,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
-import Image from "next/image";
-import Link from "next/link";
 import { useCookies } from "react-cookie";
 
 import { siteConfig } from "@/config/site";
 import useUserStore from "@/lib/store/user";
 import { trpc } from "@/utils/trpc";
+
 import { Icons } from "../../../../assets/icons";
 import { Images } from "../../../../assets/images";
 import { ProBorder } from "../../../ui/pro-border";
@@ -51,7 +53,7 @@ const NavItem = ({
     </DropdownMenu>
 );
 
-interface NavbarProps extends React.HTMLAttributes<HTMLElement> {}
+type NavbarProps = React.HTMLAttributes<HTMLElement>;
 
 export function Navbar({ className, ...props }: NavbarProps) {
     const [_, __, removeCookie] = useCookies(["ps_access_token"]);
@@ -60,19 +62,20 @@ export function Navbar({ className, ...props }: NavbarProps) {
 
     const { isFetching } = trpc.auth.getMe.useQuery(undefined, {
         onSuccess: ({ data }) => {
-            if (!data.user) return;
             setUser(data.user);
             setIsLoading(false);
         },
     });
 
-    const handleLogout = async () => {
+    const handleLogout = () => {
         try {
             removeCookie("ps_access_token");
 
             window.google?.accounts.id.disableAutoSelect();
             window.location.href = siteConfig.pages.login.link;
-        } catch (error) {}
+        } catch {
+            // Ignore
+        }
     };
 
     return (
@@ -117,7 +120,9 @@ export function Navbar({ className, ...props }: NavbarProps) {
                                 <Avatar className="size-9">
                                     <AvatarImage
                                         src={user?.profile_pic}
-                                        alt={`${user?.first_name} ${user?.last_name}`}
+                                        alt={`${user?.first_name ?? "Publish"} ${
+                                            user?.last_name ?? "Studio"
+                                        }`}
                                     />
                                     {isFetching ? (
                                         <AvatarFallback>

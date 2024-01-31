@@ -1,9 +1,13 @@
-import {
+import { useEffect, useMemo, useState } from "react";
+
+import type {
     ColumnDef,
     ColumnFiltersState,
     PaginationState,
     SortingState,
     VisibilityState,
+} from "@tanstack/react-table";
+import {
     flexRender,
     getCoreRowModel,
     getFacetedRowModel,
@@ -13,11 +17,11 @@ import {
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table";
-import { useEffect, useMemo, useState } from "react";
 
 import { Icons } from "@/assets/icons";
 import { DataTablePagination } from "@/components/ui/data-table";
 import { FoldersLoader } from "@/components/ui/loaders/folders-loader";
+
 import { Toolbar } from "./toolbar";
 
 interface FoldersTableProps<TData, TValue> {
@@ -89,7 +93,7 @@ export function FoldersTable<TData, TValue>({
                 <FoldersLoader />
             ) : (
                 <div className="grid grid-cols-4 gap-4">
-                    {table.getRowModel().rows?.length ? (
+                    {table.getRowModel().rows.length > 0 ? (
                         table.getRowModel().rows.map(row => (
                             <div
                                 key={row.id}

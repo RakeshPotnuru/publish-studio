@@ -1,14 +1,15 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import Image from "next/image";
+
 import { RadioGroup, RadioGroupItem } from "@itsrakesh/ui";
 import { useTheme } from "next-themes";
-import Image from "next/image";
-import { useEffect, useState } from "react";
 
 import { Images } from "@/assets/images";
 import { Heading } from "@/components/ui/heading";
 
-interface AppearanceProps extends React.HTMLAttributes<HTMLDivElement> {}
+type AppearanceProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function Appearance({ ...props }: AppearanceProps) {
     const [mounted, setMounted] = useState(false);

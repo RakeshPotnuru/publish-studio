@@ -1,10 +1,11 @@
-import { toast } from "@itsrakesh/ui";
 import { useState } from "react";
 
+import { toast } from "@itsrakesh/ui";
 import type { ICloudinary } from "@publish-studio/core";
 
 import { Images } from "@/assets/images";
 import { trpc } from "@/utils/trpc";
+
 import { ConnectionCard } from "../../connection-card";
 import { CloudinaryForm } from "./form";
 
@@ -29,8 +30,8 @@ export function Cloudinary({ data, isLoading }: Readonly<CloudinaryProps>) {
         try {
             const { data } = await disconnect();
             toast.success(data?.data.message);
-            utils.cloudinary.get.invalidate();
-        } catch (error) {
+            await utils.cloudinary.get.invalidate();
+        } catch {
             toast.error(disconnectError?.message ?? "Something went wrong.");
         }
     };

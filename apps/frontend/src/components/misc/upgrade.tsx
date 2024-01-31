@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 import {
     Button,
     Card,
@@ -14,13 +17,12 @@ import {
     DialogTrigger,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 import { Icons } from "@/assets/icons";
 import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
+
 import { Center } from "../ui/center";
 import { ErrorBox } from "../ui/error-box";
 import { Heading } from "../ui/heading";
@@ -48,9 +50,9 @@ export function Upgrade({ children, featureText, ...props }: Readonly<UpgradePro
             const { data } = await goToCheckout();
 
             if (data?.data.url) {
-                router.push(data?.data.url);
+                router.push(data.data.url);
             }
-        } catch (error) {}
+        } catch {}
     };
 
     return (

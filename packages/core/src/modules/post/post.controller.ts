@@ -6,7 +6,7 @@ import PostService from "./post.service";
 import type { TPostCreateInput, TPostUpdateInput } from "./post.types";
 
 export default class PostController extends PostService {
-    async createPostHandler(post: TPostCreateInput, ctx: Context) {
+    async createPostHandler(post: Omit<TPostCreateInput, "user_id">, ctx: Context) {
         if (!ctx.user.platforms?.find(platform => platform === post.platform)) {
             throw new TRPCError({
                 code: "BAD_REQUEST",
@@ -32,7 +32,7 @@ export default class PostController extends PostService {
             return;
         }
 
-        await super.createPost(post);
+        await super.createPost({ ...post, user_id: ctx.user._id });
 
         return {
             status: "success",

@@ -1,4 +1,4 @@
-import { TInsertImageOptions } from ".";
+import type { TInsertImageOptions } from ".";
 
 type IPayload =
     | {

@@ -1,8 +1,9 @@
+import Link from "next/link";
+
 import { cn } from "@itsrakesh/utils";
-import { type TableOfContentDataItem } from "@tiptap-pro/extension-table-of-content";
 import { TextSelection } from "@tiptap/pm/state";
 import { type Editor } from "@tiptap/react";
-import Link from "next/link";
+import { type TableOfContentDataItem } from "@tiptap-pro/extension-table-of-content";
 
 interface ToCProps extends React.HTMLAttributes<HTMLDivElement> {
     items: TableOfContentDataItem[];
@@ -20,7 +21,7 @@ const ToCItem = ({
     onItemClick,
 }: {
     item: TableOfContentDataItem;
-    onItemClick: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, id: string) => void;
+    onItemClick: (event: React.MouseEvent<HTMLAnchorElement>, id: string) => void;
 }) => (
     <div
         className={cn("hover:text-primary", {
@@ -41,7 +42,7 @@ const ToCItem = ({
 export function ToC({ items = [], editor }: Readonly<ToCProps>) {
     if (items.length === 0) return <ToCEmptyState />;
 
-    const onItemClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, id: string) => {
+    const onItemClick = (event: React.MouseEvent<HTMLAnchorElement>, id: string) => {
         event.preventDefault();
 
         const element = editor.view.dom.querySelector(`[data-toc-id="${id}"`);

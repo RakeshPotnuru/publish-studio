@@ -1,14 +1,14 @@
 import { Button } from "@itsrakesh/ui";
-
 import type { IProject } from "@publish-studio/core";
 
 import { Icons } from "@/assets/icons";
 import { shortenText } from "@/utils/text-shortener";
+
 import { PublishPost } from "../modules/dashboard/projects/publish-post";
 import { RenameProject } from "../modules/dashboard/projects/rename-project";
 import { ProjectSettings } from "../modules/dashboard/projects/settings";
 import { ProjectTools } from "../modules/dashboard/projects/tools";
-import { MenuProps } from "./menu/fixed-menu";
+import type { MenuProps } from "./menu/fixed-menu";
 
 interface ProjectToolbarProps extends MenuProps {
     project: IProject;

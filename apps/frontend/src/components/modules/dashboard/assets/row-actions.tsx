@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import {
     Button,
     DropdownMenu,
@@ -5,10 +7,8 @@ import {
     DropdownMenuTrigger,
     toast,
 } from "@itsrakesh/ui";
-import { Row } from "@tanstack/react-table";
-import { useState } from "react";
-
 import type { IAsset } from "@publish-studio/core";
+import type { Row } from "@tanstack/react-table";
 
 import { Icons } from "@/assets/icons";
 import { AskForConfirmation } from "@/components/ui/ask-for-confirmation";
@@ -36,7 +36,7 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
     const handleDelete = async () => {
         try {
             await deleteAsset([row.original._id]);
-        } catch (error) {}
+        } catch {}
     };
 
     return (
@@ -62,7 +62,7 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
                 ) : (
                     <slot
                         onClick={() => setAskingForConfirmation(true)}
-                        className="hover:bg-accent hover:text-destructive text-destructive relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+                        className="text-destructive hover:bg-accent hover:text-destructive relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
                     >
                         <Icons.Delete className="mr-2 size-4" />
                         Delete

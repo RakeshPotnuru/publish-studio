@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Button,
@@ -16,12 +19,9 @@ import {
     toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import type { IFolder } from "@publish-studio/core";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
-import type { IFolder } from "@publish-studio/core";
 
 import { ErrorBox } from "@/components/ui/error-box";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
@@ -64,7 +64,7 @@ export function NewProject({
             toast.success("Project created successfully.");
             setOpen(false);
 
-            router.push(`${siteConfig.pages.projects.link}/${data.project._id}`);
+            router.push(`${siteConfig.pages.projects.link}/${data.project._id.toString()}`);
         },
         onError(error) {
             setError(error.message);
@@ -86,7 +86,9 @@ export function NewProject({
                 ...data,
                 folder_id: folderId,
             });
-        } catch (error) {}
+        } catch {
+            // Ignore
+        }
     };
 
     const isLoading = form.formState.isSubmitting || isCreating;

@@ -1,9 +1,10 @@
 "use client";
 
-import { Button } from "@itsrakesh/ui";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+
+import { Button } from "@itsrakesh/ui";
 
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
@@ -36,7 +37,7 @@ export function VerifyEmail() {
         try {
             setError(null);
             await verifyEmail({ token });
-        } catch (error) {}
+        } catch {}
     }, [token, verifyEmail]);
 
     useEffect(() => {

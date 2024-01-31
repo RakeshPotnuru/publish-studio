@@ -1,19 +1,21 @@
 "use client";
 
+import { forwardRef } from "react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+
 import { Button, Skeleton } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import mongoose from "mongoose";
-import Link from "next/link";
-import { useParams } from "next/navigation";
-import { forwardRef } from "react";
 
 import { Icons } from "@/assets/icons";
 import { Editor } from "@/components/editor";
 import { ErrorBox } from "@/components/ui/error-box";
 import { siteConfig } from "@/config/site";
+import { useDocumentTitle } from "@/hooks/use-document-title";
 import { trpc } from "@/utils/trpc";
 
-interface ProjectProps extends React.HTMLAttributes<HTMLDivElement> {}
+type ProjectProps = React.HTMLAttributes<HTMLDivElement>;
 
 export const SideButton = forwardRef<HTMLButtonElement, React.HTMLAttributes<HTMLButtonElement>>(
     ({ children, className, ...props }, ref) => {
@@ -45,6 +47,8 @@ export function Project({ ...props }: ProjectProps) {
         created: data.data.project.created_at,
         last_edited: data.data.project.updated_at,
     };
+
+    useDocumentTitle(`Projects | ${project?.name ?? "Not Found"}`);
 
     const projectView = isFetching ? (
         <div className="flex flex-row space-x-4">

@@ -24,7 +24,6 @@ export default class PublishController extends PublishService {
                 {
                     platform,
                     project_id,
-                    user_id: ctx.user._id,
                     status: constants.postStatus.PENDING,
                 },
                 ctx,

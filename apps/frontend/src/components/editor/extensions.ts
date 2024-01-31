@@ -30,6 +30,7 @@ import { mergeAttributes } from "@tiptap/react";
 import { all, createLowlight } from "lowlight";
 
 import { constants } from "@/config/constants";
+
 import SpeechRecognition from "./custom-extensions/speech-recognition";
 
 const lowlight = createLowlight(all);

@@ -3,6 +3,7 @@ import type { Types } from "mongoose";
 
 import type { IPaginationOptions } from "../../types/common.types";
 import Folder from "../folder/folder.model";
+import FolderService from "../folder/folder.service";
 import Post from "../post/post.model";
 import Project from "./project.model";
 import type {
@@ -12,7 +13,7 @@ import type {
     TProjectCreateInput,
 } from "./project.types";
 
-export default class ProjectService {
+export default class ProjectService extends FolderService {
     async createProject(project: TProjectCreateInput): Promise<IProject> {
         try {
             const newProject = await Project.create(project);

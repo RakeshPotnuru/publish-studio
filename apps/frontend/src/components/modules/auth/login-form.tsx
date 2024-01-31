@@ -1,5 +1,8 @@
 "use client";
 
+import { useState } from "react";
+import Link from "next/link";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Button,
@@ -13,8 +16,6 @@ import {
     toast,
 } from "@itsrakesh/ui";
 import { jwtDecode } from "jwt-decode";
-import Link from "next/link";
-import { useState } from "react";
 import { useCookies } from "react-cookie";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -27,6 +28,7 @@ import { Shake } from "@/components/ui/shake";
 import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
+
 import { Captcha } from "./captcha";
 import { GoogleAuth } from "./google-auth";
 import { ShowPassword } from "./show-password";
@@ -100,7 +102,7 @@ export function LoginForm() {
             setError(null);
             setEmail(data.email);
             await login(data);
-        } catch (error) {}
+        } catch {}
     };
 
     const { mutateAsync: resendVerificationEmail, isLoading: isResendLoading } =
@@ -121,7 +123,7 @@ export function LoginForm() {
         try {
             setError(null);
             await resendVerificationEmail({ email });
-        } catch (error) {}
+        } catch {}
     };
 
     const isLoading =

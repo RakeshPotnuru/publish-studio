@@ -1,5 +1,6 @@
-import { constants } from "@/config/constants";
 import type { Types } from "mongoose";
+
+import type { constants } from "@/config/constants";
 
 export type TMimeType =
     (typeof constants.asset.ALLOWED_MIMETYPES)[keyof typeof constants.asset.ALLOWED_MIMETYPES];

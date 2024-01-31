@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Button,
@@ -18,7 +20,6 @@ import {
     toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -68,9 +69,9 @@ export function BloggerEditForm({ setIsOpen, ...props }: Readonly<BloggerEditFor
     });
 
     const { mutateAsync: edit, isLoading: isUpdating } = trpc.platforms.blogger.update.useMutation({
-        onSuccess: ({ data }) => {
+        onSuccess: async ({ data }) => {
             toast.success(data.message);
-            utils.platforms.getAll.invalidate();
+            await utils.platforms.getAll.invalidate();
             setIsOpen(false);
         },
         onError: error => {
@@ -96,14 +97,18 @@ export function BloggerEditForm({ setIsOpen, ...props }: Readonly<BloggerEditFor
                     status: data.status === "true",
                 });
             }
-        } catch (error) {}
+        } catch {
+            // Ignore
+        }
     };
 
     const handleFetchBlogs = async () => {
         try {
             const { data } = await fetchBlogs();
             setBlogs(data?.data.blogs);
-        } catch (error) {}
+        } catch {
+            // Ignore
+        }
     };
 
     const isLoading = form.formState.isSubmitting || isUpdating || isFetching;
@@ -134,7 +139,7 @@ export function BloggerEditForm({ setIsOpen, ...props }: Readonly<BloggerEditFor
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Change blog</FormLabel>
-                                <div className="flow-row flex space-x-2">
+                                <div className="flex flex-row space-x-2">
                                     <Select
                                         onValueChange={field.onChange}
                                         defaultValue={field.value}

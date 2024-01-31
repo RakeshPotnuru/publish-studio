@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Badge,
@@ -22,12 +24,11 @@ import {
     Textarea,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Icons } from "@/assets/icons";
-import { MenuProps } from "@/components/editor/menu/fixed-menu";
+import type { MenuProps } from "@/components/editor/menu/fixed-menu";
 import { deserialize } from "@/components/editor/transform-markdown";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
@@ -85,7 +86,7 @@ export function ImportMarkdown({ editor }: MenuProps) {
 
             setIsLoading(false);
             setOpen(false);
-        } catch (error) {
+        } catch {
             setError(
                 "Content import unsuccessful. This may be due to various reasons, including content being restricted behind a paywall, requiring authentication, or containing sensitive information.",
             );

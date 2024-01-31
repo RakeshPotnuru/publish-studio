@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 import {
     Button,
     Popover,
@@ -8,14 +10,13 @@ import {
     Skeleton,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
-import { intlFormatDistance } from "date-fns";
-import { useEffect, useState } from "react";
-
 import type { INotification } from "@publish-studio/core";
+import { intlFormatDistance } from "date-fns";
 
 import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
 import { trpc } from "@/utils/trpc";
+
 import { Center } from "../../../ui/center";
 import { Heading } from "../../../ui/heading";
 import { Tooltip } from "../../../ui/tooltip";
@@ -39,7 +40,7 @@ export function Notifications() {
                 setIsNewNotification(true);
                 setTimeout(() => {
                     setIsNewNotification(false);
-                }, 10000);
+                }, 10_000);
             }, 100);
         },
     });
@@ -57,49 +58,52 @@ export function Notifications() {
                     return notification;
                 }),
             );
-        } catch (error) {}
+        } catch {
+            // Ignore
+        }
     };
 
-    const bodyView = notifications.length ? (
-        <ScrollArea className="h-96">
-            <div className="space-y-4">
-                {notifications.map(notification => (
-                    <div
-                        key={notification._id.toString()}
-                        className="space-y-2 rounded-md border p-2"
-                    >
-                        <div className="grid grid-cols-6 items-center justify-between space-x-2">
-                            <p className="col-span-5 text-sm">{notification.message}</p>
+    const bodyView =
+        notifications.length > 0 ? (
+            <ScrollArea className="h-96">
+                <div className="space-y-4">
+                    {notifications.map(notification => (
+                        <div
+                            key={notification._id.toString()}
+                            className="space-y-2 rounded-md border p-2"
+                        >
+                            <div className="grid grid-cols-6 items-center justify-between space-x-2">
+                                <p className="col-span-5 text-sm">{notification.message}</p>
 
-                            {notification.status === "sent" && (
-                                <Button
-                                    onClick={() => handleMarkAsRead([notification._id])}
-                                    variant="ghost"
-                                    size="icon"
-                                >
-                                    <Icons.Check />
-                                </Button>
-                            )}
+                                {notification.status === "sent" && (
+                                    <Button
+                                        onClick={() => handleMarkAsRead([notification._id])}
+                                        variant="ghost"
+                                        size="icon"
+                                    >
+                                        <Icons.Check />
+                                    </Button>
+                                )}
+                            </div>
+                            <p className="text-muted-foreground flex flex-row items-center text-xs">
+                                {notification.status === "sent" && (
+                                    <Icons.Dot className="text-success" />
+                                )}{" "}
+                                {intlFormatDistance(new Date(notification.created_at), new Date(), {
+                                    style: "narrow",
+                                })}
+                            </p>
                         </div>
-                        <p className="text-muted-foreground flex flex-row items-center text-xs">
-                            {notification.status === "sent" && (
-                                <Icons.Dot className="text-success" />
-                            )}{" "}
-                            {intlFormatDistance(new Date(notification.created_at), new Date(), {
-                                style: "narrow",
-                            })}
-                        </p>
-                    </div>
-                ))}
-            </div>
-        </ScrollArea>
-    ) : (
-        <Center className="text-muted-foreground h-24 text-sm">No new notifications</Center>
-    );
+                    ))}
+                </div>
+            </ScrollArea>
+        ) : (
+            <Center className="text-muted-foreground h-24 text-sm">No new notifications</Center>
+        );
 
     const bodyPendingView = isFetching ? (
         <div className="space-y-4">
-            {[...Array(5)].map((_, index) => (
+            {Array.from({ length: 5 }).map((_, index) => (
                 <Skeleton key={`skeleton-${index + 1}`} className="h-16 w-full" />
             ))}
         </div>
@@ -111,8 +115,8 @@ export function Notifications() {
 
     const tooltip =
         numUnread > 0
-            ? `You have ${numUnread} unread notification${numUnread > 1 && "s"}`
-            : `You have no unread notifications`;
+            ? `You have ${numUnread} unread notification${numUnread > 1 ? "s" : ""}`
+            : "You have no unread notifications";
 
     return (
         <Popover>

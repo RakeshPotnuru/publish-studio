@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Button,
@@ -26,7 +28,6 @@ import {
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import type { Types } from "mongoose";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -44,7 +45,7 @@ const formSchema = z.object({
     _id: z.custom<Types.ObjectId>(),
 });
 
-export function MoveProject({ children, projectId, ...props }: Readonly<MoveProjectProps>) {
+export function MoveProject({ projectId, ...props }: Readonly<MoveProjectProps>) {
     const [open, setOpen] = useState(false);
     const [moveError, setMoveError] = useState<string | null>(null);
 
@@ -59,9 +60,9 @@ export function MoveProject({ children, projectId, ...props }: Readonly<MoveProj
 
     const { mutateAsync: moveProject, isLoading: isProjectMoving } =
         trpc.projects.update.useMutation({
-            onSuccess: () => {
+            onSuccess: async () => {
                 toast.success("Project moved successfully.");
-                utils.projects.getByFolderId.invalidate();
+                await utils.projects.getByFolderId.invalidate();
                 props.onOpenChange(false);
             },
             onError: error => {
@@ -73,7 +74,7 @@ export function MoveProject({ children, projectId, ...props }: Readonly<MoveProj
         data?.data.folders.map(folder => ({
             label: folder.name,
             value: folder._id,
-        })) || [];
+        })) ?? [];
 
     const form = useForm<z.infer<typeof formSchema>>({
         mode: "onBlur",
@@ -89,7 +90,7 @@ export function MoveProject({ children, projectId, ...props }: Readonly<MoveProj
                     folder_id: data._id,
                 },
             });
-        } catch (error) {}
+        } catch {}
     };
 
     return (
@@ -118,17 +119,13 @@ export function MoveProject({ children, projectId, ...props }: Readonly<MoveProj
                                                     <Button
                                                         variant="outline"
                                                         // role="combobox"
-                                                        className={cn(
-                                                            "justify-between",
-                                                            !field.value && "text-muted-foreground",
-                                                        )}
+                                                        className="justify-between"
                                                     >
-                                                        {field.value
-                                                            ? items.find(
-                                                                  item =>
-                                                                      item.value === field.value,
-                                                              )?.label
-                                                            : "Select folder"}
+                                                        {
+                                                            items.find(
+                                                                item => item.value === field.value,
+                                                            )?.label
+                                                        }
                                                         <Icons.Sort className="ml-2 size-4 shrink-0 opacity-50" />
                                                     </Button>
                                                 </FormControl>

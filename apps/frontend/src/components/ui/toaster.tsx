@@ -1,6 +1,7 @@
 "use client";
 
-import { Toaster as PSToaster, ToasterProps } from "@itsrakesh/ui";
+import type { ToasterProps } from "@itsrakesh/ui";
+import { Toaster as PSToaster } from "@itsrakesh/ui";
 import { useTheme } from "next-themes";
 
 export function Toaster() {

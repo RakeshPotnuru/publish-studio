@@ -1,8 +1,7 @@
 import { Button } from "@itsrakesh/ui";
+import type { IProject } from "@publish-studio/core";
 import { format } from "date-fns";
 import { NodeHtmlMarkdown } from "node-html-markdown";
-
-import type { IProject } from "@publish-studio/core";
 
 import { Icons } from "@/assets/icons";
 import type { MenuProps } from "@/components/editor/menu/fixed-menu";
@@ -13,14 +12,12 @@ interface DownloadProjectProps extends MenuProps {
 }
 
 export function DownloadProject({ editor, project }: Readonly<DownloadProjectProps>) {
-    const handlePDF = () => {};
-
     const handleCSV = () => {
         const nhm = new NodeHtmlMarkdown();
 
         const csvContent = [
             "title, created_at, content",
-            `${project.title}, ${format(new Date(project.created_at), "PPPp")}, ${nhm.translate(
+            `${project.name}, ${format(new Date(project.created_at), "PPPp")}, ${nhm.translate(
                 editor.getHTML(),
             )}`,
         ].join("\n");
@@ -30,12 +27,12 @@ export function DownloadProject({ editor, project }: Readonly<DownloadProjectPro
 
         const a = document.createElement("a");
         a.href = url;
-        a.download = `${project.title}.csv`;
+        a.download = `${project.name}.csv`;
 
-        document.body.appendChild(a);
+        document.body.append(a);
         a.click();
 
-        document.body.removeChild(a);
+        a.remove();
         URL.revokeObjectURL(url);
     };
 
@@ -43,7 +40,7 @@ export function DownloadProject({ editor, project }: Readonly<DownloadProjectPro
         const nhm = new NodeHtmlMarkdown();
 
         const txtContent = [
-            `${project.title}`,
+            `${project.name}`,
             `${format(new Date(project.created_at), "PPPp")}`,
             `${nhm.translate(editor.getHTML())}`,
         ].join("\n");
@@ -53,12 +50,12 @@ export function DownloadProject({ editor, project }: Readonly<DownloadProjectPro
 
         const a = document.createElement("a");
         a.href = url;
-        a.download = `${project.title}.txt`;
+        a.download = `${project.name}.txt`;
 
-        document.body.appendChild(a);
+        document.body.append(a);
         a.click();
 
-        document.body.removeChild(a);
+        a.remove();
         URL.revokeObjectURL(url);
     };
 
@@ -66,7 +63,7 @@ export function DownloadProject({ editor, project }: Readonly<DownloadProjectPro
         const nhm = new NodeHtmlMarkdown();
 
         const mdContent = [
-            `# ${project.title}`,
+            `# ${project.name}`,
             `## ${format(new Date(project.created_at), "PPPp")}`,
             `${nhm.translate(editor.getHTML())}`,
         ].join("\n");
@@ -76,12 +73,12 @@ export function DownloadProject({ editor, project }: Readonly<DownloadProjectPro
 
         const a = document.createElement("a");
         a.href = url;
-        a.download = `${project.title}.md`;
+        a.download = `${project.name}.md`;
 
-        document.body.appendChild(a);
+        document.body.append(a);
         a.click();
 
-        document.body.removeChild(a);
+        a.remove();
         URL.revokeObjectURL(url);
     };
 
@@ -95,7 +92,7 @@ export function DownloadProject({ editor, project }: Readonly<DownloadProjectPro
             </div>
             <div className="flex flex-wrap gap-2">
                 <Button
-                    onClick={handlePDF}
+                    // onClick={handlePDF}
                     size="sm"
                     className="bg-pdf text-pdf-foreground hover:opacity-80"
                 >

@@ -1,7 +1,7 @@
-import { Button, Skeleton, toast } from "@itsrakesh/ui";
-import { cn } from "@itsrakesh/utils";
 import { useState } from "react";
 
+import { Button, Skeleton, toast } from "@itsrakesh/ui";
+import { cn } from "@itsrakesh/utils";
 import type { IProject } from "@publish-studio/core";
 
 import { Icons } from "@/assets/icons";
@@ -10,8 +10,10 @@ import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { ProButton } from "@/components/ui/pro-button";
 import fleschReadingEaseScore from "@/utils/flesch-reading-ease-score";
 import { trpc } from "@/utils/trpc";
+
 import type { MenuProps } from "../../../../../editor/menu/fixed-menu";
-import { Analysis, IToneAnalysis, TEmotionScores } from "./analysis";
+import type { IToneAnalysis, TEmotionScores } from "./analysis";
+import { Analysis } from "./analysis";
 
 interface ToneAnalysisProps extends MenuProps {
     project: IProject;
@@ -34,12 +36,28 @@ export function ToneAnalysis({ editor, project }: Readonly<ToneAnalysisProps>) {
             });
 
             setData(data.analysis);
-        } catch (error) {}
+        } catch {
+            // Ignore
+        }
     };
 
     const level = fleschReadingEaseScore(editor.getText())?.schoolLevel;
-    const sentiment = data?.sentiment || project.tone_analysis?.sentiment;
+    const sentiment = data?.sentiment ?? project.tone_analysis?.sentiment;
     const emotion = data?.emotion ?? project.tone_analysis?.emotion;
+
+    const getEmotion = (emotion: Partial<TEmotionScores>) => {
+        let maxEmotionKey: keyof TEmotionScores | undefined;
+        let maxEmotionValue = -Infinity;
+
+        for (const key of Object.keys(emotion) as (keyof TEmotionScores)[]) {
+            if (emotion[key]! > maxEmotionValue) {
+                maxEmotionKey = key;
+                maxEmotionValue = emotion[key]!;
+            }
+        }
+
+        return maxEmotionKey;
+    };
 
     return (
         <div className="space-y-2">
@@ -55,7 +73,7 @@ export function ToneAnalysis({ editor, project }: Readonly<ToneAnalysisProps>) {
                             "text-destructive": !level,
                         })}
                     >
-                        {level || "No grade"}.
+                        {level ?? "No grade"}.
                     </span>
                 </p>
             </div>
@@ -67,11 +85,7 @@ export function ToneAnalysis({ editor, project }: Readonly<ToneAnalysisProps>) {
                     <div className="flex flex-row items-center justify-between space-x-1 rounded-lg border p-2">
                         <p className="text-sm">
                             Analysis: <span className="capitalize">{sentiment}</span> and{" "}
-                            <span className="capitalize">
-                                {(Object.keys(emotion) as Array<keyof TEmotionScores>).reduce(
-                                    (acc, key) => (emotion[acc]! > emotion[key]! ? acc : key),
-                                )}
-                            </span>
+                            <span className="capitalize">{getEmotion(emotion)}</span>
                         </p>
                         <Analysis
                             toneAnalysis={{

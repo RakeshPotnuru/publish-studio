@@ -1,14 +1,15 @@
-import { Button, Input, toast } from "@itsrakesh/ui";
-import { Table } from "@tanstack/react-table";
 import { useState } from "react";
 
+import { Button, Input, toast } from "@itsrakesh/ui";
 import type { IProject } from "@publish-studio/core";
+import type { Table } from "@tanstack/react-table";
 
 import { Icons } from "@/assets/icons";
 import { AskForConfirmation } from "@/components/ui/ask-for-confirmation";
 import { DataTableViewOptions } from "@/components/ui/data-table";
 import { DataTableFacetedFilter } from "@/components/ui/data-table/faceted-filter";
 import { trpc } from "@/utils/trpc";
+
 import { statuses } from "./columns";
 
 interface ToolbarProps<TData> {
@@ -23,12 +24,12 @@ export function Toolbar<TData>({ table }: Readonly<ToolbarProps<TData>>) {
     const utils = trpc.useUtils();
 
     const { mutateAsync: deleteProjects, isLoading } = trpc.projects.delete.useMutation({
-        onSuccess: ({ data }) => {
+        onSuccess: async ({ data }) => {
             const count = data.projects.deletedCount;
 
             toast.success(`${count} project${count > 1 ? "s" : ""} deleted successfully`);
 
-            utils.projects.getAll.invalidate();
+            await utils.projects.getAll.invalidate();
             table.resetRowSelection();
         },
         onError: error => {
@@ -41,7 +42,9 @@ export function Toolbar<TData>({ table }: Readonly<ToolbarProps<TData>>) {
             await deleteProjects(
                 table.getFilteredSelectedRowModel().rows.map(row => (row.original as IProject)._id),
             );
-        } catch (error) {}
+        } catch {
+            // Ignore
+        }
     };
 
     return (
@@ -49,7 +52,7 @@ export function Toolbar<TData>({ table }: Readonly<ToolbarProps<TData>>) {
             <div className="flex flex-1 items-center space-x-2">
                 <Input
                     placeholder="Search projects..."
-                    value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+                    value={table.getColumn("name")?.getFilterValue() as string}
                     onChange={event => table.getColumn("name")?.setFilterValue(event.target.value)}
                     className="h-8 w-[150px] lg:w-[250px]"
                 />

@@ -67,7 +67,7 @@ const countSyllables = (word: string): number => {
 export default function fleschReadingEaseScore(text: string): IReadabilityScore | null {
     const words = text.split(/\s+/).filter(word => word.length > 0);
 
-    const sentences = text.split(/[.!?]+/).length - 1;
+    const sentences = text.split(/[!.?]+/).length - 1;
     const syllables = words.reduce((acc, word) => acc + countSyllables(word), 0);
 
     const fleschReadingEase =

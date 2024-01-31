@@ -1,13 +1,14 @@
-import { toast } from "@itsrakesh/ui";
-import { PaginationState } from "@tanstack/react-table";
 import { useState } from "react";
 
+import { toast } from "@itsrakesh/ui";
 import type { IGhost } from "@publish-studio/core";
+import type { PaginationState } from "@tanstack/react-table";
 
 import { Images } from "@/assets/images";
 import { constants } from "@/config/constants";
 import { useEditor } from "@/hooks/use-editor";
 import { trpc } from "@/utils/trpc";
+
 import { ConnectionCard } from "../../connection-card";
 import { ImportPostsBody } from "../import-dialog";
 import { GhostConnectForm } from "./connect-form";
@@ -36,9 +37,9 @@ export function Ghost({ data, isLoading }: Readonly<GhostProps>) {
     const handleDisconnect = async () => {
         try {
             await disconnect();
-            utils.platforms.getAll.invalidate();
-            utils.auth.getMe.invalidate();
-        } catch (error) {
+            await utils.platforms.getAll.invalidate();
+            await utils.auth.getMe.invalidate();
+        } catch {
             toast.error(disconnectError?.message ?? "Something went wrong.");
         }
     };
@@ -85,13 +86,23 @@ export function ImportPosts() {
             pagination: { page: pageIndex + 1, limit: pageSize },
         },
         {
-            staleTime: 60000,
+            staleTime: 60_000,
         },
     );
 
     const posts = data?.data.posts ?? [];
 
-    const { mutateAsync: importPost, isLoading } = trpc.projects.create.useMutation({
+    const { mutateAsync: createProject, isLoading: isCreatingProject } =
+        trpc.projects.create.useMutation({
+            onSuccess: () => {
+                toast.success("Project created.");
+            },
+            onError: error => {
+                toast.error(error.message);
+            },
+        });
+
+    const { mutateAsync: createPost, isLoading: isCreatingPost } = trpc.post.create.useMutation({
         onSuccess: () => {
             toast.success("Post imported successfully.");
         },
@@ -107,7 +118,7 @@ export function ImportPosts() {
 
             setImportingPost(id);
 
-            await importPost({
+            const { data } = await createProject({
                 name: post.title,
                 title: post.title,
                 description: post.excerpt ?? undefined,
@@ -119,22 +130,28 @@ export function ImportPosts() {
                 },
                 canonical_url: post.canonical_url ?? undefined,
                 cover_image: post.feature_image ?? undefined,
-                platforms: [
-                    {
-                        name: constants.user.platforms.GHOST,
-                        id: post.id,
-                        published_url: post.url,
-                        status: constants.project.platformPublishStatuses.SUCCESS,
-                    },
-                ],
+                platforms: [constants.user.platforms.GHOST],
                 published_at: new Date(post.published_at ?? Date.now()),
                 status: constants.project.status.PUBLISHED,
             });
 
+            await createPost({
+                platform: constants.user.platforms.GHOST,
+                post_id: post.id,
+                project_id: data.project._id,
+                published_at: new Date(post.published_at ?? Date.now()),
+                published_url: post.url,
+                status: constants.postStatus.SUCCESS,
+            });
+
             setImportedPosts([...importedPosts, id]);
             setImportingPost(null);
-        } catch (error) {}
+        } catch {
+            // Ignore
+        }
     };
+
+    const isLoading = isCreatingPost || isCreatingProject;
 
     return (
         <ImportPostsBody

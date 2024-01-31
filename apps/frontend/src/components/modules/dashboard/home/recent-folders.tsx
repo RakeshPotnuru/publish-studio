@@ -1,5 +1,6 @@
-import { Button } from "@itsrakesh/ui";
 import Link from "next/link";
+
+import { Button } from "@itsrakesh/ui";
 
 import { Icons } from "@/assets/icons";
 import { Center } from "@/components/ui/center";
@@ -8,6 +9,7 @@ import { Heading } from "@/components/ui/heading";
 import { FoldersLoader } from "@/components/ui/loaders/folders-loader";
 import { shortenText } from "@/utils/text-shortener";
 import { trpc } from "@/utils/trpc";
+
 import { NewFolderDialog } from "../folders/new-folder";
 
 export function RecentFolders() {
@@ -26,7 +28,7 @@ export function RecentFolders() {
         </Center>
     ) : (
         <div className="grid grid-cols-4 gap-4 rounded-lg border p-4">
-            {folders.length ? (
+            {folders.length > 0 ? (
                 <>
                     {folders.map(folder => (
                         <Button

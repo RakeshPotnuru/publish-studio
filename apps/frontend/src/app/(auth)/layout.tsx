@@ -1,5 +1,6 @@
-import type { Metadata } from "next";
 import Script from "next/script";
+
+import type { Metadata } from "next";
 
 import { Footer } from "@/components/common/layouts/footer";
 import { siteConfig } from "@/config/site";
@@ -19,7 +20,7 @@ export default function AuthLayout({ children }: Readonly<{ children: React.Reac
         <>
             <main className="bg-pattern-light dark:bg-pattern-dark min-h-dvh">
                 <div className="container flex flex-col items-center justify-center pb-8 pt-28">
-                    <div className="bg-background dark:bg-background-dark container mx-auto flex w-full flex-col justify-center space-y-6 rounded-lg p-14 shadow-xl sm:w-[500px]">
+                    <div className="bg-background container mx-auto flex w-full flex-col justify-center space-y-6 rounded-lg p-14 shadow-xl sm:w-[500px]">
                         {children}
                     </div>
                 </div>

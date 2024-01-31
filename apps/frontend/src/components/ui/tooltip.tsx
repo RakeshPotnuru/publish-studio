@@ -1,6 +1,6 @@
 import {
-    TooltipContent,
     Tooltip as TooltipPrimitive,
+    TooltipContent,
     TooltipProvider,
     TooltipTrigger,
 } from "@itsrakesh/ui";

@@ -1,7 +1,8 @@
+import { useCallback, useEffect, useRef, useState } from "react";
+
 import { toast } from "@itsrakesh/ui";
 import { jwtDecode } from "jwt-decode";
 import { useTheme } from "next-themes";
-import { useCallback, useEffect, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
 
 import { Center } from "@/components/ui/center";
@@ -50,7 +51,7 @@ export function GoogleAuth() {
 
             try {
                 await connectGoogle({ id_token: response.credential });
-            } catch (error) {}
+            } catch {}
         },
         [connectGoogle],
     );
@@ -72,7 +73,7 @@ export function GoogleAuth() {
                     shape: "rectangular",
                 });
                 window.google?.accounts.id.prompt();
-            } catch (error) {}
+            } catch {}
         }
     }, [theme, handleConnectGoogle]);
 

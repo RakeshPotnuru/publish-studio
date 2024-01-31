@@ -1,5 +1,6 @@
-import { Dialog, DialogContent, DialogTrigger } from "@itsrakesh/ui";
 import Image from "next/image";
+
+import { Dialog, DialogContent, DialogTrigger } from "@itsrakesh/ui";
 
 import imageLoader from "@/utils/image-loader";
 

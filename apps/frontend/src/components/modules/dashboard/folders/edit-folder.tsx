@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Button,
@@ -15,8 +17,8 @@ import {
     toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
-import mongoose, { Types } from "mongoose";
-import { useState } from "react";
+import type { Types } from "mongoose";
+import mongoose from "mongoose";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -75,7 +77,7 @@ export function EditFolder({ children, ...props }: Readonly<EditFolderProps>) {
                 id: new mongoose.Types.ObjectId(props.folderId),
                 folder: data,
             });
-        } catch (error) {}
+        } catch {}
     };
 
     return (

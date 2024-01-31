@@ -3,8 +3,8 @@ import { Button, Form, FormControl, FormField, FormItem, FormMessage, Input } fr
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { TProvider } from ".";
 import { ButtonLoader } from "../../../../ui/loaders/button-loader";
+import type { TProvider } from ".";
 
 interface SearchInputProps extends React.HTMLAttributes<HTMLInputElement> {
     provider: TProvider;

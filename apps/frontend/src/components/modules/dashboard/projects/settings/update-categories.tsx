@@ -1,3 +1,5 @@
+import { useRef } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Button,
@@ -10,7 +12,6 @@ import {
     Input,
     toast,
 } from "@itsrakesh/ui";
-import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -19,9 +20,10 @@ import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { ProButton } from "@/components/ui/pro-button";
 import { Tooltip } from "@/components/ui/tooltip";
 import { trpc } from "@/utils/trpc";
+
 import type { ProjectSettingsProps } from ".";
 
-interface UpdateCategoriesProps extends ProjectSettingsProps {}
+type UpdateCategoriesProps = ProjectSettingsProps;
 
 const formSchema = z.object({
     categories: z.string(),
@@ -40,9 +42,9 @@ export function UpdateCategories({ project }: UpdateCategoriesProps) {
 
     const { mutateAsync: updateCategories, isLoading: isUpdating } =
         trpc.projects.update.useMutation({
-            onSuccess: () => {
+            onSuccess: async () => {
                 toast.success("Categories updated successfully");
-                utils.projects.getById.invalidate();
+                await utils.projects.getById.invalidate();
             },
             onError: error => {
                 toast.error(error.message);
@@ -57,7 +59,9 @@ export function UpdateCategories({ project }: UpdateCategoriesProps) {
                     categories: data.categories.split(","),
                 },
             });
-        } catch (error) {}
+        } catch {
+            // Ignore
+        }
     };
 
     const { mutateAsync: generateCategories, isLoading: isGenerating } =
@@ -75,7 +79,9 @@ export function UpdateCategories({ project }: UpdateCategoriesProps) {
             await generateCategories({
                 text: project.title ?? project.name,
             });
-        } catch (error) {}
+        } catch {
+            // Ignore
+        }
     };
 
     const isLoading = form.formState.isSubmitting || isUpdating || isGenerating;

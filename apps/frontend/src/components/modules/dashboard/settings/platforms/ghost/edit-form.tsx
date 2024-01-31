@@ -1,3 +1,6 @@
+import { useState } from "react";
+import Link from "next/link";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Button,
@@ -16,7 +19,6 @@ import {
     toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
-import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -26,8 +28,8 @@ import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
-import { useState } from "react";
-import { TGhostStatus } from ".";
+
+import type { TGhostStatus } from ".";
 
 interface DevEditFormProps extends React.HTMLAttributes<HTMLDivElement> {
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -47,9 +49,9 @@ export function GhostEditForm({ status, setIsOpen, ...props }: Readonly<DevEditF
     const utils = trpc.useUtils();
 
     const { mutateAsync: edit, isLoading: isUpdating } = trpc.platforms.ghost.update.useMutation({
-        onSuccess: ({ data }) => {
+        onSuccess: async ({ data }) => {
             toast.success(data.message);
-            utils.platforms.getAll.invalidate();
+            await utils.platforms.getAll.invalidate();
             setIsOpen(false);
         },
         onError: error => {
@@ -69,7 +71,9 @@ export function GhostEditForm({ status, setIsOpen, ...props }: Readonly<DevEditF
         try {
             setError(null);
             await edit(data);
-        } catch (error) {}
+        } catch {
+            // Ignore
+        }
     };
 
     const isLoading = form.formState.isSubmitting || isUpdating;

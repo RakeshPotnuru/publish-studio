@@ -7,7 +7,7 @@ import {
     DropdownMenuTrigger,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
-import { Column } from "@tanstack/react-table";
+import type { Column } from "@tanstack/react-table";
 
 import { Icons } from "../../../assets/icons";
 

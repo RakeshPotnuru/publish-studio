@@ -8,7 +8,7 @@ import {
     Separator,
     Skeleton,
 } from "@itsrakesh/ui";
-import { PaginationState } from "@tanstack/react-table";
+import type { PaginationState } from "@tanstack/react-table";
 
 import { Center } from "@/components/ui/center";
 import { ErrorBox } from "@/components/ui/error-box";
@@ -20,7 +20,7 @@ interface ImportDialogProps extends React.HTMLAttributes<HTMLDialogElement> {
     component: React.ReactNode;
     platform: string;
     open: boolean;
-    onOpenChange: (open: boolean) => void;
+    onOpenChange?: (open: boolean) => void;
     tooltip?: string;
 }
 
@@ -74,35 +74,36 @@ export function ImportPostsBody({
     importedPosts,
     handleImport,
 }: Readonly<ImportPostsBodyProps>) {
-    const bodyView = posts.length ? (
-        posts.map(post => (
-            <div key={post.id}>
-                <div className="flex items-center justify-between space-x-2 px-2">
-                    <p title={post.title} className="text-sm">
-                        {pageIndex * pageSize + posts.indexOf(post) + 1}.{" "}
-                        {shortenText(post.title, 50)}
-                    </p>
-                    <Button
-                        onClick={() => handleImport(post.id)}
-                        variant={importedPosts.includes(post.id) ? "success" : "secondary"}
-                        size="sm"
-                        disabled={isLoading || importedPosts.includes(post.id)}
-                    >
-                        {importedPosts.includes(post.id) ? (
-                            "Imported"
-                        ) : (
-                            <ButtonLoader isLoading={isLoading && importingPost === post.id}>
-                                Import
-                            </ButtonLoader>
-                        )}
-                    </Button>
+    const bodyView =
+        posts.length > 0 ? (
+            posts.map(post => (
+                <div key={post.id}>
+                    <div className="flex items-center justify-between space-x-2 px-2">
+                        <p title={post.title} className="text-sm">
+                            {pageIndex * pageSize + posts.indexOf(post) + 1}.{" "}
+                            {shortenText(post.title, 50)}
+                        </p>
+                        <Button
+                            onClick={() => handleImport(post.id)}
+                            variant={importedPosts.includes(post.id) ? "success" : "secondary"}
+                            size="sm"
+                            disabled={isLoading || importedPosts.includes(post.id)}
+                        >
+                            {importedPosts.includes(post.id) ? (
+                                "Imported"
+                            ) : (
+                                <ButtonLoader isLoading={isLoading && importingPost === post.id}>
+                                    Import
+                                </ButtonLoader>
+                            )}
+                        </Button>
+                    </div>
+                    {posts.indexOf(post) !== posts.length - 1 && <Separator className="mt-2" />}
                 </div>
-                {posts.indexOf(post) !== posts.length - 1 && <Separator className="mt-2" />}
-            </div>
-        ))
-    ) : (
-        <Center className="text-muted-foreground h-24">No results</Center>
-    );
+            ))
+        ) : (
+            <Center className="text-muted-foreground h-24">No results</Center>
+        );
 
     const bodyPendingView = isFetching
         ? Array.from({ length: 10 }).map((_, index) => (
@@ -187,37 +188,38 @@ export function ImportPostsBodyWithoutPrevious({
     importedPosts,
     handleImport,
 }: Readonly<ImportPostsBodyWithoutPreviousProps>) {
-    const bodyView = posts.length ? (
-        posts.map(post => (
-            <div key={post.id}>
-                <div className="flex items-center justify-between space-x-2 px-2">
-                    <p title={post.title} className="text-sm">
-                        {posts.indexOf(post) +
-                            (cursors.indexOf(end_cursor ?? "") + 1) * pageSize +
-                            1}
-                        . {shortenText(post.title, 50)}
-                    </p>
-                    <Button
-                        onClick={() => handleImport(post.id)}
-                        variant={importedPosts.includes(post.id) ? "success" : "secondary"}
-                        size="sm"
-                        disabled={isLoading || importedPosts.includes(post.id)}
-                    >
-                        {importedPosts.includes(post.id) ? (
-                            "Imported"
-                        ) : (
-                            <ButtonLoader isLoading={isLoading && importingPost === post.id}>
-                                Import
-                            </ButtonLoader>
-                        )}
-                    </Button>
+    const bodyView =
+        posts.length > 0 ? (
+            posts.map(post => (
+                <div key={post.id}>
+                    <div className="flex items-center justify-between space-x-2 px-2">
+                        <p title={post.title} className="text-sm">
+                            {posts.indexOf(post) +
+                                (cursors.indexOf(end_cursor ?? "") + 1) * pageSize +
+                                1}
+                            . {shortenText(post.title, 50)}
+                        </p>
+                        <Button
+                            onClick={() => handleImport(post.id)}
+                            variant={importedPosts.includes(post.id) ? "success" : "secondary"}
+                            size="sm"
+                            disabled={isLoading || importedPosts.includes(post.id)}
+                        >
+                            {importedPosts.includes(post.id) ? (
+                                "Imported"
+                            ) : (
+                                <ButtonLoader isLoading={isLoading && importingPost === post.id}>
+                                    Import
+                                </ButtonLoader>
+                            )}
+                        </Button>
+                    </div>
+                    {posts.indexOf(post) !== posts.length - 1 && <Separator className="mt-2" />}
                 </div>
-                {posts.indexOf(post) !== posts.length - 1 && <Separator className="mt-2" />}
-            </div>
-        ))
-    ) : (
-        <Center className="text-muted-foreground h-24">No results</Center>
-    );
+            ))
+        ) : (
+            <Center className="text-muted-foreground h-24">No results</Center>
+        );
 
     const bodyPendingView = isFetching
         ? Array.from({ length: 10 }).map((_, index) => (
@@ -251,7 +253,7 @@ export function ImportPostsBodyWithoutPrevious({
                         })
                     }
                     variant="outline"
-                    disabled={isFetching || cursors.indexOf(end_cursor ?? "") === -1}
+                    disabled={isFetching || !cursors.includes(end_cursor ?? "")}
                 >
                     Previous
                 </Button>
@@ -259,7 +261,7 @@ export function ImportPostsBodyWithoutPrevious({
                     onClick={() =>
                         setPagination({
                             pageSize,
-                            end_cursor: cursors[cursors.length - 1],
+                            end_cursor: cursors.at(-1),
                         })
                     }
                     variant="outline"

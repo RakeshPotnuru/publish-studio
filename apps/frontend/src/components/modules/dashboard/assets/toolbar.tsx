@@ -1,8 +1,8 @@
-import { Button, Input, toast } from "@itsrakesh/ui";
-import { Table } from "@tanstack/react-table";
 import { useState } from "react";
 
+import { Button, Input, toast } from "@itsrakesh/ui";
 import type { IAsset } from "@publish-studio/core";
+import type { Table } from "@tanstack/react-table";
 
 import { Icons } from "@/assets/icons";
 import { AskForConfirmation } from "@/components/ui/ask-for-confirmation";
@@ -10,7 +10,8 @@ import { DataTableViewOptions } from "@/components/ui/data-table";
 import { DataTableFacetedFilter } from "@/components/ui/data-table/faceted-filter";
 import { constants } from "@/config/constants";
 import { trpc } from "@/utils/trpc";
-import { TInsertImageOptions } from "./image-widget";
+
+import type { TInsertImageOptions } from "./image-widget";
 
 interface ToolbarProps<TData> {
     table: Table<TData>;
@@ -44,7 +45,7 @@ export function Toolbar<TData>({ table, isWidget, onImageInsert }: Readonly<Tool
             await deleteAssets(
                 table.getFilteredSelectedRowModel().rows.map(row => (row.original as IAsset)._id),
             );
-        } catch (error) {}
+        } catch {}
     };
 
     const handleAdd = (urls: string[], alts: string[], titles?: string[]) => {

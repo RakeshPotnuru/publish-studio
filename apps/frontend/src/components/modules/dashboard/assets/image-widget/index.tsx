@@ -1,3 +1,7 @@
+import { useState } from "react";
+import Image from "next/image";
+import Script from "next/script";
+
 import {
     Button,
     Dialog,
@@ -7,12 +11,10 @@ import {
     DialogTitle,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
-import Image from "next/image";
-import Script from "next/script";
-import { useState } from "react";
 
 import { Images } from "@/assets/images";
 import { Assets } from "@/components/modules/dashboard/assets";
+
 import { Cloudinary } from "./cloudinary";
 import { ImageKit } from "./imagekit";
 import { Pexels } from "./pexels";

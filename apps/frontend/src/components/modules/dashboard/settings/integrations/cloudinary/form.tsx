@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { useState } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Button,
@@ -14,8 +17,6 @@ import {
     toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
-import Link from "next/link";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -42,9 +43,9 @@ export function CloudinaryForm({ setIsOpen, type, ...props }: Readonly<Cloudinar
     const utils = trpc.useUtils();
 
     const { mutateAsync: connect, isLoading: isConnecting } = trpc.cloudinary.connect.useMutation({
-        onSuccess: ({ data }) => {
+        onSuccess: async ({ data }) => {
             toast.success(data.message);
-            utils.cloudinary.get.invalidate();
+            await utils.cloudinary.get.invalidate();
             setIsOpen(false);
         },
         onError: error => {
@@ -53,9 +54,9 @@ export function CloudinaryForm({ setIsOpen, type, ...props }: Readonly<Cloudinar
     });
 
     const { mutateAsync: edit, isLoading: isUpdating } = trpc.cloudinary.update.useMutation({
-        onSuccess: ({ data }) => {
+        onSuccess: async ({ data }) => {
             toast.success(data.message);
-            utils.cloudinary.get.invalidate();
+            await utils.cloudinary.get.invalidate();
             setIsOpen(false);
         },
         onError: error => {
@@ -74,12 +75,10 @@ export function CloudinaryForm({ setIsOpen, type, ...props }: Readonly<Cloudinar
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         try {
             setError(null);
-            if (type === "connect") {
-                await connect(data);
-            } else {
-                await edit(data);
-            }
-        } catch (error) {}
+            await (type === "connect" ? connect(data) : edit(data));
+        } catch {
+            // Ignore
+        }
     };
 
     const isLoading = form.formState.isSubmitting || isConnecting || isUpdating;

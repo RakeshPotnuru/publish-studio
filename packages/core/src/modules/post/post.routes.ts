@@ -6,6 +6,19 @@ import { proProtectedProcedure, protectedProcedure, router } from "../../trpc";
 import PublishController from "./publish/publish.controller";
 
 const postRouter = router({
+    create: protectedProcedure
+        .input(
+            z.object({
+                project_id: z.custom<Types.ObjectId>(),
+                platform: z.nativeEnum(constants.user.platforms),
+                post_id: z.string().optional(),
+                status: z.nativeEnum(constants.postStatus).optional(),
+                published_url: z.string().optional(),
+                published_at: z.date().optional(),
+            }),
+        )
+        .mutation(({ input, ctx }) => new PublishController().createPostHandler(input, ctx)),
+
     publish: protectedProcedure
         .input(
             z.object({

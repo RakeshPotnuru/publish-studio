@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Button,
@@ -15,8 +18,6 @@ import {
     toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -79,7 +80,7 @@ export function NewFolderDialog({
         try {
             setError(null);
             await createFolder(data);
-        } catch (error) {}
+        } catch {}
     };
 
     return (

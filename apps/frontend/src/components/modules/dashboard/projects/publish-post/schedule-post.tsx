@@ -1,6 +1,7 @@
+import { useState } from "react";
+
 import { Button, Calendar, Input, Popover, PopoverContent, PopoverTrigger } from "@itsrakesh/ui";
 import { format } from "date-fns";
-import { useState } from "react";
 
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
@@ -9,8 +10,8 @@ interface SchedulePostProps extends React.HTMLAttributes<HTMLElement> {
     onConfirm: (date: Date) => void;
 }
 
-const initialDate = new Date(new Date().getTime() + 60 * 60000);
-const minDate = new Date(new Date().getTime() + 5 * 60000);
+const initialDate = new Date(Date.now() + 60 * 60_000);
+const minDate = new Date(Date.now() + 5 * 60_000);
 
 export function SchedulePost({ children, onConfirm }: Readonly<SchedulePostProps>) {
     const [open, setOpen] = useState(false);

@@ -1,12 +1,13 @@
-import { toast } from "@itsrakesh/ui";
 import { useEffect, useState } from "react";
 
+import { toast } from "@itsrakesh/ui";
 import type { IBlogger } from "@publish-studio/core";
 
 import { Images } from "@/assets/images";
 import { constants } from "@/config/constants";
 import { useEditor } from "@/hooks/use-editor";
 import { trpc } from "@/utils/trpc";
+
 import { ConnectionCard } from "../../connection-card";
 import { ImportPostsBodyWithoutPrevious } from "../import-dialog";
 import { BloggerConnectForm } from "./connect-form";
@@ -33,9 +34,9 @@ export function Blogger({ data, isLoading }: Readonly<BloggerProps>) {
     const handleDisconnect = async () => {
         try {
             await disconnect();
-            utils.platforms.getAll.invalidate();
-            utils.auth.getMe.invalidate();
-        } catch (error) {
+            await utils.platforms.getAll.invalidate();
+            await utils.auth.getMe.invalidate();
+        } catch {
             toast.error(disconnectError?.message ?? "Something went wrong.");
         }
     };
@@ -85,7 +86,7 @@ export function ImportPosts() {
             pagination: { limit: pageSize, page_token },
         },
         {
-            staleTime: 60000,
+            staleTime: 60_000,
         },
     );
 
@@ -97,7 +98,17 @@ export function ImportPosts() {
 
     const posts = data?.data.posts.items ?? [];
 
-    const { mutateAsync: importPost, isLoading } = trpc.projects.create.useMutation({
+    const { mutateAsync: createProject, isLoading: isCreatingProject } =
+        trpc.projects.create.useMutation({
+            onSuccess: () => {
+                toast.success("Project created.");
+            },
+            onError: error => {
+                toast.error(error.message);
+            },
+        });
+
+    const { mutateAsync: createPost, isLoading: isCreatingPost } = trpc.post.create.useMutation({
         onSuccess: () => {
             toast.success("Post imported successfully.");
         },
@@ -113,7 +124,7 @@ export function ImportPosts() {
 
             setImportingPost(id);
 
-            await importPost({
+            const { data } = await createProject({
                 name: post.title,
                 title: post.title,
                 body: {
@@ -122,22 +133,28 @@ export function ImportPosts() {
                 tags: {
                     blogger_tags: post.labels,
                 },
-                platforms: [
-                    {
-                        name: constants.user.platforms.BLOGGER,
-                        id: post.id,
-                        published_url: post.url,
-                        status: constants.project.platformPublishStatuses.SUCCESS,
-                    },
-                ],
+                platforms: [constants.user.platforms.BLOGGER],
                 published_at: new Date(post.published),
                 status: constants.project.status.PUBLISHED,
             });
 
+            await createPost({
+                platform: constants.user.platforms.BLOGGER,
+                post_id: post.id,
+                project_id: data.project._id,
+                published_at: new Date(post.published),
+                published_url: post.url,
+                status: constants.postStatus.SUCCESS,
+            });
+
             setImportedPosts([...importedPosts, id]);
             setImportingPost(null);
-        } catch (error) {}
+        } catch {
+            // Ignore
+        }
     };
+
+    const isLoading = isCreatingPost || isCreatingProject;
 
     return (
         <ImportPostsBodyWithoutPrevious

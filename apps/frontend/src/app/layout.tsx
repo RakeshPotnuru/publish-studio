@@ -1,7 +1,6 @@
-import "@/styles/globals.css";
-
 import type { Metadata, Viewport } from "next";
 
+import "@/styles/globals.css";
 import { ThemeToggleButton } from "@/components/dev-tools/theme-toggle";
 import { Toaster } from "@/components/ui/toaster";
 import { siteConfig } from "@/config/site";
@@ -40,7 +39,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
     width: "device-width",
     initialScale: 1,
-    themeColor: siteConfig.theme?.color,
+    themeColor: siteConfig.theme.color,
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import {
     Badge,
     Button,
@@ -10,21 +12,21 @@ import {
     FormMessage,
     Skeleton,
 } from "@itsrakesh/ui";
-import Link from "next/link";
-import { UseFormReturn } from "react-hook-form";
-import { z } from "zod";
-
 import type { IPlatform, IProject } from "@publish-studio/core";
+import { intlFormatDistance } from "date-fns";
+import type { UseFormReturn } from "react-hook-form";
+import type { z } from "zod";
 
 import { Icons } from "@/assets/icons";
 import { Images } from "@/assets/images";
+import { Center } from "@/components/ui/center";
 import { ErrorBox } from "@/components/ui/error-box";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
-import { intlFormatDistance } from "date-fns";
-import { formSchema } from "../form-schema";
+
+import type { formSchema } from "../form-schema";
 import { Blogger } from "./blogger";
 import { Dev } from "./dev";
 import { Ghost } from "./ghost";
@@ -35,7 +37,10 @@ interface IPlatformConfig {
     label: string;
     value: (typeof constants.user.platforms)[keyof typeof constants.user.platforms];
     logo: string;
-    component: (form: UseFormReturn<z.infer<typeof formSchema>>, isLoading: boolean) => JSX.Element;
+    component: (
+        form: UseFormReturn<z.infer<typeof formSchema>>,
+        isLoading: boolean,
+    ) => React.JSX.Element;
 }
 
 const platformConfig: IPlatformConfig[] = [
@@ -59,7 +64,6 @@ const platformConfig: IPlatformConfig[] = [
         label: "Hashnode",
         value: constants.user.platforms.HASHNODE,
         logo: Images.hashnodeLogo,
-        // component: (form: UseFormReturn<z.infer<typeof formSchema>>, isLoading) => <Hashnode form={form} isLoading={isLoading} />,
         component: () => <></>,
     },
     {
@@ -90,29 +94,29 @@ const platformConfig: IPlatformConfig[] = [
 
 interface PlatformsFieldProps {
     form: UseFormReturn<z.infer<typeof formSchema>>;
-    connected_platforms: IPlatform["name"][];
+    connectedPlatforms: IPlatform["name"][];
     isLoading: boolean;
     onSubmit: (data: z.infer<typeof formSchema>) => void;
     onRefresh: () => void;
-    scheduled_at?: Date;
-    project_id: IProject["_id"];
+    scheduledAt?: Date;
+    projectId: IProject["_id"];
 }
 
 export const PlatformsField = ({
     form,
-    connected_platforms,
+    connectedPlatforms,
     isLoading,
     onSubmit,
     onRefresh,
-    scheduled_at,
-    project_id,
+    scheduledAt,
+    projectId,
 }: PlatformsFieldProps) => {
-    const { data, error, isFetching } = trpc.post.getAllByProjectId.useQuery(project_id);
+    const { data, error, isFetching } = trpc.post.getAllByProjectId.useQuery(projectId);
 
     const publishedPlatforms = data?.data.posts;
 
     const bodyView = platformConfig
-        .filter(platform => connected_platforms.includes(platform.value))
+        .filter(platform => connectedPlatforms.includes(platform.value))
         .map(platform => (
             <FormField
                 key={platform.value}
@@ -132,9 +136,7 @@ export const PlatformsField = ({
                                     >
                                         <FormControl>
                                             <Checkbox
-                                                checked={field.value.some(
-                                                    value => value === platform.value,
-                                                )}
+                                                checked={field.value.includes(platform.value)}
                                                 onCheckedChange={checked => {
                                                     return checked
                                                         ? field.onChange([
@@ -167,7 +169,7 @@ export const PlatformsField = ({
                                         publishedPlatform =>
                                             publishedPlatform.platform === platform.value,
                                     )?.status === constants.postStatus.SUCCESS &&
-                                        publishedPlatforms?.find(
+                                        publishedPlatforms.find(
                                             publishedPlatform =>
                                                 publishedPlatform.platform === platform.value,
                                         )?.published_url && (
@@ -226,10 +228,10 @@ export const PlatformsField = ({
                                     )?.status === constants.postStatus.PENDING && (
                                         <div className="flex items-center space-x-2">
                                             <Badge variant="warning">Pending</Badge>
-                                            {scheduled_at && new Date(scheduled_at) > new Date() ? (
+                                            {scheduledAt && new Date(scheduledAt) > new Date() ? (
                                                 <p className="text-muted-foreground text-sm">
                                                     {intlFormatDistance(
-                                                        new Date(scheduled_at),
+                                                        new Date(scheduledAt),
                                                         new Date(),
                                                         {
                                                             style: "short",
@@ -252,7 +254,7 @@ export const PlatformsField = ({
                                     )}
                                 </div>
                             )}
-                            {field.value.some(value => value === platform.value) &&
+                            {field.value.includes(platform.value) &&
                                 platform.component(form, isLoading)}
                         </div>
                     );
@@ -284,7 +286,9 @@ export const PlatformsField = ({
                         </FormDescription>
                     </div>
                     {error ? (
-                        <ErrorBox title="Failed to fetch posts" description={error.message} />
+                        <Center>
+                            <ErrorBox title="Failed to fetch posts" description={error.message} />
+                        </Center>
                     ) : (
                         bodyView
                     )}

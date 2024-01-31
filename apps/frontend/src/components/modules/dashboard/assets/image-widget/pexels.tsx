@@ -1,11 +1,14 @@
-import { PaginationState } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
-import { z } from "zod";
+
+import type { PaginationState } from "@tanstack/react-table";
+import type { z } from "zod";
 
 import { trpc } from "@/utils/trpc";
-import { TInsertImageOptions } from ".";
+
+import type { TInsertImageOptions } from ".";
 import { SearchBody } from "./search-body";
-import { SearchInput, formSchema } from "./search-input";
+import type { formSchema } from "./search-input";
+import { SearchInput } from "./search-input";
 
 interface PexelsProps {
     onImageInsert: ({ ...options }: TInsertImageOptions) => void;
@@ -31,7 +34,7 @@ export function Pexels({ onImageInsert }: Readonly<PexelsProps>) {
         },
         {
             enabled: false,
-            staleTime: 60000,
+            staleTime: 60_000,
         },
     );
 
@@ -44,7 +47,7 @@ export function Pexels({ onImageInsert }: Readonly<PexelsProps>) {
     };
 
     const handleInsert = (photoId: string | number) => {
-        const id = typeof photoId === "string" ? parseInt(photoId) : photoId;
+        const id = typeof photoId === "string" ? Number.parseInt(photoId) : photoId;
         const photo = data?.data.photos.photos.find(photo => photo.id === id);
         if (photo) {
             onImageInsert({
