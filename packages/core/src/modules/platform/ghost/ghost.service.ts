@@ -3,8 +3,8 @@ import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 import type { Types } from "mongoose";
 
 import defaultConfig from "../../../config/app.config";
-import { constants } from "../../../config/constants";
-import Platform from "../../../modules/platform/platform.model";
+import { Platform } from "../../../config/constants";
+import PlatformModel from "../../../modules/platform/platform.model";
 import User from "../../../modules/user/user.model";
 import type { IPaginationOptions } from "../../../types/common.types";
 import Ghost from "./ghost.model";
@@ -18,7 +18,7 @@ import type {
 } from "./ghost.types";
 
 export default class GhostService {
-    private readonly PLATFORM = constants.user.platforms.GHOST;
+    private readonly PLATFORM = Platform.GHOST;
     private readonly GHOST_API_VERSION = "v5.72.1";
 
     private async ghost(user_id: Types.ObjectId) {
@@ -57,7 +57,7 @@ export default class GhostService {
                 },
             }).exec();
 
-            await Platform.create({
+            await PlatformModel.create({
                 user_id: platform.user_id,
                 name: this.PLATFORM,
                 data: newPlatform._id,
@@ -93,7 +93,7 @@ export default class GhostService {
 
     async deletePlatform(user_id: Types.ObjectId): Promise<boolean> {
         try {
-            await Platform.findOneAndDelete({
+            await PlatformModel.findOneAndDelete({
                 user_id,
                 name: this.PLATFORM,
             }).exec();

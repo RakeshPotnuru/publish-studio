@@ -1,7 +1,7 @@
 import type { Types } from "mongoose";
 import { z } from "zod";
 
-import { constants } from "../../config/constants";
+import { Platform, PostStatus } from "../../config/constants";
 import { proProtectedProcedure, protectedProcedure, router } from "../../trpc";
 import PublishController from "./publish/publish.controller";
 
@@ -10,9 +10,9 @@ const postRouter = router({
         .input(
             z.object({
                 project_id: z.custom<Types.ObjectId>(),
-                platform: z.nativeEnum(constants.user.platforms),
+                platform: z.nativeEnum(Platform),
                 post_id: z.string().optional(),
-                status: z.nativeEnum(constants.postStatus).optional(),
+                status: z.nativeEnum(PostStatus).optional(),
                 published_url: z.string().optional(),
                 published_at: z.date().optional(),
             }),
@@ -24,7 +24,7 @@ const postRouter = router({
             z.object({
                 project_id: z.custom<Types.ObjectId>(),
                 scheduled_at: z.date().optional(),
-                platforms: z.array(z.nativeEnum(constants.user.platforms)).min(1),
+                platforms: z.array(z.nativeEnum(Platform)).min(1),
             }),
         )
         .mutation(({ input, ctx }) => new PublishController().publishPostHandler(input, ctx)),
@@ -33,7 +33,7 @@ const postRouter = router({
         .input(
             z.object({
                 project_id: z.custom<Types.ObjectId>(),
-                platforms: z.array(z.nativeEnum(constants.user.platforms)).min(1),
+                platforms: z.array(z.nativeEnum(Platform)).min(1),
             }),
         )
         .mutation(({ input, ctx }) => new PublishController().editPostHandler(input, ctx)),

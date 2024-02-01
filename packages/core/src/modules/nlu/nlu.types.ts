@@ -1,4 +1,4 @@
-import type { constants } from "../../config/constants";
+import type { Sentiment } from "../../config/constants";
 
 export interface IToneAnalysis {
     result: Result;
@@ -10,7 +10,7 @@ export interface Result {
 
 export interface Data {
     usage: Usage;
-    sentiment: Sentiment;
+    sentiment: ISentiment;
     language: string;
     emotion: DataEmotion;
 }
@@ -27,17 +27,14 @@ export type IEmotionScores = {
     [key in "joy" | "anger" | "disgust" | "fear" | "sadness"]?: number;
 };
 
-export interface Sentiment {
+export interface ISentiment {
     document: SentimentDocument;
 }
-
-export type TSentimentLabel =
-    (typeof constants.project.tone_analysis.sentiments)[keyof typeof constants.project.tone_analysis.sentiments];
 
 export interface SentimentDocument {
     score: number;
     mixed: string;
-    label: TSentimentLabel;
+    label: Sentiment;
 }
 
 export interface Usage {

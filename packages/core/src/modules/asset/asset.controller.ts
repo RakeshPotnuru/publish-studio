@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
-import { constants } from "../../config/constants";
+import { constants,MimeType } from "../../config/constants";
 import type { Context } from "../../trpc";
 import type { IPaginationOptions } from "../../types/common.types";
 import type { IFile } from "../../types/file.types";
@@ -10,7 +10,7 @@ import AssetService from "./asset.service";
 export default class AssetController extends AssetService {
     private validateFile(file: IFile) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        if (!Object.values(constants.asset.ALLOWED_MIMETYPES).includes(file.mimetype)) {
+        if (!Object.values(MimeType).includes(file.mimetype)) {
             throw new TRPCError({
                 code: "BAD_REQUEST",
                 message: "Invalid file type",

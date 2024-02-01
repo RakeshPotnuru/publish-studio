@@ -17,9 +17,9 @@ import {
     DialogTrigger,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
+import { constants } from "@publish-studio/core/src/config/constants";
 
 import { Icons } from "@/assets/icons";
-import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
 
@@ -52,7 +52,9 @@ export function Upgrade({ children, featureText, ...props }: Readonly<UpgradePro
             if (data?.data.url) {
                 router.push(data.data.url);
             }
-        } catch {}
+        } catch {
+            // Ignore
+        }
     };
 
     return (
@@ -105,7 +107,7 @@ export function Upgrade({ children, featureText, ...props }: Readonly<UpgradePro
                                 </Button>
                             </CardFooter>
                         </Card>
-                        <div className="from-primary rounded-xl bg-gradient-to-tr via-purple-500 to-blue-500 p-[1px]">
+                        <div className="rounded-xl bg-gradient-to-tr from-primary via-purple-500 to-blue-500 p-[1px]">
                             <Card>
                                 <CardHeader>
                                     <CardTitle>Pro</CardTitle>

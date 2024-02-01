@@ -1,5 +1,6 @@
 import { Button, toast } from "@itsrakesh/ui";
 import type { IProject, IUser } from "@publish-studio/core";
+import { ProjectStatus } from "@publish-studio/core/src/config/constants";
 import type { UseFormReturn } from "react-hook-form";
 import type { z } from "zod";
 
@@ -7,7 +8,6 @@ import { Icons } from "@/assets/icons";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { ProButton } from "@/components/ui/pro-button";
 import { Tooltip } from "@/components/ui/tooltip";
-import { constants } from "@/config/constants";
 import { trpc } from "@/utils/trpc";
 
 import type { formSchema } from "./form-schema";
@@ -20,7 +20,7 @@ interface ActionsProps {
     handleSave: (data: z.infer<typeof formSchema>) => Promise<void>;
     isProjectSaving: boolean;
     isPostPublishing: boolean;
-    handleRefresh: () => void;
+    handleRefresh: () => Promise<void>;
     publishPost: (
         data: z.infer<typeof formSchema> & { project_id: IProject["_id"]; scheduled_at?: Date },
     ) => Promise<{ status: string; data: { message: string } }>;
@@ -94,7 +94,7 @@ export function Actions({
                     </ButtonLoader>
                 </Button>
             </Tooltip>
-            {project.status === constants.project.status.PUBLISHED && (
+            {project.status === ProjectStatus.PUBLISHED && (
                 <ProButton
                     onClick={form.handleSubmit(handleUpdate)}
                     type="button"
@@ -111,17 +111,17 @@ export function Actions({
                     disabled={
                         !form.formState.isDirty ||
                         isLoading ||
-                        project.status === constants.project.status.SCHEDULED ||
+                        project.status === ProjectStatus.SCHEDULED ||
                         form.getValues().platforms.length === 0
                     }
                 >
                     <ButtonLoader isLoading={isPostPublishing}>Publish Now</ButtonLoader>
                 </Button>
             )}
-            {project.status !== constants.project.status.PUBLISHED && (
+            {project.status !== ProjectStatus.PUBLISHED && (
                 <SchedulePost
-                    onConfirm={date => {
-                        handleSchedule(form.getValues(), date);
+                    onConfirm={async date => {
+                        await handleSchedule(form.getValues(), date);
                     }}
                 >
                     <Button
@@ -130,7 +130,7 @@ export function Actions({
                         disabled={
                             !form.formState.isDirty ||
                             isLoading ||
-                            project.status === constants.project.status.SCHEDULED ||
+                            project.status === ProjectStatus.SCHEDULED ||
                             form.getValues().platforms.length === 0
                         }
                     >

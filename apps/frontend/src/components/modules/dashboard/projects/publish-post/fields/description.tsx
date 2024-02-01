@@ -9,6 +9,7 @@ import {
     toast,
 } from "@itsrakesh/ui";
 import type { IProject } from "@publish-studio/core";
+import { constants } from "@publish-studio/core/src/config/constants";
 import type { RefObject } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import type { z } from "zod";
@@ -17,7 +18,6 @@ import { Icons } from "@/assets/icons";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { ProButton } from "@/components/ui/pro-button";
 import { Tooltip } from "@/components/ui/tooltip";
-import { constants } from "@/config/constants";
 import { trpc } from "@/utils/trpc";
 
 import { CharactersLengthViewer } from "../characters-length-viewer";

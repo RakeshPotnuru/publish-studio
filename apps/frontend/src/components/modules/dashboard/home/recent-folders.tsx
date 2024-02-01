@@ -38,7 +38,7 @@ export function RecentFolders() {
                             className="flex justify-start"
                             asChild
                         >
-                            <Link href={`/folders/${folder._id}`}>
+                            <Link href={`/folders/${folder._id.toString()}`}>
                                 <Icons.Folder className="mr-2 size-4" />
                                 {shortenText(folder.name, 24)}
                             </Link>

@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 
 import { toast } from "@itsrakesh/ui";
 import type { IHashnode } from "@publish-studio/core";
+import { Platform, PostStatus, ProjectStatus } from "@publish-studio/core/src/config/constants";
 
 import { Images } from "@/assets/images";
-import { constants } from "@/config/constants";
 import { useEditor } from "@/hooks/use-editor";
 import { trpc } from "@/utils/trpc";
 
@@ -137,20 +137,20 @@ export function ImportPosts() {
                 name: post.title,
                 title: post.seo.title ?? post.title,
                 body: {
-                    json,
+                    json: json ?? undefined,
                 },
-                platforms: [constants.user.platforms.HASHNODE],
+                platforms: [Platform.HASHNODE],
                 published_at: new Date(post.publishedAt),
-                status: constants.project.status.PUBLISHED,
+                status: ProjectStatus.PUBLISHED,
             });
 
             await createPost({
-                platform: constants.user.platforms.HASHNODE,
+                platform: Platform.HASHNODE,
                 post_id: post.id,
                 project_id: data.project._id,
                 published_at: new Date(post.publishedAt),
                 published_url: post.url,
-                status: constants.postStatus.SUCCESS,
+                status: PostStatus.SUCCESS,
             });
 
             setImportedPosts([...importedPosts, id]);

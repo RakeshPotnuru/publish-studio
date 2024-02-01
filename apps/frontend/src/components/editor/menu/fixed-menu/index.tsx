@@ -30,7 +30,7 @@ export function FixedMenu({
 
     return (
         <div
-            className="bg-background sticky top-0 z-10 flex justify-between rounded-full p-2 shadow-sm"
+            className="sticky top-0 z-10 flex justify-between rounded-full bg-background p-2 shadow-sm"
             {...props}
         >
             <div className="flex flex-row items-center space-x-2">

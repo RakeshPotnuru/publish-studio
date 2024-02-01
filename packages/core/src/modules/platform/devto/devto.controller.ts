@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
-import { constants } from "../../../config/constants";
+import { Platform, PostStatus } from "../../../config/constants";
 import type { Context } from "../../../trpc";
 import type { IPaginationOptions } from "../../../types/common.types";
 import type { TPostUpdateInput } from "../../post/post.types";
@@ -103,8 +103,8 @@ export default class DevToController extends DevToService {
 
         if (!platform) {
             return {
-                platform: constants.user.platforms.DEVTO,
-                status: constants.postStatus.ERROR,
+                platform: Platform.DEVTO,
+                status: PostStatus.ERROR,
             };
         }
 
@@ -125,14 +125,14 @@ export default class DevToController extends DevToService {
 
         if (newPost.isError || !newPost.url || !newPost.id) {
             return {
-                platform: constants.user.platforms.DEVTO,
-                status: constants.postStatus.ERROR,
+                platform: Platform.DEVTO,
+                status: PostStatus.ERROR,
             };
         }
 
         return {
-            platform: constants.user.platforms.DEVTO,
-            status: constants.postStatus.SUCCESS,
+            platform: Platform.DEVTO,
+            status: PostStatus.SUCCESS,
             published_url: newPost.url,
             post_id: newPost.id.toString(),
         };

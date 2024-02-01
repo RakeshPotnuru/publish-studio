@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { constants } from "../../../config/constants";
+import { WordPressStatus } from "../../../config/constants";
 import { protectedProcedure, router } from "../../../trpc";
 import WordPressController from "./wordpress.controller";
 
@@ -13,7 +13,7 @@ const wordpressRouter = router({
         .input(
             z.object({
                 publicize: z.boolean(),
-                status: z.nativeEnum(constants.wordpressStatus),
+                status: z.nativeEnum(WordPressStatus),
             }),
         )
         .mutation(({ input, ctx }) => new WordPressController().updatePlatformHandler(input, ctx)),

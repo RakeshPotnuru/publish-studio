@@ -2,8 +2,8 @@ import { forwardRef, useState } from "react";
 
 import { Button } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
+import { UserType } from "@publish-studio/core/src/config/constants";
 
-import { constants } from "@/config/constants";
 import useUserStore from "@/lib/store/user";
 
 import { Upgrade } from "../misc/upgrade";
@@ -20,7 +20,7 @@ const ProButton = forwardRef<HTMLButtonElement, ProButtonProps>(
         const { isLoading, user } = useUserStore();
 
         const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-            if (user?.user_type === constants.user.userTypes.PRO) {
+            if (user?.user_type === UserType.PRO) {
                 onClick?.(event);
             } else {
                 setOpen(prev => !prev);

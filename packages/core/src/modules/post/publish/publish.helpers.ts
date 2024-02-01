@@ -3,13 +3,12 @@ import type { Job } from "bullmq";
 import { Queue, Worker } from "bullmq";
 
 import { bullMQConnectionOptions } from "../../../config/app.config";
-import { constants } from "../../../config/constants";
+import { constants,Platform } from "../../../config/constants";
 import BloggerController from "../../platform/blogger/blogger.controller";
 import DevToController from "../../platform/devto/devto.controller";
 import GhostController from "../../platform/ghost/ghost.controller";
 import HashnodeController from "../../platform/hashnode/hashnode.controller";
 import MediumController from "../../platform/medium/medium.controller";
-import type { TPlatformName } from "../../platform/platform.types";
 import WordPressController from "../../platform/wordpress/wordpress.controller";
 import type { ISchedule } from "../post.types";
 import PublishService from "./publish.service";
@@ -86,7 +85,7 @@ export default class PublishHelpers extends PublishService {
     }
 
     getPlatformCreateController(
-        platform: TPlatformName,
+        platform: Platform,
     ):
         | DevToController
         | HashnodeController
@@ -96,22 +95,22 @@ export default class PublishHelpers extends PublishService {
         | BloggerController
         | undefined {
         switch (platform) {
-            case constants.user.platforms.DEVTO: {
+            case Platform.DEVTO: {
                 return new DevToController();
             }
-            case constants.user.platforms.HASHNODE: {
+            case Platform.HASHNODE: {
                 return new HashnodeController();
             }
-            case constants.user.platforms.MEDIUM: {
+            case Platform.MEDIUM: {
                 return new MediumController();
             }
-            case constants.user.platforms.GHOST: {
+            case Platform.GHOST: {
                 return new GhostController();
             }
-            case constants.user.platforms.WORDPRESS: {
+            case Platform.WORDPRESS: {
                 return new WordPressController();
             }
-            case constants.user.platforms.BLOGGER: {
+            case Platform.BLOGGER: {
                 return new BloggerController();
             }
 
@@ -122,7 +121,7 @@ export default class PublishHelpers extends PublishService {
     }
 
     getPlatformUpdateController(
-        platform: TPlatformName,
+        platform: Platform,
     ):
         | DevToController
         | HashnodeController
@@ -131,19 +130,19 @@ export default class PublishHelpers extends PublishService {
         | BloggerController
         | undefined {
         switch (platform) {
-            case constants.user.platforms.DEVTO: {
+            case Platform.DEVTO: {
                 return new DevToController();
             }
-            case constants.user.platforms.HASHNODE: {
+            case Platform.HASHNODE: {
                 return new HashnodeController();
             }
-            case constants.user.platforms.GHOST: {
+            case Platform.GHOST: {
                 return new GhostController();
             }
-            case constants.user.platforms.WORDPRESS: {
+            case Platform.WORDPRESS: {
                 return new WordPressController();
             }
-            case constants.user.platforms.BLOGGER: {
+            case Platform.BLOGGER: {
                 return new BloggerController();
             }
 

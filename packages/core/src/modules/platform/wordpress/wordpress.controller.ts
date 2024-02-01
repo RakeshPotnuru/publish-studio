@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
-import { constants } from "../../../config/constants";
+import { Platform, PostStatus, WordPressStatus } from "../../../config/constants";
 import type { Context } from "../../../trpc";
 import type { IPaginationOptions } from "../../../types/common.types";
 import type { TPostUpdateInput } from "../../post/post.types";
@@ -25,7 +25,7 @@ export default class WordPressController extends WordPressService {
             blog_id: site.blog_id,
             token: site.access_token,
             publicize: false,
-            status: constants.wordpressStatus.DRAFT,
+            status: WordPressStatus.DRAFT,
         });
 
         return {
@@ -76,8 +76,8 @@ export default class WordPressController extends WordPressService {
 
         if (!platform) {
             return {
-                platform: constants.user.platforms.DEVTO,
-                status: constants.postStatus.ERROR,
+                platform: Platform.DEVTO,
+                status: PostStatus.ERROR,
             };
         }
 
@@ -98,14 +98,14 @@ export default class WordPressController extends WordPressService {
 
         if (newPost.isError || !newPost.URL || !newPost.ID) {
             return {
-                platform: constants.user.platforms.DEVTO,
-                status: constants.postStatus.ERROR,
+                platform: Platform.DEVTO,
+                status: PostStatus.ERROR,
             };
         }
 
         return {
-            platform: constants.user.platforms.WORDPRESS,
-            status: constants.postStatus.SUCCESS,
+            platform: Platform.WORDPRESS,
+            status: PostStatus.SUCCESS,
             published_url: newPost.URL,
             post_id: newPost.ID.toString(),
         };

@@ -1,7 +1,7 @@
 import type { Types } from "mongoose";
 import { z } from "zod";
 
-import { constants } from "../../config/constants";
+import { constants,Platform, ProjectStatus } from "../../config/constants";
 import { protectedProcedure, router } from "../../trpc";
 import ProjectController from "./project.controller";
 
@@ -27,12 +27,9 @@ const projectRouter = router({
                         markdown: z.string().optional(),
                     })
                     .optional(),
-                status: z
-                    .nativeEnum(constants.project.status)
-                    .optional()
-                    .default(constants.project.status.DRAFT),
+                status: z.nativeEnum(ProjectStatus).optional().default(ProjectStatus.DRAFT),
                 cover_image: z.string().optional(),
-                platforms: z.array(z.nativeEnum(constants.user.platforms)).optional(),
+                platforms: z.array(z.nativeEnum(Platform)).optional(),
                 tags: z
                     .object({
                         devto_tags: z.array(z.string()).optional(),
@@ -115,7 +112,7 @@ const projectRouter = router({
                             markdown: z.string().optional(),
                         })
                         .optional(),
-                    status: z.nativeEnum(constants.project.status).optional(),
+                    status: z.nativeEnum(ProjectStatus).optional(),
                     cover_image: z.string().optional(),
                     tags: z
                         .object({

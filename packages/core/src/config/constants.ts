@@ -1,31 +1,3 @@
-/* Platform name must match model name. */
-enum platforms {
-    HASHNODE = "Hashnode",
-    DEVTO = "DevTo",
-    MEDIUM = "Medium",
-    GHOST = "Ghost",
-    WORDPRESS = "WordPress",
-    BLOGGER = "Blogger",
-}
-
-enum projectStatus {
-    DRAFT = "draft",
-    PUBLISHED = "published",
-    SCHEDULED = "scheduled",
-}
-
-enum postStatus {
-    SUCCESS = "success",
-    ERROR = "error",
-    PENDING = "pending",
-}
-
-enum sentiments {
-    POSITIVE = "positive",
-    NEGATIVE = "negative",
-    NEUTRAL = "neutral",
-}
-
 const project = {
     name: {
         MIN_LENGTH: 3,
@@ -66,13 +38,11 @@ const project = {
             MAX_LENGTH: 3,
         },
     },
-    status: projectStatus,
     tone_analysis: {
         input: {
             MIN_LENGTH: 10,
             MAX_LENGTH: 10_000,
         },
-        sentiments,
     },
 } as const;
 
@@ -82,16 +52,6 @@ const folder = {
         MAX_LENGTH: 160,
     },
 } as const;
-
-enum userTypes {
-    FREE = "free",
-    PRO = "pro",
-}
-
-enum authModes {
-    CLASSIC = "classic",
-    GOOGLE = "google",
-}
 
 const user = {
     firstName: {
@@ -105,9 +65,6 @@ const user = {
     password: {
         MIN_LENGTH: 8,
     },
-    userTypes: userTypes,
-    platforms: platforms,
-    authModes: authModes,
 } as const;
 
 const bullmq = {
@@ -116,12 +73,6 @@ const bullmq = {
         EMAIL: "email",
     },
 } as const;
-
-enum emailTemplates {
-    VERIFY_EMAIL = "ps_verify_email",
-    RESET_PASSWORD = "ps_reset_password",
-    WELCOME_EMAIL = "ps_welcome_email",
-}
 
 const payment = {
     plans: {
@@ -137,40 +88,9 @@ const payment = {
     },
 };
 
-enum mimeTypes {
-    PNG = "image/png",
-    JPG = "image/jpg",
-    JPEG = "image/jpeg",
-    SVG = "image/svg+xml",
-    GIF = "image/gif",
-}
-
 const asset = {
-    ALLOWED_MIMETYPES: mimeTypes,
     MAX_FILE_SIZE: 5 * 1024 * 1024, // 5MB
 } as const;
-
-const errorCauses = {
-    VERIFICATION_PENDING: "verification_pending",
-};
-
-enum mediumStatus {
-    PUBLIC = "public",
-    UNLISTED = "unlisted",
-    DRAFT = "draft",
-}
-
-enum ghostStatus {
-    PUBLISHED = "published",
-    DRAFT = "draft",
-}
-
-enum wordpressStatus {
-    PUBLISH = "publish",
-    PRIVATE = "private",
-    DRAFT = "draft",
-    PENDING = "pending",
-}
 
 export const constants = {
     project,
@@ -178,11 +98,79 @@ export const constants = {
     folder,
     bullmq,
     payment,
-    emailTemplates,
     asset,
-    errorCauses,
-    mediumStatus,
-    ghostStatus,
-    wordpressStatus,
-    postStatus,
 };
+
+/* Platform name must match model name. */
+export enum Platform {
+    HASHNODE = "Hashnode",
+    DEVTO = "DevTo",
+    MEDIUM = "Medium",
+    GHOST = "Ghost",
+    WORDPRESS = "WordPress",
+    BLOGGER = "Blogger",
+}
+
+export enum ProjectStatus {
+    DRAFT = "draft",
+    PUBLISHED = "published",
+    SCHEDULED = "scheduled",
+}
+
+export enum PostStatus {
+    SUCCESS = "success",
+    ERROR = "error",
+    PENDING = "pending",
+}
+
+export enum Sentiment {
+    POSITIVE = "positive",
+    NEGATIVE = "negative",
+    NEUTRAL = "neutral",
+}
+
+export enum UserType {
+    FREE = "free",
+    PRO = "pro",
+}
+
+export enum AuthMode {
+    CLASSIC = "classic",
+    GOOGLE = "google",
+}
+
+export enum EmailTemplate {
+    VERIFY_EMAIL = "ps_verify_email",
+    RESET_PASSWORD = "ps_reset_password",
+    WELCOME_EMAIL = "ps_welcome_email",
+}
+
+export enum MimeType {
+    PNG = "image/png",
+    JPG = "image/jpg",
+    JPEG = "image/jpeg",
+    SVG = "image/svg+xml",
+    GIF = "image/gif",
+}
+
+export enum ErrorCause {
+    VERIFICATION_PENDING = "verification_pending",
+}
+
+export enum MediumStatus {
+    PUBLIC = "public",
+    UNLISTED = "unlisted",
+    DRAFT = "draft",
+}
+
+export enum GhostStatus {
+    PUBLISHED = "published",
+    DRAFT = "draft",
+}
+
+export enum WordPressStatus {
+    PUBLISH = "publish",
+    PRIVATE = "private",
+    DRAFT = "draft",
+    PENDING = "pending",
+}

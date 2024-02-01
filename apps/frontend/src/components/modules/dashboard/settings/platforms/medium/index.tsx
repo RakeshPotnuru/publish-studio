@@ -2,9 +2,9 @@ import { useState } from "react";
 
 import { toast } from "@itsrakesh/ui";
 import type { IMedium } from "@publish-studio/core";
+import { MediumStatus } from "@publish-studio/core/src/config/constants";
 
 import { Images } from "@/assets/images";
-import { constants } from "@/config/constants";
 import { trpc } from "@/utils/trpc";
 
 import { ConnectionCard } from "../../connection-card";
@@ -52,7 +52,7 @@ export function Medium({ data, isLoading }: Readonly<MediumToProps>) {
             editForm={
                 <MediumEditForm
                     setIsOpen={setIsOpen}
-                    status={data?.status ?? constants.mediumStatus.DRAFT}
+                    status={data?.status ?? MediumStatus.DRAFT}
                     notify_followers={data?.notify_followers.toString() ?? "false"}
                 />
             }

@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
-import { constants } from "../../../config/constants";
+import { PostStatus, ProjectStatus } from "../../../config/constants";
 import type { Context } from "../../../trpc";
 import type { IPublish, TEdit } from "../post.types";
 import PublishHelpers from "./publish.helpers";
@@ -24,7 +24,7 @@ export default class PublishController extends PublishService {
                 {
                     platform,
                     project_id,
-                    status: constants.postStatus.PENDING,
+                    status: PostStatus.PENDING,
                 },
                 ctx,
             );
@@ -42,7 +42,7 @@ export default class PublishController extends PublishService {
                 project_id,
                 {
                     platforms,
-                    status: constants.project.status.SCHEDULED,
+                    status: ProjectStatus.SCHEDULED,
                     scheduled_at,
                 },
                 ctx.user._id,

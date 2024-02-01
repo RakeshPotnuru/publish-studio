@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-import { constants } from "../../config/constants";
+import { MimeType } from "../../config/constants";
 import type { IAsset } from "./asset.types";
 
 const AssetSchema = new Schema<IAsset>(
@@ -10,7 +10,7 @@ const AssetSchema = new Schema<IAsset>(
         project_id: { type: Schema.Types.ObjectId },
         user_id: { type: Schema.Types.ObjectId, required: true },
         size: { type: Number, required: true },
-        mimetype: { type: String, enum: constants.asset.ALLOWED_MIMETYPES, required: true },
+        mimetype: { type: String, enum: MimeType, required: true },
         key: { type: String, required: true },
     },
     {

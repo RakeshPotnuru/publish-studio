@@ -16,7 +16,7 @@ export function GoogleAuth() {
 
     const { theme } = useTheme();
     const authButtonRef = useRef<HTMLDivElement>(null);
-    const [_, setCookie] = useCookies(["ps_access_token"]);
+    const [, setCookie] = useCookies(["ps_access_token"]);
 
     const { mutateAsync: connectGoogle, isLoading } = trpc.auth.connectGoogle.useMutation({
         onSuccess({ data }) {
@@ -51,7 +51,9 @@ export function GoogleAuth() {
 
             try {
                 await connectGoogle({ id_token: response.credential });
-            } catch {}
+            } catch {
+                // Ignore
+            }
         },
         [connectGoogle],
     );
@@ -73,7 +75,9 @@ export function GoogleAuth() {
                     shape: "rectangular",
                 });
                 window.google?.accounts.id.prompt();
-            } catch {}
+            } catch {
+                // Ignore
+            }
         }
     }, [theme, handleConnectGoogle]);
 

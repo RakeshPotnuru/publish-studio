@@ -18,7 +18,7 @@ export function BubbleMenu({ editor }: BubbleMenuProps) {
                 (editor.isActive("paragraph") || editor.isActive("heading"))
             }
         >
-            <div className="bg-popover text-popover-foreground flex flex-row items-center rounded-md border shadow-md">
+            <div className="flex flex-row items-center rounded-md border bg-popover text-popover-foreground shadow-md">
                 <MenuShell>
                     <MarkActions editor={editor} isBubbleMenu />
                 </MenuShell>

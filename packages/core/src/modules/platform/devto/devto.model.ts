@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import { fieldEncryption } from "mongoose-field-encryption";
 
-import { constants } from "../../../config/constants";
+import { Platform } from "../../../config/constants";
 import type { IDevTo } from "./devto.types";
 
 const DevToSchema = new Schema<IDevTo>(
@@ -25,4 +25,4 @@ DevToSchema.plugin(fieldEncryption, {
     encryptNull: false,
 });
 
-export default mongoose.model(constants.user.platforms.DEVTO, DevToSchema);
+export default mongoose.model(Platform.DEVTO, DevToSchema);

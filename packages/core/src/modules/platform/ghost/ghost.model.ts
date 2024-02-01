@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import { fieldEncryption } from "mongoose-field-encryption";
 
-import { constants } from "../../../config/constants";
+import { GhostStatus, Platform } from "../../../config/constants";
 import type { IGhost } from "./ghost.types";
 
 const GhostSchema = new Schema<IGhost>(
@@ -11,9 +11,9 @@ const GhostSchema = new Schema<IGhost>(
         admin_api_key: { type: String, required: true, unique: true },
         status: {
             type: String,
-            enum: constants.ghostStatus,
+            enum: GhostStatus,
             required: true,
-            default: constants.ghostStatus.DRAFT,
+            default: GhostStatus.DRAFT,
         },
     },
     {
@@ -30,4 +30,4 @@ GhostSchema.plugin(fieldEncryption, {
     encryptNull: false,
 });
 
-export default mongoose.model(constants.user.platforms.GHOST, GhostSchema);
+export default mongoose.model(Platform.GHOST, GhostSchema);

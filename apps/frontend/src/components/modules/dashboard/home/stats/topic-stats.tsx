@@ -46,16 +46,16 @@ export function TopicStats() {
     const chartView = chartData.labels?.length ? (
         <Doughnut data={chartData} options={config} />
     ) : (
-        <div className="bg-secondary text-muted-foreground flex size-52 items-center justify-center rounded-full">
+        <div className="flex size-52 items-center justify-center rounded-full bg-secondary text-muted-foreground">
             No enough data
         </div>
     );
 
     const labelsView = chartData.labels?.length ? (
-        chartData.labels.map((label, index) => (
+        (chartData.labels as ICategoryStats["category"][]).map((label, index) => (
             <div
                 key={`${label}-${index + 1}`}
-                className="text-muted-foreground mt-2 flex items-center text-sm"
+                className="mt-2 flex items-center text-sm text-muted-foreground"
             >
                 <div
                     className="mr-2 size-4"
@@ -63,11 +63,11 @@ export function TopicStats() {
                         backgroundColor: (chartData.datasets[0].backgroundColor as string[])[index],
                     }}
                 />
-                <span>{label as string}</span>
+                <span>{label}</span>
             </div>
         ))
     ) : (
-        <p className="text-muted-foreground flex h-20 items-center text-sm">No enough data</p>
+        <p className="flex h-20 items-center text-sm text-muted-foreground">No enough data</p>
     );
 
     return error ? (
@@ -77,7 +77,7 @@ export function TopicStats() {
     ) : (
         <div className="flex flex-col items-center space-y-4">
             <h4 className="text-lg font-semibold">Top categories</h4>
-            <div className="flow-row flex items-center space-x-6">
+            <div className="flex flex-row items-center space-x-6">
                 <div className="size-52">
                     {isFetching ? <Skeleton className="size-52 rounded-full" /> : chartView}
                 </div>
@@ -86,7 +86,7 @@ export function TopicStats() {
                         ? Array.from({ length: 5 }).map((_, index) => (
                               <div
                                   key={`skeleton-${index + 1}`}
-                                  className="text-muted-foreground mt-2 flex items-center text-sm"
+                                  className="mt-2 flex items-center text-sm text-muted-foreground"
                               >
                                   <div className="mr-2 size-5">
                                       <Skeleton className="size-5" />

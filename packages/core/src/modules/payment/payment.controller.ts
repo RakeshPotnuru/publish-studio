@@ -3,7 +3,7 @@ import type { Types } from "mongoose";
 import mongoose from "mongoose";
 import type Stripe from "stripe";
 
-import { constants } from "../../config/constants";
+import { constants,UserType } from "../../config/constants";
 import type { Context } from "../../trpc";
 import stripe from "../../utils/stripe";
 import PaymentService from "./payment.service";
@@ -89,7 +89,7 @@ export default class PaymentController extends PaymentService {
         const session = await super.fetchCheckoutSession(session_id);
 
         await super.updateUser(user_id, {
-            user_type: constants.user.userTypes.PRO,
+            user_type: UserType.PRO,
             stripe_customer_id: session.customer as string,
         });
 
@@ -136,7 +136,7 @@ export default class PaymentController extends PaymentService {
         }
 
         await super.updateUser(user._id, {
-            user_type: constants.user.userTypes.FREE,
+            user_type: UserType.FREE,
             stripe_customer_id: undefined,
         });
 

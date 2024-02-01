@@ -1,7 +1,7 @@
 import { cn } from "@itsrakesh/utils";
 import type { IUser } from "@publish-studio/core";
+import { UserType } from "@publish-studio/core/src/config/constants";
 
-import { constants } from "@/config/constants";
 import useUserStore from "@/lib/store/user";
 
 type ProBorderProps = React.HTMLAttributes<HTMLDivElement>;
@@ -14,8 +14,7 @@ export function ProBorder({ children, className, ...props }: Readonly<ProBorderP
             className={cn(
                 "from-primary rounded-xl bg-gradient-to-tr via-purple-500 to-blue-500 p-[1px]",
                 {
-                    "bg-none":
-                        (user?.user_type as IUser["user_type"]) !== constants.user.userTypes.PRO,
+                    "bg-none": (user?.user_type as IUser["user_type"]) !== UserType.PRO,
                 },
                 className,
             )}

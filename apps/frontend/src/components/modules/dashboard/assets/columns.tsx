@@ -58,7 +58,7 @@ export const columns: ColumnDef<IAsset>[] = [
             </AssetDialog>
         ),
         filterFn: (row, id, value) => {
-            return value.includes(row.getValue(id));
+            return value.includes(row.getValue(id)) as boolean;
         },
     },
     {
@@ -70,7 +70,7 @@ export const columns: ColumnDef<IAsset>[] = [
             </span>
         ),
         filterFn: (row, id, value) => {
-            return value.includes(row.getValue(id));
+            return value.includes(row.getValue(id)) as boolean;
         },
     },
     {
@@ -83,7 +83,7 @@ export const columns: ColumnDef<IAsset>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="File Type" />,
         cell: ({ row }) => <Badge variant="secondary">{row.original.mimetype.split("/")[1]}</Badge>,
         filterFn: (row, id, value) => {
-            return value.includes(row.getValue(id));
+            return value.includes(row.getValue(id)) as boolean;
         },
     },
     {
@@ -98,7 +98,7 @@ export const columns: ColumnDef<IAsset>[] = [
             </span>
         ),
         filterFn: (row, id, value) => {
-            return value.includes(row.getValue(id));
+            return value.includes(row.getValue(id)) as boolean;
         },
     },
     {

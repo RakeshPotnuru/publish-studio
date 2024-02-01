@@ -52,7 +52,7 @@ export default class PostService extends ProjectService {
     async getPostsByProjectId(
         project_id: Types.ObjectId,
         user_id: Types.ObjectId,
-    ): Promise<IPost[] | []> {
+    ): Promise<IPost[] | null> {
         try {
             return await Post.find({ project_id, user_id });
         } catch (error) {

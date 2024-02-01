@@ -7,7 +7,7 @@ import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
 
 interface SchedulePostProps extends React.HTMLAttributes<HTMLElement> {
-    onConfirm: (date: Date) => void;
+    onConfirm: (date: Date) => Promise<void>;
 }
 
 const initialDate = new Date(Date.now() + 60 * 60_000);
@@ -31,7 +31,7 @@ export function SchedulePost({ children, onConfirm }: Readonly<SchedulePostProps
             <PopoverContent className="w-[35rem] space-y-2">
                 <div className="space-y-2">
                     <Heading level={4}>Schedule Post</Heading>
-                    <p className="text-muted-foreground text-sm">
+                    <p className="text-sm text-muted-foreground">
                         Schedule your post to be published at a later date and time.
                     </p>
                 </div>
@@ -76,9 +76,9 @@ export function SchedulePost({ children, onConfirm }: Readonly<SchedulePostProps
                             </Button>
                             <Button
                                 type="button"
-                                onClick={() => {
+                                onClick={async () => {
                                     if (date && date > minDate) {
-                                        onConfirm(date);
+                                        await onConfirm(date);
                                         setOpen(false);
                                     }
                                 }}

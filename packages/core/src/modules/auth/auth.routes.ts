@@ -3,7 +3,7 @@ import { Ratelimit } from "@upstash/ratelimit";
 import { z } from "zod";
 
 import defaultConfig from "../../config/app.config";
-import { constants } from "../../config/constants";
+import { constants,UserType } from "../../config/constants";
 import { protectedProcedure, router, t } from "../../trpc";
 import { rateLimiterMiddleware } from "../../utils/rate-limiter";
 import UserController from "../user/user.controller";
@@ -30,10 +30,7 @@ const authRouter = router({
                         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!"#$%&'()*+,./:;<=>?@[\\\]^_{|}~-])(.{8,})$/,
                     ),
                 profile_pic: z.string().optional(),
-                user_type: z
-                    .nativeEnum(constants.user.userTypes)
-                    .optional()
-                    .default(constants.user.userTypes.FREE),
+                user_type: z.nativeEnum(UserType).optional().default(UserType.FREE),
             }),
         )
         .mutation(({ input }) => new AuthController().registerHandler(input)),

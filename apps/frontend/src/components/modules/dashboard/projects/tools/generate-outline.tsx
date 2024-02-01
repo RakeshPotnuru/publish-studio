@@ -40,7 +40,7 @@ export function GenerateOutline({ editor, project_id }: Readonly<GenerateOutline
         <div className="space-y-2">
             <div>
                 <Heading level={5}>Generate Outline</Heading>
-                <p className="text-muted-foreground text-sm">
+                <p className="text-sm text-muted-foreground">
                     Quickly generate an outline of your topic.
                 </p>
             </div>

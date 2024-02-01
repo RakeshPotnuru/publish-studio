@@ -1,8 +1,8 @@
 import type { Types } from "mongoose";
 
+import type { Sentiment } from "../../config/constants";
 import type { Context } from "../../trpc";
 import NLUService from "./nlu.service";
-import type { TSentimentLabel } from "./nlu.types";
 
 export default class NLUController extends NLUService {
     async getToneAnalysisHandler(
@@ -17,7 +17,7 @@ export default class NLUController extends NLUService {
             project_id,
             {
                 tone_analysis: {
-                    sentiment: analysis.sentiment?.document?.label as TSentimentLabel,
+                    sentiment: analysis.sentiment?.document?.label as Sentiment,
                     emotion: analysis.emotion?.document?.emotion,
                 },
             },

@@ -1,8 +1,6 @@
 import type { Types } from "mongoose";
 
-import type { constants } from "../../../config/constants";
-
-export type TMediumStatus = (typeof constants.mediumStatus)[keyof typeof constants.mediumStatus];
+import type { MediumStatus } from "../../../config/constants";
 
 export interface IMedium {
     _id: Types.ObjectId;
@@ -10,7 +8,7 @@ export interface IMedium {
     api_key: string;
     username: string;
     author_id: string;
-    status: TMediumStatus;
+    status: MediumStatus;
     notify_followers: boolean;
     created_at: Date;
     updated_at: Date;
@@ -41,7 +39,7 @@ export interface IMediumCreatePostInput {
     content?: string;
     tags?: string[];
     canonicalUrl?: string;
-    publishStatus?: TMediumStatus;
+    publishStatus?: MediumStatus;
     notifyFollowers?: boolean;
 }
 

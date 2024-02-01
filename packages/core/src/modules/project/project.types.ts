@@ -1,12 +1,8 @@
 import type { Types } from "mongoose";
 
-import type { constants } from "../../config/constants";
+import type { Platform, ProjectStatus, Sentiment } from "../../config/constants";
 import type { IPagination } from "../../types/common.types";
-import type { IEmotionScores, TSentimentLabel } from "../nlu/nlu.types";
-import type { TPlatformName } from "../platform/platform.types";
-
-export type TProjectStatus =
-    (typeof constants.project.status)[keyof typeof constants.project.status];
+import type { IEmotionScores } from "../nlu/nlu.types";
 
 export interface IProject {
     _id: Types.ObjectId;
@@ -20,13 +16,13 @@ export interface IProject {
         html?: string;
         markdown?: string;
     };
-    status: TProjectStatus;
+    status: ProjectStatus;
     cover_image?: string;
-    platforms?: TPlatformName[];
+    platforms?: Platform[];
     tags?: ITags;
     canonical_url?: string;
     tone_analysis?: {
-        sentiment?: TSentimentLabel;
+        sentiment?: Sentiment;
         emotion?: IEmotionScores;
     };
     categories?: string[];

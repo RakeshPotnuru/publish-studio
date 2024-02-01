@@ -38,7 +38,7 @@ export function RecentProjects() {
                             className="flex justify-start"
                             asChild
                         >
-                            <Link href={`/projects/${project._id}`}>
+                            <Link href={`/projects/${project._id.toString()}`}>
                                 <Icons.Projects className="mr-2 size-4" />
                                 {shortenText(project.name, 24)}
                             </Link>

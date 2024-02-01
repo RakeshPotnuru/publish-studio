@@ -52,8 +52,10 @@ export function useEditor(project?: IProject) {
             },
         },
         autofocus: true,
-        onUpdate: async ({ editor }) => {
-            await handleAutosave(editor.state.doc.toJSON() as JSON);
+        onUpdate: ({ editor }) => {
+            handleAutosave(editor.state.doc.toJSON() as JSON)?.catch(() => {
+                // Ignore
+            });
         },
         content: project?.body?.json ?? project?.body?.html,
     });

@@ -20,6 +20,7 @@ import {
     toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
+import { constants } from "@publish-studio/core/src/config/constants";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -29,7 +30,6 @@ import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { Tooltip } from "@/components/ui/tooltip";
-import { constants } from "@/config/constants";
 import useUserStore from "@/lib/store/user";
 import { trpc } from "@/utils/trpc";
 
@@ -51,7 +51,7 @@ const formSchema = z.object({
     profile_pic: z.string().url().optional(),
 });
 
-export function Profile({ ...props }: ProfileProps) {
+export function Profile({ ...props }: Readonly<ProfileProps>) {
     const [isEditing, setIsEditing] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [open, setOpen] = useState(false);
@@ -60,10 +60,10 @@ export function Profile({ ...props }: ProfileProps) {
     const utils = trpc.useUtils();
 
     const { mutateAsync: editProfile, isLoading: isUpdating } = trpc.users.update.useMutation({
-        onSuccess: () => {
+        onSuccess: async () => {
             toast.success("Your profile has been updated successfully.");
             setIsEditing(false);
-            utils.auth.getMe.invalidate();
+            await utils.auth.getMe.invalidate();
         },
         onError: error => {
             setError(error.message);
@@ -86,7 +86,9 @@ export function Profile({ ...props }: ProfileProps) {
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         try {
             await editProfile(data);
-        } catch {}
+        } catch {
+            // Ignore
+        }
     };
 
     useEffect(() => {
@@ -118,7 +120,8 @@ export function Profile({ ...props }: ProfileProps) {
                                 <Button
                                     variant="outline"
                                     onClick={() => {
-                                        setIsEditing(false), form.reset();
+                                        setIsEditing(false);
+                                        form.reset();
                                     }}
                                 >
                                     Cancel

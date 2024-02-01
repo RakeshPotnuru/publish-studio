@@ -16,7 +16,7 @@ import { ProjectsTable } from "./table";
 
 type ProjectsProps = React.HTMLAttributes<HTMLDivElement>;
 
-export function Projects({ ...props }: ProjectsProps) {
+export function Projects({ ...props }: Readonly<ProjectsProps>) {
     const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
         pageIndex: 0,
         pageSize: 10,

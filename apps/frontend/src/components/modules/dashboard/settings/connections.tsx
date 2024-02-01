@@ -1,11 +1,11 @@
 "use client";
 
 import type { IPlatform } from "@publish-studio/core";
+import { Platform } from "@publish-studio/core/src/config/constants";
 
 import { Center } from "@/components/ui/center";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
-import { constants } from "@/config/constants";
 import { trpc } from "@/utils/trpc";
 
 import { Cloudinary } from "./integrations/cloudinary";
@@ -18,7 +18,7 @@ import { WordPress } from "./platforms/wordpress";
 
 type IntegrationsProps = React.HTMLAttributes<HTMLDivElement>;
 
-export function Connections({ ...props }: IntegrationsProps) {
+export function Connections({ ...props }: Readonly<IntegrationsProps>) {
     const {
         data,
         isFetching,
@@ -29,21 +29,23 @@ export function Connections({ ...props }: IntegrationsProps) {
 
     const platforms = data?.data.platforms;
 
-    const devto: IPlatform<typeof constants.user.platforms.DEVTO> | undefined = platforms?.find(
-        platform => platform.name === constants.user.platforms.DEVTO,
+    const devto: IPlatform<typeof Platform.DEVTO> | undefined = platforms?.find(
+        platform => platform.name === Platform.DEVTO,
     )?.data;
-    const medium: IPlatform<typeof constants.user.platforms.MEDIUM> | undefined = platforms?.find(
-        platform => platform.name === constants.user.platforms.MEDIUM,
+    const medium: IPlatform<typeof Platform.MEDIUM> | undefined = platforms?.find(
+        platform => platform.name === Platform.MEDIUM,
     )?.data;
-    const hashnode: IPlatform<typeof constants.user.platforms.HASHNODE> | undefined =
-        platforms?.find(platform => platform.name === constants.user.platforms.HASHNODE)?.data;
-    const ghost: IPlatform<typeof constants.user.platforms.GHOST> | undefined = platforms?.find(
-        platform => platform.name === constants.user.platforms.GHOST,
+    const hashnode: IPlatform<typeof Platform.HASHNODE> | undefined = platforms?.find(
+        platform => platform.name === Platform.HASHNODE,
     )?.data;
-    const wordpress: IPlatform<typeof constants.user.platforms.WORDPRESS> | undefined =
-        platforms?.find(platform => platform.name === constants.user.platforms.WORDPRESS)?.data;
-    const blogger: IPlatform<typeof constants.user.platforms.BLOGGER> | undefined = platforms?.find(
-        platform => platform.name === constants.user.platforms.BLOGGER,
+    const ghost: IPlatform<typeof Platform.GHOST> | undefined = platforms?.find(
+        platform => platform.name === Platform.GHOST,
+    )?.data;
+    const wordpress: IPlatform<typeof Platform.WORDPRESS> | undefined = platforms?.find(
+        platform => platform.name === Platform.WORDPRESS,
+    )?.data;
+    const blogger: IPlatform<typeof Platform.BLOGGER> | undefined = platforms?.find(
+        platform => platform.name === Platform.BLOGGER,
     )?.data;
 
     const {

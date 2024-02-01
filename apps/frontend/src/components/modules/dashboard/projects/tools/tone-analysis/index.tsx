@@ -47,12 +47,12 @@ export function ToneAnalysis({ editor, project }: Readonly<ToneAnalysisProps>) {
 
     const getEmotion = (emotion: Partial<TEmotionScores>) => {
         let maxEmotionKey: keyof TEmotionScores | undefined;
-        let maxEmotionValue = -Infinity;
+        let maxEmotionValue = Number.NEGATIVE_INFINITY;
 
         for (const key of Object.keys(emotion) as (keyof TEmotionScores)[]) {
-            if (emotion[key]! > maxEmotionValue) {
+            if (emotion[key] ?? 0 > maxEmotionValue) {
                 maxEmotionKey = key;
-                maxEmotionValue = emotion[key]!;
+                maxEmotionValue = emotion[key] ?? 0;
             }
         }
 
@@ -63,7 +63,7 @@ export function ToneAnalysis({ editor, project }: Readonly<ToneAnalysisProps>) {
         <div className="space-y-2">
             <div>
                 <Heading level={5}>Tone Analysis</Heading>
-                <p className="text-muted-foreground text-sm">
+                <p className="text-sm text-muted-foreground">
                     Find out how your content sounds to readers.
                     <br />
                     <span className="text-warning">Note:</span> To use this tool, your content must

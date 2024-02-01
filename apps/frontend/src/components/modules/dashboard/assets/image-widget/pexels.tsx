@@ -62,13 +62,15 @@ export function Pexels({ onImageInsert }: Readonly<PexelsProps>) {
 
     useEffect(() => {
         if (query) {
-            searchPhotos();
+            searchPhotos().catch(() => {
+                // Ignore
+            });
         }
     }, [pageIndex, pageSize, query, searchPhotos]);
 
     return (
         <div className="space-y-4">
-            <SearchInput provider="pexels" handleSubmit={handleSearch} isLoading={isFetching} />
+            <SearchInput provider="Pexels" handleSubmit={handleSearch} isLoading={isFetching} />
             <SearchBody
                 error={error?.message}
                 isLoading={isFetching}

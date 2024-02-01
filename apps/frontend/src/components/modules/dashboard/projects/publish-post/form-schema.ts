@@ -1,6 +1,5 @@
+import { constants,Platform } from "@publish-studio/core/src/config/constants";
 import { z } from "zod";
-
-import { constants } from "@/config/constants";
 
 export const formSchema = z.object({
     cover_image: z.string().optional(),
@@ -22,7 +21,7 @@ export const formSchema = z.object({
             constants.project.description.MAX_LENGTH,
             `Description must not exceed ${constants.project.description.MAX_LENGTH} characters.`,
         ),
-    platforms: z.array(z.nativeEnum(constants.user.platforms)),
+    platforms: z.array(z.nativeEnum(Platform)),
     tags: z.object({
         // hashnode_tags: z
         //     .string()
@@ -70,7 +69,7 @@ export const formSchema = z.object({
     }),
     canonical_url: z.string().optional(),
 });
-// .refine(data => !data.platforms.includes(constants.user.platforms.HASHNODE), {
+// .refine(data => !data.platforms.includes(Platform.HASHNODE), {
 //     message: "Please select at least one tag",
 //     path: ["tags.hashnode_tags"],
 // });

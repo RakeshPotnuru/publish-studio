@@ -3,8 +3,8 @@ import axios from "axios";
 import type { Types } from "mongoose";
 
 import defaultConfig from "../../../config/app.config";
-import { constants } from "../../../config/constants";
-import Platform from "../../platform/platform.model";
+import { Platform } from "../../../config/constants";
+import PlatformModel from "../../platform/platform.model";
 import User from "../../user/user.model";
 import Hashnode from "./hashnode.model";
 import type {
@@ -20,7 +20,7 @@ import type {
 } from "./hashnode.types";
 
 export default class HashnodeService {
-    private readonly PLATFORM = constants.user.platforms.HASHNODE;
+    private readonly PLATFORM = Platform.HASHNODE;
 
     private async hashnode(user_id: Types.ObjectId) {
         const platform = await Hashnode.findOne({ user_id }).exec();
@@ -61,7 +61,7 @@ export default class HashnodeService {
                 },
             }).exec();
 
-            await Platform.create({
+            await PlatformModel.create({
                 user_id: user.user_id,
                 name: this.PLATFORM,
                 data: newPlatform._id,
@@ -100,7 +100,7 @@ export default class HashnodeService {
 
     async deletePlatform(user_id: Types.ObjectId): Promise<boolean> {
         try {
-            await Platform.findOneAndDelete({
+            await PlatformModel.findOneAndDelete({
                 user_id,
                 name: this.PLATFORM,
             }).exec();

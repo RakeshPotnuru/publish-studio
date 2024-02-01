@@ -22,7 +22,7 @@ export function DataTablePagination<TData>({
 }: Readonly<DataTablePaginationProps<TData>>) {
     return (
         <div className="flex items-center justify-between px-2">
-            <div className="text-muted-foreground flex-1 text-sm">
+            <div className="flex-1 text-sm text-muted-foreground">
                 {isLoading ? (
                     <Skeleton className="h-6 w-36" />
                 ) : (

@@ -1,10 +1,7 @@
 import type { Types } from "mongoose";
 
-import type { constants } from "../../config/constants";
+import type { MimeType } from "../../config/constants";
 import type { IPagination } from "../../types/common.types";
-
-export type TMimeType =
-    (typeof constants.asset.ALLOWED_MIMETYPES)[keyof typeof constants.asset.ALLOWED_MIMETYPES];
 
 export interface IAsset {
     _id: Types.ObjectId;
@@ -13,7 +10,7 @@ export interface IAsset {
     original_file_name: string;
     hosted_url: string;
     size: number;
-    mimetype: TMimeType;
+    mimetype: MimeType;
     key: string;
     created_at: Date;
     updated_at: Date;

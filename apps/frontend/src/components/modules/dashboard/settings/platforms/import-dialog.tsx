@@ -102,7 +102,7 @@ export function ImportPostsBody({
                 </div>
             ))
         ) : (
-            <Center className="text-muted-foreground h-24">No results</Center>
+            <Center className="h-24 text-muted-foreground">No results</Center>
         );
 
     const bodyPendingView = isFetching
@@ -218,7 +218,7 @@ export function ImportPostsBodyWithoutPrevious({
                 </div>
             ))
         ) : (
-            <Center className="text-muted-foreground h-24">No results</Center>
+            <Center className="h-24 text-muted-foreground">No results</Center>
         );
 
     const bodyPendingView = isFetching

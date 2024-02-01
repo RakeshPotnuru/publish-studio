@@ -16,7 +16,7 @@ interface ProjectToolbarProps extends MenuProps {
 
 export function ProjectToolbar({ project, editor }: Readonly<ProjectToolbarProps>) {
     return (
-        <div className="bg-background sticky top-0 z-10 flex justify-between rounded-full p-2 shadow-sm">
+        <div className="sticky top-0 z-10 flex justify-between rounded-full bg-background p-2 shadow-sm">
             <div className="flex flex-row items-center rounded-full border px-2 py-0">
                 <p title={project.name} className="text-sm">
                     {shortenText(project.name, 20)}
@@ -31,7 +31,7 @@ export function ProjectToolbar({ project, editor }: Readonly<ProjectToolbarProps
                     </Button>
                 </RenameProject>
             </div>
-            <div className="flow-row flex space-x-1">
+            <div className="flex flex-row space-x-1">
                 <PublishPost editor={editor} project={project}>
                     <Button variant="secondary">Publish</Button>
                 </PublishPost>

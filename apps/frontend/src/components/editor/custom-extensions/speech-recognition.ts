@@ -2,6 +2,10 @@
  * @see: https://github.com/y4aniv/TipTap-SpeechRecognition
  **/
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable unicorn/consistent-function-scoping */
+
 import { Node } from "@tiptap/core";
 import type { Commands } from "@tiptap/react";
 
@@ -116,7 +120,5 @@ const SpeechRecognition = SRNode.create<SpeechRecognitionOptions>({
         };
     },
 });
-
-export { SpeechRecognition };
 
 export default SpeechRecognition;

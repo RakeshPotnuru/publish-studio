@@ -86,7 +86,7 @@ export function DownloadProject({ editor, project }: Readonly<DownloadProjectPro
         <div className="space-y-2">
             <div>
                 <Heading level={5}>Download</Heading>
-                <p className="text-muted-foreground text-sm">
+                <p className="text-sm text-muted-foreground">
                     Download the project in a variety of formats.
                 </p>
             </div>

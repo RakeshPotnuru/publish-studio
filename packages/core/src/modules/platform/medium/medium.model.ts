@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import { fieldEncryption } from "mongoose-field-encryption";
 
-import { constants } from "../../../config/constants";
+import { MediumStatus, Platform } from "../../../config/constants";
 import type { IMedium } from "./medium.types";
 
 const MediumSchema = new Schema<IMedium>(
@@ -12,9 +12,9 @@ const MediumSchema = new Schema<IMedium>(
         author_id: { type: String, required: true },
         status: {
             type: String,
-            enum: constants.mediumStatus,
+            enum: MediumStatus,
             required: true,
-            default: constants.mediumStatus.DRAFT,
+            default: MediumStatus.DRAFT,
         },
         notify_followers: { type: Boolean, required: true, default: false },
     },
@@ -32,4 +32,4 @@ MediumSchema.plugin(fieldEncryption, {
     encryptNull: false,
 });
 
-export default mongoose.model(constants.user.platforms.MEDIUM, MediumSchema);
+export default mongoose.model(Platform.MEDIUM, MediumSchema);

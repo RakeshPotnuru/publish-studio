@@ -7,7 +7,7 @@ import { verify } from "hcaptcha";
 import type { Types } from "mongoose";
 
 import defaultConfig from "../../config/app.config";
-import { constants } from "../../config/constants";
+import { AuthMode, EmailTemplate, ErrorCause, UserType } from "../../config/constants";
 import type { Context } from "../../trpc";
 import { scheduleEmail, sendEmail } from "../../utils/aws/ses";
 import { verifyGoogleToken } from "../../utils/google/auth";
@@ -47,7 +47,7 @@ export default class AuthController extends UserService {
 
         await sendEmail(
             [email],
-            constants.emailTemplates.VERIFY_EMAIL,
+            EmailTemplate.VERIFY_EMAIL,
             {
                 verification_url: verificationUrl,
             },
@@ -68,7 +68,7 @@ export default class AuthController extends UserService {
 
             await sendEmail(
                 [email],
-                constants.emailTemplates.RESET_PASSWORD,
+                EmailTemplate.RESET_PASSWORD,
                 {
                     reset_password_url: resetPasswordUrl,
                 },
@@ -152,7 +152,7 @@ export default class AuthController extends UserService {
 
         await scheduleEmail({
             emails: [user.email],
-            template: constants.emailTemplates.WELCOME_EMAIL,
+            template: EmailTemplate.WELCOME_EMAIL,
             variables: {
                 first_name: user.first_name,
                 last_name: user.last_name,
@@ -235,8 +235,8 @@ export default class AuthController extends UserService {
                 last_name: payload.family_name,
                 email: payload.email,
                 profile_pic: payload.picture,
-                user_type: constants.user.userTypes.FREE,
-                auth_modes: [constants.user.authModes.GOOGLE],
+                user_type: UserType.FREE,
+                auth_modes: [AuthMode.GOOGLE],
                 google_sub: payload.sub,
                 is_verified: true,
             });
@@ -263,9 +263,9 @@ export default class AuthController extends UserService {
             };
         }
 
-        if (!user.auth_modes.includes(constants.user.authModes.GOOGLE)) {
+        if (!user.auth_modes.includes(AuthMode.GOOGLE)) {
             await super.updateUser(user._id, {
-                auth_modes: [...user.auth_modes, constants.user.authModes.GOOGLE],
+                auth_modes: [...user.auth_modes, AuthMode.GOOGLE],
                 google_sub: payload.sub,
             });
 
@@ -317,7 +317,7 @@ export default class AuthController extends UserService {
         if (!user.is_verified) {
             throw new TRPCError({
                 code: "BAD_REQUEST",
-                message: constants.errorCauses.VERIFICATION_PENDING,
+                message: ErrorCause.VERIFICATION_PENDING,
             });
         }
 

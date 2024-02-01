@@ -20,12 +20,12 @@ export function Toolbar<TData>({ table }: Readonly<ToolbarProps<TData>>) {
     const utils = trpc.useUtils();
 
     const { mutateAsync: deleteFolders, isLoading } = trpc.folders.delete.useMutation({
-        onSuccess: ({ data }) => {
+        onSuccess: async ({ data }) => {
             const count = data.folders.deletedCount;
 
             toast.success(`${count} folder${count > 1 ? "s" : ""} deleted successfully`);
 
-            utils.folders.getAll.invalidate();
+            await utils.folders.getAll.invalidate();
             table.resetRowSelection();
         },
         onError: error => {
@@ -38,7 +38,9 @@ export function Toolbar<TData>({ table }: Readonly<ToolbarProps<TData>>) {
             await deleteFolders(
                 table.getFilteredSelectedRowModel().rows.map(row => (row.original as IFolder)._id),
             );
-        } catch {}
+        } catch {
+            // Ignore
+        }
     };
 
     return (

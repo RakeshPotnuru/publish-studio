@@ -1,15 +1,13 @@
 import type { Types } from "mongoose";
 
-import type { constants } from "../../../config/constants";
-
-export type TGhostStatus = (typeof constants.ghostStatus)[keyof typeof constants.ghostStatus];
+import type { GhostStatus } from "../../../config/constants";
 
 export interface IGhost {
     _id: Types.ObjectId;
     user_id: Types.ObjectId;
     api_url: string;
     admin_api_key: string;
-    status: TGhostStatus;
+    status: GhostStatus;
     created_at: Date;
     updated_at: Date;
 }
@@ -39,7 +37,7 @@ export interface IGhostCreatePostInput {
     title: string;
     html?: string;
     canonical_url?: string;
-    status?: TGhostStatus;
+    status?: GhostStatus;
     tags?: { name: string }[];
 }
 

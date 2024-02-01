@@ -4,7 +4,7 @@ import { Ratelimit } from "@upstash/ratelimit";
 import type { NextFunction } from "express";
 import { Redis } from "ioredis";
 
-import { constants } from "../config/constants";
+import { UserType } from "../config/constants";
 import type { IUser } from "../modules/user/user.types";
 
 const redis = new Redis(process.env.REDIS_URL);
@@ -49,12 +49,12 @@ export const rateLimiterMiddleware = (
 ) => {
     return async (next: NextFunction) => {
         let isBlocked = false;
-        if (user_type === constants.user.userTypes.PRO) {
+        if (user_type === UserType.PRO) {
             const { success } = await rateLimiter(limiter.pro ?? limiter.default).pro.limit(
                 identifier,
             );
             isBlocked = !success;
-        } else if (user_type === constants.user.userTypes.FREE) {
+        } else if (user_type === UserType.FREE) {
             const { success } = await rateLimiter(limiter.free ?? limiter.default).free.limit(
                 identifier,
             );

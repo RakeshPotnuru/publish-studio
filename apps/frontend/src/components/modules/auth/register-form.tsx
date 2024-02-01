@@ -14,6 +14,7 @@ import {
     FormMessage,
     Input,
 } from "@itsrakesh/ui";
+import { constants } from "@publish-studio/core/src/config/constants";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -22,7 +23,6 @@ import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { Shake } from "@/components/ui/shake";
-import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
 
@@ -102,7 +102,9 @@ export function RegisterForm() {
         try {
             setError(null);
             await register(data);
-        } catch {}
+        } catch {
+            // Ignore
+        }
     };
 
     const isLoading = isRegistering || form.formState.isSubmitting || isCaptchaVerificationLoading;

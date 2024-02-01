@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { constants } from "../../../config/constants";
+import { MediumStatus } from "../../../config/constants";
 import { protectedProcedure, router } from "../../../trpc";
 import MediumController from "./medium.controller";
 
@@ -9,7 +9,7 @@ const mediumRouter = router({
         .input(
             z.object({
                 api_key: z.string(),
-                status: z.nativeEnum(constants.mediumStatus),
+                status: z.nativeEnum(MediumStatus),
                 notify_followers: z.boolean(),
             }),
         )
@@ -19,7 +19,7 @@ const mediumRouter = router({
         .input(
             z.object({
                 api_key: z.string().optional(),
-                status: z.nativeEnum(constants.mediumStatus).optional(),
+                status: z.nativeEnum(MediumStatus).optional(),
                 notify_followers: z.boolean().optional(),
             }),
         )

@@ -24,7 +24,7 @@ export function EditorFooter({ editor, isLoading }: MenuProps & EditorFooterProp
     };
 
     const getSelection = () => {
-        const { view, state } = editor;
+        const { view, state, storage } = editor;
         const { from, to } = view.state.selection;
         const text = state.doc.textBetween(from, to, "");
         const words = text.split(" ").filter(word => word !== "");
@@ -32,8 +32,8 @@ export function EditorFooter({ editor, isLoading }: MenuProps & EditorFooterProp
         if (state.selection.empty) {
             return {
                 text: "",
-                characterCount: editor.storage.characterCount.characters(),
-                wordCount: editor.storage.characterCount.words(),
+                characterCount: storage.characterCount.characters(),
+                wordCount: storage.characterCount.words(),
             };
         }
 
@@ -53,7 +53,7 @@ export function EditorFooter({ editor, isLoading }: MenuProps & EditorFooterProp
     const readabilityScore = getReadabilityScore();
 
     return (
-        <div className="bg-background text-muted-foreground sticky bottom-0 flex flex-row items-center justify-between rounded-xl p-2 py-1 text-sm">
+        <div className="sticky bottom-0 flex flex-row items-center justify-between rounded-xl bg-background p-2 py-1 text-sm text-muted-foreground">
             <div className="flex flex-row items-center space-x-2">
                 <p>
                     {getSelection().characterCount || editor.storage.characterCount.characters()}{" "}
@@ -99,7 +99,7 @@ export function EditorFooter({ editor, isLoading }: MenuProps & EditorFooterProp
                         <span>
                             <Icons.Unlock
                                 onClick={handleEditable}
-                                className="text-success cursor-pointer hover:opacity-80"
+                                className="cursor-pointer text-success hover:opacity-80"
                             />
                         </span>
                     </Tooltip>
@@ -108,7 +108,7 @@ export function EditorFooter({ editor, isLoading }: MenuProps & EditorFooterProp
                         <span>
                             <Icons.Lock
                                 onClick={handleEditable}
-                                className="text-destructive cursor-pointer hover:opacity-80"
+                                className="cursor-pointer text-destructive hover:opacity-80"
                             />
                         </span>
                     </Tooltip>

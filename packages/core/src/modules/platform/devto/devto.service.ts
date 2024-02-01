@@ -3,10 +3,10 @@ import axios from "axios";
 import type { Types } from "mongoose";
 
 import defaultConfig from "../../../config/app.config";
-import { constants } from "../../../config/constants";
+import { Platform } from "../../../config/constants";
 import type { IPaginationOptions } from "../../../types/common.types";
 import User from "../../user/user.model";
-import Platform from "../platform.model";
+import PlatformModel from "../platform.model";
 import DevTo from "./devto.model";
 import type {
     IDevTo,
@@ -21,7 +21,7 @@ import type {
 } from "./devto.types";
 
 export default class DevToService {
-    private readonly PLATFORM = constants.user.platforms.DEVTO;
+    private readonly PLATFORM = Platform.DEVTO;
 
     private async devTo(user_id: Types.ObjectId) {
         const platform = await DevTo.findOne({ user_id }).exec();
@@ -62,7 +62,7 @@ export default class DevToService {
                 },
             }).exec();
 
-            await Platform.create({
+            await PlatformModel.create({
                 user_id: platform.user_id,
                 name: this.PLATFORM,
                 data: newPlatform._id,
@@ -98,7 +98,7 @@ export default class DevToService {
 
     async deletePlatform(user_id: Types.ObjectId): Promise<boolean> {
         try {
-            await Platform.findOneAndDelete({
+            await PlatformModel.findOneAndDelete({
                 user_id,
                 name: this.PLATFORM,
             }).exec();

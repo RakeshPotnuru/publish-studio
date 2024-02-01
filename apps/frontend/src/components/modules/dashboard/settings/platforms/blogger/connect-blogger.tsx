@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { toast } from "@itsrakesh/ui";
@@ -7,7 +8,6 @@ import { toast } from "@itsrakesh/ui";
 import { DotsLoader } from "@/components/ui/loaders/dots-loader";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
-import { useCallback, useEffect } from "react";
 
 export function ConnectBlogger() {
     const searchParams = useSearchParams();
@@ -36,7 +36,9 @@ export function ConnectBlogger() {
 
         try {
             await connect(code);
-        } catch (error) {}
+        } catch {
+            // Ignore
+        }
     }, [code, connect]);
 
     useEffect(() => {
@@ -44,9 +46,9 @@ export function ConnectBlogger() {
             router.replace(siteConfig.pages.settings.connections.link);
         }
 
-        (async () => {
-            await handleConnect();
-        })();
+        handleConnect().catch(() => {
+            // Ignore
+        });
     }, [code, handleConnect, router]);
 
     return (

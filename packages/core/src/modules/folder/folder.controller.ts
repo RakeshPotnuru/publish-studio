@@ -4,10 +4,10 @@ import type { Types } from "mongoose";
 import { type Context } from "../../trpc";
 import type { IPaginationOptions } from "../../types/common.types";
 import FolderService from "./folder.service";
-import type { IFolder } from "./folder.types";
+import type { TFolderCreateInput, TFolderUpdateInput } from "./folder.types";
 
 export default class FolderController extends FolderService {
-    async createFolderHandler(input: IFolder, ctx: Context) {
+    async createFolderHandler(input: Omit<TFolderCreateInput, "user_id">, ctx: Context) {
         const folder = await super.getFolderByName(input.name, ctx.user._id);
 
         if (folder) {
@@ -50,7 +50,10 @@ export default class FolderController extends FolderService {
         };
     }
 
-    async updateFolderHandler(input: { id: Types.ObjectId; folder: IFolder }, ctx: Context) {
+    async updateFolderHandler(
+        input: { id: Types.ObjectId; folder: TFolderUpdateInput },
+        ctx: Context,
+    ) {
         const isFolderExist = await super.getFolderById(input.id, ctx.user._id);
 
         if (!isFolderExist) {

@@ -35,7 +35,9 @@ export const Captcha = forwardRef<HCaptcha, CaptchaProps>(
             try {
                 setIsLoading(true);
                 await verify(token);
-            } catch {}
+            } catch {
+                // Ignore
+            }
         };
 
         if (!process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY) {

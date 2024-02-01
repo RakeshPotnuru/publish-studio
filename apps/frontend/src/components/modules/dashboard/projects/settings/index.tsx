@@ -65,7 +65,7 @@ export function ProjectSettings({ children, project, ...props }: Readonly<Projec
                 <div className="my-4 space-y-6">
                     <UpdateCategories project={project} />
                 </div>
-                <SheetFooter className="bg-background absolute bottom-0 w-full py-4 pr-12">
+                <SheetFooter className="absolute bottom-0 w-full bg-background py-4 pr-12">
                     {askingForConfirmation ? (
                         <div className="flex w-full justify-center rounded-lg border p-1">
                             <AskForConfirmation

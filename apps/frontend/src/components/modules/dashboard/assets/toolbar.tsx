@@ -2,13 +2,13 @@ import { useState } from "react";
 
 import { Button, Input, toast } from "@itsrakesh/ui";
 import type { IAsset } from "@publish-studio/core";
+import { MimeType } from "@publish-studio/core/src/config/constants";
 import type { Table } from "@tanstack/react-table";
 
 import { Icons } from "@/assets/icons";
 import { AskForConfirmation } from "@/components/ui/ask-for-confirmation";
 import { DataTableViewOptions } from "@/components/ui/data-table";
 import { DataTableFacetedFilter } from "@/components/ui/data-table/faceted-filter";
-import { constants } from "@/config/constants";
 import { trpc } from "@/utils/trpc";
 
 import type { TInsertImageOptions } from "./image-widget";
@@ -27,12 +27,12 @@ export function Toolbar<TData>({ table, isWidget, onImageInsert }: Readonly<Tool
     const utils = trpc.useUtils();
 
     const { mutateAsync: deleteAssets, isLoading } = trpc.assets.delete.useMutation({
-        onSuccess: ({ data }) => {
+        onSuccess: async ({ data }) => {
             const count = data.assets.deletedCount;
 
             toast.success(`${count} asset${count > 1 ? "s" : ""} deleted successfully`);
 
-            utils.assets.getAll.invalidate();
+            await utils.assets.getAll.invalidate();
             table.resetRowSelection();
         },
         onError: error => {
@@ -45,7 +45,9 @@ export function Toolbar<TData>({ table, isWidget, onImageInsert }: Readonly<Tool
             await deleteAssets(
                 table.getFilteredSelectedRowModel().rows.map(row => (row.original as IAsset)._id),
             );
-        } catch {}
+        } catch {
+            // Ignore
+        }
     };
 
     const handleAdd = (urls: string[], alts: string[], titles?: string[]) => {
@@ -72,7 +74,7 @@ export function Toolbar<TData>({ table, isWidget, onImageInsert }: Readonly<Tool
                     <DataTableFacetedFilter
                         column={table.getColumn("file_type")}
                         title="Type"
-                        options={Object.values(constants.asset.ALLOWED_MIMETYPES).map(mimetype => ({
+                        options={Object.values(MimeType).map(mimetype => ({
                             label: mimetype.split("/")[1],
                             value: mimetype,
                         }))}

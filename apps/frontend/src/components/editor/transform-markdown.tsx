@@ -29,7 +29,7 @@ import { marked } from "marked";
 const tableMap = new WeakMap<ProseMirrorNode, boolean>();
 
 function isInTable(node: ProseMirrorNode): boolean {
-    return tableMap.has(node);
+    return tableMap && tableMap.has(node);
 }
 
 export function renderHardBreak(
@@ -65,7 +65,7 @@ export function isPlainURL(
     index: number,
     side: number,
 ) {
-    if (link.attrs.title || !/^\w+:/.test(link.attrs.href)) return false;
+    if (link.attrs.title || !/^\w+:/.test(link.attrs.href as string)) return false;
     const content = parent.child(index + (side < 0 ? -1 : 0));
     if (!content.isText || content.text !== link.attrs.href || content.marks.at(-1) !== link)
         return false;
@@ -107,8 +107,10 @@ const serializerMarks = {
         ) {
             const href = mark.attrs.canonicalSrc || mark.attrs.href;
 
-            const title = mark.attrs.title ? mark.attrs.title : "";
-            return isPlainURL(mark, parent, index, -1) ? ">" : `](${state.esc(href)}${title})`;
+            const title = mark.attrs.title ?? "";
+            return isPlainURL(mark, parent, index, -1)
+                ? ">"
+                : `](${state.esc(href as string)}${title})`;
         },
     },
 };
@@ -164,5 +166,6 @@ export function deserialize(schema: ProseMirrorSchema, content: string): JSON | 
 
     const state = ProseMirrorDOMParser.fromSchema(schema).parse(body);
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return state.toJSON();
 }

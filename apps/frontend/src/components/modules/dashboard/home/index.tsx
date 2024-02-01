@@ -9,7 +9,7 @@ import { Stats } from "./stats";
 
 type HomeProps = React.HTMLAttributes<HTMLDivElement>;
 
-export function Home({ ...props }: HomeProps) {
+export function Home({ ...props }: Readonly<HomeProps>) {
     return (
         <div className="space-y-8" {...props}>
             <Heading className="text-center font-extrabold">

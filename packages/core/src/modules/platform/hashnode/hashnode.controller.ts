@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
 import defaultConfig from "../../../config/app.config";
-import { constants } from "../../../config/constants";
+import { Platform, PostStatus } from "../../../config/constants";
 import type { Context } from "../../../trpc";
 import type { TPostUpdateInput } from "../../post/post.types";
 import type { IProject } from "../../project/project.types";
@@ -174,8 +174,8 @@ export default class HashnodeController extends HashnodeService {
 
         if (!platform) {
             return {
-                platform: constants.user.platforms.DEVTO,
-                status: constants.postStatus.ERROR,
+                platform: Platform.DEVTO,
+                status: PostStatus.ERROR,
             };
         }
 
@@ -210,8 +210,8 @@ export default class HashnodeController extends HashnodeService {
 
         if (newPost.isError || !newPost.data) {
             return {
-                platform: constants.user.platforms.DEVTO,
-                status: constants.postStatus.ERROR,
+                platform: Platform.DEVTO,
+                status: PostStatus.ERROR,
             };
         }
 
@@ -221,8 +221,8 @@ export default class HashnodeController extends HashnodeService {
         const postSlug = newPost.data.publishPost.post.slug;
 
         return {
-            platform: constants.user.platforms.HASHNODE,
-            status: constants.postStatus.SUCCESS,
+            platform: Platform.HASHNODE,
+            status: PostStatus.SUCCESS,
             published_url: `${blogHandle}/${postSlug}`,
             post_id: newPost.data.publishPost.post.id,
         };

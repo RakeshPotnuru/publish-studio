@@ -34,7 +34,7 @@ export const columns: ColumnDef<IFolder>[] = [
         accessorKey: "name",
         header: "Name",
         cell: ({ row }) => (
-            <Link href={`${siteConfig.pages.folders.link}/${row.original._id}`}>
+            <Link href={`${siteConfig.pages.folders.link}/${row.original._id.toString()}`}>
                 <span title={row.original.name}>{shortenText(row.original.name, 18)}</span>
             </Link>
         ),

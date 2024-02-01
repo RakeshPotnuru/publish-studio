@@ -19,13 +19,13 @@ import {
     toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
+import { MediumStatus } from "@publish-studio/core/src/config/constants";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
-import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
 
@@ -35,7 +35,7 @@ interface MediumConnectFormProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const formSchema = z.object({
     api_key: z.string().min(1, { message: "API key is required" }),
-    status: z.nativeEnum(constants.mediumStatus).default(constants.mediumStatus.DRAFT),
+    status: z.nativeEnum(MediumStatus).default(MediumStatus.DRAFT),
     notify_followers: z.string().default("false"),
 });
 
@@ -60,7 +60,7 @@ export function MediumConnectForm({ setIsOpen, ...props }: Readonly<MediumConnec
         resolver: zodResolver(formSchema),
         defaultValues: {
             api_key: "",
-            status: constants.mediumStatus.DRAFT,
+            status: MediumStatus.DRAFT,
             notify_followers: "false",
         },
     });
@@ -102,7 +102,7 @@ export function MediumConnectForm({ setIsOpen, ...props }: Readonly<MediumConnec
                                             <HoverCardTrigger asChild>
                                                 <Button
                                                     variant="link"
-                                                    className="text-foreground h-max p-0"
+                                                    className="h-max p-0 text-foreground"
                                                 >
                                                     <Icons.Question />
                                                 </Button>
@@ -125,7 +125,7 @@ export function MediumConnectForm({ setIsOpen, ...props }: Readonly<MediumConnec
                                             </HoverCardContent>
                                         </HoverCard>
                                     </FormLabel>
-                                    <p className="text-muted-foreground text-xs">
+                                    <p className="text-xs text-muted-foreground">
                                         Your API key will be encrypted and stored securely.{" "}
                                         <Button
                                             type="button"
@@ -171,25 +171,19 @@ export function MediumConnectForm({ setIsOpen, ...props }: Readonly<MediumConnec
                                     >
                                         <FormItem className="flex items-center space-x-3 space-y-0">
                                             <FormControl>
-                                                <RadioGroupItem
-                                                    value={constants.mediumStatus.DRAFT}
-                                                />
+                                                <RadioGroupItem value={MediumStatus.DRAFT} />
                                             </FormControl>
                                             <FormLabel className="font-normal">Draft</FormLabel>
                                         </FormItem>
                                         <FormItem className="flex items-center space-x-3 space-y-0">
                                             <FormControl>
-                                                <RadioGroupItem
-                                                    value={constants.mediumStatus.PUBLIC}
-                                                />
+                                                <RadioGroupItem value={MediumStatus.PUBLIC} />
                                             </FormControl>
                                             <FormLabel className="font-normal">Public</FormLabel>
                                         </FormItem>
                                         <FormItem className="flex items-center space-x-3 space-y-0">
                                             <FormControl>
-                                                <RadioGroupItem
-                                                    value={constants.mediumStatus.UNLISTED}
-                                                />
+                                                <RadioGroupItem value={MediumStatus.UNLISTED} />
                                             </FormControl>
                                             <FormLabel className="font-normal">Unlisted</FormLabel>
                                         </FormItem>

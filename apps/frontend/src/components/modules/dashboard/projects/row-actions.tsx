@@ -1,6 +1,6 @@
+import { useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useState } from "react";
 
 import {
     Button,
@@ -12,12 +12,12 @@ import {
     toast,
 } from "@itsrakesh/ui";
 import type { IProject } from "@publish-studio/core";
+import { constants } from "@publish-studio/core/src/config/constants";
 import type { Row } from "@tanstack/react-table";
 import mongoose from "mongoose";
 
 import { Icons } from "@/assets/icons";
 import { AskForConfirmation } from "@/components/ui/ask-for-confirmation";
-import { constants } from "@/config/constants";
 import { trpc } from "@/utils/trpc";
 
 import { MoveProject } from "./move-project";
@@ -99,7 +99,7 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
         <>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="data-[state=open]:bg-muted flex size-8 p-0">
+                    <Button variant="ghost" className="flex size-8 p-0 data-[state=open]:bg-muted">
                         <Icons.RowActions className="size-4" />
                         <span className="sr-only">Open menu</span>
                     </Button>
@@ -153,7 +153,7 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
                                 }
                             }}
                             tabIndex={0}
-                            className="text-destructive hover:bg-accent hover:text-destructive relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+                            className="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm text-destructive outline-none transition-colors hover:bg-accent hover:text-destructive data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
                         >
                             <Icons.Delete className="mr-2 size-4" />
                             Delete

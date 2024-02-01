@@ -61,13 +61,15 @@ export function Unsplash({ onImageInsert }: Readonly<UnsplashProps>) {
 
     useEffect(() => {
         if (query) {
-            searchPhotos();
+            searchPhotos().catch(() => {
+                // Ignore
+            });
         }
     }, [pageIndex, pageSize, query, searchPhotos]);
 
     return (
         <div className="space-y-4">
-            <SearchInput provider="unsplash" handleSubmit={handleSearch} isLoading={isFetching} />
+            <SearchInput provider="Unsplash" handleSubmit={handleSearch} isLoading={isFetching} />
             <SearchBody
                 error={data?.data.photos.errors?.[0] || error?.message}
                 isLoading={isFetching}

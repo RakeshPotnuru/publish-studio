@@ -1,12 +1,12 @@
 import { Checkbox } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import type { IProject } from "@publish-studio/core";
+import { ProjectStatus } from "@publish-studio/core/src/config/constants";
 import type { ColumnDef } from "@tanstack/react-table";
 import { formatDistanceToNow } from "date-fns";
 
 import { Icons } from "@/assets/icons";
 import { DataTableColumnHeader } from "@/components/ui/data-table";
-import { constants } from "@/config/constants";
 import { shortenText } from "@/utils/text-shortener";
 
 import { RowActions } from "./row-actions";
@@ -14,19 +14,19 @@ import { RowActions } from "./row-actions";
 export const statuses = [
     {
         label: "Draft",
-        value: constants.project.status.DRAFT,
+        value: ProjectStatus.DRAFT,
         icon: Icons.Draft,
         color: "text-warning",
     },
     {
         label: "Published",
-        value: constants.project.status.PUBLISHED,
+        value: ProjectStatus.PUBLISHED,
         icon: Icons.Published,
         color: "text-success",
     },
     {
         label: "Scheduled",
-        value: constants.project.status.SCHEDULED,
+        value: ProjectStatus.SCHEDULED,
         icon: Icons.Schedule,
         color: "text-info",
     },
@@ -85,7 +85,7 @@ export const columns: ColumnDef<IProject>[] = [
             );
         },
         filterFn: (row, id, value) => {
-            return value.includes(row.getValue(id));
+            return value.includes(row.getValue(id)) as boolean;
         },
     },
     {
@@ -100,7 +100,7 @@ export const columns: ColumnDef<IProject>[] = [
             </span>
         ),
         filterFn: (row, id, value) => {
-            return value.includes(row.getValue(id));
+            return value.includes(row.getValue(id)) as boolean;
         },
     },
     {
@@ -115,7 +115,7 @@ export const columns: ColumnDef<IProject>[] = [
             </span>
         ),
         filterFn: (row, id, value) => {
-            return value.includes(row.getValue(id));
+            return value.includes(row.getValue(id)) as boolean;
         },
     },
     {

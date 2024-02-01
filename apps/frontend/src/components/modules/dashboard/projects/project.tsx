@@ -35,7 +35,7 @@ export const SideButton = forwardRef<HTMLButtonElement, React.HTMLAttributes<HTM
 );
 SideButton.displayName = "SideButton";
 
-export function Project({ ...props }: ProjectProps) {
+export function Project({ ...props }: Readonly<ProjectProps>) {
     const { projectId } = useParams();
 
     const { data, isFetching, error } = trpc.projects.getById.useQuery(
@@ -52,11 +52,11 @@ export function Project({ ...props }: ProjectProps) {
 
     const projectView = isFetching ? (
         <div className="flex flex-row space-x-4">
-            <div className="*:bg-background w-3/4 space-y-4">
+            <div className="w-3/4 space-y-4 *:bg-background">
                 <Skeleton className="h-14 rounded-full" />
                 <Skeleton className="h-screen rounded-3xl" />
             </div>
-            <div className="*:bg-background flex w-1/4 flex-col space-y-4">
+            <div className="flex w-1/4 flex-col space-y-4 *:bg-background">
                 <Skeleton className="h-14 rounded-full" />
                 <Skeleton className="h-screen rounded-3xl" />
             </div>
@@ -69,7 +69,7 @@ export function Project({ ...props }: ProjectProps) {
         <div {...props}>
             {error ? (
                 <div className="flex h-[80vh] items-center justify-center">
-                    <div className="bg-background flex w-max flex-col items-center space-y-4 rounded-lg p-10">
+                    <div className="flex w-max flex-col items-center space-y-4 rounded-lg bg-background p-10">
                         <ErrorBox title="Error" description={error.message} />
                         <Button variant="link" asChild>
                             <Link href={siteConfig.pages.dashboard.link}>

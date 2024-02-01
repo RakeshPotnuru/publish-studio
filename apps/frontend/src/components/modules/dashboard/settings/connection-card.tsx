@@ -145,7 +145,7 @@ export function ConnectionCard({
                             connected && (
                                 <Tooltip content="Connected" side="top">
                                     <span>
-                                        <Icons.Connected className="text-success text-sm" />
+                                        <Icons.Connected className="text-sm text-success" />
                                     </span>
                                 </Tooltip>
                             )
@@ -158,7 +158,7 @@ export function ConnectionCard({
                         profile_url && (
                             <Button
                                 variant="link"
-                                className="text-muted-foreground h-max w-max p-0"
+                                className="h-max w-max p-0 text-muted-foreground"
                                 asChild
                             >
                                 <Link href={profile_url} target="_blank">

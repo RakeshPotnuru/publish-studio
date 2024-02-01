@@ -1,4 +1,4 @@
-import type { constants } from "../../config/constants";
+import type { AuthMode, UserType } from "../../config/constants";
 
 export interface ILoginInput {
     email: string;
@@ -11,8 +11,8 @@ export interface IRegisterInput {
     email: string;
     password?: string;
     profile_pic?: string;
-    user_type: (typeof constants.user.userTypes)[keyof typeof constants.user.userTypes];
-    auth_modes?: (typeof constants.user.authModes)[keyof typeof constants.user.authModes][];
+    user_type: UserType;
+    auth_modes?: AuthMode[];
     google_sub?: string;
     is_verified?: boolean;
 }

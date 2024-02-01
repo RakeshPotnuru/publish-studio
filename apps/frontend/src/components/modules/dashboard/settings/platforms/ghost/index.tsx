@@ -2,10 +2,15 @@ import { useState } from "react";
 
 import { toast } from "@itsrakesh/ui";
 import type { IGhost } from "@publish-studio/core";
+import {
+    GhostStatus,
+    Platform,
+    PostStatus,
+    ProjectStatus,
+} from "@publish-studio/core/src/config/constants";
 import type { PaginationState } from "@tanstack/react-table";
 
 import { Images } from "@/assets/images";
-import { constants } from "@/config/constants";
 import { useEditor } from "@/hooks/use-editor";
 import { trpc } from "@/utils/trpc";
 
@@ -13,8 +18,6 @@ import { ConnectionCard } from "../../connection-card";
 import { ImportPostsBody } from "../import-dialog";
 import { GhostConnectForm } from "./connect-form";
 import { GhostEditForm } from "./edit-form";
-
-export type TGhostStatus = (typeof constants.ghostStatus)[keyof typeof constants.ghostStatus];
 
 interface GhostProps {
     data?: IGhost;
@@ -59,7 +62,7 @@ export function Ghost({ data, isLoading }: Readonly<GhostProps>) {
             editForm={
                 <GhostEditForm
                     setIsOpen={setIsOpen}
-                    status={data?.status ?? constants.ghostStatus.DRAFT}
+                    status={data?.status ?? GhostStatus.DRAFT}
                     api_url={data?.api_url ?? ""}
                 />
             }
@@ -130,18 +133,18 @@ export function ImportPosts() {
                 },
                 canonical_url: post.canonical_url ?? undefined,
                 cover_image: post.feature_image ?? undefined,
-                platforms: [constants.user.platforms.GHOST],
+                platforms: [Platform.GHOST],
                 published_at: new Date(post.published_at ?? Date.now()),
-                status: constants.project.status.PUBLISHED,
+                status: ProjectStatus.PUBLISHED,
             });
 
             await createPost({
-                platform: constants.user.platforms.GHOST,
+                platform: Platform.GHOST,
                 post_id: post.id,
                 project_id: data.project._id,
                 published_at: new Date(post.published_at ?? Date.now()),
                 published_url: post.url,
-                status: constants.postStatus.SUCCESS,
+                status: PostStatus.SUCCESS,
             });
 
             setImportedPosts([...importedPosts, id]);

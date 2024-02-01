@@ -38,7 +38,9 @@ export function PaymentSuccess() {
 
         try {
             await fetchSession(sessionId);
-        } catch {}
+        } catch {
+            // Ignore
+        }
     }, [sessionId, fetchSession]);
 
     useEffect(() => {
@@ -46,7 +48,9 @@ export function PaymentSuccess() {
             router.replace(siteConfig.pages.dashboard.link);
         }
 
-        handlePaymentSuccess();
+        handlePaymentSuccess().catch(() => {
+            // Ignore
+        });
     }, [sessionId, handlePaymentSuccess, router]);
 
     return (

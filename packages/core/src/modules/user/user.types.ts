@@ -1,10 +1,6 @@
 import type { Types } from "mongoose";
 
-import type { constants } from "../../config/constants";
-import type { TPlatformName } from "../platform/platform.types";
-
-type TAuthMode = (typeof constants.user.authModes)[keyof typeof constants.user.authModes];
-type TUserType = (typeof constants.user.userTypes)[keyof typeof constants.user.userTypes];
+import type { AuthMode, Platform, UserType } from "../../config/constants";
 
 export interface IUser {
     _id: Types.ObjectId;
@@ -13,11 +9,11 @@ export interface IUser {
     email: string;
     password?: string;
     profile_pic?: string;
-    user_type: TUserType;
-    platforms?: TPlatformName[];
+    user_type: UserType;
+    platforms?: Platform[];
     is_verified: boolean;
     last_login: Date;
-    auth_modes: TAuthMode[];
+    auth_modes: AuthMode[];
     google_sub?: string;
     stripe_customer_id?: string;
 }

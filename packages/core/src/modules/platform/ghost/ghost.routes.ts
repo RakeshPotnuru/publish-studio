@@ -1,9 +1,8 @@
 import { z } from "zod";
 
-import { constants } from "../../../config/constants";
+import { GhostStatus } from "../../../config/constants";
 import { protectedProcedure, router } from "../../../trpc";
 import GhostController from "./ghost.controller";
-import type { TGhostStatus } from "./ghost.types";
 
 const ghostRouter = router({
     connect: protectedProcedure
@@ -11,7 +10,7 @@ const ghostRouter = router({
             z.object({
                 api_url: z.string(),
                 admin_api_key: z.string(),
-                status: z.nativeEnum(constants.ghostStatus),
+                status: z.nativeEnum(GhostStatus),
             }),
         )
         .mutation(({ input, ctx }) => new GhostController().createPlatformHandler(input, ctx)),
@@ -21,7 +20,7 @@ const ghostRouter = router({
             z.object({
                 api_url: z.string().optional(),
                 admin_api_key: z.string().optional(),
-                status: z.custom<TGhostStatus>().optional(),
+                status: z.nativeEnum(GhostStatus).optional(),
             }),
         )
         .mutation(({ input, ctx }) => new GhostController().updatePlatformHandler(input, ctx)),

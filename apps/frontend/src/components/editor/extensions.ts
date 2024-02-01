@@ -1,3 +1,4 @@
+import { constants } from "@publish-studio/core/src/config/constants";
 import Blockquote from "@tiptap/extension-blockquote";
 import Bold from "@tiptap/extension-bold";
 import BulletList from "@tiptap/extension-bullet-list";
@@ -29,15 +30,13 @@ import Underline from "@tiptap/extension-underline";
 import { mergeAttributes } from "@tiptap/react";
 import { all, createLowlight } from "lowlight";
 
-import { constants } from "@/config/constants";
-
 import SpeechRecognition from "./custom-extensions/speech-recognition";
 
 const lowlight = createLowlight(all);
 
-type Levels = 1 | 2 | 3 | 4 | 5 | 6;
+type Level = 1 | 2 | 3 | 4 | 5 | 6;
 
-const classes: Record<Levels, string> = {
+const classes: Record<Level, string> = {
     1: "text-4xl",
     2: "text-3xl",
     3: "text-2xl",
@@ -104,8 +103,8 @@ export const extensions = [
         levels: [1, 2, 3, 4, 5, 6],
     }).extend({
         renderHTML({ node, HTMLAttributes }) {
-            const hasLevel = this.options.levels.includes(node.attrs.level);
-            const level: Levels = hasLevel ? node.attrs.level : this.options.levels[0];
+            const hasLevel = this.options.levels.includes(node.attrs.level as Level);
+            const level: Level = hasLevel ? node.attrs.level : this.options.levels[0];
 
             return [
                 `h${level}`,

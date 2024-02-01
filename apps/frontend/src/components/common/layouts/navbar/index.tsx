@@ -17,6 +17,7 @@ import {
     Skeleton,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
+import { UserType } from "@publish-studio/core/src/config/constants";
 import { useCookies } from "react-cookie";
 
 import { siteConfig } from "@/config/site";
@@ -55,8 +56,8 @@ const NavItem = ({
 
 type NavbarProps = React.HTMLAttributes<HTMLElement>;
 
-export function Navbar({ className, ...props }: NavbarProps) {
-    const [_, __, removeCookie] = useCookies(["ps_access_token"]);
+export function Navbar({ className, ...props }: Readonly<NavbarProps>) {
+    const removeCookie = useCookies(["ps_access_token"])[2];
 
     const { user, setUser, setIsLoading } = useUserStore();
 
@@ -98,7 +99,7 @@ export function Navbar({ className, ...props }: NavbarProps) {
             </Link>
             <div className="flex flex-row items-center space-x-2">
                 {isFetching ||
-                    (user?.user_type !== "pro" && (
+                    (user?.user_type !== UserType.PRO && (
                         <ProButton size="sm">
                             <Icons.Pro className="mr-2 size-4" />
                             Upgrade
@@ -141,10 +142,10 @@ export function Navbar({ className, ...props }: NavbarProps) {
                     <DropdownMenuContent className="w-48" align="end" forceMount>
                         <DropdownMenuLabel className="grid grid-cols-2 items-center">
                             My Account{" "}
-                            {user?.user_type === "pro" && (
+                            {user?.user_type === UserType.PRO && (
                                 <Tooltip content="Pro">
                                     <span>
-                                        <Icons.Pro className="text-primary mr-2 size-4" />
+                                        <Icons.Pro className="mr-2 size-4 text-primary" />
                                     </span>
                                 </Tooltip>
                             )}

@@ -17,6 +17,7 @@ import {
     toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
+import { constants } from "@publish-studio/core/src/config/constants";
 import type { Types } from "mongoose";
 import mongoose from "mongoose";
 import { useForm } from "react-hook-form";
@@ -24,7 +25,6 @@ import { z } from "zod";
 
 import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
-import { constants } from "@/config/constants";
 import { trpc } from "@/utils/trpc";
 
 interface EditFolderProps extends React.HTMLAttributes<HTMLDialogElement> {
@@ -52,9 +52,9 @@ export function EditFolder({ children, ...props }: Readonly<EditFolderProps>) {
     const utils = trpc.useUtils();
 
     const { mutateAsync: editFolder, isLoading } = trpc.folders.update.useMutation({
-        onSuccess() {
+        onSuccess: async () => {
             toast.success("Folder successfully updated");
-            utils.folders.getAll.invalidate();
+            await utils.folders.getAll.invalidate();
             setOpen(false);
         },
         onError(error) {
@@ -77,7 +77,9 @@ export function EditFolder({ children, ...props }: Readonly<EditFolderProps>) {
                 id: new mongoose.Types.ObjectId(props.folderId),
                 folder: data,
             });
-        } catch {}
+        } catch {
+            // Ignore
+        }
     };
 
     return (

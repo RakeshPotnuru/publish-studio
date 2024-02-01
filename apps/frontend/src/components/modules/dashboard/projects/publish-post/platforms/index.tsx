@@ -13,6 +13,7 @@ import {
     Skeleton,
 } from "@itsrakesh/ui";
 import type { IPlatform, IProject } from "@publish-studio/core";
+import { Platform, PostStatus } from "@publish-studio/core/src/config/constants";
 import { intlFormatDistance } from "date-fns";
 import type { UseFormReturn } from "react-hook-form";
 import type { z } from "zod";
@@ -21,8 +22,8 @@ import { Icons } from "@/assets/icons";
 import { Images } from "@/assets/images";
 import { Center } from "@/components/ui/center";
 import { ErrorBox } from "@/components/ui/error-box";
+import { Heading } from "@/components/ui/heading";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
-import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
 
@@ -35,7 +36,7 @@ import { WordPress } from "./wordpress";
 
 interface IPlatformConfig {
     label: string;
-    value: (typeof constants.user.platforms)[keyof typeof constants.user.platforms];
+    value: (typeof Platform)[keyof typeof Platform];
     logo: string;
     component: (
         form: UseFormReturn<z.infer<typeof formSchema>>,
@@ -46,7 +47,7 @@ interface IPlatformConfig {
 const platformConfig: IPlatformConfig[] = [
     {
         label: "Dev.to",
-        value: constants.user.platforms.DEVTO,
+        value: Platform.DEVTO,
         logo: Images.devLogo,
         component: (form: UseFormReturn<z.infer<typeof formSchema>>, isLoading) => (
             <Dev form={form} isLoading={isLoading} />
@@ -54,7 +55,7 @@ const platformConfig: IPlatformConfig[] = [
     },
     {
         label: "Medium",
-        value: constants.user.platforms.MEDIUM,
+        value: Platform.MEDIUM,
         logo: Images.mediumLogo,
         component: (form: UseFormReturn<z.infer<typeof formSchema>>, isLoading) => (
             <Medium form={form} isLoading={isLoading} />
@@ -62,13 +63,13 @@ const platformConfig: IPlatformConfig[] = [
     },
     {
         label: "Hashnode",
-        value: constants.user.platforms.HASHNODE,
+        value: Platform.HASHNODE,
         logo: Images.hashnodeLogo,
         component: () => <></>,
     },
     {
         label: "Ghost",
-        value: constants.user.platforms.GHOST,
+        value: Platform.GHOST,
         logo: Images.ghostLogo,
         component: (form: UseFormReturn<z.infer<typeof formSchema>>, isLoading) => (
             <Ghost form={form} isLoading={isLoading} />
@@ -76,7 +77,7 @@ const platformConfig: IPlatformConfig[] = [
     },
     {
         label: "WordPress",
-        value: constants.user.platforms.WORDPRESS,
+        value: Platform.WORDPRESS,
         logo: Images.wordpressLogo,
         component: (form: UseFormReturn<z.infer<typeof formSchema>>, isLoading) => (
             <WordPress form={form} isLoading={isLoading} />
@@ -84,7 +85,7 @@ const platformConfig: IPlatformConfig[] = [
     },
     {
         label: "Blogger",
-        value: constants.user.platforms.BLOGGER,
+        value: Platform.BLOGGER,
         logo: Images.bloggerLogo,
         component: (form: UseFormReturn<z.infer<typeof formSchema>>, isLoading) => (
             <Blogger form={form} isLoading={isLoading} />
@@ -155,8 +156,9 @@ export const PlatformsField = ({
                                                         publishedPlatform =>
                                                             publishedPlatform.platform ===
                                                             platform.value,
-                                                    )?.status === "success"
+                                                    )?.status === PostStatus.SUCCESS
                                                 }
+                                                {...field}
                                             />
                                         </FormControl>
                                         <FormLabel className="text-sm font-normal">
@@ -168,7 +170,7 @@ export const PlatformsField = ({
                                     {publishedPlatforms?.find(
                                         publishedPlatform =>
                                             publishedPlatform.platform === platform.value,
-                                    )?.status === constants.postStatus.SUCCESS &&
+                                    )?.status === PostStatus.SUCCESS &&
                                         publishedPlatforms.find(
                                             publishedPlatform =>
                                                 publishedPlatform.platform === platform.value,
@@ -197,7 +199,7 @@ export const PlatformsField = ({
                                     {publishedPlatforms?.find(
                                         publishedPlatform =>
                                             publishedPlatform.platform === platform.value,
-                                    )?.status === constants.postStatus.ERROR && (
+                                    )?.status === PostStatus.ERROR && (
                                         <div className="flex items-center space-x-2">
                                             <Badge variant="destructive">Failed</Badge>
                                             <Button
@@ -225,11 +227,11 @@ export const PlatformsField = ({
                                     {publishedPlatforms?.find(
                                         publishedPlatform =>
                                             publishedPlatform.platform === platform.value,
-                                    )?.status === constants.postStatus.PENDING && (
+                                    )?.status === PostStatus.PENDING && (
                                         <div className="flex items-center space-x-2">
                                             <Badge variant="warning">Pending</Badge>
                                             {scheduledAt && new Date(scheduledAt) > new Date() ? (
-                                                <p className="text-muted-foreground text-sm">
+                                                <p className="text-sm text-muted-foreground">
                                                     {intlFormatDistance(
                                                         new Date(scheduledAt),
                                                         new Date(),
@@ -270,7 +272,7 @@ export const PlatformsField = ({
             render={() => (
                 <FormItem className="w-full">
                     <div className="mb-4">
-                        <FormLabel className="text-base">Platforms</FormLabel>
+                        <Heading className="text-base">Platforms</Heading>
                         <FormDescription>
                             Select platforms to publish your post to.{" "}
                             <Button

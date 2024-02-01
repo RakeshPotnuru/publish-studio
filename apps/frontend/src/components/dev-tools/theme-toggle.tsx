@@ -12,7 +12,7 @@ export function ThemeToggleButton() {
         <aside>
             <Button
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                className="text-foreground fixed bottom-3 right-14 z-50"
+                className="fixed bottom-3 right-14 z-50 text-foreground"
                 size="icon"
             >
                 <Icons.Sun />

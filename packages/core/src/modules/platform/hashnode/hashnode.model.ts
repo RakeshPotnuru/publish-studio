@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import { fieldEncryption } from "mongoose-field-encryption";
 
-import { constants } from "../../../config/constants";
+import { Platform } from "../../../config/constants";
 import type { IHashnode } from "./hashnode.types";
 
 const HashnodeSchema = new Schema<IHashnode>(
@@ -33,4 +33,4 @@ HashnodeSchema.plugin(fieldEncryption, {
     encryptNull: false,
 });
 
-export default mongoose.model(constants.user.platforms.HASHNODE, HashnodeSchema);
+export default mongoose.model(Platform.HASHNODE, HashnodeSchema);

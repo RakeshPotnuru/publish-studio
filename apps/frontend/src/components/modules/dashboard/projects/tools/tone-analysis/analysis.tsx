@@ -1,21 +1,17 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
+import { Sentiment } from "@publish-studio/core/src/config/constants";
 import type { ChartData, ChartOptions } from "chart.js/auto";
 import Chart, { CategoryScale } from "chart.js/auto";
 import { useTheme } from "next-themes";
 import { Bar } from "react-chartjs-2";
-
-import { constants } from "@/config/constants";
-
-export type TSentimentLabel =
-    (typeof constants.project.tone_analysis.sentiments)[keyof typeof constants.project.tone_analysis.sentiments];
 
 export type TEmotionScores = {
     [key in "joy" | "anger" | "disgust" | "fear" | "sadness"]?: number;
 };
 
 export interface IToneAnalysis {
-    sentiment: TSentimentLabel;
+    sentiment: Sentiment;
     emotion: TEmotionScores;
 }
 
@@ -27,22 +23,22 @@ Chart.register(CategoryScale);
 
 const sentiments: {
     label: string;
-    value: TSentimentLabel;
+    value: Sentiment;
     className: string;
 }[] = [
     {
         label: "😃 Positive",
-        value: constants.project.tone_analysis.sentiments.POSITIVE,
+        value: Sentiment.POSITIVE,
         className: "text-success",
     },
     {
         label: "😐 Neutral",
-        value: constants.project.tone_analysis.sentiments.NEUTRAL,
+        value: Sentiment.NEUTRAL,
         className: "text-neutral-500",
     },
     {
         label: "😟 Negative",
-        value: constants.project.tone_analysis.sentiments.NEGATIVE,
+        value: Sentiment.NEGATIVE,
         className: "text-destructive",
     },
 ];

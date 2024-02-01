@@ -49,7 +49,7 @@ export function SearchBody({
                 ))}
             </div>
         ) : (
-            <Center className="text-muted-foreground h-24">No results</Center>
+            <Center className="h-24 text-muted-foreground">No results</Center>
         );
 
     const searchBodyView = isLoading ? (

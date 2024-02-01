@@ -5,6 +5,7 @@ import type { Job } from "bullmq";
 import { Queue, Worker } from "bullmq";
 
 import defaultConfig, { bullMQConnectionOptions } from "../../config/app.config";
+import type { EmailTemplate } from "../../config/constants";
 import { constants } from "../../config/constants";
 import type { ISES } from "../../types/aws.types";
 
@@ -20,7 +21,7 @@ export default ses;
 
 export const sendEmail = async (
     emails: string[],
-    template: (typeof constants.emailTemplates)[keyof typeof constants.emailTemplates],
+    template: EmailTemplate,
     variables: Record<string, string>,
     from_address: string,
 ) => {
@@ -52,7 +53,7 @@ export const sendEmail = async (
 
 export interface IEmail {
     emails: string[];
-    template: (typeof constants.emailTemplates)[keyof typeof constants.emailTemplates];
+    template: EmailTemplate;
     variables: Record<string, string>;
     from_address: string;
     scheduled_at: Date;
@@ -78,8 +79,7 @@ export const scheduleEmail = async (data: IEmail) => {
             async (job: Job) => {
                 await sendEmail(
                     job.data.emails as string[],
-                    job.data
-                        .template as (typeof constants.emailTemplates)[keyof typeof constants.emailTemplates],
+                    job.data.template as EmailTemplate,
                     job.data.variables as Record<string, string>,
                     job.data.from_address as string,
                 );

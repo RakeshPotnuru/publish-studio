@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 
 import { toast } from "@itsrakesh/ui";
 import type { IBlogger } from "@publish-studio/core";
+import { Platform, PostStatus, ProjectStatus } from "@publish-studio/core/src/config/constants";
 
 import { Images } from "@/assets/images";
-import { constants } from "@/config/constants";
 import { useEditor } from "@/hooks/use-editor";
 import { trpc } from "@/utils/trpc";
 
@@ -133,18 +133,18 @@ export function ImportPosts() {
                 tags: {
                     blogger_tags: post.labels,
                 },
-                platforms: [constants.user.platforms.BLOGGER],
+                platforms: [Platform.BLOGGER],
                 published_at: new Date(post.published),
-                status: constants.project.status.PUBLISHED,
+                status: ProjectStatus.PUBLISHED,
             });
 
             await createPost({
-                platform: constants.user.platforms.BLOGGER,
+                platform: Platform.BLOGGER,
                 post_id: post.id,
                 project_id: data.project._id,
                 published_at: new Date(post.published),
                 published_url: post.url,
-                status: constants.postStatus.SUCCESS,
+                status: PostStatus.SUCCESS,
             });
 
             setImportedPosts([...importedPosts, id]);

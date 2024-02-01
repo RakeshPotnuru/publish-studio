@@ -29,7 +29,7 @@ const formSchema = z.object({
     categories: z.string(),
 });
 
-export function UpdateCategories({ project }: UpdateCategoriesProps) {
+export function UpdateCategories({ project }: Readonly<UpdateCategoriesProps>) {
     const tooltipRef = useRef<HTMLButtonElement>(null);
     const utils = trpc.useUtils();
 

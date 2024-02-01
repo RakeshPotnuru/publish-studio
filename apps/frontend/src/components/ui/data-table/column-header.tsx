@@ -43,7 +43,7 @@ export function DataTableColumnHeader<TData, TValue>({
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="data-[state=open]:bg-accent -ml-3 h-8"
+                        className="-ml-3 h-8 data-[state=open]:bg-accent"
                     >
                         <span className="text-sm">{title}</span>
                         {sortIcon}
@@ -51,16 +51,16 @@ export function DataTableColumnHeader<TData, TValue>({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start">
                     <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
-                        <Icons.SortAsc className="text-muted-foreground/70 mr-2 size-3.5" />
+                        <Icons.SortAsc className="mr-2 size-3.5 text-muted-foreground/70" />
                         Asc
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
-                        <Icons.SortDesc className="text-muted-foreground/70 mr-2 size-3.5" />
+                        <Icons.SortDesc className="mr-2 size-3.5 text-muted-foreground/70" />
                         Desc
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
-                        <Icons.Hide className="text-muted-foreground/70 mr-2 size-3.5" />
+                        <Icons.Hide className="mr-2 size-3.5 text-muted-foreground/70" />
                         Hide
                     </DropdownMenuItem>
                 </DropdownMenuContent>

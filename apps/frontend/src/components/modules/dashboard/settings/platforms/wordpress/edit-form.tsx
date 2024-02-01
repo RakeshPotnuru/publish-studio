@@ -15,12 +15,12 @@ import {
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import type { IWordPress } from "@publish-studio/core";
+import { WordPressStatus } from "@publish-studio/core/src/config/constants";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { ErrorBox } from "@/components/ui/error-box";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
-import { constants } from "@/config/constants";
 import { trpc } from "@/utils/trpc";
 
 interface WordPressEditFormProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -31,7 +31,7 @@ interface WordPressEditFormProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const formSchema = z.object({
     api_key: z.string().optional(),
-    status: z.nativeEnum(constants.wordpressStatus),
+    status: z.nativeEnum(WordPressStatus),
     publicize: z.string(),
 });
 
@@ -105,33 +105,25 @@ export function WordPressEditForm({
                                     >
                                         <FormItem className="flex items-center space-x-3 space-y-0">
                                             <FormControl>
-                                                <RadioGroupItem
-                                                    value={constants.wordpressStatus.DRAFT}
-                                                />
+                                                <RadioGroupItem value={WordPressStatus.DRAFT} />
                                             </FormControl>
                                             <FormLabel className="font-normal">Draft</FormLabel>
                                         </FormItem>
                                         <FormItem className="flex items-center space-x-3 space-y-0">
                                             <FormControl>
-                                                <RadioGroupItem
-                                                    value={constants.wordpressStatus.PUBLISH}
-                                                />
+                                                <RadioGroupItem value={WordPressStatus.PUBLISH} />
                                             </FormControl>
                                             <FormLabel className="font-normal">Publish</FormLabel>
                                         </FormItem>
                                         <FormItem className="flex items-center space-x-3 space-y-0">
                                             <FormControl>
-                                                <RadioGroupItem
-                                                    value={constants.wordpressStatus.PRIVATE}
-                                                />
+                                                <RadioGroupItem value={WordPressStatus.PRIVATE} />
                                             </FormControl>
                                             <FormLabel className="font-normal">Private</FormLabel>
                                         </FormItem>
                                         <FormItem className="flex items-center space-x-3 space-y-0">
                                             <FormControl>
-                                                <RadioGroupItem
-                                                    value={constants.wordpressStatus.PENDING}
-                                                />
+                                                <RadioGroupItem value={WordPressStatus.PENDING} />
                                             </FormControl>
                                             <FormLabel className="font-normal">Pending</FormLabel>
                                         </FormItem>

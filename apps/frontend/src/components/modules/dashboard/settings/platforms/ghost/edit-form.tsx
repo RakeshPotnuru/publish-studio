@@ -19,28 +19,26 @@ import {
     toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
+import { GhostStatus } from "@publish-studio/core/src/config/constants";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
-import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
-
-import type { TGhostStatus } from ".";
 
 interface DevEditFormProps extends React.HTMLAttributes<HTMLDivElement> {
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
     api_url: string;
-    status: TGhostStatus;
+    status: GhostStatus;
 }
 
 const formSchema = z.object({
     admin_api_key: z.string().optional(),
     api_url: z.string().url().optional(),
-    status: z.nativeEnum(constants.ghostStatus).optional(),
+    status: z.nativeEnum(GhostStatus).optional(),
 });
 
 export function GhostEditForm({ status, setIsOpen, ...props }: Readonly<DevEditFormProps>) {
@@ -101,7 +99,7 @@ export function GhostEditForm({ status, setIsOpen, ...props }: Readonly<DevEditF
                                             <HoverCardTrigger asChild>
                                                 <Button
                                                     variant="link"
-                                                    className="text-foreground h-max p-0"
+                                                    className="h-max p-0 text-foreground"
                                                 >
                                                     <Icons.Question />
                                                 </Button>
@@ -124,7 +122,7 @@ export function GhostEditForm({ status, setIsOpen, ...props }: Readonly<DevEditF
                                             </HoverCardContent>
                                         </HoverCard>
                                     </FormLabel>
-                                    <p className="text-muted-foreground text-xs">
+                                    <p className="text-xs text-muted-foreground">
                                         Your API key will be encrypted and stored securely.{" "}
                                         <Button
                                             type="button"
@@ -168,7 +166,7 @@ export function GhostEditForm({ status, setIsOpen, ...props }: Readonly<DevEditF
                                             <HoverCardTrigger asChild>
                                                 <Button
                                                     variant="link"
-                                                    className="text-foreground h-max p-0"
+                                                    className="h-max p-0 text-foreground"
                                                 >
                                                     <Icons.Question />
                                                 </Button>
@@ -219,17 +217,13 @@ export function GhostEditForm({ status, setIsOpen, ...props }: Readonly<DevEditF
                                     >
                                         <FormItem className="flex items-center space-x-3 space-y-0">
                                             <FormControl>
-                                                <RadioGroupItem
-                                                    value={constants.ghostStatus.DRAFT}
-                                                />
+                                                <RadioGroupItem value={GhostStatus.DRAFT} />
                                             </FormControl>
                                             <FormLabel className="font-normal">Draft</FormLabel>
                                         </FormItem>
                                         <FormItem className="flex items-center space-x-3 space-y-0">
                                             <FormControl>
-                                                <RadioGroupItem
-                                                    value={constants.ghostStatus.PUBLISHED}
-                                                />
+                                                <RadioGroupItem value={GhostStatus.PUBLISHED} />
                                             </FormControl>
                                             <FormLabel className="font-normal">Published</FormLabel>
                                         </FormItem>

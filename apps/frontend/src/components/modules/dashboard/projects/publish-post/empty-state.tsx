@@ -7,7 +7,7 @@ import { siteConfig } from "@/config/site";
 
 export function EmptyState() {
     return (
-        <div className="text-muted-foreground flex h-full flex-col items-center justify-center space-y-4 text-center">
+        <div className="flex h-full flex-col items-center justify-center space-y-4 text-center text-muted-foreground">
             <p>
                 Looks like you haven&apos;t connected any accounts yet. Connect your accounts and
                 get your content rolling.

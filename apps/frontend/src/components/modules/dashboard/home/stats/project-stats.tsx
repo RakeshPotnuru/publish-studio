@@ -62,7 +62,7 @@ export function ProjectStats() {
     const chartView = chartData.labels?.length ? (
         <Line data={chartData} options={config} />
     ) : (
-        <div className="bg-secondary text-muted-foreground flex h-full w-80 items-center justify-center">
+        <div className="flex h-full w-80 items-center justify-center bg-secondary text-muted-foreground">
             No enough data
         </div>
     );

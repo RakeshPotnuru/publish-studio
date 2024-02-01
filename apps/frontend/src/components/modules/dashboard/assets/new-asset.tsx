@@ -14,6 +14,7 @@ import {
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import type { IAsset } from "@publish-studio/core";
+import { constants, MimeType } from "@publish-studio/core/src/config/constants";
 import axios from "axios";
 import mongoose from "mongoose";
 
@@ -21,7 +22,6 @@ import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { Tooltip } from "@/components/ui/tooltip";
-import { constants } from "@/config/constants";
 import { formatFileSize } from "@/utils/format-file-size";
 import { shortenText } from "@/utils/text-shortener";
 import { trpc } from "@/utils/trpc";
@@ -72,7 +72,7 @@ export function NewAssetDialog({
     };
 
     const validateFile = (file: File) => {
-        const allowedMimeTypes = Object.values(constants.asset.ALLOWED_MIMETYPES);
+        const allowedMimeTypes = Object.values(MimeType);
 
         if (!allowedMimeTypes.includes(file.type as (typeof allowedMimeTypes)[number])) {
             setError({
@@ -154,7 +154,7 @@ export function NewAssetDialog({
 
             toast.success("Image has been uploaded successfully");
 
-            utils.assets.getAll.invalidate();
+            await utils.assets.getAll.invalidate();
             setOpen(false);
         } catch {
             await deleteAsset([data.asset._id]);
@@ -173,7 +173,7 @@ export function NewAssetDialog({
                     <DialogTitle>Upload new asset</DialogTitle>
                     <DialogDescription>
                         Supported formats:{" "}
-                        {Object.values(constants.asset.ALLOWED_MIMETYPES)
+                        {Object.values(MimeType)
                             .map(mimeType => mimeType.split("/")[1].toUpperCase())
                             .join(", ")}
                         <br />
@@ -200,7 +200,7 @@ export function NewAssetDialog({
                             <Icons.ImageFile className="size-8" />
                             <div className="flex flex-col">
                                 <p className="text-sm font-medium">{shortenText(file.name, 20)}</p>
-                                <p className="text-muted-foreground text-xs">
+                                <p className="text-xs text-muted-foreground">
                                     {formatFileSize(file.size)}
                                 </p>
                             </div>
@@ -223,7 +223,7 @@ export function NewAssetDialog({
                                 ref={fileRef}
                                 onChange={handleChange}
                                 type="file"
-                                accept={Object.values(constants.asset.ALLOWED_MIMETYPES).join(", ")}
+                                accept={Object.values(MimeType).join(", ")}
                                 className="hidden"
                             />
                             <Button

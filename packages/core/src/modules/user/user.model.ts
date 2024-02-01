@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-import { constants } from "../../config/constants";
+import { AuthMode, constants,Platform, UserType } from "../../config/constants";
 import type { IUser } from "./user.types";
 
 const UserSchema = new Schema<IUser>(
@@ -22,18 +22,18 @@ const UserSchema = new Schema<IUser>(
         profile_pic: String,
         user_type: {
             type: String,
-            enum: constants.user.userTypes,
+            enum: UserType,
             required: true,
-            default: constants.user.userTypes.FREE,
+            default: UserType.FREE,
         },
-        platforms: [{ type: String, enum: constants.user.platforms }],
+        platforms: [{ type: String, enum: Platform }],
         is_verified: { type: Boolean, required: true, default: false },
         last_login: { type: Date, required: true, default: Date.now },
         auth_modes: {
             type: [String],
-            enum: constants.user.authModes,
+            enum: AuthMode,
             required: true,
-            default: [constants.user.authModes.CLASSIC],
+            default: [AuthMode.CLASSIC],
         },
         google_sub: String,
         stripe_customer_id: String,

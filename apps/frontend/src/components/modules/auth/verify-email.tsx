@@ -37,7 +37,9 @@ export function VerifyEmail() {
         try {
             setError(null);
             await verifyEmail({ token });
-        } catch {}
+        } catch {
+            // Ignore
+        }
     }, [token, verifyEmail]);
 
     useEffect(() => {
@@ -45,7 +47,9 @@ export function VerifyEmail() {
             return;
         }
 
-        handleVerifyEmail();
+        handleVerifyEmail().catch(() => {
+            // Ignore
+        });
     }, [token, handleVerifyEmail]);
 
     if (!token) {

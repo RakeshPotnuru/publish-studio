@@ -1,18 +1,22 @@
 import type { Types } from "mongoose";
 
-import { constants } from "../../../config/constants";
+import type { Platform } from "../../../config/constants";
+import { PostStatus, ProjectStatus } from "../../../config/constants";
 import { createCaller } from "../../../routes";
 import type { Context } from "../../../trpc";
-import type { TPlatformName } from "../../platform/platform.types";
 import type { IProject } from "../../project/project.types";
 import PostController from "../post.controller";
 import type { IPost } from "../post.types";
 import PublishHelpers from "./publish.helpers";
 
 export default class PublishService extends PostController {
-    async publishPost(platforms: TPlatformName[], project: IProject, user_id: Types.ObjectId) {
+    async publishPost(platforms: Platform[], project: IProject, user_id: Types.ObjectId) {
         const publishHelpers = new PublishHelpers();
         const posts = await super.getPostsByProjectId(project._id, user_id);
+
+        if (!posts) {
+            return;
+        }
 
         let successCount = 0;
         for (const platform of platforms) {
@@ -28,25 +32,24 @@ export default class PublishService extends PostController {
         await super.updateProjectById(
             project._id,
             {
-                status:
-                    successCount > 0
-                        ? constants.project.status.PUBLISHED
-                        : constants.project.status.DRAFT,
+                status: successCount > 0 ? ProjectStatus.PUBLISHED : ProjectStatus.DRAFT,
             },
             user_id,
         );
     }
 
     createCaller(user_id: Types.ObjectId) {
+        /* eslint-disable @typescript-eslint/no-explicit-any */
         return createCaller({
             req: {} as any,
             res: {} as any,
             user: { _id: user_id } as any,
         });
+        /* eslint-enable @typescript-eslint/no-explicit-any */
     }
 
     async handlePlatformPost(
-        platform: TPlatformName,
+        platform: Platform,
         posts: IPost[],
         project: IProject,
         user_id: Types.ObjectId,
@@ -54,7 +57,7 @@ export default class PublishService extends PostController {
     ) {
         const post = posts.find(post => post.platform === platform);
 
-        if (!post || post.status === constants.postStatus.SUCCESS) {
+        if (!post || post.status === PostStatus.SUCCESS) {
             return 0;
         }
 
@@ -69,7 +72,7 @@ export default class PublishService extends PostController {
             const response = await controller.createPostHandler({ post: project }, user_id);
             await super.updatePost(post._id, response);
 
-            const isSuccess = response.status === constants.postStatus.SUCCESS;
+            const isSuccess = response.status === PostStatus.SUCCESS;
 
             await caller.notifications.create({
                 type: isSuccess ? "Publish post" : "Publish Post failed",
@@ -85,15 +88,19 @@ export default class PublishService extends PostController {
         }
     }
 
-    async editPost(platforms: TPlatformName[], project: IProject, ctx: Context) {
+    async editPost(platforms: Platform[], project: IProject, ctx: Context) {
         const publishHelpers = new PublishHelpers();
 
         const posts = await super.getPostsByProjectId(project._id, ctx.user._id);
 
+        if (!posts) {
+            return;
+        }
+
         for (const platform of platforms) {
             const post = posts.find(post => post.platform === platform);
 
-            if (post && post.status === constants.postStatus.SUCCESS && post.post_id) {
+            if (post && post.status === PostStatus.SUCCESS && post.post_id) {
                 const controller = publishHelpers.getPlatformUpdateController(platform);
 
                 if (controller) {
@@ -107,8 +114,8 @@ export default class PublishService extends PostController {
                             _id: post._id,
                             post: {
                                 status: response.data.post.isError
-                                    ? constants.postStatus.ERROR
-                                    : constants.postStatus.SUCCESS,
+                                    ? PostStatus.ERROR
+                                    : PostStatus.SUCCESS,
                             },
                         },
                         ctx,

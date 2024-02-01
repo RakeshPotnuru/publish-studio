@@ -2,18 +2,18 @@ import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
 import defaultConfig from "../../../config/app.config";
-import { constants } from "../../../config/constants";
+import type { MediumStatus} from "../../../config/constants";
+import { Platform, PostStatus } from "../../../config/constants";
 import type { Context } from "../../../trpc";
 import type { TPostUpdateInput } from "../../post/post.types";
 import type { IProject } from "../../project/project.types";
 import MediumService from "./medium.service";
-import type { TMediumStatus } from "./medium.types";
 
 export default class MediumController extends MediumService {
     async createPlatformHandler(
         input: {
             api_key: string;
-            status: TMediumStatus;
+            status: MediumStatus;
             notify_followers: boolean;
         },
         ctx: Context,
@@ -53,7 +53,7 @@ export default class MediumController extends MediumService {
     async updatePlatformHandler(
         input: {
             api_key?: string;
-            status?: TMediumStatus;
+            status?: MediumStatus;
             notify_followers?: boolean;
         },
         ctx: Context,
@@ -137,8 +137,8 @@ export default class MediumController extends MediumService {
 
         if (!platform) {
             return {
-                platform: constants.user.platforms.DEVTO,
-                status: constants.postStatus.ERROR,
+                platform: Platform.DEVTO,
+                status: PostStatus.ERROR,
             };
         }
 
@@ -159,14 +159,14 @@ export default class MediumController extends MediumService {
 
         if (newPost.isError || !newPost.data) {
             return {
-                platform: constants.user.platforms.DEVTO,
-                status: constants.postStatus.ERROR,
+                platform: Platform.DEVTO,
+                status: PostStatus.ERROR,
             };
         }
 
         return {
-            platform: constants.user.platforms.MEDIUM,
-            status: constants.postStatus.SUCCESS,
+            platform: Platform.MEDIUM,
+            status: PostStatus.SUCCESS,
             published_url: newPost.data.url,
             post_id: newPost.data.id,
         };

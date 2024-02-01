@@ -72,7 +72,7 @@ export function ToC({ items = [], editor }: Readonly<ToCProps>) {
 
     return (
         <div className="space-y-2">
-            {items.map((item, i) => (
+            {items.map(item => (
                 <ToCItem onItemClick={onItemClick} key={item.id} item={item} />
             ))}
         </div>

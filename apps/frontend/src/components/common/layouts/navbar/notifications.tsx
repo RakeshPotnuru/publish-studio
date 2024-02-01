@@ -85,7 +85,7 @@ export function Notifications() {
                                     </Button>
                                 )}
                             </div>
-                            <p className="text-muted-foreground flex flex-row items-center text-xs">
+                            <p className="flex flex-row items-center text-xs text-muted-foreground">
                                 {notification.status === "sent" && (
                                     <Icons.Dot className="text-success" />
                                 )}{" "}
@@ -98,7 +98,7 @@ export function Notifications() {
                 </div>
             </ScrollArea>
         ) : (
-            <Center className="text-muted-foreground h-24 text-sm">No new notifications</Center>
+            <Center className="h-24 text-sm text-muted-foreground">No new notifications</Center>
         );
 
     const bodyPendingView = isFetching ? (

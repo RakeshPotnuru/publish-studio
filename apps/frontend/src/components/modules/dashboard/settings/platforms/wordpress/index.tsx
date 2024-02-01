@@ -2,10 +2,15 @@ import { useState } from "react";
 
 import { toast } from "@itsrakesh/ui";
 import type { IWordPress } from "@publish-studio/core";
+import {
+    Platform,
+    PostStatus,
+    ProjectStatus,
+    WordPressStatus,
+} from "@publish-studio/core/src/config/constants";
 import type { PaginationState } from "@tanstack/react-table";
 
 import { Images } from "@/assets/images";
-import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { useEditor } from "@/hooks/use-editor";
 import { trpc } from "@/utils/trpc";
@@ -67,7 +72,7 @@ export function WordPress({ data, isLoading }: Readonly<WordPressProps>) {
             editForm={
                 <WordPressEditForm
                     setIsOpen={setIsOpen}
-                    status={data?.status ?? constants.wordpressStatus.DRAFT}
+                    status={data?.status ?? WordPressStatus.DRAFT}
                     publicize={data?.publicize.toString() ?? "false"}
                 />
             }
@@ -139,18 +144,18 @@ export function ImportPosts() {
                         : undefined,
                 },
                 cover_image: post.featured_image ?? undefined,
-                platforms: [constants.user.platforms.WORDPRESS],
+                platforms: [Platform.WORDPRESS],
                 published_at: new Date(post.date),
-                status: constants.project.status.PUBLISHED,
+                status: ProjectStatus.PUBLISHED,
             });
 
             await createPost({
-                platform: constants.user.platforms.WORDPRESS,
+                platform: Platform.WORDPRESS,
                 post_id: post.ID.toString(),
                 project_id: data.project._id,
                 published_at: new Date(post.date),
                 published_url: post.URL,
-                status: constants.postStatus.SUCCESS,
+                status: PostStatus.SUCCESS,
             });
 
             setImportedPosts([...importedPosts, id]);

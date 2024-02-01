@@ -90,7 +90,9 @@ export function MoveProject({ projectId, ...props }: Readonly<MoveProjectProps>)
                     folder_id: data._id,
                 },
             });
-        } catch {}
+        } catch {
+            // Ignore
+        }
     };
 
     return (

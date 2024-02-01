@@ -98,7 +98,7 @@ export function FoldersTable<TData, TValue>({
                             <div
                                 key={row.id}
                                 data-state={row.getIsSelected() && "selected"}
-                                className="hover:bg-muted/50 data-[state=selected]:bg-muted flex flex-row items-center justify-between rounded-md border px-4 py-2 dark:hover:bg-zinc-800"
+                                className="flex flex-row items-center justify-between rounded-md border px-4 py-2 hover:bg-muted/50 data-[state=selected]:bg-muted dark:hover:bg-zinc-800"
                             >
                                 <div className="flex flex-row items-center space-x-2">
                                     {row
@@ -152,7 +152,7 @@ export function FoldersTable<TData, TValue>({
                             </div>
                         ))
                     ) : (
-                        <div className="text-muted-foreground col-span-4 p-4 text-center">
+                        <div className="col-span-4 p-4 text-center text-muted-foreground">
                             No results
                         </div>
                     )}

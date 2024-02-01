@@ -2,10 +2,10 @@ import { useState } from "react";
 
 import { toast } from "@itsrakesh/ui";
 import type { IDevTo } from "@publish-studio/core";
+import { Platform, PostStatus, ProjectStatus } from "@publish-studio/core/src/config/constants";
 import type { PaginationState } from "@tanstack/react-table";
 
 import { Images } from "@/assets/images";
-import { constants } from "@/config/constants";
 import { useEditor } from "@/hooks/use-editor";
 import { trpc } from "@/utils/trpc";
 
@@ -114,35 +114,30 @@ export function ImportPosts() {
 
             const json = deserialize(editor.schema, post.body_markdown);
 
-            if (!json) {
-                toast.error("Something went wrong.");
-                return;
-            }
-
             const { data } = await createProject({
                 name: post.title,
                 title: post.title,
                 description: post.description,
                 body: {
-                    json,
+                    json: json ?? undefined,
                 },
                 tags: {
                     devto_tags: post.tag_list,
                 },
                 canonical_url: post.canonical_url,
                 cover_image: post.cover_image ?? undefined,
-                platforms: [constants.user.platforms.DEVTO],
+                platforms: [Platform.DEVTO],
                 published_at: new Date(post.published_at),
-                status: constants.project.status.PUBLISHED,
+                status: ProjectStatus.PUBLISHED,
             });
 
             await createPost({
-                platform: constants.user.platforms.DEVTO,
+                platform: Platform.DEVTO,
                 post_id: post.id.toString(),
                 project_id: data.project._id,
                 published_at: new Date(post.published_at),
                 published_url: post.url,
-                status: constants.postStatus.SUCCESS,
+                status: PostStatus.SUCCESS,
             });
 
             setImportedPosts([...importedPosts, id]);

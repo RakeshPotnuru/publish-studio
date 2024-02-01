@@ -11,7 +11,7 @@ import { Heading } from "@/components/ui/heading";
 
 type AppearanceProps = React.HTMLAttributes<HTMLDivElement>;
 
-export function Appearance({ ...props }: AppearanceProps) {
+export function Appearance({ ...props }: Readonly<AppearanceProps>) {
     const [mounted, setMounted] = useState(false);
     const { theme, setTheme } = useTheme();
 

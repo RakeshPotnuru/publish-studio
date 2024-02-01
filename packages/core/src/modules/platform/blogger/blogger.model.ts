@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import { fieldEncryption } from "mongoose-field-encryption";
 
-import { constants } from "../../../config/constants";
+import { Platform } from "../../../config/constants";
 import type { IBlogger } from "./blogger.types";
 
 const BloggerSchema = new Schema<IBlogger>(
@@ -27,4 +27,4 @@ BloggerSchema.plugin(fieldEncryption, {
     encryptNull: false,
 });
 
-export default mongoose.model(constants.user.platforms.BLOGGER, BloggerSchema);
+export default mongoose.model(Platform.BLOGGER, BloggerSchema);

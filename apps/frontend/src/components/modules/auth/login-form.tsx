@@ -15,6 +15,7 @@ import {
     Input,
     toast,
 } from "@itsrakesh/ui";
+import { ErrorCause } from "@publish-studio/core/src/config/constants";
 import { jwtDecode } from "jwt-decode";
 import { useCookies } from "react-cookie";
 import { useForm } from "react-hook-form";
@@ -25,7 +26,6 @@ import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { Shake } from "@/components/ui/shake";
-import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
 
@@ -46,10 +46,10 @@ export function LoginForm() {
     const [isCaptchaCompleted, setIsCaptchaCompleted] = useState(false);
     const [isCaptchaVerificationLoading, setIsCaptchaVerificationLoading] = useState(false);
 
-    const [_, setCookie] = useCookies(["ps_access_token"]);
+    const [, setCookie] = useCookies(["ps_access_token"]);
 
     const { mutateAsync: login, isLoading: isLoggingIn } = trpc.auth.login.useMutation({
-        onSuccess({ data }) {
+        onSuccess: ({ data }) => {
             if (!data.access_token) {
                 setError("Something went wrong. Please try again.");
                 return;
@@ -70,8 +70,8 @@ export function LoginForm() {
                 window.location.href = siteConfig.pages.dashboard.link;
             }, 1000);
         },
-        onError(error) {
-            if (error.message === constants.errorCauses.VERIFICATION_PENDING) {
+        onError: error => {
+            if (error.message === ErrorCause.VERIFICATION_PENDING.toString()) {
                 setError(
                     "Please verify your email address to continue. Check your inbox for the verification email.",
                 );
@@ -102,7 +102,9 @@ export function LoginForm() {
             setError(null);
             setEmail(data.email);
             await login(data);
-        } catch {}
+        } catch {
+            // Ignore
+        }
     };
 
     const { mutateAsync: resendVerificationEmail, isLoading: isResendLoading } =
@@ -123,7 +125,9 @@ export function LoginForm() {
         try {
             setError(null);
             await resendVerificationEmail({ email });
-        } catch {}
+        } catch {
+            // Ignore
+        }
     };
 
     const isLoading =

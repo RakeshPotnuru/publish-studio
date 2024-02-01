@@ -3,8 +3,8 @@ import axios from "axios";
 import type { Types } from "mongoose";
 
 import defaultConfig from "../../../config/app.config";
-import { constants } from "../../../config/constants";
-import Platform from "../../../modules/platform/platform.model";
+import { Platform } from "../../../config/constants";
+import PlatformModel from "../../../modules/platform/platform.model";
 import User from "../../../modules/user/user.model";
 import type { IPaginationOptions } from "../../../types/common.types";
 import WordPress from "./wordpress.model";
@@ -21,7 +21,7 @@ import type {
 } from "./wordpress.types";
 
 export default class WordPressService {
-    private readonly PLATFORM = constants.user.platforms.WORDPRESS;
+    private readonly PLATFORM = Platform.WORDPRESS;
     private readonly API_URL = defaultConfig.wordpress_api_url;
     private readonly API_VERSION = "v1.1";
 
@@ -64,7 +64,7 @@ export default class WordPressService {
                 },
             }).exec();
 
-            await Platform.create({
+            await PlatformModel.create({
                 user_id: platform.user_id,
                 name: this.PLATFORM,
                 data: newPlatform._id,
@@ -104,7 +104,7 @@ export default class WordPressService {
     async deletePlatform(user_id: Types.ObjectId): Promise<boolean> {
         try {
             // Note: There's no way I can disconnect this application from user's connected applications
-            await Platform.findOneAndDelete({
+            await PlatformModel.findOneAndDelete({
                 user_id,
                 name: this.PLATFORM,
             }).exec();

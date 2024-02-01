@@ -10,10 +10,10 @@ import {
     FormMessage,
     Input,
 } from "@itsrakesh/ui";
+import { constants } from "@publish-studio/core/src/config/constants";
 import type { UseFormReturn } from "react-hook-form";
 import type { z } from "zod";
 
-import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 
 import type { formSchema } from "../form-schema";
@@ -43,7 +43,7 @@ export function WordPress({ form, isLoading }: Readonly<WordPressProps>) {
                             {field.value.split(",").map((tag, index) => (
                                 <div
                                     key={`${tag}-${index + 1}`}
-                                    className="bg-secondary rounded-md px-2 py-1 text-xs"
+                                    className="rounded-md bg-secondary px-2 py-1 text-xs"
                                 >
                                     {tag}
                                 </div>

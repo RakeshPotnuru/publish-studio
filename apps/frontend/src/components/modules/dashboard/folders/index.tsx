@@ -16,7 +16,7 @@ import { FoldersTable } from "./table";
 
 type ProjectsProps = React.HTMLAttributes<HTMLDivElement>;
 
-export function Folders({ ...props }: ProjectsProps) {
+export function Folders({ ...props }: Readonly<ProjectsProps>) {
     const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
         pageIndex: 0,
         pageSize: 10,

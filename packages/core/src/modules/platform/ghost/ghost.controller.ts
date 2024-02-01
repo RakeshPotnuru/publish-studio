@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
-import { constants } from "../../../config/constants";
+import { Platform, PostStatus } from "../../../config/constants";
 import type { Context } from "../../../trpc";
 import type { IPaginationOptions } from "../../../types/common.types";
 import type { TPostUpdateInput } from "../../post/post.types";
@@ -118,20 +118,18 @@ export default class GhostController extends GhostService {
 
         if (!platform) {
             return {
-                platform: constants.user.platforms.DEVTO,
-                status: constants.postStatus.ERROR,
+                platform: Platform.DEVTO,
+                status: PostStatus.ERROR,
             };
         }
 
         const { post } = input;
 
-        const tags =
-            post.tags?.ghost_tags &&
-            post.tags.ghost_tags.map(tag => {
-                return {
-                    name: tag.name,
-                };
-            });
+        const tags = post.tags?.ghost_tags?.map(tag => {
+            return {
+                name: tag.name,
+            };
+        });
 
         const newPost = await super.publishPost(
             {
@@ -146,14 +144,14 @@ export default class GhostController extends GhostService {
 
         if (!newPost.success) {
             return {
-                platform: constants.user.platforms.DEVTO,
-                status: constants.postStatus.ERROR,
+                platform: Platform.DEVTO,
+                status: PostStatus.ERROR,
             };
         }
 
         return {
-            platform: constants.user.platforms.GHOST,
-            status: constants.postStatus.SUCCESS,
+            platform: Platform.GHOST,
+            status: PostStatus.SUCCESS,
             published_url: newPost.data.url,
             post_id: newPost.data.id,
         };
@@ -171,13 +169,11 @@ export default class GhostController extends GhostService {
 
         const { post, post_id } = input;
 
-        const tags =
-            post.tags?.ghost_tags &&
-            post.tags.ghost_tags.map(tag => {
-                return {
-                    name: tag.name,
-                };
-            });
+        const tags = post.tags?.ghost_tags?.map(tag => {
+            return {
+                name: tag.name,
+            };
+        });
 
         const existingPost = await super.getPost(post_id, user_id);
 

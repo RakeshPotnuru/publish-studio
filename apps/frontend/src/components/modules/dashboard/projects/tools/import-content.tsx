@@ -98,7 +98,7 @@ export function ImportMarkdown({ editor }: MenuProps) {
         <div className="space-y-2">
             <div>
                 <Heading level={5}>Import content</Heading>
-                <p className="text-muted-foreground text-sm">
+                <p className="text-sm text-muted-foreground">
                     Import content from URL or Markdown into the editor.
                 </p>
             </div>

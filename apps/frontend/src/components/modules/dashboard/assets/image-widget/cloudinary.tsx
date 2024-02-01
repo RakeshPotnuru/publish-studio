@@ -14,6 +14,7 @@ import type { TInsertImageOptions } from ".";
 
 declare global {
     interface Window {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         cloudinary: any;
     }
 }
@@ -31,15 +32,12 @@ interface IPayload {
         height: number;
         bytes: number;
         duration: null;
-        tags: any[];
-        metadata: any[];
         created_at: Date;
         derived: {
             url: string;
             secure_url: string;
         }[];
         access_mode: string;
-        access_control: any[];
         created_by: {
             type: string;
             id: string;

@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -98,8 +98,10 @@ export function PublishPost({
                 toast(data.message, {
                     action: {
                         label: "Refresh",
-                        onClick: async () => {
-                            await handleRefresh();
+                        onClick: () => {
+                            handleRefresh().catch(() => {
+                                // Ignore
+                            });
                         },
                     },
                 });
@@ -242,7 +244,7 @@ export function PublishPost({
                                 <CanonicalUrl form={form} isLoading={isLoading} />
                             </div>
                         </ScrollArea>
-                        <SheetFooter className="bg-background sticky bottom-0 py-4">
+                        <SheetFooter className="sticky bottom-0 bg-background py-4">
                             <Actions
                                 form={form}
                                 isLoading={isLoading}

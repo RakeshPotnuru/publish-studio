@@ -92,7 +92,9 @@ export function ResetPasswordForm() {
             setError(null);
             setEmail(data.email);
             await sendResetPasswordEmail(data);
-        } catch {}
+        } catch {
+            // Ignore
+        }
     };
 
     const handleResend = async () => {
@@ -103,7 +105,9 @@ export function ResetPasswordForm() {
         try {
             setError(null);
             await sendResetPasswordEmail({ email });
-        } catch {}
+        } catch {
+            // Ignore
+        }
     };
 
     const isEmailStepLoading =
@@ -144,7 +148,9 @@ export function ResetPasswordForm() {
         try {
             setError(null);
             await resetPassword({ token, password: data.password });
-        } catch {}
+        } catch {
+            // Ignore
+        }
     };
 
     const isPasswordStepLoading =

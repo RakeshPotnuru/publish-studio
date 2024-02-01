@@ -1,9 +1,9 @@
 import type { Types } from "mongoose";
 import { z } from "zod";
 
+import { MimeType } from "../../config/constants";
 import { protectedProcedure, router } from "../../trpc";
 import AssetController from "./asset.controller";
-import type { TMimeType } from "./asset.types";
 
 const assetRouter = router({
     upload: protectedProcedure
@@ -11,7 +11,7 @@ const assetRouter = router({
             z.object({
                 file: z.object({
                     originalname: z.string(),
-                    mimetype: z.custom<TMimeType>(),
+                    mimetype: z.nativeEnum(MimeType),
                     size: z.number(),
                 }),
                 project_id: z.custom<Types.ObjectId>().optional(),

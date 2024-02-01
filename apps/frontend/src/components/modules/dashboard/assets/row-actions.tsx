@@ -24,9 +24,9 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
     const utils = trpc.useUtils();
 
     const { mutateAsync: deleteAsset, isLoading } = trpc.assets.delete.useMutation({
-        onSuccess: () => {
+        onSuccess: async () => {
             toast.success("Asset deleted successfully");
-            utils.assets.getAll.invalidate();
+            await utils.assets.getAll.invalidate();
         },
         onError: error => {
             toast.error(error.message);
@@ -36,13 +36,15 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
     const handleDelete = async () => {
         try {
             await deleteAsset([row.original._id]);
-        } catch {}
+        } catch {
+            // Ignore
+        }
     };
 
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="data-[state=open]:bg-muted flex size-8 p-0">
+                <Button variant="ghost" className="flex size-8 p-0 data-[state=open]:bg-muted">
                     <Icons.RowActions className="size-4" />
                     <span className="sr-only">Open menu</span>
                 </Button>
@@ -62,7 +64,7 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
                 ) : (
                     <slot
                         onClick={() => setAskingForConfirmation(true)}
-                        className="text-destructive hover:bg-accent hover:text-destructive relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+                        className="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm text-destructive outline-none transition-colors hover:bg-accent hover:text-destructive data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
                     >
                         <Icons.Delete className="mr-2 size-4" />
                         Delete

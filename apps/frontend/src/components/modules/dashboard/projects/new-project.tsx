@@ -20,13 +20,13 @@ import {
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import type { IFolder } from "@publish-studio/core";
+import { constants } from "@publish-studio/core/src/config/constants";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { ErrorBox } from "@/components/ui/error-box";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { Tooltip } from "@/components/ui/tooltip";
-import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
 

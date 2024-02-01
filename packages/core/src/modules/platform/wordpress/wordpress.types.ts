@@ -1,9 +1,6 @@
 import type { Types } from "mongoose";
 
-import type { constants } from "../../../config/constants";
-
-export type TWordPressStatus =
-    (typeof constants.wordpressStatus)[keyof typeof constants.wordpressStatus];
+import type { WordPressStatus } from "../../../config/constants";
 
 export interface IWordPress {
     _id: Types.ObjectId;
@@ -12,7 +9,7 @@ export interface IWordPress {
     blog_url: string;
     blog_id: string;
     publicize: boolean;
-    status: TWordPressStatus;
+    status: WordPressStatus;
     created_at: Date;
     updated_at: Date;
 }
@@ -21,7 +18,7 @@ export type TWordPressCreateInput = Omit<IWordPress, "_id" | "created_at" | "upd
 
 export interface IWordPressUpdateInput {
     publicize: boolean;
-    status: TWordPressStatus;
+    status: WordPressStatus;
 }
 
 export interface IWordPressSiteOutput {
@@ -36,7 +33,7 @@ export interface IWordPressCreatePostInput {
     title: string;
     content?: string;
     tags?: string[];
-    status: TWordPressStatus;
+    status: WordPressStatus;
     publicize: boolean;
     excerpt?: string;
 }
@@ -67,7 +64,7 @@ export interface IWordPressGetAllPostsOutput {
     excerpt: string;
     date: Date;
     content: string;
-    status: TWordPressStatus;
+    status: WordPressStatus;
     tags?: Record<
         string,
         {

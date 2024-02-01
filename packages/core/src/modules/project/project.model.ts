@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-import { constants } from "../../config/constants";
+import { constants,Platform, ProjectStatus, Sentiment } from "../../config/constants";
 import type { IProject } from "./project.types";
 
 const ProjectSchema = new Schema<IProject>(
@@ -26,14 +26,14 @@ const ProjectSchema = new Schema<IProject>(
         },
         status: {
             type: String,
-            enum: constants.project.status,
+            enum: ProjectStatus,
             required: true,
-            default: constants.project.status.DRAFT,
+            default: ProjectStatus.DRAFT,
         },
         cover_image: String,
         platforms: {
             type: [String],
-            enum: constants.user.platforms,
+            enum: Platform,
         },
         tags: {
             // hashnode_tags: [
@@ -56,7 +56,7 @@ const ProjectSchema = new Schema<IProject>(
         tone_analysis: {
             sentiment: {
                 type: String,
-                enum: constants.project.tone_analysis.sentiments,
+                enum: Sentiment,
             },
             emotion: {
                 sadness: Number,

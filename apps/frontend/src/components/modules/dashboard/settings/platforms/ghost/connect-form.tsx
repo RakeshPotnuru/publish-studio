@@ -19,13 +19,13 @@ import {
     toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
+import { GhostStatus } from "@publish-studio/core/src/config/constants";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
-import { constants } from "@/config/constants";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
 
@@ -38,7 +38,7 @@ const formSchema = z.object({
     api_url: z.string().min(1, { message: "API URL is required" }).url({
         message: "API URL must be a valid URL",
     }),
-    status: z.nativeEnum(constants.ghostStatus).default(constants.ghostStatus.DRAFT),
+    status: z.nativeEnum(GhostStatus).default(GhostStatus.DRAFT),
 });
 
 export function GhostConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFormProps>) {
@@ -63,7 +63,7 @@ export function GhostConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFor
         defaultValues: {
             admin_api_key: "",
             api_url: "",
-            status: constants.ghostStatus.DRAFT,
+            status: GhostStatus.DRAFT,
         },
     });
 
@@ -101,7 +101,7 @@ export function GhostConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFor
                                             <HoverCardTrigger asChild>
                                                 <Button
                                                     variant="link"
-                                                    className="text-foreground h-max p-0"
+                                                    className="h-max p-0 text-foreground"
                                                 >
                                                     <Icons.Question />
                                                 </Button>
@@ -124,7 +124,7 @@ export function GhostConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFor
                                             </HoverCardContent>
                                         </HoverCard>
                                     </FormLabel>
-                                    <p className="text-muted-foreground text-xs">
+                                    <p className="text-xs text-muted-foreground">
                                         Your API key will be encrypted and stored securely.{" "}
                                         <Button
                                             type="button"
@@ -168,7 +168,7 @@ export function GhostConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFor
                                             <HoverCardTrigger asChild>
                                                 <Button
                                                     variant="link"
-                                                    className="text-foreground h-max p-0"
+                                                    className="h-max p-0 text-foreground"
                                                 >
                                                     <Icons.Question />
                                                 </Button>
@@ -219,17 +219,13 @@ export function GhostConnectForm({ setIsOpen, ...props }: Readonly<DevConnectFor
                                     >
                                         <FormItem className="flex items-center space-x-3 space-y-0">
                                             <FormControl>
-                                                <RadioGroupItem
-                                                    value={constants.ghostStatus.DRAFT}
-                                                />
+                                                <RadioGroupItem value={GhostStatus.DRAFT} />
                                             </FormControl>
                                             <FormLabel className="font-normal">Draft</FormLabel>
                                         </FormItem>
                                         <FormItem className="flex items-center space-x-3 space-y-0">
                                             <FormControl>
-                                                <RadioGroupItem
-                                                    value={constants.ghostStatus.PUBLISHED}
-                                                />
+                                                <RadioGroupItem value={GhostStatus.PUBLISHED} />
                                             </FormControl>
                                             <FormLabel className="font-normal">Published</FormLabel>
                                         </FormItem>

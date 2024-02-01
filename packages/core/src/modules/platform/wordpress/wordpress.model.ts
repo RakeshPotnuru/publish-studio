@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import { fieldEncryption } from "mongoose-field-encryption";
 
-import { constants } from "../../../config/constants";
+import { Platform, WordPressStatus } from "../../../config/constants";
 import type { IWordPress } from "./wordpress.types";
 
 const WordPressSchema = new Schema<IWordPress>(
@@ -13,9 +13,9 @@ const WordPressSchema = new Schema<IWordPress>(
         publicize: { type: Boolean, required: true, default: false },
         status: {
             type: String,
-            enum: constants.wordpressStatus,
+            enum: WordPressStatus,
             required: true,
-            default: constants.wordpressStatus.DRAFT,
+            default: WordPressStatus.DRAFT,
         },
     },
     {
@@ -32,4 +32,4 @@ WordPressSchema.plugin(fieldEncryption, {
     encryptNull: false,
 });
 
-export default mongoose.model(constants.user.platforms.WORDPRESS, WordPressSchema);
+export default mongoose.model(Platform.WORDPRESS, WordPressSchema);

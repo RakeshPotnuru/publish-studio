@@ -4,8 +4,8 @@ import { OAuth2Client } from "google-auth-library";
 import type { Types } from "mongoose";
 
 import defaultConfig from "../../../config/app.config";
-import { constants } from "../../../config/constants";
-import Platform from "../../../modules/platform/platform.model";
+import { Platform } from "../../../config/constants";
+import PlatformModel from "../../../modules/platform/platform.model";
 import User from "../../../modules/user/user.model";
 import Blogger from "./blogger.model";
 import type {
@@ -19,7 +19,7 @@ import type {
 } from "./blogger.types";
 
 export default class BloggerService {
-    private readonly PLATFORM = constants.user.platforms.BLOGGER;
+    private readonly PLATFORM = Platform.BLOGGER;
     private readonly BLOGGER_VERSION = "v3";
     private oauth2Client = new OAuth2Client(
         process.env.GOOGLE_OAUTH_CLIENT_ID,
@@ -83,7 +83,7 @@ export default class BloggerService {
                 },
             }).exec();
 
-            await Platform.create({
+            await PlatformModel.create({
                 user_id: platform.user_id,
                 name: this.PLATFORM,
                 data: newPlatform._id,
@@ -125,7 +125,7 @@ export default class BloggerService {
                 },
             }).exec();
 
-            await Platform.findOneAndDelete({
+            await PlatformModel.findOneAndDelete({
                 user_id,
                 name: this.PLATFORM,
             }).exec();

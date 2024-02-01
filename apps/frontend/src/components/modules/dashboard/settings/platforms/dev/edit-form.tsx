@@ -104,7 +104,7 @@ export function DevEditForm({ status, setIsOpen, ...props }: Readonly<DevEditFor
                                             <HoverCardTrigger asChild>
                                                 <Button
                                                     variant="link"
-                                                    className="text-foreground h-max p-0"
+                                                    className="h-max p-0 text-foreground"
                                                 >
                                                     <Icons.Question />
                                                 </Button>
@@ -127,7 +127,7 @@ export function DevEditForm({ status, setIsOpen, ...props }: Readonly<DevEditFor
                                             </HoverCardContent>
                                         </HoverCard>
                                     </FormLabel>
-                                    <p className="text-muted-foreground text-xs">
+                                    <p className="text-xs text-muted-foreground">
                                         Your API key will be encrypted and stored securely.{" "}
                                         <Button
                                             type="button"
