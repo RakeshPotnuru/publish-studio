@@ -79,6 +79,9 @@ export function Actions({
         }
         setIsPostUpdating(false);
     };
+
+    const watchPlatforms = form.watch("platforms") ?? [];
+
     return (
         <>
             <Tooltip content="Save changes">
@@ -112,7 +115,7 @@ export function Actions({
                         !form.formState.isDirty ||
                         isLoading ||
                         project.status === ProjectStatus.SCHEDULED ||
-                        form.getValues().platforms.length === 0
+                        watchPlatforms.length === 0
                     }
                 >
                     <ButtonLoader isLoading={isPostPublishing}>Publish Now</ButtonLoader>
@@ -131,7 +134,7 @@ export function Actions({
                             !form.formState.isDirty ||
                             isLoading ||
                             project.status === ProjectStatus.SCHEDULED ||
-                            form.getValues().platforms.length === 0
+                            watchPlatforms.length === 0
                         }
                     >
                         <ButtonLoader isLoading={isPostPublishing}>

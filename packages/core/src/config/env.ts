@@ -44,6 +44,7 @@ const ZodEnvironmentVariables = z.object({
     UNSPLASH_ACCESS_KEY: z.string(),
     HCAPTCHA_SECRET: z.string(),
     ENCRYPTION_SECRET: z.string(),
+    LOGTAIL_SOURCE_TOKEN: z.string(),
 });
 
 ZodEnvironmentVariables.parse(process.env);

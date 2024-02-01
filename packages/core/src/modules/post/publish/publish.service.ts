@@ -75,7 +75,7 @@ export default class PublishService extends PostController {
             const isSuccess = response.status === PostStatus.SUCCESS;
 
             await caller.notifications.create({
-                type: isSuccess ? "Publish post" : "Publish Post failed",
+                type: isSuccess ? "Publish post" : "Publish post failed",
                 message: isSuccess
                     ? `Post "${project.name}" published on "${platform}" successfully.`
                     : `Failed to publish "${project.name}" on "${platform}". Please check if your ${platform} credentials are valid.`,
@@ -98,28 +98,48 @@ export default class PublishService extends PostController {
         }
 
         for (const platform of platforms) {
-            const post = posts.find(post => post.platform === platform);
+            await this.handleEditPost(platform, posts, project, ctx, publishHelpers);
+        }
+    }
 
-            if (post && post.status === PostStatus.SUCCESS && post.post_id) {
-                const controller = publishHelpers.getPlatformUpdateController(platform);
+    async handleEditPost(
+        platform: Platform,
+        posts: IPost[],
+        project: IProject,
+        ctx: Context,
+        publishHelpers: PublishHelpers,
+    ) {
+        const post = posts.find(post => post.platform === platform);
 
-                if (controller) {
-                    const response = await controller.updatePostHandler(
-                        { post: project, post_id: post.post_id },
-                        ctx.user._id,
-                    );
+        if (post && post.status === PostStatus.SUCCESS && post.post_id) {
+            const controller = publishHelpers.getPlatformUpdateController(platform);
 
-                    await super.updatePostHandler(
-                        {
-                            _id: post._id,
-                            post: {
-                                status: response.data.post.isError
-                                    ? PostStatus.ERROR
-                                    : PostStatus.SUCCESS,
-                            },
+            if (controller) {
+                const response = await controller.updatePostHandler(
+                    { post: project, post_id: post.post_id },
+                    ctx.user._id,
+                );
+
+                await super.updatePostHandler(
+                    {
+                        _id: post._id,
+                        post: {
+                            status: response.data.post.isError
+                                ? PostStatus.ERROR
+                                : PostStatus.SUCCESS,
                         },
-                        ctx,
-                    );
+                    },
+                    ctx,
+                );
+
+                const isSuccess = response.data.post.isError;
+                const caller = createCaller(ctx);
+
+                if (!isSuccess) {
+                    await caller.notifications.create({
+                        type: "Edit post failed",
+                        message: `Failed to edit "${project.name}" on "${platform}". Please check if post exists and your ${platform} credentials are valid.`,
+                    });
                 }
             }
         }

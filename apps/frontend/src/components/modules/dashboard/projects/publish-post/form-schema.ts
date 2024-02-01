@@ -1,4 +1,4 @@
-import { constants,Platform } from "@publish-studio/core/src/config/constants";
+import { constants, Platform } from "@publish-studio/core/src/config/constants";
 import { z } from "zod";
 
 export const formSchema = z.object({

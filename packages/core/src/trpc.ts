@@ -3,6 +3,7 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import type { CreateExpressContextOptions } from "@trpc/server/adapters/express";
 import superjson from "superjson";
 
+import { UserType } from "./config/constants";
 import { deserializeUser } from "./middlewares/deserialize-user";
 
 export const createContext = async ({ req, res }: CreateExpressContextOptions) => {

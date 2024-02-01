@@ -5,6 +5,7 @@ import type { Types } from "mongoose";
 import defaultConfig from "../../../config/app.config";
 import { Platform } from "../../../config/constants";
 import type { IPaginationOptions } from "../../../types/common.types";
+import { logtail } from "../../../utils/logtail";
 import User from "../../user/user.model";
 import PlatformModel from "../platform.model";
 import DevTo from "./devto.model";
@@ -183,7 +184,7 @@ export default class DevToService {
 
             return response.data as TDevToCreatePostOutput;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error));
 
             return { isError: true };
         }
@@ -202,7 +203,9 @@ export default class DevToService {
 
             return response.data as IDevToUpdatePostOutput;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id: user_id.toString(),
+            });
 
             return { isError: true };
         }

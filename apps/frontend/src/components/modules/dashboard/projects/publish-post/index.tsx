@@ -114,7 +114,7 @@ export function PublishPost({
     );
 
     async function handleRefresh() {
-        await utils.projects.getById.invalidate();
+        await utils.projects.getById.invalidate({ _id: project._id });
     }
 
     const handleSave = async (data: z.infer<typeof formSchema>) => {
