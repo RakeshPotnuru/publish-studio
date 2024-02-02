@@ -29,6 +29,7 @@ interface ICustomConfig {
     resetPasswordTokenPublicKey: string;
     redis_host: string;
     redis_port: number;
+    turnstileVerifyEndpoint: string;
 }
 
 const defaultConfig: ICustomConfig = {
@@ -62,6 +63,7 @@ const defaultConfig: ICustomConfig = {
     kickbox_api_url: "https://open.kickbox.com/v1/disposable",
     client_url: process.env.CLIENT_URL,
     app_name: "Publish Studio",
+    turnstileVerifyEndpoint: "https://challenges.cloudflare.com/turnstile/v0/siteverify",
 };
 
 export const bullMQConnectionOptions = {

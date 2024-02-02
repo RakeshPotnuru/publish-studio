@@ -42,7 +42,7 @@ const ZodEnvironmentVariables = z.object({
     WORDPRESS_CLIENT_SECRET: z.string(),
     PEXELS_API_KEY: z.string(),
     UNSPLASH_ACCESS_KEY: z.string(),
-    HCAPTCHA_SECRET: z.string(),
+    TURNSTILE_SECRET: z.string(),
     ENCRYPTION_SECRET: z.string(),
     LOGTAIL_SOURCE_TOKEN: z.string(),
 });

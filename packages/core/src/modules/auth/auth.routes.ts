@@ -1,11 +1,7 @@
-import { TRPCError } from "@trpc/server";
-import { Ratelimit } from "@upstash/ratelimit";
 import { z } from "zod";
 
-import defaultConfig from "../../config/app.config";
-import { constants,UserType } from "../../config/constants";
+import { constants, UserType } from "../../config/constants";
 import { protectedProcedure, router, t } from "../../trpc";
-import { rateLimiterMiddleware } from "../../utils/rate-limiter";
 import UserController from "../user/user.controller";
 import AuthController from "./auth.controller";
 
@@ -50,21 +46,7 @@ const authRouter = router({
                 password: z.string().min(1),
             }),
         )
-        .mutation(async ({ input, ctx }) => {
-            if (!ctx.req.ip) {
-                throw new TRPCError({
-                    code: "INTERNAL_SERVER_ERROR",
-                    message: defaultConfig.defaultErrorMessage,
-                });
-            }
-
-            rateLimiterMiddleware(
-                { default: Ratelimit.slidingWindow(2, "1 m") },
-                `auth.login-${ctx.req.ip}`,
-            );
-
-            return new AuthController().loginHandler(input, ctx);
-        }),
+        .mutation(async ({ input, ctx }) => new AuthController().loginHandler(input, ctx)),
 
     logout: protectedProcedure.mutation(({ ctx }) => new AuthController().logoutHandler(ctx)),
 
@@ -117,7 +99,7 @@ const authRouter = router({
 
     verifyCaptcha: t.procedure
         .input(z.string())
-        .mutation(({ input }) => new AuthController().verifyCaptchaHandler(input)),
+        .mutation(({ input, ctx }) => new AuthController().verifyCaptchaHandler(input, ctx)),
 });
 
 export default authRouter;

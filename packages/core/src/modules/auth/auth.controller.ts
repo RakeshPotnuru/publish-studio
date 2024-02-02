@@ -3,7 +3,6 @@ import axios from "axios";
 import bycrypt from "bcryptjs";
 import { getCookie, setCookie } from "cookies-next";
 import type { OptionsType } from "cookies-next/lib/types";
-import { verify } from "hcaptcha";
 import type { Types } from "mongoose";
 
 import defaultConfig from "../../config/app.config";
@@ -502,11 +501,19 @@ export default class AuthController extends UserService {
         }
     }
 
-    async verifyCaptchaHandler(input: string) {
+    async verifyCaptchaHandler(input: string, ctx: Context) {
         try {
-            const { success } = await verify(process.env.HCAPTCHA_SECRET, input);
+            const response = await axios.post(
+                defaultConfig.turnstileVerifyEndpoint,
+                `secret=${encodeURIComponent(process.env.TURNSTILE_SECRET)}&response=${encodeURIComponent(input)}&remoteip=${ctx.req.ip}`,
+                {
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                },
+            );
 
-            if (!success) {
+            if (!response.data.success) {
                 throw new TRPCError({
                     code: "BAD_REQUEST",
                     message: "Invalid captcha. Please try again.",

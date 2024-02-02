@@ -33,7 +33,7 @@ export function RecentProjects() {
                     {projects.slice(0, 5).map(project => (
                         <Button
                             key={project._id.toString()}
-                            title={project.title}
+                            title={project.name}
                             variant="secondary"
                             className="flex justify-start"
                             asChild
