@@ -2,7 +2,6 @@ import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 import type Stripe from "stripe";
 
-import defaultConfig from "../../config/app.config";
 import { constants } from "../../config/constants";
 import type { Context } from "../../trpc";
 import stripe from "../../utils/stripe";
@@ -70,8 +69,8 @@ export default class PaymentService extends UserService {
                     },
                 ],
                 success_url:
-                    defaultConfig.client_url + "/payment-success?session_id={CHECKOUT_SESSION_ID}",
-                cancel_url: defaultConfig.client_url,
+                    process.env.CLIENT_URL + "/payment-success?session_id={CHECKOUT_SESSION_ID}",
+                cancel_url: process.env.CLIENT_URL,
                 client_reference_id: ctx.user._id.toString(),
             };
 

@@ -248,7 +248,6 @@ export default class HashnodeController extends HashnodeService {
 
         const updatedPost = await super.updatePost(
             {
-                post_id,
                 title: post.title,
                 contentMarkdown: post.body?.markdown,
                 // tags: post.tags?.hashnode_tags ?? [],
@@ -258,6 +257,7 @@ export default class HashnodeController extends HashnodeService {
                 },
                 originalArticleURL: post.canonical_url,
             },
+            post_id,
             user_id,
         );
 

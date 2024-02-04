@@ -28,7 +28,7 @@ const MediumSchema = new Schema<IMedium>(
 
 MediumSchema.plugin(fieldEncryption, {
     fields: ["api_key"],
-    secret: process.env.ENCRYPTION_SECRET,
+    secret: process.env.DB_ENCRYPTION_SECRET,
     encryptNull: false,
 });
 

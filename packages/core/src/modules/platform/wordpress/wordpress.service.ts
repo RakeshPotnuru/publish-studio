@@ -22,7 +22,7 @@ import type {
 
 export default class WordPressService {
     private readonly PLATFORM = Platform.WORDPRESS;
-    private readonly API_URL = defaultConfig.wordpress_api_url;
+    private readonly API_URL = defaultConfig.wordPressApiUrl;
     private readonly API_VERSION = "v1.1";
 
     private async wordpress(user_id: Types.ObjectId) {
@@ -163,7 +163,7 @@ export default class WordPressService {
                 `${this.API_URL}/oauth2/token`,
                 {
                     client_id: process.env.WORDPRESS_CLIENT_ID,
-                    redirect_uri: defaultConfig.wordpress_redirect_uri,
+                    redirect_uri: defaultConfig.wordPressRedirectUri,
                     client_secret: process.env.WORDPRESS_CLIENT_SECRET,
                     code,
                     grant_type: "authorization_code",

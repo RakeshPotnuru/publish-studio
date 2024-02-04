@@ -31,7 +31,7 @@ export default class MediumService {
 
         try {
             return axios.create({
-                baseURL: defaultConfig.medium_api_url,
+                baseURL: defaultConfig.mediumApiUrl,
                 timeout: 10_000,
                 headers: {
                     "Content-Type": "application/json",
@@ -152,7 +152,7 @@ export default class MediumService {
     to fetch user Medium details and update them in database. That's why api key is being used directly. */
     async getMediumUser(api_key: string): Promise<IMediumUserOutput> {
         try {
-            const response = await axios.get(`${defaultConfig.medium_api_url}/me`, {
+            const response = await axios.get(`${defaultConfig.mediumApiUrl}/me`, {
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${api_key}`,

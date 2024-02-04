@@ -18,7 +18,7 @@ import { createContext } from "./trpc";
 const app: Application = express();
 
 app.use((req, res, next) => {
-    if (req.originalUrl === "/api/stripeWebhook") {
+    if (req.originalUrl === defaultConfig.stripeWebhookEndpoint) {
         express.raw({ type: "application/json" })(req, res, next);
     } else {
         express.json()(req, res, next);
@@ -32,7 +32,7 @@ const corsOptions: CorsOptions = {
                   origin: string | undefined,
                   callback: (error: Error | null, allow?: boolean) => void,
               ) => {
-                  if (origin && defaultConfig.whitelist_origins?.includes(origin)) {
+                  if (origin && process.env.WHITELIST_ORIGINS.split(",")?.includes(origin)) {
                       callback(null, true);
                   } else {
                       callback(new Error("Not allowed by CORS"));
@@ -53,11 +53,11 @@ app.use(
 );
 
 app.use("/panel", (_, res) => {
-    return res.send(renderTrpcPanel(appRouter, { url: defaultConfig.baseUrl }));
+    return res.send(renderTrpcPanel(appRouter, { url: process.env.BASE_URL }));
 });
 
-app.listen(defaultConfig.port, () => {
-    console.log(`✅ Server running on port ${defaultConfig.port}`);
+app.listen(process.env.PORT, () => {
+    console.log(`✅ Server running on port ${process.env.PORT}`);
 });
 
 export type AppRouter = typeof appRouter;

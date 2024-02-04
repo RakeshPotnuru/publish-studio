@@ -76,7 +76,7 @@ export interface IHashnodeCreatePostInput {
     };
 }
 
-export type THashnodeToUpdatePost = Partial<IHashnodeCreatePostInput> & { post_id: string };
+export type THashnodeToUpdatePost = Partial<IHashnodeCreatePostInput>;
 
 export interface IOutput {
     isError: boolean;

@@ -3,8 +3,9 @@ import type { Types } from "mongoose";
 import mongoose from "mongoose";
 import type Stripe from "stripe";
 
-import { constants,UserType } from "../../config/constants";
+import { constants, UserType } from "../../config/constants";
 import type { Context } from "../../trpc";
+import { logtail } from "../../utils/logtail";
 import stripe from "../../utils/stripe";
 import PaymentService from "./payment.service";
 
@@ -23,7 +24,7 @@ export default class PaymentController extends PaymentService {
                 endpointSecret,
             );
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error));
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",

@@ -34,7 +34,7 @@ const refreshTokenCookieOptions: OptionsType = {
 export default class AuthController extends UserService {
     private async isDisposableEmail(email: string) {
         try {
-            const response = await axios.get(`${defaultConfig.kickbox_api_url}/${email}`);
+            const response = await axios.get(`${defaultConfig.kickboxApiUrl}/${email}`);
             return response.data.disposable as boolean;
         } catch {
             return false;
@@ -42,7 +42,7 @@ export default class AuthController extends UserService {
     }
 
     private async sendVerificationEmail(email: string, token: string) {
-        const verificationUrl = `${defaultConfig.client_url}/verify-email?token=${token}`;
+        const verificationUrl = `${process.env.CLIENT_URL}/verify-email?token=${token}`;
 
         await sendEmail(
             [email],
@@ -63,7 +63,7 @@ export default class AuthController extends UserService {
 
     private async sendResetPasswordEmail(email: string, token: string) {
         try {
-            const resetPasswordUrl = `${defaultConfig.client_url}/reset-password?token=${token}`;
+            const resetPasswordUrl = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
 
             await sendEmail(
                 [email],

@@ -21,7 +21,7 @@ const DevToSchema = new Schema<IDevTo>(
 
 DevToSchema.plugin(fieldEncryption, {
     fields: ["api_key"],
-    secret: process.env.ENCRYPTION_SECRET,
+    secret: process.env.DB_ENCRYPTION_SECRET,
     encryptNull: false,
 });
 

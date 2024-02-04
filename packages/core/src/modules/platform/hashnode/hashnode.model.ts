@@ -29,7 +29,7 @@ const HashnodeSchema = new Schema<IHashnode>(
 
 HashnodeSchema.plugin(fieldEncryption, {
     fields: ["api_key"],
-    secret: process.env.ENCRYPTION_SECRET,
+    secret: process.env.DB_ENCRYPTION_SECRET,
     encryptNull: false,
 });
 

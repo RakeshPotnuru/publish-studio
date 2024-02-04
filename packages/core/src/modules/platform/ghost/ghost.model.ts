@@ -26,7 +26,7 @@ const GhostSchema = new Schema<IGhost>(
 
 GhostSchema.plugin(fieldEncryption, {
     fields: ["admin_api_key"],
-    secret: process.env.ENCRYPTION_SECRET,
+    secret: process.env.DB_ENCRYPTION_SECRET,
     encryptNull: false,
 });
 

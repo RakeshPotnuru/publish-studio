@@ -28,7 +28,7 @@ const WordPressSchema = new Schema<IWordPress>(
 
 WordPressSchema.plugin(fieldEncryption, {
     fields: ["token"],
-    secret: process.env.ENCRYPTION_SECRET,
+    secret: process.env.DB_ENCRYPTION_SECRET,
     encryptNull: false,
 });
 

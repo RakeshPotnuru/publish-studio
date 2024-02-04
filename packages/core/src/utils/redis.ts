@@ -2,9 +2,7 @@ import "dotenv/config";
 
 import { createClient } from "redis";
 
-import defaultConfig from "../config/app.config";
-
-const redisUrl = defaultConfig.redis_url;
+const redisUrl = process.env.REDIS_URL;
 const redisClient = createClient({
     url: redisUrl,
 });

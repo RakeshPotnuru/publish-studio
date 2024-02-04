@@ -19,7 +19,7 @@ const CloudinarySchema = new Schema<ICloudinary>(
 
 CloudinarySchema.plugin(fieldEncryption, {
     fields: ["cloud_name", "api_key"],
-    secret: process.env.ENCRYPTION_SECRET,
+    secret: process.env.DB_ENCRYPTION_SECRET,
     encryptNull: false,
 });
 

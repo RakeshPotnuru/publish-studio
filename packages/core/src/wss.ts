@@ -5,7 +5,7 @@ import { WebSocketServer } from "ws";
 import appRouter from "./routes";
 
 const wss = new WebSocketServer({
-    port: 4001,
+    port: Number.parseInt(process.env.WEBSOCKET_PORT),
 });
 
 export const createContext = ({ req, res }: CreateWSSContextFnOptions) => {

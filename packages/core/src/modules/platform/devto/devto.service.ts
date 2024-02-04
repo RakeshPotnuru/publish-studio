@@ -36,7 +36,7 @@ export default class DevToService {
 
         try {
             return axios.create({
-                baseURL: defaultConfig.devto_api_url,
+                baseURL: defaultConfig.devToApiUrl,
                 timeout: 10_000,
                 headers: {
                     "Content-Type": "application/json",
@@ -154,7 +154,7 @@ export default class DevToService {
     to fetch user Dev.to details and update them in database. That's why api key is being used directly. */
     async getDevUser(api_key: string): Promise<IDevToUserOutput> {
         try {
-            const response = await axios.get(`${defaultConfig.devto_api_url}/users/me`, {
+            const response = await axios.get(`${defaultConfig.devToApiUrl}/users/me`, {
                 headers: {
                     "api-key": api_key,
                 },

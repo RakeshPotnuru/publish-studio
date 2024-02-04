@@ -34,7 +34,7 @@ export default class HashnodeService {
 
         try {
             return axios.create({
-                baseURL: defaultConfig.hashnode_api_url,
+                baseURL: defaultConfig.hashnodeApiUrl,
                 timeout: 10_000,
                 headers: {
                     "Content-Type": "application/json",
@@ -156,7 +156,7 @@ export default class HashnodeService {
     async getHashnodeUser(api_key: string): Promise<IHashnodeUserOutput> {
         try {
             const response = await axios.post(
-                defaultConfig.hashnode_api_url,
+                defaultConfig.hashnodeApiUrl,
                 {
                     query: `query Me {
                                 me {
@@ -225,6 +225,7 @@ export default class HashnodeService {
 
     async updatePost(
         post: THashnodeToUpdatePost,
+        post_id: string,
         user_id: Types.ObjectId,
     ): Promise<IHashnodeUpdatePostOutput> {
         try {
@@ -241,7 +242,7 @@ export default class HashnodeService {
                         }`,
                 variables: {
                     input: {
-                        id: post.post_id,
+                        id: post_id,
                         ...post,
                     },
                 },
