@@ -7,6 +7,7 @@ import defaultConfig from "../../../config/app.config";
 import { Platform } from "../../../config/constants";
 import PlatformModel from "../../../modules/platform/platform.model";
 import User from "../../../modules/user/user.model";
+import { logtail } from "../../../utils/logtail";
 import Blogger from "./blogger.model";
 import type {
     IBlogger,
@@ -27,7 +28,7 @@ export default class BloggerService {
         defaultConfig.bloggerRedirectUri,
     );
 
-    getAuthUrl() {
+    async getAuthUrl(user_id: Types.ObjectId) {
         try {
             return this.oauth2Client.generateAuthUrl({
                 access_type: "offline",
@@ -35,7 +36,9 @@ export default class BloggerService {
                 prompt: "consent",
             });
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -64,7 +67,9 @@ export default class BloggerService {
                 auth: this.oauth2Client,
             });
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -91,7 +96,9 @@ export default class BloggerService {
 
             return true;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id: platform.user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -103,12 +110,22 @@ export default class BloggerService {
     async updatePlatform(platform: IBloggerUpdateInput, user_id: Types.ObjectId): Promise<boolean> {
         try {
             const doc = await Blogger.findOne({ user_id }).exec();
-            doc?.set(platform);
-            await doc?.save();
+
+            if (!doc) {
+                throw new TRPCError({
+                    code: "NOT_FOUND",
+                    message: "Platform not found",
+                });
+            }
+
+            doc.set(platform);
+            await doc.save();
 
             return true;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -136,7 +153,9 @@ export default class BloggerService {
 
             return true;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -154,7 +173,9 @@ export default class BloggerService {
                 .select("-token")
                 .exec();
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -163,7 +184,10 @@ export default class BloggerService {
         }
     }
 
-    async getPlatformByBlogId(blog_id: string): Promise<Omit<IBlogger, "token"> | null> {
+    async getPlatformByBlogId(
+        blog_id: string,
+        user_id: Types.ObjectId,
+    ): Promise<Omit<IBlogger, "token"> | null> {
         try {
             return await Blogger.findOne({
                 blog_id,
@@ -171,7 +195,9 @@ export default class BloggerService {
                 .select("-token")
                 .exec();
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -203,7 +229,9 @@ export default class BloggerService {
                 url: string;
             }[];
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -212,7 +240,7 @@ export default class BloggerService {
         }
     }
 
-    async getTokenAndBlogs(code: string) {
+    async getTokenAndBlogs(code: string, user_id: Types.ObjectId) {
         try {
             const { tokens } = await this.oauth2Client.getToken(code);
 
@@ -248,7 +276,9 @@ export default class BloggerService {
                 }[];
             };
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -265,12 +295,13 @@ export default class BloggerService {
 
     async updatePost(
         post: TBloggerUpdatePostInput,
+        post_id: string,
         user_id: Types.ObjectId,
     ): Promise<IBloggerUpdatePostOutput> {
         const blogger = await this.blogger(user_id);
 
         const response = await blogger.posts.update({
-            postId: post.post_id,
+            postId: post_id,
             ...post,
         });
 
@@ -310,6 +341,10 @@ export default class BloggerService {
         });
 
         if (response.statusText !== "OK") {
+            await logtail.error(JSON.stringify(response), {
+                user_id,
+            });
+
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
                 message: "An error occurred while fetching posts. Please try again later.",

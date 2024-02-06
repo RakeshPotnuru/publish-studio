@@ -6,23 +6,26 @@ import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 import { v4 as uuidV4 } from "uuid";
 
-import type { Context } from "../../trpc";
 import type { IPaginationOptions } from "../../types/common.types";
 import type { IFile } from "../../types/file.types";
 import s3 from "../../utils/aws/s3";
+import { logtail } from "../../utils/logtail";
 import ProjectService from "../project/project.service";
 import Asset from "./asset.model";
 import type { IAsset, IAssetsResponse } from "./asset.types";
 
 export default class AssetService extends ProjectService {
-    async uploadImage(file: IFile, project_id: Types.ObjectId | undefined, ctx: Context) {
+    async uploadImage(
+        file: IFile,
+        project_id: Types.ObjectId | undefined,
+        user_id: Types.ObjectId,
+    ) {
         try {
             const { mimetype, originalname, size } = file;
-            const { user } = ctx;
 
             const uuid = uuidV4();
 
-            const filePath = `${user._id.toString()}/${uuid}_${originalname}`;
+            const filePath = `${user_id.toString()}/${uuid}_${originalname}`;
 
             const params: PresignedPostOptions = {
                 Bucket: process.env.AWS_BUCKET_NAME,
@@ -45,7 +48,7 @@ export default class AssetService extends ProjectService {
                 original_file_name: originalname,
                 hosted_url: hostedUrl,
                 project_id: project_id,
-                user_id: user._id,
+                user_id: user_id,
                 size: size,
                 mimetype: mimetype,
                 key: filePath,
@@ -57,7 +60,9 @@ export default class AssetService extends ProjectService {
                 asset: newAsset,
             };
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -79,7 +84,7 @@ export default class AssetService extends ProjectService {
 
             return await s3.send(command);
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error));
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -112,7 +117,9 @@ export default class AssetService extends ProjectService {
                 },
             };
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -128,7 +135,12 @@ export default class AssetService extends ProjectService {
      * @returns {Promise<DeleteResult>} - A promise that resolves when the assets are deleted.
      * @throws {TRPCError} - If an error occurs while deleting the assets.
      */
-    async deleteAssets(ids: Types.ObjectId[], user_id: Types.ObjectId) {
+    async deleteAssets(
+        ids: Types.ObjectId[],
+        user_id: Types.ObjectId,
+    ): Promise<{
+        deletedCount: number;
+    }> {
         try {
             const assets = await Asset.find({ _id: { $in: ids } }).exec();
 
@@ -138,7 +150,9 @@ export default class AssetService extends ProjectService {
 
             return await Asset.deleteMany({ user_id, _id: { $in: ids } }).exec();
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",

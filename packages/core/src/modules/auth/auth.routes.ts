@@ -63,7 +63,7 @@ const authRouter = router({
                     token: z.string(),
                 }),
             )
-            .mutation(({ input }) => new AuthController().verifyEmailHandler(input)),
+            .mutation(({ input, ctx }) => new AuthController().verifyEmailHandler(input, ctx)),
 
         resendVerification: t.procedure
             .input(

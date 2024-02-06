@@ -2,11 +2,12 @@ import { TRPCError } from "@trpc/server";
 
 import defaultConfig from "../../config/app.config";
 import type { Context } from "../../trpc";
+import { logtail } from "../../utils/logtail";
 import UserService from "./user.service";
 import type { IUserUpdate } from "./user.types";
 
 export default class UserController extends UserService {
-    getMeHandler(ctx: Context) {
+    async getMeHandler(ctx: Context) {
         try {
             const user = ctx.user;
 
@@ -17,7 +18,9 @@ export default class UserController extends UserService {
                 },
             };
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id: ctx.user._id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",

@@ -1,6 +1,8 @@
 import { TRPCError } from "@trpc/server";
+import type { Types } from "mongoose";
 
 import defaultConfig from "../../config/app.config";
+import { logtail } from "../../utils/logtail";
 import nlu from "../../utils/nlu";
 import ProjectService from "../project/project.service";
 
@@ -14,7 +16,7 @@ export default class NLUService extends ProjectService {
      * @returns The function `getToneAnalysis` is returning the result of the tone analysis performed
      * on the given text.
      */
-    async getToneAnalysis(text: string) {
+    async getToneAnalysis(text: string, user_id: Types.ObjectId) {
         try {
             const response = await nlu.analyze({
                 text,
@@ -26,7 +28,9 @@ export default class NLUService extends ProjectService {
 
             return response.result;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",

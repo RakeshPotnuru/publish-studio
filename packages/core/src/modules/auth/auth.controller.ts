@@ -63,7 +63,7 @@ export default class AuthController extends AuthService {
         return await this.sendVerificationEmail(user.email, token);
     }
 
-    async verifyEmailHandler(input: { token: string }) {
+    async verifyEmailHandler(input: { token: string }, ctx: Context) {
         const payload = await verifyJwt<{ email: string }>(
             input.token,
             "verificationTokenPublicKey",
@@ -94,7 +94,7 @@ export default class AuthController extends AuthService {
 
         await super.updateUser(user._id, { is_verified: true });
 
-        await super.sendWelcomeEmail(user);
+        await super.sendWelcomeEmail(user, { ...ctx, user: { ...ctx.user, _id: user._id } });
 
         return {
             status: "success",
@@ -191,7 +191,10 @@ export default class AuthController extends AuthService {
             cookies.set("refresh_token", refresh_token, refreshTokenCookieOptions);
             cookies.set("logged_in", "true", accessTokenCookieOptions);
 
-            await super.sendWelcomeEmail(newUser);
+            await super.sendWelcomeEmail(newUser, {
+                ...ctx,
+                user: { ...ctx.user, _id: newUser._id },
+            });
 
             return {
                 status: "success",
@@ -436,7 +439,9 @@ export default class AuthController extends AuthService {
                 status: "success",
             };
         } catch (error) {
-            await logtail.error(JSON.stringify(error));
+            await logtail.error(JSON.stringify(error), {
+                user_id: ctx.user._id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",

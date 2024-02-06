@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
+import { logtail } from "../../utils/logtail";
 import ProjectService from "../project/project.service";
 import Post from "./post.model";
 import type { IPost, TPostCreateInput } from "./post.types";
@@ -12,7 +13,9 @@ export default class PostService extends ProjectService {
 
             return true;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id: post.user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -21,13 +24,19 @@ export default class PostService extends ProjectService {
         }
     }
 
-    async updatePost(_id: Types.ObjectId, post: Partial<TPostCreateInput>): Promise<boolean> {
+    async updatePost(
+        _id: Types.ObjectId,
+        post: Partial<TPostCreateInput>,
+        user_id: Types.ObjectId,
+    ): Promise<boolean> {
         try {
-            await Post.findByIdAndUpdate(_id, post);
+            await Post.findOneAndUpdate({ _id, user_id }, post);
 
             return true;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -36,11 +45,13 @@ export default class PostService extends ProjectService {
         }
     }
 
-    async getPost(_id: Types.ObjectId): Promise<IPost | null> {
+    async getPost(_id: Types.ObjectId, user_id: Types.ObjectId): Promise<IPost | null> {
         try {
-            return await Post.findById(_id);
+            return await Post.findOne({ _id, user_id });
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -56,7 +67,9 @@ export default class PostService extends ProjectService {
         try {
             return await Post.find({ project_id, user_id });
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -68,11 +81,14 @@ export default class PostService extends ProjectService {
     async getPostByProjectIdAndPlatform(
         project_id: Types.ObjectId,
         platform: string,
+        user_id: Types.ObjectId,
     ): Promise<IPost | null> {
         try {
             return await Post.findOne({ project_id, platform });
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -81,13 +97,18 @@ export default class PostService extends ProjectService {
         }
     }
 
-    async deletePostsByProjectId(project_id: Types.ObjectId): Promise<boolean> {
+    async deletePostsByProjectId(
+        project_id: Types.ObjectId,
+        user_id: Types.ObjectId,
+    ): Promise<boolean> {
         try {
-            await Post.deleteMany({ project_id });
+            await Post.deleteMany({ project_id, user_id });
 
             return true;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",

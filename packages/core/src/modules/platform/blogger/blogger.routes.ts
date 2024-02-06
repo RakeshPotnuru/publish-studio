@@ -22,7 +22,9 @@ const bloggerRouter = router({
         new BloggerController().deletePlatformHandler(ctx),
     ),
 
-    getAuthUrl: protectedProcedure.query(() => new BloggerController().getAuthUrlHandler()),
+    getAuthUrl: protectedProcedure.query(({ ctx }) =>
+        new BloggerController().getAuthUrlHandler(ctx),
+    ),
 
     getBlogs: protectedProcedure.query(({ ctx }) =>
         new BloggerController().getBloggerBlogsHandler(ctx),

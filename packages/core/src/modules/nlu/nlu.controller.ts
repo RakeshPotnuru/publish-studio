@@ -11,7 +11,7 @@ export default class NLUController extends NLUService {
     ) {
         const { text, project_id } = input;
 
-        const analysis = await super.getToneAnalysis(text);
+        const analysis = await super.getToneAnalysis(text, ctx.user._id);
 
         const updatedProject = await super.updateProjectById(
             project_id,

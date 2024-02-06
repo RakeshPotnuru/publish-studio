@@ -33,7 +33,7 @@ export default class AssetController extends AssetService {
 
         this.validateFile(file);
 
-        const { asset, fields, url } = await super.uploadImage(file, project_id, ctx);
+        const { asset, fields, url } = await super.uploadImage(file, project_id, ctx.user._id);
 
         return {
             status: "success",

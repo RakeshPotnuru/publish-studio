@@ -1,9 +1,11 @@
 import { TRPCError } from "@trpc/server";
 import type { Job } from "bullmq";
 import { Queue, Worker } from "bullmq";
+import type { Types } from "mongoose";
 
 import { bullMQConnectionOptions } from "../../../config/app.config";
 import { constants, Platform } from "../../../config/constants";
+import { logtail } from "../../../utils/logtail";
 import BloggerController from "../../platform/blogger/blogger.controller";
 import DevToController from "../../platform/devto/devto.controller";
 import GhostController from "../../platform/ghost/ghost.controller";
@@ -21,7 +23,6 @@ export default class PublishHelpers extends PublishService {
             });
 
             const delay = Number(new Date(data.scheduled_at)) - Date.now();
-            console.log(`⏰ Sending post in ${delay}ms`);
 
             await postQueue.add(
                 `${constants.bullmq.queues.POST}-job-${data.project._id.toString()}`,
@@ -31,9 +32,11 @@ export default class PublishHelpers extends PublishService {
                 },
             );
 
-            this.startSchedulePostWorker();
+            await this.startSchedulePostWorker(data.user_id);
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id: data.user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -42,7 +45,7 @@ export default class PublishHelpers extends PublishService {
         }
     }
 
-    startSchedulePostWorker() {
+    async startSchedulePostWorker(user_id: Types.ObjectId) {
         try {
             const worker = new Worker<ISchedule, ISchedule>(
                 constants.bullmq.queues.POST,
@@ -51,8 +54,6 @@ export default class PublishHelpers extends PublishService {
 
                     await super.publishPost(data.platforms, data.project, data.user_id);
 
-                    console.log(`✅ Sent post ${job.id ?? ""} at ${data.scheduled_at.toString()}`);
-
                     return job.data as ISchedule;
                 },
                 { connection: bullMQConnectionOptions },
@@ -60,22 +61,23 @@ export default class PublishHelpers extends PublishService {
 
             worker.on("completed", job => {
                 void job.remove();
-                console.log(`✅ Completed scheduled post ${job.id ?? ""}`);
             });
 
             worker.on("failed", job => {
-                console.log(job?.failedReason);
-
-                console.log("❌ Job Failed");
+                void logtail.error(job?.failedReason ?? "Post job failed due to unknown reason", {
+                    user_id,
+                });
             });
 
             worker.on("error", error => {
-                console.log(error);
+                void logtail.error(JSON.stringify(error), {
+                    user_id,
+                });
             });
         } catch (error) {
-            console.log("❌ Failed to start schedule post worker");
-
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",

@@ -4,6 +4,7 @@ import type { Types } from "mongoose";
 
 import defaultConfig from "../../../config/app.config";
 import { Platform } from "../../../config/constants";
+import { logtail } from "../../../utils/logtail";
 import PlatformModel from "../../platform/platform.model";
 import User from "../../user/user.model";
 import Hashnode from "./hashnode.model";
@@ -42,7 +43,9 @@ export default class HashnodeService {
                 },
             });
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -51,25 +54,27 @@ export default class HashnodeService {
         }
     }
 
-    async createPlatform(user: THashnodeCreateInput): Promise<boolean> {
+    async createPlatform(platform: THashnodeCreateInput): Promise<boolean> {
         try {
-            const newPlatform = await Hashnode.create(user);
+            const newPlatform = await Hashnode.create(platform);
 
-            await User.findByIdAndUpdate(user.user_id, {
+            await User.findByIdAndUpdate(platform.user_id, {
                 $push: {
                     platforms: this.PLATFORM,
                 },
             }).exec();
 
             await PlatformModel.create({
-                user_id: user.user_id,
+                user_id: platform.user_id,
                 name: this.PLATFORM,
                 data: newPlatform._id,
             });
 
             return true;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id: platform.user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -84,12 +89,22 @@ export default class HashnodeService {
     ): Promise<boolean> {
         try {
             const doc = await Hashnode.findOne({ user_id }).exec();
-            doc?.set(platform);
-            await doc?.save();
+
+            if (!doc) {
+                throw new TRPCError({
+                    code: "NOT_FOUND",
+                    message: "Platform not found",
+                });
+            }
+
+            doc.set(platform);
+            await doc.save();
 
             return true;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -115,7 +130,9 @@ export default class HashnodeService {
 
             return true;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -129,7 +146,9 @@ export default class HashnodeService {
         try {
             return await Hashnode.findOne({ user_id }).select("-api_key").exec();
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -138,11 +157,16 @@ export default class HashnodeService {
         }
     }
 
-    async getPlatformByUsername(username: string): Promise<Omit<IHashnode, "api_key"> | null> {
+    async getPlatformByUsername(
+        username: string,
+        user_id: Types.ObjectId,
+    ): Promise<Omit<IHashnode, "api_key"> | null> {
         try {
             return await Hashnode.findOne({ username }).select("-api_key").exec();
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -153,7 +177,7 @@ export default class HashnodeService {
 
     /* This method is used exactly twice before creating or updating user in `HashnodeController()` class
     to fetch user Hashnode details and update them in database. That's why api key is being used directly. */
-    async getHashnodeUser(api_key: string): Promise<IHashnodeUserOutput> {
+    async getHashnodeUser(api_key: string, user_id: Types.ObjectId): Promise<IHashnodeUserOutput> {
         try {
             const response = await axios.post(
                 defaultConfig.hashnodeApiUrl,
@@ -185,7 +209,9 @@ export default class HashnodeService {
 
             return response.data as IHashnodeUserOutput;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -217,7 +243,9 @@ export default class HashnodeService {
 
             return response.data as THashnodeCreatePostOutput;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             return { isError: true };
         }
@@ -250,7 +278,9 @@ export default class HashnodeService {
 
             return response.data as IHashnodeUpdatePostOutput;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             return { isError: true };
         }
@@ -317,7 +347,9 @@ export default class HashnodeService {
 
             return response.data as IHashnodeGetAllPostsOutput;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",

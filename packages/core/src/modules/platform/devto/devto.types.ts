@@ -29,7 +29,7 @@ export interface IDevToCreatePostInput {
     tags?: string[];
 }
 
-export type IDevToUpdatePost = Partial<IDevToCreatePostInput> & { post_id: number };
+export type IDevToUpdatePost = Partial<IDevToCreatePostInput>;
 
 interface IOutput {
     isError: boolean;

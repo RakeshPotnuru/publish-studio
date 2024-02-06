@@ -18,7 +18,7 @@ const paymentRouter = router({
 
     getSession: protectedProcedure
         .input(z.string())
-        .mutation(({ input }) => new PaymentController().getSessionHandler(input)),
+        .mutation(({ input, ctx }) => new PaymentController().getSessionHandler(input, ctx)),
 });
 
 export default paymentRouter;

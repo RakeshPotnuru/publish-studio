@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
 import type { IPaginationOptions } from "../../types/common.types";
+import { logtail } from "../../utils/logtail";
 import Project from "../project/project.model";
 import Folder from "./folder.model";
 import type {
@@ -16,7 +17,9 @@ export default class FolderService {
         try {
             return await Folder.create(folder);
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id: folder.user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -29,7 +32,9 @@ export default class FolderService {
         try {
             return await Folder.findOne({ user_id, name }).exec();
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -41,7 +46,11 @@ export default class FolderService {
     async getFolderById(id: Types.ObjectId, user_id: Types.ObjectId): Promise<IFolder | null> {
         try {
             return await Folder.findOne({ user_id, _id: id }).exec();
-        } catch {
+        } catch (error) {
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
+
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
                 message: "An error occurred while fetching the folder. Please try again later.",
@@ -73,7 +82,9 @@ export default class FolderService {
                 },
             };
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -92,7 +103,9 @@ export default class FolderService {
                 new: true,
             }).exec();
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -120,7 +133,9 @@ export default class FolderService {
             ).exec();
             return await Folder.deleteMany({ user_id, _id: { $in: ids } }).exec();
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",

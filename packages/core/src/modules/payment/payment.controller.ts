@@ -87,7 +87,7 @@ export default class PaymentController extends PaymentService {
     }
 
     private async upgradePlan(session_id: string, user_id: Types.ObjectId) {
-        const session = await super.fetchCheckoutSession(session_id);
+        const session = await super.fetchCheckoutSession(session_id, user_id);
 
         await super.updateUser(user_id, {
             user_type: UserType.PRO,
@@ -126,14 +126,14 @@ export default class PaymentController extends PaymentService {
             });
         }
 
-        await super.deletePayment(payment._id);
+        await super.deletePayment(payment._id, payment.user_id);
 
         const user = await super.getUserById(payment.user_id);
 
         if (!user) return;
 
         if (user.stripe_customer_id) {
-            await super.deleteCustomer(user.stripe_customer_id);
+            await super.deleteCustomer(user.stripe_customer_id, user._id);
         }
 
         await super.updateUser(user._id, {
@@ -159,7 +159,7 @@ export default class PaymentController extends PaymentService {
             });
         }
 
-        await super.cancelSubscription(payment.subscription_id);
+        await super.cancelSubscription(payment.subscription_id, ctx.user._id);
 
         return {
             status: "success",
@@ -170,8 +170,8 @@ export default class PaymentController extends PaymentService {
         };
     }
 
-    async getSessionHandler(session_id: string) {
-        const session = await super.fetchCheckoutSession(session_id);
+    async getSessionHandler(session_id: string, ctx: Context) {
+        const session = await super.fetchCheckoutSession(session_id, ctx.user._id);
 
         return {
             status: "success",

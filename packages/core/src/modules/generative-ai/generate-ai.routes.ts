@@ -26,7 +26,9 @@ const generativeAIRouter = router({
 
         categories: proProtectedProcedure
             .input(z.object({ text: z.string() }))
-            .mutation(({ input }) => new GenerativeAIController().generateCategoriesHandler(input)),
+            .mutation(({ input, ctx }) =>
+                new GenerativeAIController().generateCategoriesHandler(input, ctx),
+            ),
     }),
 });
 

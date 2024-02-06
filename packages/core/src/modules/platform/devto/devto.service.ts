@@ -44,7 +44,9 @@ export default class DevToService {
                 },
             });
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -71,7 +73,9 @@ export default class DevToService {
 
             return true;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id: platform.user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -83,12 +87,22 @@ export default class DevToService {
     async updatePlatform(platform: TDevToUpdateInput, user_id: Types.ObjectId): Promise<boolean> {
         try {
             const doc = await DevTo.findOne({ user_id }).exec();
-            doc?.set(platform);
-            await doc?.save();
+
+            if (!doc) {
+                throw new TRPCError({
+                    code: "NOT_FOUND",
+                    message: "Platform not found",
+                });
+            }
+
+            doc.set(platform);
+            await doc.save();
 
             return true;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -114,7 +128,9 @@ export default class DevToService {
 
             return true;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -128,7 +144,9 @@ export default class DevToService {
         try {
             return await DevTo.findOne({ user_id }).select("-api_key").exec();
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -137,11 +155,16 @@ export default class DevToService {
         }
     }
 
-    async getPlatformByUsername(username: string): Promise<Omit<IDevTo, "api_key"> | null> {
+    async getPlatformByUsername(
+        username: string,
+        user_id: Types.ObjectId,
+    ): Promise<Omit<IDevTo, "api_key"> | null> {
         try {
             return await DevTo.findOne({ username }).select("-api_key").exec();
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -152,7 +175,7 @@ export default class DevToService {
 
     /* This method is used exactly twice before creating or updating user in `DevController()` class
     to fetch user Dev.to details and update them in database. That's why api key is being used directly. */
-    async getDevUser(api_key: string): Promise<IDevToUserOutput> {
+    async getDevUser(api_key: string, user_id: Types.ObjectId): Promise<IDevToUserOutput> {
         try {
             const response = await axios.get(`${defaultConfig.devToApiUrl}/users/me`, {
                 headers: {
@@ -162,7 +185,9 @@ export default class DevToService {
 
             return response.data as IDevToUserOutput;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "UNAUTHORIZED",
@@ -192,12 +217,13 @@ export default class DevToService {
 
     async updatePost(
         post: IDevToUpdatePost,
+        post_id: number,
         user_id: Types.ObjectId,
     ): Promise<IDevToUpdatePostOutput> {
         try {
             const devTo = await this.devTo(user_id);
 
-            const response = await devTo.put(`/articles/${post.post_id}`, {
+            const response = await devTo.put(`/articles/${post_id}`, {
                 article: post,
             });
 
@@ -224,7 +250,9 @@ export default class DevToService {
 
             return response.data as IDevToGetAllPostsOutput[];
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",

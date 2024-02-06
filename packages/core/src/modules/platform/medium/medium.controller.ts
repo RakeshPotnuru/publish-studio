@@ -18,7 +18,7 @@ export default class MediumController extends MediumService {
         },
         ctx: Context,
     ) {
-        const user = await super.getMediumUser(input.api_key);
+        const user = await super.getMediumUser(input.api_key, ctx.user._id);
 
         if (user.errors) {
             throw new TRPCError({
@@ -27,7 +27,7 @@ export default class MediumController extends MediumService {
             });
         }
 
-        const platform = await super.getPlatformByUsername(user.username);
+        const platform = await super.getPlatformByUsername(user.username, ctx.user._id);
 
         if (platform && !platform.user_id.equals(ctx.user._id)) {
             await super.deletePlatform(platform.user_id);
@@ -59,7 +59,7 @@ export default class MediumController extends MediumService {
         ctx: Context,
     ) {
         if (input.api_key) {
-            const user = await super.getMediumUser(input.api_key);
+            const user = await super.getMediumUser(input.api_key, ctx.user._id);
 
             if (user.errors) {
                 throw new TRPCError({
@@ -68,7 +68,7 @@ export default class MediumController extends MediumService {
                 });
             }
 
-            const platform = await super.getPlatformByUsername(user.username);
+            const platform = await super.getPlatformByUsername(user.username, ctx.user._id);
 
             if (platform && !platform.user_id.equals(ctx.user._id)) {
                 await super.deletePlatform(platform.user_id);

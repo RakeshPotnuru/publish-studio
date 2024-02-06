@@ -11,9 +11,9 @@ import type { IWordPressUpdateInput } from "./wordpress.types";
 
 export default class WordPressController extends WordPressService {
     async createPlatformHandler(code: string, ctx: Context) {
-        const site = await super.getWordPressSite(code);
+        const site = await super.getWordPressSite(code, ctx.user._id);
 
-        const platform = await super.getPlatformByBlogId(site.blog_id);
+        const platform = await super.getPlatformByBlogId(site.blog_id, ctx.user._id);
 
         if (platform && !platform.user_id.equals(ctx.user._id)) {
             await super.deletePlatform(platform.user_id);
@@ -125,7 +125,6 @@ export default class WordPressController extends WordPressService {
 
         const updatedPost = await super.updatePost(
             {
-                post_id,
                 blog_id: platform.blog_id,
                 title: `<h1>${post.title ?? "Untitled"}</h1>`,
                 content: post.body?.html,
@@ -134,6 +133,7 @@ export default class WordPressController extends WordPressService {
                 excerpt: post.description,
                 tags: post.tags?.wordpress_tags,
             },
+            post_id,
             user_id,
         );
 

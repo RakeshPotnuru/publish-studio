@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
+import { logtail } from "../../utils/logtail";
 import Platform from "./platform.model";
 import type { IPlatform, IPlatformsResponse } from "./platform.types";
 
@@ -32,7 +33,9 @@ export default class PlatformService {
                 },
             } as IPlatformsResponse;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",

@@ -39,7 +39,6 @@ export interface IWordPressCreatePostInput {
 }
 
 export type IWordPressUpdatePostInput = Partial<IWordPressCreatePostInput> & {
-    post_id: string;
     blog_id: string;
 };
 

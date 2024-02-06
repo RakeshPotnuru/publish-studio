@@ -15,7 +15,7 @@ export default class GenerativeAIController extends GenerativeAIService {
             });
         }
 
-        const output = await super.generateTitle(project.name);
+        const output = await super.generateTitle(project.name, ctx.user._id);
 
         const regex = /Title: (.*?)(?:Topic:|$)/;
         const match = new RegExp(regex).exec(output);
@@ -42,7 +42,7 @@ export default class GenerativeAIController extends GenerativeAIService {
             });
         }
 
-        const output = await super.generateDescription(project.title ?? project.name);
+        const output = await super.generateDescription(project.title ?? project.name, ctx.user._id);
 
         const regex = /Description: (.*?)(?:Title:|$)/;
         const match = new RegExp(regex).exec(output);
@@ -69,13 +69,13 @@ export default class GenerativeAIController extends GenerativeAIService {
             });
         }
 
-        const output = await super.generateOutline(project.title ?? project.name);
+        const output = await super.generateOutline(project.title ?? project.name, ctx.user._id);
 
         return { status: "success", data: { outline: output } };
     }
 
-    async generateCategoriesHandler(input: { text: string }) {
-        const output = await super.generateCategories(input.text);
+    async generateCategoriesHandler(input: { text: string }, ctx: Context) {
+        const output = await super.generateCategories(input.text, ctx.user._id);
 
         // eslint-disable-next-line unicorn/better-regex
         const regex = /categories: \[(.*?)\]/;

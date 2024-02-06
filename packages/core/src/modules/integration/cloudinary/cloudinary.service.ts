@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
+import { logtail } from "../../../utils/logtail";
 import Cloudinary from "./cloudinary.model";
 import type {
     ICloudinary,
@@ -15,8 +16,9 @@ export default class CloudinaryService {
 
             return true;
         } catch (error) {
-            console.log(error);
-
+            await logtail.error(JSON.stringify(error), {
+                user_id: integration.user_id,
+            });
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
                 message:
@@ -36,7 +38,9 @@ export default class CloudinaryService {
 
             return true;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -54,7 +58,9 @@ export default class CloudinaryService {
 
             return true;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -68,7 +74,9 @@ export default class CloudinaryService {
         try {
             return await Cloudinary.findOne({ user_id }).exec();
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",

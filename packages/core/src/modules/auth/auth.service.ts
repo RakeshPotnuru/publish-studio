@@ -3,6 +3,8 @@ import axios from "axios";
 
 import defaultConfig from "../../config/app.config";
 import { EmailTemplate } from "../../config/constants";
+import { createCaller } from "../../routes";
+import type { Context } from "../../trpc";
 import { scheduleEmail, sendEmail } from "../../utils/aws/ses";
 import { signJwt } from "../../utils/jwt";
 import { logtail } from "../../utils/logtail";
@@ -22,7 +24,7 @@ export default class AuthService extends UserService {
         }
     }
 
-    async sendWelcomeEmail(user: IUser) {
+    async sendWelcomeEmail(user: IUser, ctx: Context) {
         await scheduleEmail({
             emails: [user.email],
             template: EmailTemplate.WELCOME_EMAIL,
@@ -32,6 +34,11 @@ export default class AuthService extends UserService {
             },
             from_address: process.env.AWS_SES_PERSONAL_FROM_EMAIL,
             scheduled_at: new Date(Date.now() + 5 * 60 * 1000), // 5 minutes from now
+        });
+
+        await createCaller(ctx).notifications.create({
+            type: "welcome",
+            message: `Welcome to ${process.env.APP_NAME}! Feel free to reach out to support by clicking "?" button if you have any questions.`,
         });
     }
 
@@ -102,7 +109,9 @@ export default class AuthService extends UserService {
 
             return { access_token, refresh_token };
         } catch (error) {
-            await logtail.error(JSON.stringify(error));
+            await logtail.error(JSON.stringify(error), {
+                user_id: user._id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",

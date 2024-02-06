@@ -4,6 +4,7 @@ import type { Types } from "mongoose";
 
 import defaultConfig from "../../../config/app.config";
 import { Platform } from "../../../config/constants";
+import { logtail } from "../../../utils/logtail";
 import User from "../../user/user.model";
 import PlatformModel from "../platform.model";
 import Medium from "./medium.model";
@@ -39,7 +40,9 @@ export default class MediumService {
                 },
             });
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -48,25 +51,27 @@ export default class MediumService {
         }
     }
 
-    async createPlatform(user: TMediumCreateInput): Promise<boolean> {
+    async createPlatform(platform: TMediumCreateInput): Promise<boolean> {
         try {
-            const newPlatform = await Medium.create(user);
+            const newPlatform = await Medium.create(platform);
 
-            await User.findByIdAndUpdate(user.user_id, {
+            await User.findByIdAndUpdate(platform.user_id, {
                 $push: {
                     platforms: this.PLATFORM,
                 },
             }).exec();
 
             await PlatformModel.create({
-                user_id: user.user_id,
+                user_id: platform.user_id,
                 name: this.PLATFORM,
                 data: newPlatform._id,
             });
 
             return true;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id: platform.user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -81,12 +86,22 @@ export default class MediumService {
     ): Promise<boolean> {
         try {
             const doc = await Medium.findOne({ user_id }).exec();
-            doc?.set(platform);
-            await doc?.save();
+
+            if (!doc) {
+                throw new TRPCError({
+                    code: "NOT_FOUND",
+                    message: "Platform not found",
+                });
+            }
+
+            doc.set(platform);
+            await doc.save();
 
             return true;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -112,7 +127,9 @@ export default class MediumService {
 
             return true;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -126,7 +143,9 @@ export default class MediumService {
         try {
             return await Medium.findOne({ user_id }).select("-api_key").exec();
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -135,11 +154,16 @@ export default class MediumService {
         }
     }
 
-    async getPlatformByUsername(username: string): Promise<Omit<IMedium, "api_key"> | null> {
+    async getPlatformByUsername(
+        username: string,
+        user_id: Types.ObjectId,
+    ): Promise<Omit<IMedium, "api_key"> | null> {
         try {
             return await Medium.findOne({ username }).select("-api_key").exec();
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -150,7 +174,7 @@ export default class MediumService {
 
     /* This method is used exactly twice before creating or updating user in `MediumController()` method
     to fetch user Medium details and update them in database. That's why api key is being used directly. */
-    async getMediumUser(api_key: string): Promise<IMediumUserOutput> {
+    async getMediumUser(api_key: string, user_id: Types.ObjectId): Promise<IMediumUserOutput> {
         try {
             const response = await axios.get(`${defaultConfig.mediumApiUrl}/me`, {
                 headers: {
@@ -161,7 +185,9 @@ export default class MediumService {
 
             return response.data.data as IMediumUserOutput;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "UNAUTHORIZED",
@@ -182,7 +208,9 @@ export default class MediumService {
 
             return response.data as TMediumCreatePostOutput;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             return { isError: true };
         }

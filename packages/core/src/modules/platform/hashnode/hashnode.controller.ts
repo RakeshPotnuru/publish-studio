@@ -14,7 +14,7 @@ export default class HashnodeController extends HashnodeService {
         input: { api_key: string; settings: IHashnodeDefaultSettings },
         ctx: Context,
     ) {
-        const user = await super.getHashnodeUser(input.api_key);
+        const user = await super.getHashnodeUser(input.api_key, ctx.user._id);
 
         if (!user.data) {
             if (user.errors[0].extensions.code === "UNAUTHENTICATED") {
@@ -37,7 +37,7 @@ export default class HashnodeController extends HashnodeService {
             });
         }
 
-        const platform = await super.getPlatformByUsername(user.data.me.username);
+        const platform = await super.getPlatformByUsername(user.data.me.username, ctx.user._id);
 
         if (platform && !platform.user_id.equals(ctx.user._id)) {
             await super.deletePlatform(platform.user_id);
@@ -71,7 +71,7 @@ export default class HashnodeController extends HashnodeService {
         ctx: Context,
     ) {
         if (input.api_key) {
-            const user = await super.getHashnodeUser(input.api_key);
+            const user = await super.getHashnodeUser(input.api_key, ctx.user._id);
 
             if (!user.data) {
                 if (user.errors[0].extensions.code === "UNAUTHENTICATED") {
@@ -94,7 +94,7 @@ export default class HashnodeController extends HashnodeService {
                 });
             }
 
-            const platform = await super.getPlatformByUsername(user.data.me.username);
+            const platform = await super.getPlatformByUsername(user.data.me.username, ctx.user._id);
 
             if (platform && !platform.user_id.equals(ctx.user._id)) {
                 await super.deletePlatform(platform.user_id);

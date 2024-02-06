@@ -43,7 +43,6 @@ export interface IGhostCreatePostInput {
 
 export type TGhostUpdatePostInput = Partial<IGhostCreatePostInput> & {
     updated_at: Date;
-    post_id: string;
 };
 
 export interface IGhostUpdatePostOutput {

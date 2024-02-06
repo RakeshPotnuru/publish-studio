@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
 import type { IPaginationOptions } from "../../types/common.types";
+import { logtail } from "../../utils/logtail";
 import Folder from "../folder/folder.model";
 import FolderService from "../folder/folder.service";
 import Post from "../post/post.model";
@@ -26,7 +27,9 @@ export default class ProjectService extends FolderService {
 
             return newProject;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id: project.user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -39,7 +42,9 @@ export default class ProjectService extends FolderService {
         try {
             return await Project.findOne({ _id: id, user_id }).exec();
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -72,7 +77,9 @@ export default class ProjectService extends FolderService {
                 },
             };
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -109,7 +116,9 @@ export default class ProjectService extends FolderService {
                 },
             } as IProjectsResponse;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -150,7 +159,9 @@ export default class ProjectService extends FolderService {
                 },
             ).exec()) as IProject;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -167,7 +178,9 @@ export default class ProjectService extends FolderService {
 
             return await Project.deleteMany({ user_id, _id: { $in: ids } }).exec();
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",

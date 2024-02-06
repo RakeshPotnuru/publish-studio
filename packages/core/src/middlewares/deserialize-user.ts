@@ -5,6 +5,7 @@ import defaultConfig from "../config/app.config";
 import User from "../modules/user/user.model";
 import type { IUser } from "../modules/user/user.types";
 import { verifyJwt } from "../utils/jwt";
+import { logtail } from "../utils/logtail";
 import redisClient from "../utils/redis";
 
 export const deserializeUser = async ({ req, res }: CreateExpressContextOptions) => {
@@ -51,7 +52,7 @@ export const deserializeUser = async ({ req, res }: CreateExpressContextOptions)
             user: { ...user.toJSON() },
         };
     } catch (error) {
-        console.log(error);
+        await logtail.error(JSON.stringify(error));
 
         throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",

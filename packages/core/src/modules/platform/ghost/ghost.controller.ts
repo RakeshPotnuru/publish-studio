@@ -11,7 +11,7 @@ import type { TGhostCreateFormInput, TGhostUpdateInput } from "./ghost.types";
 
 export default class GhostController extends GhostService {
     async createPlatformHandler(input: TGhostCreateFormInput, ctx: Context) {
-        const site = await super.getGhostSite(input.api_url, input.admin_api_key);
+        const site = await super.getGhostSite(ctx.user._id, input.api_url, input.admin_api_key);
 
         if (!site.success) {
             throw new TRPCError({
@@ -20,7 +20,7 @@ export default class GhostController extends GhostService {
             });
         }
 
-        const platform = await super.getPlatformByAPIUrl(input.api_url);
+        const platform = await super.getPlatformByAPIUrl(input.api_url, ctx.user._id);
 
         if (platform && !platform.user_id.equals(ctx.user._id)) {
             await super.deletePlatform(platform.user_id);
@@ -43,7 +43,7 @@ export default class GhostController extends GhostService {
 
     async updatePlatformHandler(input: TGhostUpdateInput, ctx: Context) {
         if (input.admin_api_key && input.api_url) {
-            const site = await super.getGhostSite(input.api_url, input.admin_api_key);
+            const site = await super.getGhostSite(ctx.user._id, input.api_url, input.admin_api_key);
 
             if (!site.success) {
                 throw new TRPCError({
@@ -52,7 +52,7 @@ export default class GhostController extends GhostService {
                 });
             }
 
-            const platform = await super.getPlatformByAPIUrl(input.api_url);
+            const platform = await super.getPlatformByAPIUrl(input.api_url, ctx.user._id);
 
             if (platform && !platform.user_id.equals(ctx.user._id)) {
                 await super.deletePlatform(platform.user_id);
@@ -180,7 +180,6 @@ export default class GhostController extends GhostService {
         const updatedPost = await (existingPost.success
             ? super.updatePost(
                   {
-                      post_id: post_id,
                       html: post.body?.html,
                       title: post.title,
                       canonical_url: post.canonical_url,
@@ -188,11 +187,11 @@ export default class GhostController extends GhostService {
                       tags: tags ?? undefined,
                       updated_at: new Date(existingPost.data.updated_at ?? Date.now()),
                   },
+                  post_id,
                   user_id,
               )
             : super.updatePost(
                   {
-                      post_id: post_id,
                       html: post.body?.html,
                       title: post.title,
                       canonical_url: post.canonical_url,
@@ -200,6 +199,7 @@ export default class GhostController extends GhostService {
                       tags: tags ?? undefined,
                       updated_at: new Date(),
                   },
+                  post_id,
                   user_id,
               ));
 

@@ -7,6 +7,7 @@ import { Platform } from "../../../config/constants";
 import PlatformModel from "../../../modules/platform/platform.model";
 import User from "../../../modules/user/user.model";
 import type { IPaginationOptions } from "../../../types/common.types";
+import { logtail } from "../../../utils/logtail";
 import Ghost from "./ghost.model";
 import type {
     IGhost,
@@ -38,7 +39,9 @@ export default class GhostService {
                 this.GHOST_API_VERSION,
             );
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -65,7 +68,9 @@ export default class GhostService {
 
             return true;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id: platform.user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -77,8 +82,16 @@ export default class GhostService {
     async updatePlatform(platform: TGhostUpdateInput, user_id: Types.ObjectId): Promise<boolean> {
         try {
             const doc = await Ghost.findOne({ user_id }).exec();
-            doc?.set(platform);
-            await doc?.save();
+
+            if (!doc) {
+                throw new TRPCError({
+                    code: "NOT_FOUND",
+                    message: "Platform not found",
+                });
+            }
+
+            doc.set(platform);
+            await doc.save();
 
             return true;
         } catch (error) {
@@ -108,7 +121,9 @@ export default class GhostService {
 
             return true;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -122,7 +137,9 @@ export default class GhostService {
         try {
             return await Ghost.findOne({ user_id }).exec();
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -131,11 +148,13 @@ export default class GhostService {
         }
     }
 
-    async getPlatformByAPIUrl(api_url: string): Promise<IGhost | null> {
+    async getPlatformByAPIUrl(api_url: string, user_id: Types.ObjectId): Promise<IGhost | null> {
         try {
             return await Ghost.findOne({ api_url }).exec();
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -152,7 +171,7 @@ export default class GhostService {
 
     /* This method is used exactly twice before creating or updating site in `GhostController()` class
     to check if the site exists or not. That's why api key is being used directly. */
-    async getGhostSite(api_url: string, admin_api_key?: string) {
+    async getGhostSite(user_id: Types.ObjectId, api_url: string, admin_api_key?: string) {
         try {
             if (!admin_api_key) {
                 return {
@@ -164,7 +183,9 @@ export default class GhostService {
 
             return await ghost.site.fetch();
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -182,11 +203,12 @@ export default class GhostService {
 
     async updatePost(
         post: TGhostUpdatePostInput,
+        post_id: string,
         user_id: Types.ObjectId,
     ): Promise<IGhostUpdatePostOutput> {
         const ghost = await this.ghost(user_id);
 
-        const response = await ghost.posts.edit(post.post_id, { ...post }, { source: "html" });
+        const response = await ghost.posts.edit(post_id, { ...post }, { source: "html" });
 
         if (!response.success) {
             return {
@@ -205,6 +227,10 @@ export default class GhostService {
         const response = await ghost.posts.browse(pagination).fetch();
 
         if (!response.success) {
+            await logtail.error(JSON.stringify(response), {
+                user_id,
+            });
+
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
                 message: "An error occurred while fetching the posts. Please try again later.",

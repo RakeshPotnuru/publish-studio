@@ -7,6 +7,7 @@ import { Platform } from "../../../config/constants";
 import PlatformModel from "../../../modules/platform/platform.model";
 import User from "../../../modules/user/user.model";
 import type { IPaginationOptions } from "../../../types/common.types";
+import { logtail } from "../../../utils/logtail";
 import WordPress from "./wordpress.model";
 import type {
     IWordPress,
@@ -45,7 +46,9 @@ export default class WordPressService {
                 },
             });
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -72,7 +75,9 @@ export default class WordPressService {
 
             return true;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id: platform.user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -87,12 +92,22 @@ export default class WordPressService {
     ): Promise<boolean> {
         try {
             const doc = await WordPress.findOne({ user_id }).exec();
-            doc?.set(platform);
-            await doc?.save();
+
+            if (!doc) {
+                throw new TRPCError({
+                    code: "NOT_FOUND",
+                    message: "Platform not found",
+                });
+            }
+
+            doc.set(platform);
+            await doc.save();
 
             return true;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -119,7 +134,9 @@ export default class WordPressService {
 
             return true;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -135,7 +152,9 @@ export default class WordPressService {
                 user_id,
             }).exec();
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -144,11 +163,13 @@ export default class WordPressService {
         }
     }
 
-    async getPlatformByBlogId(blog_id: string) {
+    async getPlatformByBlogId(blog_id: string, user_id: Types.ObjectId) {
         try {
             return await WordPress.findOne({ blog_id }).exec();
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -157,7 +178,7 @@ export default class WordPressService {
         }
     }
 
-    async getWordPressSite(code: string): Promise<IWordPressSiteOutput> {
+    async getWordPressSite(code: string, user_id: Types.ObjectId): Promise<IWordPressSiteOutput> {
         try {
             const response = await axios.post(
                 `${this.API_URL}/oauth2/token`,
@@ -177,7 +198,9 @@ export default class WordPressService {
 
             return response.data as IWordPressSiteOutput;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "UNAUTHORIZED",
@@ -197,7 +220,9 @@ export default class WordPressService {
 
             return response.data as IWordPressCreatePostOutput;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             return { isError: true };
         }
@@ -205,19 +230,19 @@ export default class WordPressService {
 
     async updatePost(
         post: IWordPressUpdatePostInput,
+        post_id: string,
         user_id: Types.ObjectId,
     ): Promise<IWordPressUpdatePostOutput> {
         try {
             const wordpress = await this.wordpress(user_id);
 
-            const response = await wordpress.post(
-                `/sites/${post.blog_id}/posts/${post.post_id}`,
-                post,
-            );
+            const response = await wordpress.post(`/sites/${post.blog_id}/posts/${post_id}`, post);
 
             return response.data as IWordPressUpdatePostOutput;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             return { isError: true };
         }
@@ -236,7 +261,9 @@ export default class WordPressService {
 
             return response.data.posts as IWordPressGetAllPostsOutput[];
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",

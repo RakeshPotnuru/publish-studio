@@ -26,6 +26,7 @@ export default class PostController extends PostService {
         const existingPost = await super.getPostByProjectIdAndPlatform(
             post.project_id,
             post.platform,
+            ctx.user._id,
         );
 
         if (existingPost) {
@@ -49,7 +50,7 @@ export default class PostController extends PostService {
         },
         ctx: Context,
     ) {
-        const post = await super.getPost(input._id);
+        const post = await super.getPost(input._id, ctx.user._id);
 
         if (!post) {
             throw new TRPCError({
@@ -67,7 +68,7 @@ export default class PostController extends PostService {
             });
         }
 
-        await super.updatePost(input._id, input.post);
+        await super.updatePost(input._id, input.post, ctx.user._id);
 
         return {
             status: "success",

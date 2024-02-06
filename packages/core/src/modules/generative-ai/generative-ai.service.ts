@@ -1,8 +1,10 @@
 import { HarmBlockThreshold, HarmCategory } from "@google/generative-ai";
 import { TRPCError } from "@trpc/server";
+import type { Types } from "mongoose";
 
 import { constants } from "../../config/constants";
 import { ai } from "../../utils/google/gemini";
+import { logtail } from "../../utils/logtail";
 import ProjectService from "../project/project.service";
 
 export default class GenerativeAIService extends ProjectService {
@@ -32,7 +34,7 @@ export default class GenerativeAIService extends ProjectService {
         maxOutputTokens: 2048,
     };
 
-    async generateTitle(topic: string) {
+    async generateTitle(topic: string, user_id: Types.ObjectId) {
         const parts = [
             { text: "Topic: What is backend testing?" },
             { text: "Title: What is Backend Testing? - Essential Techniques Unveiled" },
@@ -61,7 +63,9 @@ export default class GenerativeAIService extends ProjectService {
 
             return response.text();
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -70,7 +74,7 @@ export default class GenerativeAIService extends ProjectService {
         }
     }
 
-    async generateDescription(title: string) {
+    async generateDescription(title: string, user_id: Types.ObjectId) {
         const parts = [
             { text: "Title: Data Science vs Web Dev: Comparing Two Booming Tech Fields" },
             {
@@ -109,7 +113,9 @@ export default class GenerativeAIService extends ProjectService {
 
             return response.text();
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -119,7 +125,7 @@ export default class GenerativeAIService extends ProjectService {
         }
     }
 
-    async generateOutline(title: string) {
+    async generateOutline(title: string, user_id: Types.ObjectId) {
         const parts = [
             {
                 text: `Generate a markdown-based blog outline for the topic "${title}".`,
@@ -137,7 +143,9 @@ export default class GenerativeAIService extends ProjectService {
 
             return response.text();
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -147,7 +155,7 @@ export default class GenerativeAIService extends ProjectService {
         }
     }
 
-    async generateCategories(text: string) {
+    async generateCategories(text: string, user_id: Types.ObjectId) {
         const parts = [
             { text: "Given a sentence, return an array of 5 categories related to that sentence" },
             {
@@ -180,7 +188,9 @@ export default class GenerativeAIService extends ProjectService {
 
             return response.text();
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",

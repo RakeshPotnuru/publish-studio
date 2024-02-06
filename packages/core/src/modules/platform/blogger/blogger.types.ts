@@ -29,7 +29,7 @@ export interface IBloggerCreatePostInput {
     };
 }
 
-export type TBloggerUpdatePostInput = Partial<IBloggerCreatePostInput> & { post_id: string };
+export type TBloggerUpdatePostInput = Partial<IBloggerCreatePostInput>;
 
 export interface IBloggerUpdatePostOutput {
     isError: boolean;

@@ -4,6 +4,7 @@ import type { Platform } from "../../../config/constants";
 import { PostStatus, ProjectStatus } from "../../../config/constants";
 import { createCaller } from "../../../routes";
 import type { Context } from "../../../trpc";
+import { logtail } from "../../../utils/logtail";
 import type { IProject } from "../../project/project.types";
 import PostController from "../post.controller";
 import type { IPost } from "../post.types";
@@ -20,7 +21,7 @@ export default class PublishService extends PostController {
 
         let successCount = 0;
         for (const platform of platforms) {
-            successCount += await this.handlePlatformPost(
+            successCount += await this.handlePublishPost(
                 platform,
                 posts,
                 project,
@@ -48,7 +49,7 @@ export default class PublishService extends PostController {
         /* eslint-enable @typescript-eslint/no-explicit-any */
     }
 
-    async handlePlatformPost(
+    async handlePublishPost(
         platform: Platform,
         posts: IPost[],
         project: IProject,
@@ -70,7 +71,7 @@ export default class PublishService extends PostController {
             }
 
             const response = await controller.createPostHandler({ post: project }, user_id);
-            await super.updatePost(post._id, response);
+            await super.updatePost(post._id, response, user_id);
 
             const isSuccess = response.status === PostStatus.SUCCESS;
 
@@ -83,7 +84,10 @@ export default class PublishService extends PostController {
 
             return isSuccess ? 1 : 0;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
+
             return 0;
         }
     }

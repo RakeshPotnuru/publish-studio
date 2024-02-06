@@ -34,7 +34,7 @@ export default class ProjectController extends ProjectService {
 
             const text = project.description ?? project.title ?? project.name;
             if (text) {
-                const { data } = await genAI.generateCategoriesHandler({ text });
+                const { data } = await genAI.generateCategoriesHandler({ text }, ctx);
                 categories = data.categories.length > 0 ? data.categories : undefined;
             }
 

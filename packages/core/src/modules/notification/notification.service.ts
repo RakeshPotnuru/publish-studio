@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
+import { logtail } from "../../utils/logtail";
 import Notification from "./notification.model";
 import type { INotification, TNotificationCreateInput } from "./notification.types";
 
@@ -9,7 +10,9 @@ export default class NotificationService {
         try {
             return await Notification.create(notification);
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id: notification.user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -24,7 +27,9 @@ export default class NotificationService {
 
             return true;
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -37,7 +42,9 @@ export default class NotificationService {
         try {
             return await Notification.findOne({ _id: id, user_id });
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -50,7 +57,9 @@ export default class NotificationService {
         try {
             return await Notification.find({ user_id }).sort({ created_at: -1 });
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",

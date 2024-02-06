@@ -4,6 +4,7 @@ import type Stripe from "stripe";
 
 import { constants } from "../../config/constants";
 import type { Context } from "../../trpc";
+import { logtail } from "../../utils/logtail";
 import stripe from "../../utils/stripe";
 import UserService from "../user/user.service";
 import type { IUser } from "../user/user.types";
@@ -21,7 +22,9 @@ export default class PaymentService extends UserService {
 
             return await stripe.customers.update(customer_id, params);
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id: user._id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -30,24 +33,13 @@ export default class PaymentService extends UserService {
         }
     }
 
-    async fetchCustomer(customer_id: string) {
-        try {
-            return await stripe.customers.retrieve(customer_id);
-        } catch (error) {
-            console.log(error);
-
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: "Error fetching customer",
-            });
-        }
-    }
-
-    async deleteCustomer(customer_id: string) {
+    async deleteCustomer(customer_id: string, user_id: Types.ObjectId) {
         try {
             return await stripe.customers.del(customer_id);
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -76,7 +68,9 @@ export default class PaymentService extends UserService {
 
             return await stripe.checkout.sessions.create(params);
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id: ctx.user._id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -85,11 +79,13 @@ export default class PaymentService extends UserService {
         }
     }
 
-    async fetchCheckoutSession(session_id: string) {
+    async fetchCheckoutSession(session_id: string, user_id: Types.ObjectId) {
         try {
             return await stripe.checkout.sessions.retrieve(session_id);
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -102,7 +98,9 @@ export default class PaymentService extends UserService {
         try {
             return await Payment.create(payment);
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id: payment.user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -114,10 +112,12 @@ export default class PaymentService extends UserService {
     async getPayment(user_id: Types.ObjectId): Promise<IPayment | null> {
         try {
             return await Payment.findOne({
-                user_id: user_id,
+                user_id,
             });
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -132,7 +132,7 @@ export default class PaymentService extends UserService {
                 subscription_id: subscription_id,
             });
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error));
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -141,11 +141,16 @@ export default class PaymentService extends UserService {
         }
     }
 
-    async deletePayment(payment_id: Types.ObjectId) {
+    async deletePayment(payment_id: Types.ObjectId, user_id: Types.ObjectId) {
         try {
-            return await Payment.findByIdAndDelete(payment_id);
+            return await Payment.findOneAndDelete({
+                _id: payment_id,
+                user_id,
+            });
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -154,11 +159,13 @@ export default class PaymentService extends UserService {
         }
     }
 
-    async cancelSubscription(subscription_id: string) {
+    async cancelSubscription(subscription_id: string, user_id: Types.ObjectId) {
         try {
             return await stripe.subscriptions.cancel(subscription_id);
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error), {
+                user_id,
+            });
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",

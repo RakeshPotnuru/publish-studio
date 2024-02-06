@@ -10,9 +10,9 @@ import DevToService from "./devto.service";
 
 export default class DevToController extends DevToService {
     async createPlatformHandler(input: { api_key: string; status: boolean }, ctx: Context) {
-        const user = await super.getDevUser(input.api_key);
+        const user = await super.getDevUser(input.api_key, ctx.user._id);
 
-        const platform = await super.getPlatformByUsername(user.username);
+        const platform = await super.getPlatformByUsername(user.username, ctx.user._id);
 
         if (platform && !platform.user_id.equals(ctx.user._id)) {
             await super.deletePlatform(platform.user_id);
@@ -35,9 +35,9 @@ export default class DevToController extends DevToService {
 
     async updatePlatformHandler(input: { api_key?: string; status?: boolean }, ctx: Context) {
         if (input.api_key) {
-            const user = await super.getDevUser(input.api_key);
+            const user = await super.getDevUser(input.api_key, ctx.user._id);
 
-            const platform = await super.getPlatformByUsername(user.username);
+            const platform = await super.getPlatformByUsername(user.username, ctx.user._id);
 
             if (platform && !platform.user_id.equals(ctx.user._id)) {
                 await super.deletePlatform(platform.user_id);
@@ -152,7 +152,6 @@ export default class DevToController extends DevToService {
 
         const updatedPost = await super.updatePost(
             {
-                post_id: Number.parseInt(post_id),
                 title: post.title,
                 body_markdown: post.body?.markdown,
                 description: post.description,
@@ -161,6 +160,7 @@ export default class DevToController extends DevToService {
                 tags: post.tags?.devto_tags,
                 main_image: post.cover_image,
             },
+            Number.parseInt(post_id),
             user_id,
         );
 

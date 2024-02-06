@@ -9,8 +9,8 @@ import BloggerService from "./blogger.service";
 import type { IBloggerUpdateInput } from "./blogger.types";
 
 export default class BloggerController extends BloggerService {
-    getAuthUrlHandler() {
-        const authUrl = super.getAuthUrl();
+    async getAuthUrlHandler(ctx: Context) {
+        const authUrl = await super.getAuthUrl(ctx.user._id);
 
         return {
             status: "success",
@@ -32,9 +32,9 @@ export default class BloggerController extends BloggerService {
     }
 
     async createPlatformHandler(code: string, ctx: Context) {
-        const response = await super.getTokenAndBlogs(code);
+        const response = await super.getTokenAndBlogs(code, ctx.user._id);
 
-        const platform = await super.getPlatformByBlogId(response.blogs[0].id);
+        const platform = await super.getPlatformByBlogId(response.blogs[0].id, ctx.user._id);
 
         if (platform && !platform.user_id.equals(ctx.user._id)) {
             await super.deletePlatform(platform.user_id);
@@ -57,7 +57,7 @@ export default class BloggerController extends BloggerService {
     }
 
     async updatePlatformHandler(input: IBloggerUpdateInput, ctx: Context) {
-        const platform = await super.getPlatformByBlogId(input.blog_id);
+        const platform = await super.getPlatformByBlogId(input.blog_id, ctx.user._id);
 
         if (platform && !platform.user_id.equals(ctx.user._id)) {
             await super.deletePlatform(platform.user_id);
@@ -150,7 +150,6 @@ export default class BloggerController extends BloggerService {
 
         const updatedPost = await super.updatePost(
             {
-                post_id: post_id,
                 blogId: platform.blog_id,
                 requestBody: {
                     title: post.title ?? post.name,
@@ -158,6 +157,7 @@ export default class BloggerController extends BloggerService {
                     labels: post.tags?.blogger_tags,
                 },
             },
+            post_id,
             user_id,
         );
 

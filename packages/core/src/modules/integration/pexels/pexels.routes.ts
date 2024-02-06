@@ -12,7 +12,7 @@ const pexelsRouter = router({
                 page: z.number().int().positive().default(1),
             }),
         )
-        .query(({ input }) => new PexelsController().searchPhotosHandler(input)),
+        .query(({ input, ctx }) => new PexelsController().searchPhotosHandler(input, ctx)),
 });
 
 export default pexelsRouter;
