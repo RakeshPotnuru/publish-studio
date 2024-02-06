@@ -1,6 +1,5 @@
 import type { AppRouter } from "@publish-studio/core";
-import type {
-  HTTPHeaders} from "@trpc/react-query";
+import type { HTTPHeaders } from "@trpc/react-query";
 import {
   createTRPCProxyClient,
   createTRPCReact,
