@@ -37,103 +37,104 @@ const lowlight = createLowlight(all);
 type Level = 1 | 2 | 3 | 4 | 5 | 6;
 
 const classes: Record<Level, string> = {
-    1: "text-4xl",
-    2: "text-3xl",
-    3: "text-2xl",
-    4: "text-xl",
-    5: "text-lg",
-    6: "text-base",
+  1: "text-4xl",
+  2: "text-3xl",
+  3: "text-2xl",
+  4: "text-xl",
+  5: "text-lg",
+  6: "text-base",
 };
 
 export const extensions = [
-    Document,
-    Bold,
-    Text,
-    Paragraph,
-    Underline,
-    ListItem,
-    Typography,
-    SpeechRecognition,
-    History,
-    Italic,
-    Strike,
-    HardBreak,
-    HorizontalRule,
-    Dropcursor,
-    Gapcursor,
-    TableRow,
-    TableHeader.configure({
-        HTMLAttributes: {
-            class: "border p-2 bg-secondary",
-        },
-    }),
-    TableCell.configure({
-        HTMLAttributes: {
-            class: "border p-2",
-        },
-    }),
-    Table.configure({
-        resizable: true,
-    }),
-    Code.configure({
-        HTMLAttributes: {
-            class: "bg-secondary text-sm p-1 rounded-md",
-            spellcheck: false,
-        },
-    }),
-    Blockquote.configure({
-        HTMLAttributes: {
-            class: "p-2 my-2 border-l-4 border-gray-300 bg-gray-50 italic dark:border-gray-500 dark:bg-gray-800",
-        },
-    }),
-    BulletList.configure({
-        HTMLAttributes: {
-            class: "list-disc",
-        },
-    }),
-    OrderedList.configure({
-        HTMLAttributes: {
-            class: "list-decimal",
-        },
-    }),
-    Placeholder.configure({
-        placeholder: "Once upon a time...",
-    }),
-    TiptapHeading.configure({
-        levels: [1, 2, 3, 4, 5, 6],
-    }).extend({
-        renderHTML({ node, HTMLAttributes }) {
-            const hasLevel = this.options.levels.includes(node.attrs.level as Level);
-            const level: Level = hasLevel ? node.attrs.level : this.options.levels[0];
+  Document,
+  Bold,
+  Text,
+  Paragraph,
+  Underline,
+  ListItem,
+  Typography,
+  SpeechRecognition,
+  History,
+  Italic,
+  Strike,
+  HardBreak,
+  HorizontalRule,
+  Dropcursor,
+  Gapcursor,
+  TableRow,
+  TableHeader.configure({
+    HTMLAttributes: {
+      class: "border p-2 bg-secondary",
+    },
+  }),
+  TableCell.configure({
+    HTMLAttributes: {
+      class: "border p-2",
+    },
+  }),
+  Table.configure({
+    resizable: true,
+  }),
+  Code.configure({
+    HTMLAttributes: {
+      class: "bg-secondary text-sm p-1 rounded-md",
+      spellcheck: false,
+    },
+  }),
+  Blockquote.configure({
+    HTMLAttributes: {
+      class:
+        "p-2 my-2 border-l-4 border-gray-300 bg-gray-50 italic dark:border-gray-500 dark:bg-gray-800",
+    },
+  }),
+  BulletList.configure({
+    HTMLAttributes: {
+      class: "list-disc",
+    },
+  }),
+  OrderedList.configure({
+    HTMLAttributes: {
+      class: "list-decimal",
+    },
+  }),
+  Placeholder.configure({
+    placeholder: "Once upon a time...",
+  }),
+  TiptapHeading.configure({
+    levels: [1, 2, 3, 4, 5, 6],
+  }).extend({
+    renderHTML({ node, HTMLAttributes }) {
+      const hasLevel = this.options.levels.includes(node.attrs.level as Level);
+      const level: Level = hasLevel ? node.attrs.level : this.options.levels[0];
 
-            return [
-                `h${level}`,
-                mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
-                    class: `${classes[level]}`,
-                }),
-                0,
-            ];
-        },
-    }),
-    CodeBlockLowlight.configure({
-        lowlight,
-        HTMLAttributes: {
-            spellcheck: false,
-            class: "bg-code text-code-foreground text-sm p-4 rounded-md",
-        },
-    }),
-    Image.configure({
-        inline: true,
-        HTMLAttributes: {
-            class: "cursor-move",
-        },
-    }),
-    CharacterCount.configure({
-        limit: constants.project.body.MAX_LENGTH,
-    }),
-    Link.configure({
-        HTMLAttributes: {
-            class: "text-blue-500 underline hover:text-blue-600",
-        },
-    }),
+      return [
+        `h${level}`,
+        mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
+          class: `${classes[level]}`,
+        }),
+        0,
+      ];
+    },
+  }),
+  CodeBlockLowlight.configure({
+    lowlight,
+    HTMLAttributes: {
+      spellcheck: false,
+      class: "bg-code text-code-foreground text-sm p-4 rounded-md",
+    },
+  }),
+  Image.configure({
+    inline: true,
+    HTMLAttributes: {
+      class: "cursor-move",
+    },
+  }),
+  CharacterCount.configure({
+    limit: constants.project.body.MAX_LENGTH,
+  }),
+  Link.configure({
+    HTMLAttributes: {
+      class: "text-blue-500 underline hover:text-blue-600",
+    },
+  }),
 ];

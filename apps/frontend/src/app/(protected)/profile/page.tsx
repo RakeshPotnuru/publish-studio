@@ -4,13 +4,13 @@ import { Profile } from "@/components/modules/dashboard/profile";
 import { Shell } from "@/components/ui/shell";
 
 export const metadata: Metadata = {
-    title: "Profile",
+  title: "Profile",
 };
 
 export default function ProfilePage() {
-    return (
-        <Shell>
-            <Profile />
-        </Shell>
-    );
+  return (
+    <Shell>
+      <Profile />
+    </Shell>
+  );
 }

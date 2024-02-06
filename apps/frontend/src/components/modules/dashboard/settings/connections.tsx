@@ -19,79 +19,76 @@ import { WordPress } from "./platforms/wordpress";
 type IntegrationsProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function Connections({ ...props }: Readonly<IntegrationsProps>) {
-    const {
-        data,
-        isFetching,
-        error: platformsError,
-    } = trpc.platforms.getAll.useQuery({
-        pagination: { page: 1, limit: 10 },
-    });
+  const {
+    data,
+    isFetching,
+    error: platformsError,
+  } = trpc.platforms.getAll.useQuery({
+    pagination: { page: 1, limit: 10 },
+  });
 
-    const platforms = data?.data.platforms;
+  const platforms = data?.data.platforms;
 
-    const devto: IPlatform<typeof Platform.DEVTO> | undefined = platforms?.find(
-        platform => platform.name === Platform.DEVTO,
-    )?.data;
-    const medium: IPlatform<typeof Platform.MEDIUM> | undefined = platforms?.find(
-        platform => platform.name === Platform.MEDIUM,
-    )?.data;
-    const hashnode: IPlatform<typeof Platform.HASHNODE> | undefined = platforms?.find(
-        platform => platform.name === Platform.HASHNODE,
-    )?.data;
-    const ghost: IPlatform<typeof Platform.GHOST> | undefined = platforms?.find(
-        platform => platform.name === Platform.GHOST,
-    )?.data;
-    const wordpress: IPlatform<typeof Platform.WORDPRESS> | undefined = platforms?.find(
-        platform => platform.name === Platform.WORDPRESS,
-    )?.data;
-    const blogger: IPlatform<typeof Platform.BLOGGER> | undefined = platforms?.find(
-        platform => platform.name === Platform.BLOGGER,
-    )?.data;
+  const devto: IPlatform<typeof Platform.DEVTO> | undefined = platforms?.find(
+    (platform) => platform.name === Platform.DEVTO,
+  )?.data;
+  const medium: IPlatform<typeof Platform.MEDIUM> | undefined = platforms?.find(
+    (platform) => platform.name === Platform.MEDIUM,
+  )?.data;
+  const hashnode: IPlatform<typeof Platform.HASHNODE> | undefined =
+    platforms?.find((platform) => platform.name === Platform.HASHNODE)?.data;
+  const ghost: IPlatform<typeof Platform.GHOST> | undefined = platforms?.find(
+    (platform) => platform.name === Platform.GHOST,
+  )?.data;
+  const wordpress: IPlatform<typeof Platform.WORDPRESS> | undefined =
+    platforms?.find((platform) => platform.name === Platform.WORDPRESS)?.data;
+  const blogger: IPlatform<typeof Platform.BLOGGER> | undefined =
+    platforms?.find((platform) => platform.name === Platform.BLOGGER)?.data;
 
-    const {
-        data: cloudinary,
-        isFetching: isCloudinaryLoading,
-        error: cloudinaryError,
-    } = trpc.cloudinary.get.useQuery();
+  const {
+    data: cloudinary,
+    isFetching: isCloudinaryLoading,
+    error: cloudinaryError,
+  } = trpc.cloudinary.get.useQuery();
 
-    return (
-        <div className="space-y-8" {...props}>
-            <div className="space-y-2">
-                <Heading>Connections</Heading>
-                <p className="text-muted-foreground">
-                    Configure your platforms and other integrations
-                </p>
-            </div>
-            <div className="space-y-4">
-                <Heading level={2}>Platforms</Heading>
-                {platformsError && (
-                    <Center>
-                        <ErrorBox title="Error" description={platformsError.message} />
-                    </Center>
-                )}
-                <div className="grid grid-cols-2 gap-4">
-                    <Blogger isLoading={isFetching} data={blogger} />
-                    <DevTo isLoading={isFetching} data={devto} />
-                    <Ghost isLoading={isFetching} data={ghost} />
-                    <Hashnode isLoading={isFetching} data={hashnode} />
-                    <Medium isLoading={isFetching} data={medium} />
-                    <WordPress isLoading={isFetching} data={wordpress} />
-                </div>
-            </div>
-            <div className="space-y-4">
-                <Heading level={2}>Integrations</Heading>
-                {cloudinaryError && (
-                    <Center>
-                        <ErrorBox title="Error" description={cloudinaryError.message} />
-                    </Center>
-                )}
-                <div className="grid grid-cols-2 gap-4">
-                    <Cloudinary
-                        isLoading={isCloudinaryLoading}
-                        data={cloudinary?.data.integration ?? undefined}
-                    />
-                </div>
-            </div>
+  return (
+    <div className="space-y-8" {...props}>
+      <div className="space-y-2">
+        <Heading>Connections</Heading>
+        <p className="text-muted-foreground">
+          Configure your platforms and other integrations
+        </p>
+      </div>
+      <div className="space-y-4">
+        <Heading level={2}>Platforms</Heading>
+        {platformsError && (
+          <Center>
+            <ErrorBox title="Error" description={platformsError.message} />
+          </Center>
+        )}
+        <div className="grid grid-cols-2 gap-4">
+          <Blogger isLoading={isFetching} data={blogger} />
+          <DevTo isLoading={isFetching} data={devto} />
+          <Ghost isLoading={isFetching} data={ghost} />
+          <Hashnode isLoading={isFetching} data={hashnode} />
+          <Medium isLoading={isFetching} data={medium} />
+          <WordPress isLoading={isFetching} data={wordpress} />
         </div>
-    );
+      </div>
+      <div className="space-y-4">
+        <Heading level={2}>Integrations</Heading>
+        {cloudinaryError && (
+          <Center>
+            <ErrorBox title="Error" description={cloudinaryError.message} />
+          </Center>
+        )}
+        <div className="grid grid-cols-2 gap-4">
+          <Cloudinary
+            isLoading={isCloudinaryLoading}
+            data={cloudinary?.data.integration ?? undefined}
+          />
+        </div>
+      </div>
+    </div>
+  );
 }

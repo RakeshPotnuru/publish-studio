@@ -1,7 +1,7 @@
 import type { Types } from "mongoose";
 import { z } from "zod";
 
-import { constants,Platform, ProjectStatus } from "../../config/constants";
+import { constants, Platform, ProjectStatus } from "../../config/constants";
 import { protectedProcedure, router } from "../../trpc";
 import ProjectController from "./project.controller";
 

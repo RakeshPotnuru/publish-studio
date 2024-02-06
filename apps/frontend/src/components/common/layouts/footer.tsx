@@ -10,25 +10,25 @@ import { siteConfig } from "@/config/site";
 type FooterProps = React.HTMLAttributes<HTMLElement>;
 
 export function Footer({ className, ...props }: FooterProps) {
-    return (
-        <footer
-            className={cn(
-                "dark:bg-background-dark flex flex-row items-center space-x-4",
-                className,
-            )}
-            {...props}
-        >
-            <p className="text-sm">&copy; Publish Studio</p>
-            <Button variant="link" className="h-max p-0" asChild>
-                <Link href={siteConfig.pages.privacyPolicy.link} target="_blank">
-                    Privacy Policy
-                </Link>
-            </Button>
-            <Button variant="link" className="h-max p-0" asChild>
-                <Link href={siteConfig.pages.termsOfService.link} target="_blank">
-                    Terms of Service
-                </Link>
-            </Button>
-        </footer>
-    );
+  return (
+    <footer
+      className={cn(
+        "dark:bg-background-dark flex flex-row items-center space-x-4",
+        className,
+      )}
+      {...props}
+    >
+      <p className="text-sm">&copy; Publish Studio</p>
+      <Button variant="link" className="h-max p-0" asChild>
+        <Link href={siteConfig.pages.privacyPolicy.link} target="_blank">
+          Privacy Policy
+        </Link>
+      </Button>
+      <Button variant="link" className="h-max p-0" asChild>
+        <Link href={siteConfig.pages.termsOfService.link} target="_blank">
+          Terms of Service
+        </Link>
+      </Button>
+    </footer>
+  );
 }

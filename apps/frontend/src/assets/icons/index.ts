@@ -9,9 +9,9 @@ import { NavigationIcons } from "./navigation";
 export type Icon = IconType;
 
 export const Icons = {
-    ...ActionIcons,
-    ...EditorIcons,
-    ...FileIcons,
-    ...GeneralIcons,
-    ...NavigationIcons,
+  ...ActionIcons,
+  ...EditorIcons,
+  ...FileIcons,
+  ...GeneralIcons,
+  ...NavigationIcons,
 };

@@ -1,21 +1,21 @@
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import {
-    BiPlus,
-    BiSolidHide,
-    BiSolidMicrophone,
-    BiSolidMicrophoneOff,
-    BiSolidSave,
+  BiPlus,
+  BiSolidHide,
+  BiSolidMicrophone,
+  BiSolidMicrophoneOff,
+  BiSolidSave,
 } from "react-icons/bi";
 import { BsArrowDownShort, BsArrowUpShort } from "react-icons/bs";
 import { HiDocumentDuplicate } from "react-icons/hi";
 import { IoMdLogOut } from "react-icons/io";
 import { IoMdRefresh } from "react-icons/io";
 import {
-    MdDriveFileMoveRtl,
-    MdManageAccounts,
-    MdOutlineFullscreen,
-    MdOutlineFullscreenExit,
-    MdScheduleSend,
+  MdDriveFileMoveRtl,
+  MdManageAccounts,
+  MdOutlineFullscreen,
+  MdOutlineFullscreenExit,
+  MdScheduleSend,
 } from "react-icons/md";
 import { PiPlusCircleLight } from "react-icons/pi";
 import { RxCaretSort, RxCross2 } from "react-icons/rx";
@@ -23,28 +23,28 @@ import { TbPlugConnected } from "react-icons/tb";
 import { TiDownload, TiLockClosed, TiLockOpen } from "react-icons/ti";
 
 export const ActionIcons = {
-    EditProfile: MdManageAccounts,
-    Delete: AiFillDelete,
-    Edit: AiFillEdit,
-    Duplicate: HiDocumentDuplicate,
-    Close: RxCross2,
-    Hide: BiSolidHide,
-    Logout: IoMdLogOut,
-    SortAsc: BsArrowUpShort,
-    SortDesc: BsArrowDownShort,
-    Sort: RxCaretSort,
-    CircleAdd: PiPlusCircleLight,
-    Add: BiPlus,
-    Move: MdDriveFileMoveRtl,
-    Schedule: MdScheduleSend,
-    Lock: TiLockClosed,
-    Unlock: TiLockOpen,
-    Connect: TbPlugConnected,
-    Save: BiSolidSave,
-    Fullscreen: MdOutlineFullscreen,
-    ExitFullscreen: MdOutlineFullscreenExit,
-    Mic: BiSolidMicrophone,
-    MicOff: BiSolidMicrophoneOff,
-    Import: TiDownload,
-    Refresh: IoMdRefresh,
+  EditProfile: MdManageAccounts,
+  Delete: AiFillDelete,
+  Edit: AiFillEdit,
+  Duplicate: HiDocumentDuplicate,
+  Close: RxCross2,
+  Hide: BiSolidHide,
+  Logout: IoMdLogOut,
+  SortAsc: BsArrowUpShort,
+  SortDesc: BsArrowDownShort,
+  Sort: RxCaretSort,
+  CircleAdd: PiPlusCircleLight,
+  Add: BiPlus,
+  Move: MdDriveFileMoveRtl,
+  Schedule: MdScheduleSend,
+  Lock: TiLockClosed,
+  Unlock: TiLockOpen,
+  Connect: TbPlugConnected,
+  Save: BiSolidSave,
+  Fullscreen: MdOutlineFullscreen,
+  ExitFullscreen: MdOutlineFullscreenExit,
+  Mic: BiSolidMicrophone,
+  MicOff: BiSolidMicrophoneOff,
+  Import: TiDownload,
+  Refresh: IoMdRefresh,
 };

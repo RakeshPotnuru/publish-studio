@@ -18,7 +18,7 @@ import { createContext } from "./trpc";
 const app: Application = express();
 
 app.use((req, res, next) => {
-    if (req.originalUrl === defaultConfig.stripeWebhookEndpoint) {
+    if (req.originalUrl === defaultConfig.stripeWebhookPath) {
         express.raw({ type: "application/json" })(req, res, next);
     } else {
         express.json()(req, res, next);

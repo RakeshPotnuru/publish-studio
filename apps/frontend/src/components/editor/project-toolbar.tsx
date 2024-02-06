@@ -11,41 +11,44 @@ import { ProjectTools } from "../modules/dashboard/projects/tools";
 import type { MenuProps } from "./menu/fixed-menu";
 
 interface ProjectToolbarProps extends MenuProps {
-    project: IProject;
+  project: IProject;
 }
 
-export function ProjectToolbar({ project, editor }: Readonly<ProjectToolbarProps>) {
-    return (
-        <div className="sticky top-0 z-10 flex justify-between rounded-full bg-background p-2 shadow-sm">
-            <div className="flex flex-row items-center rounded-full border px-2 py-0">
-                <p title={project.name} className="text-sm">
-                    {shortenText(project.name, 20)}
-                </p>
-                <RenameProject project={project}>
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        className="hover:bg-transparent hover:opacity-80"
-                    >
-                        <Icons.Edit />
-                    </Button>
-                </RenameProject>
-            </div>
-            <div className="flex flex-row space-x-1">
-                <PublishPost editor={editor} project={project}>
-                    <Button variant="secondary">Publish</Button>
-                </PublishPost>
-                <ProjectTools editor={editor} project={project}>
-                    <Button variant="ghost" size="icon">
-                        <Icons.Tools />
-                    </Button>
-                </ProjectTools>
-                <ProjectSettings project={project}>
-                    <Button variant="ghost" size="icon">
-                        <Icons.Settings />
-                    </Button>
-                </ProjectSettings>
-            </div>
-        </div>
-    );
+export function ProjectToolbar({
+  project,
+  editor,
+}: Readonly<ProjectToolbarProps>) {
+  return (
+    <div className="sticky top-0 z-10 flex justify-between rounded-full bg-background p-2 shadow-sm">
+      <div className="flex flex-row items-center rounded-full border px-2 py-0">
+        <p title={project.name} className="text-sm">
+          {shortenText(project.name, 20)}
+        </p>
+        <RenameProject project={project}>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="hover:bg-transparent hover:opacity-80"
+          >
+            <Icons.Edit />
+          </Button>
+        </RenameProject>
+      </div>
+      <div className="flex flex-row space-x-1">
+        <PublishPost editor={editor} project={project}>
+          <Button variant="secondary">Publish</Button>
+        </PublishPost>
+        <ProjectTools editor={editor} project={project}>
+          <Button variant="ghost" size="icon">
+            <Icons.Tools />
+          </Button>
+        </ProjectTools>
+        <ProjectSettings project={project}>
+          <Button variant="ghost" size="icon">
+            <Icons.Settings />
+          </Button>
+        </ProjectSettings>
+      </div>
+    </div>
+  );
 }

@@ -1,7 +1,7 @@
 import {
-    AiOutlineOrderedList,
-    AiOutlineStrikethrough,
-    AiOutlineUnorderedList,
+  AiOutlineOrderedList,
+  AiOutlineStrikethrough,
+  AiOutlineUnorderedList,
 } from "react-icons/ai";
 import { BiCode } from "react-icons/bi";
 import { FiItalic, FiUnderline } from "react-icons/fi";
@@ -15,19 +15,19 @@ import { TbBlockquote } from "react-icons/tb";
 import { VscNewline } from "react-icons/vsc";
 
 export const EditorIcons = {
-    HorizontalDivider: RxDividerHorizontal,
-    Undo: GrUndo,
-    Redo: GrRedo,
-    Bold: GoBold,
-    Italic: FiItalic,
-    Underline: FiUnderline,
-    Strike: AiOutlineStrikethrough,
-    Code: BiCode,
-    Blockquote: TbBlockquote,
-    Codeblock: PiCodeBlockBold,
-    Bulletlist: AiOutlineUnorderedList,
-    Orderedlist: AiOutlineOrderedList,
-    ClearFormatting: MdFormatClear,
-    Hardbreak: VscNewline,
-    Table: HiTableCells,
+  HorizontalDivider: RxDividerHorizontal,
+  Undo: GrUndo,
+  Redo: GrRedo,
+  Bold: GoBold,
+  Italic: FiItalic,
+  Underline: FiUnderline,
+  Strike: AiOutlineStrikethrough,
+  Code: BiCode,
+  Blockquote: TbBlockquote,
+  Codeblock: PiCodeBlockBold,
+  Bulletlist: AiOutlineUnorderedList,
+  Orderedlist: AiOutlineOrderedList,
+  ClearFormatting: MdFormatClear,
+  Hardbreak: VscNewline,
+  Table: HiTableCells,
 };

@@ -6,15 +6,15 @@ import type { MenuProps } from "../fixed-menu";
 import { MenuAction } from "../menu-action";
 
 export function FullscreenAction({ editor }: Readonly<MenuProps>) {
-    const isFullscreen = useFullscreenStatus();
+  const isFullscreen = useFullscreenStatus();
 
-    return (
-        <MenuAction
-            editor={editor}
-            command={() => toggleFullscreen("editor")}
-            icon={isFullscreen ? <Icons.ExitFullscreen /> : <Icons.Fullscreen />}
-            name="fullscreen"
-            tooltip={isFullscreen ? "Exit Focus Mode" : "Enter Focus Mode"}
-        />
-    );
+  return (
+    <MenuAction
+      editor={editor}
+      command={() => toggleFullscreen("editor")}
+      icon={isFullscreen ? <Icons.ExitFullscreen /> : <Icons.Fullscreen />}
+      name="fullscreen"
+      tooltip={isFullscreen ? "Exit Focus Mode" : "Enter Focus Mode"}
+    />
+  );
 }

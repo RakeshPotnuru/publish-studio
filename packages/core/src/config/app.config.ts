@@ -24,12 +24,12 @@ interface ICustomConfig {
     resetPasswordTokenPrivateKey: string;
     resetPasswordTokenPublicKey: string;
     turnstileVerifyEndpoint: string;
-    stripeWebhookEndpoint: string;
+    stripeWebhookPath: string;
 }
 
 const defaultConfig: ICustomConfig = {
     accessTokenExpiresIn: 1440, // 24 hours
-    refreshTokenExpiresIn: 1485,
+    refreshTokenExpiresIn: 10_080, // 7 days
     verificationTokenExpiresIn: 60, // 1 hour
     resetPasswordTokenExpiresIn: 60, // 1 hour
     redisCacheExpiresIn: 1440, // 24 hours
@@ -51,7 +51,7 @@ const defaultConfig: ICustomConfig = {
     kickboxApiUrl: "https://open.kickbox.com/v1/disposable",
     appName: "Publish Studio",
     turnstileVerifyEndpoint: "https://challenges.cloudflare.com/turnstile/v0/siteverify",
-    stripeWebhookEndpoint: "/api/payment.stripeWebhook",
+    stripeWebhookPath: "/api/payment.stripeWebhook",
 };
 
 export const bullMQConnectionOptions: ConnectionOptions = {

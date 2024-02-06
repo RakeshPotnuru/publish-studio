@@ -10,23 +10,23 @@ import { MenuSeparator } from "../menu-separator";
 type BubbleMenuProps = MenuProps;
 
 export function BubbleMenu({ editor }: BubbleMenuProps) {
-    return (
-        <TiptapBubbleMenu
-            editor={editor}
-            shouldShow={({ editor, state }) =>
-                !state.selection.empty &&
-                (editor.isActive("paragraph") || editor.isActive("heading"))
-            }
-        >
-            <div className="flex flex-row items-center rounded-md border bg-popover text-popover-foreground shadow-md">
-                <MenuShell>
-                    <MarkActions editor={editor} isBubbleMenu />
-                </MenuShell>
-                <MenuSeparator isBubbleMenu />
-                <MenuShell>
-                    <LinkAction editor={editor} isBubbleMenu />
-                </MenuShell>
-            </div>
-        </TiptapBubbleMenu>
-    );
+  return (
+    <TiptapBubbleMenu
+      editor={editor}
+      shouldShow={({ editor, state }) =>
+        !state.selection.empty &&
+        (editor.isActive("paragraph") || editor.isActive("heading"))
+      }
+    >
+      <div className="flex flex-row items-center rounded-md border bg-popover text-popover-foreground shadow-md">
+        <MenuShell>
+          <MarkActions editor={editor} isBubbleMenu />
+        </MenuShell>
+        <MenuSeparator isBubbleMenu />
+        <MenuShell>
+          <LinkAction editor={editor} isBubbleMenu />
+        </MenuShell>
+      </div>
+    </TiptapBubbleMenu>
+  );
 }

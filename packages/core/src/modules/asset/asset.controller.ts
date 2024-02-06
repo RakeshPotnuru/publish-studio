@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
-import { constants,MimeType } from "../../config/constants";
+import { constants, MimeType } from "../../config/constants";
 import type { Context } from "../../trpc";
 import type { IPaginationOptions } from "../../types/common.types";
 import type { IFile } from "../../types/file.types";

@@ -10,15 +10,15 @@ import { Stats } from "./stats";
 type HomeProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function Home({ ...props }: Readonly<HomeProps>) {
-    return (
-        <div className="space-y-8" {...props}>
-            <Heading className="text-center font-extrabold">
-                <ProText>What would you like to write today?</ProText>
-            </Heading>
-            <Stats />
-            <Heading level={2}>Recent</Heading>
-            <RecentProjects />
-            <RecentFolders />
-        </div>
-    );
+  return (
+    <div className="space-y-8" {...props}>
+      <Heading className="text-center font-extrabold">
+        <ProText>What would you like to write today?</ProText>
+      </Heading>
+      <Stats />
+      <Heading level={2}>Recent</Heading>
+      <RecentProjects />
+      <RecentFolders />
+    </div>
+  );
 }

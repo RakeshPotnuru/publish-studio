@@ -4,10 +4,10 @@ import { FaFileCsv, FaMarkdown } from "react-icons/fa";
 import { IoMdImage } from "react-icons/io";
 
 export const FileIcons = {
-    Image: IoMdImage,
-    ImageFile: BsFileEarmarkImage,
-    Markdown: FaMarkdown,
-    Pdf: BsFileEarmarkPdfFill,
-    Csv: FaFileCsv,
-    Txt: BiSolidFileTxt,
+  Image: IoMdImage,
+  ImageFile: BsFileEarmarkImage,
+  Markdown: FaMarkdown,
+  Pdf: BsFileEarmarkPdfFill,
+  Csv: FaFileCsv,
+  Txt: BiSolidFileTxt,
 };

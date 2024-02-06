@@ -6,21 +6,25 @@ import useUserStore from "@/lib/store/user";
 
 type ProBorderProps = React.HTMLAttributes<HTMLDivElement>;
 
-export function ProBorder({ children, className, ...props }: Readonly<ProBorderProps>) {
-    const { user } = useUserStore();
+export function ProBorder({
+  children,
+  className,
+  ...props
+}: Readonly<ProBorderProps>) {
+  const { user } = useUserStore();
 
-    return (
-        <div
-            className={cn(
-                "from-primary rounded-xl bg-gradient-to-tr via-purple-500 to-blue-500 p-[1px]",
-                {
-                    "bg-none": (user?.user_type as IUser["user_type"]) !== UserType.PRO,
-                },
-                className,
-            )}
-            {...props}
-        >
-            {children}
-        </div>
-    );
+  return (
+    <div
+      className={cn(
+        "rounded-xl bg-gradient-to-tr from-primary via-purple-500 to-blue-500 p-[1px]",
+        {
+          "bg-none": (user?.user_type as IUser["user_type"]) !== UserType.PRO,
+        },
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </div>
+  );
 }

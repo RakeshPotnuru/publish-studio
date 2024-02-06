@@ -16,71 +16,71 @@ import { MenuAction } from "../menu-action";
 import { MenuSeparator } from "../menu-separator";
 
 export interface MenuProps {
-    editor: Editor;
-    isBubbleMenu?: boolean;
+  editor: Editor;
+  isBubbleMenu?: boolean;
 }
 
 type FixedMenuProps = MenuProps;
 
 export function FixedMenu({
-    editor,
-    ...props
+  editor,
+  ...props
 }: FixedMenuProps & React.HTMLAttributes<HTMLDivElement>) {
-    const [isDictating, setIsDictating] = useState(false);
+  const [isDictating, setIsDictating] = useState(false);
 
-    return (
-        <div
-            className="sticky top-0 z-10 flex justify-between rounded-full bg-background p-2 shadow-sm"
-            {...props}
-        >
-            <div className="flex flex-row items-center space-x-2">
-                <MenuShell>
-                    <HistoryActions editor={editor} />
-                </MenuShell>
-                <MenuSeparator />
-                <MenuShell>
-                    <TextStyleActions editor={editor} />
-                </MenuShell>
-                <MenuSeparator />
-                <MenuShell>
-                    <MarkActions editor={editor} />
-                </MenuShell>
-                <MenuSeparator />
-                <MenuShell>
-                    <NodeActions editor={editor} />
-                </MenuShell>
-                <MenuSeparator />
-                <MenuShell>
-                    <ImageAction editor={editor} />
-                    <LinkAction editor={editor} />
-                </MenuShell>
-            </div>
+  return (
+    <div
+      className="sticky top-0 z-10 flex justify-between rounded-full bg-background p-2 shadow-sm"
+      {...props}
+    >
+      <div className="flex flex-row items-center space-x-2">
+        <MenuShell>
+          <HistoryActions editor={editor} />
+        </MenuShell>
+        <MenuSeparator />
+        <MenuShell>
+          <TextStyleActions editor={editor} />
+        </MenuShell>
+        <MenuSeparator />
+        <MenuShell>
+          <MarkActions editor={editor} />
+        </MenuShell>
+        <MenuSeparator />
+        <MenuShell>
+          <NodeActions editor={editor} />
+        </MenuShell>
+        <MenuSeparator />
+        <MenuShell>
+          <ImageAction editor={editor} />
+          <LinkAction editor={editor} />
+        </MenuShell>
+      </div>
 
-            <MenuShell>
-                {isDictating ? (
-                    <MenuAction
-                        editor={editor}
-                        name="stopSpeechRecognition"
-                        icon={<Icons.Mic className="animate-pulse" />}
-                        command={() => {
-                            editor.commands.stopSpeechRecognition();
-                            setIsDictating(false);
-                        }}
-                        tooltip="Stop Dictation"
-                    />
-                ) : (
-                    <MenuAction
-                        editor={editor}
-                        name="startSpeechRecognition"
-                        icon={<Icons.MicOff />}
-                        command={() => {
-                            editor.commands.startSpeechRecognition();
-                            setIsDictating(true);
-                        }}
-                        tooltip="Start Dictation"
-                    />
-                )}
-                {/* {isMarkdown ? (
+      <MenuShell>
+        {isDictating ? (
+          <MenuAction
+            editor={editor}
+            name="stopSpeechRecognition"
+            icon={<Icons.Mic className="animate-pulse" />}
+            command={() => {
+              editor.commands.stopSpeechRecognition();
+              setIsDictating(false);
+            }}
+            tooltip="Stop Dictation"
+          />
+        ) : (
+          <MenuAction
+            editor={editor}
+            name="startSpeechRecognition"
+            icon={<Icons.MicOff />}
+            command={() => {
+              editor.commands.startSpeechRecognition();
+              setIsDictating(true);
+            }}
+            tooltip="Start Dictation"
+          />
+        )}
+        {/* {isMarkdown ? (
                     <MenuAction
                         editor={editor}
                         name="showRichText"
@@ -105,8 +105,8 @@ export function FixedMenu({
                         tooltip="Show Markdown"
                     />
                 )} */}
-                <FullscreenAction editor={editor} />
-            </MenuShell>
-        </div>
-    );
+        <FullscreenAction editor={editor} />
+      </MenuShell>
+    </div>
+  );
 }

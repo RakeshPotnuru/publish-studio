@@ -1,103 +1,108 @@
 export const siteConfig = {
-    title: "Publish Studio",
-    description:
-        "Publish Studio is an all-in-one platform to curate content and publish to different platforms.",
-    url: "https://app.publishstudio.one",
-    theme: {
-        color: "#EB5757",
+  title: "Publish Studio",
+  description:
+    "Publish Studio is an all-in-one platform to curate content and publish to different platforms.",
+  url: "https://app.publishstudio.one",
+  theme: {
+    color: "#EB5757",
+  },
+  links: {
+    devAPIKeyGuide: "https://docs.publishstudio.one/platforms/dev#api-key",
+    mediumAPIKeyGuide:
+      "https://docs.publishstudio.one/platforms/medium#api-key",
+    hashnodeAPIKeyGuide:
+      "https://docs.publishstudio.one/platforms/hashnode#api-key",
+    ghostAPIKeyGuide: "https://docs.publishstudio.one/platforms/ghost#api-key",
+    cloudinaryAPIKeyGuide:
+      "https://docs.publishstudio.one/integrations/cloudinary#api-key",
+    apiKeysSecureStorage:
+      "https://docs.publishstudio.one/platforms#secure-storage-of-api-keys",
+    devTags: "https://dev.to/tags",
+    mediumTags: "https://medium.com/topics",
+    ghostTags: "https://ghost.org/help/tags/",
+    wordpressTags: "https://wordpress.com/support/posts/tags/",
+    bloggerLabels:
+      "https://support.google.com/blogger/answer/154172?visit_id=638407487949946224-3277732177&rd=1#:~:text=Add%20labels%20to,find%20your%20labels.",
+    support: "mailto:support@publishstudio.one",
+    wordpressAuthorize: "https://public-api.wordpress.com/oauth2/authorize",
+    wordpressConnectedApps:
+      "https://wordpress.com/me/security/connected-applications",
+    pricing: "https://publishstudio.one/pricing",
+  },
+  twitter: {
+    site: "@publishstudio",
+    creator: "@rakesh_at_tweet",
+  },
+  pages: {
+    privacyPolicy: {
+      title: "Privacy Policy",
+      description: "Privacy Policy",
+      link: "/privacy-policy",
     },
-    links: {
-        devAPIKeyGuide: "https://docs.publishstudio.one/platforms/dev#api-key",
-        mediumAPIKeyGuide: "https://docs.publishstudio.one/platforms/medium#api-key",
-        hashnodeAPIKeyGuide: "https://docs.publishstudio.one/platforms/hashnode#api-key",
-        ghostAPIKeyGuide: "https://docs.publishstudio.one/platforms/ghost#api-key",
-        cloudinaryAPIKeyGuide: "https://docs.publishstudio.one/integrations/cloudinary#api-key",
-        apiKeysSecureStorage: "https://docs.publishstudio.one/platforms#secure-storage-of-api-keys",
-        devTags: "https://dev.to/tags",
-        mediumTags: "https://medium.com/topics",
-        ghostTags: "https://ghost.org/help/tags/",
-        wordpressTags: "https://wordpress.com/support/posts/tags/",
-        bloggerLabels:
-            "https://support.google.com/blogger/answer/154172?visit_id=638407487949946224-3277732177&rd=1#:~:text=Add%20labels%20to,find%20your%20labels.",
-        support: "mailto:support@publishstudio.one",
-        wordpressAuthorize: "https://public-api.wordpress.com/oauth2/authorize",
-        wordpressConnectedApps: "https://wordpress.com/me/security/connected-applications",
-        pricing: "https://publishstudio.one/pricing",
+    termsOfService: {
+      title: "Terms of Service",
+      description: "Terms of Service",
+      link: "/terms-of-service",
     },
-    twitter: {
-        site: "@publishstudio",
-        creator: "@rakesh_at_tweet",
+    login: {
+      title: "Login",
+      description: "Login to Publish Studio",
+      link: "/login",
     },
-    pages: {
-        privacyPolicy: {
-            title: "Privacy Policy",
-            description: "Privacy Policy",
-            link: "/privacy-policy",
-        },
-        termsOfService: {
-            title: "Terms of Service",
-            description: "Terms of Service",
-            link: "/terms-of-service",
-        },
-        login: {
-            title: "Login",
-            description: "Login to Publish Studio",
-            link: "/login",
-        },
-        register: {
-            title: "Register",
-            description: "Register on Publish Studio",
-            link: "/register",
-        },
-        resetPassword: {
-            title: "Reset Password",
-            description: "Reset your password",
-            link: "/reset-password",
-        },
-        verifyEmail: {
-            title: "Verify Email",
-            description: "Verify your email",
-            link: "/verify-email",
-        },
-        dashboard: {
-            title: "Dashboard",
-            description: "Dashboard",
-            link: "/",
-        },
-        assets: {
-            title: "Assets",
-            description: "Assets",
-            link: "/assets",
-        },
-        folders: {
-            title: "Folders",
-            description: "Folders",
-            link: "/folders",
-        },
-        projects: {
-            title: "Projects",
-            description: "Projects",
-            link: "/projects",
-        },
-        profile: {
-            title: "Profile",
-            description: "Profile",
-            link: "/profile",
-        },
-        settings: {
-            title: "Settings",
-            description: "Settings",
-            link: "/settings",
-            appearance: {
-                title: "Appearance",
-                description: "Configure your appearance settings",
-                link: "/settings/appearance",
-            },
-            connections: {
-                title: "Connections",
-                description: "Configure your connections",
-                link: "/settings/connections",
-            },
-        },
+    register: {
+      title: "Register",
+      description: "Register on Publish Studio",
+      link: "/register",
     },
+    resetPassword: {
+      title: "Reset Password",
+      description: "Reset your password",
+      link: "/reset-password",
+    },
+    verifyEmail: {
+      title: "Verify Email",
+      description: "Verify your email",
+      link: "/verify-email",
+    },
+    dashboard: {
+      title: "Dashboard",
+      description: "Dashboard",
+      link: "/",
+    },
+    assets: {
+      title: "Assets",
+      description: "Assets",
+      link: "/assets",
+    },
+    folders: {
+      title: "Folders",
+      description: "Folders",
+      link: "/folders",
+    },
+    projects: {
+      title: "Projects",
+      description: "Projects",
+      link: "/projects",
+    },
+    profile: {
+      title: "Profile",
+      description: "Profile",
+      link: "/profile",
+    },
+    settings: {
+      title: "Settings",
+      description: "Settings",
+      link: "/settings",
+      appearance: {
+        title: "Appearance",
+        description: "Configure your appearance settings",
+        link: "/settings/appearance",
+      },
+      connections: {
+        title: "Connections",
+        description: "Configure your connections",
+        link: "/settings/connections",
+      },
+    },
+  },
 };

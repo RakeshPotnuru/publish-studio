@@ -4,3 +4,4 @@ apps/*/.next/
 
 packages/*/node_modules/
 packages/*/dist/
+email-templates/

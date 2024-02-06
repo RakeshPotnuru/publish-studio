@@ -17,46 +17,46 @@ import { ProjectsTable } from "./table";
 type ProjectsProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function Projects({ ...props }: Readonly<ProjectsProps>) {
-    const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
-        pageIndex: 0,
-        pageSize: 10,
-    });
+  const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
 
-    const { data, isFetching, refetch, error } = trpc.projects.getAll.useQuery({
-        pagination: {
-            page: pageIndex + 1,
-            limit: pageSize,
-        },
-    });
+  const { data, isFetching, refetch, error } = trpc.projects.getAll.useQuery({
+    pagination: {
+      page: pageIndex + 1,
+      limit: pageSize,
+    },
+  });
 
-    return (
-        <div className="space-y-8" {...props}>
-            <div className="flex items-center justify-between">
-                <Heading>My Projects</Heading>
-                <NewProject>
-                    <Button>
-                        <Icons.Add className="mr-2 size-4" /> New Project
-                    </Button>
-                </NewProject>
-            </div>
-            {error ? (
-                <div className="flex h-[70vh] items-center justify-center">
-                    <ErrorBox title="Error" description={error.message} />
-                </div>
-            ) : (
-                <ProjectsTable
-                    columns={columns}
-                    data={data?.data.projects ?? []}
-                    refetch={refetch}
-                    pageCount={data?.data.pagination.total_pages ?? 0}
-                    pagination={{
-                        pageIndex,
-                        pageSize,
-                    }}
-                    setPagination={setPagination}
-                    isLoading={isFetching}
-                />
-            )}
+  return (
+    <div className="space-y-8" {...props}>
+      <div className="flex items-center justify-between">
+        <Heading>My Projects</Heading>
+        <NewProject>
+          <Button>
+            <Icons.Add className="mr-2 size-4" /> New Project
+          </Button>
+        </NewProject>
+      </div>
+      {error ? (
+        <div className="flex h-[70vh] items-center justify-center">
+          <ErrorBox title="Error" description={error.message} />
         </div>
-    );
+      ) : (
+        <ProjectsTable
+          columns={columns}
+          data={data?.data.projects ?? []}
+          refetch={refetch}
+          pageCount={data?.data.pagination.total_pages ?? 0}
+          pagination={{
+            pageIndex,
+            pageSize,
+          }}
+          setPagination={setPagination}
+          isLoading={isFetching}
+        />
+      )}
+    </div>
+  );
 }

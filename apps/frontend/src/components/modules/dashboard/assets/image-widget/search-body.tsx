@@ -7,101 +7,101 @@ import { Center } from "@/components/ui/center";
 import { ErrorBox } from "@/components/ui/error-box";
 
 interface SearchBodyProps {
-    error?: string;
-    isLoading: boolean;
-    data: {
-        id: string | number;
-        src: string;
-        alt: string;
-    }[];
-    pagination: PaginationState;
-    setPagination: React.Dispatch<React.SetStateAction<PaginationState>>;
-    totalResults: number;
-    handleInsert: (photoId: string | number) => void;
+  error?: string;
+  isLoading: boolean;
+  data: {
+    id: string | number;
+    src: string;
+    alt: string;
+  }[];
+  pagination: PaginationState;
+  setPagination: React.Dispatch<React.SetStateAction<PaginationState>>;
+  totalResults: number;
+  handleInsert: (photoId: string | number) => void;
 }
 
 export function SearchBody({
-    error,
-    isLoading,
-    data,
-    pagination,
-    setPagination,
-    totalResults,
-    handleInsert,
+  error,
+  isLoading,
+  data,
+  pagination,
+  setPagination,
+  totalResults,
+  handleInsert,
 }: Readonly<SearchBodyProps>) {
-    const photosView =
-        data.length > 0 ? (
-            <div className="grid grid-cols-4 gap-2">
-                {data.map(photo => (
-                    <slot
-                        onClick={() => handleInsert(photo.id)}
-                        key={photo.id}
-                        className="cursor-pointer"
-                    >
-                        <Image
-                            src={photo.src}
-                            alt={photo.alt}
-                            width={100}
-                            height={100}
-                            className="h-auto w-auto hover:opacity-80"
-                        />
-                    </slot>
-                ))}
-            </div>
-        ) : (
-            <Center className="h-24 text-muted-foreground">No results</Center>
-        );
-
-    const searchBodyView = isLoading ? (
-        <div className="grid grid-cols-4 gap-2">
-            {[...Array.from({ length: 12 }).keys()].map(index => (
-                <Skeleton key={`skeleton-${index + 1}`} className="h-24 w-full" />
-            ))}
-        </div>
+  const photosView =
+    data.length > 0 ? (
+      <div className="grid grid-cols-4 gap-2">
+        {data.map((photo) => (
+          <slot
+            onClick={() => handleInsert(photo.id)}
+            key={photo.id}
+            className="cursor-pointer"
+          >
+            <Image
+              src={photo.src}
+              alt={photo.alt}
+              width={100}
+              height={100}
+              className="h-auto w-auto hover:opacity-80"
+            />
+          </slot>
+        ))}
+      </div>
     ) : (
-        photosView
+      <Center className="h-24 text-muted-foreground">No results</Center>
     );
 
-    return (
-        <div className="space-y-4 rounded-lg border p-2">
-            {error ? (
-                <Center>
-                    <ErrorBox title="Failed to fetch photos" description={error} />
-                </Center>
-            ) : (
-                searchBodyView
-            )}
-            <div className="flex justify-between">
-                <Button
-                    onClick={() =>
-                        setPagination({
-                            pageIndex: pagination.pageIndex - 1,
-                            pageSize: pagination.pageSize,
-                        })
-                    }
-                    variant="outline"
-                    disabled={pagination.pageIndex === 0 || isLoading || !data}
-                >
-                    Previous
-                </Button>
-                <Button
-                    onClick={() =>
-                        setPagination({
-                            pageIndex: pagination.pageIndex + 1,
-                            pageSize: pagination.pageSize,
-                        })
-                    }
-                    variant="outline"
-                    disabled={
-                        data.length === 0 ||
-                        isLoading ||
-                        !data ||
-                        pagination.pageIndex * pagination.pageSize >= totalResults
-                    }
-                >
-                    Next
-                </Button>
-            </div>
-        </div>
-    );
+  const searchBodyView = isLoading ? (
+    <div className="grid grid-cols-4 gap-2">
+      {[...Array.from({ length: 12 }).keys()].map((index) => (
+        <Skeleton key={`skeleton-${index + 1}`} className="h-24 w-full" />
+      ))}
+    </div>
+  ) : (
+    photosView
+  );
+
+  return (
+    <div className="space-y-4 rounded-lg border p-2">
+      {error ? (
+        <Center>
+          <ErrorBox title="Failed to fetch photos" description={error} />
+        </Center>
+      ) : (
+        searchBodyView
+      )}
+      <div className="flex justify-between">
+        <Button
+          onClick={() =>
+            setPagination({
+              pageIndex: pagination.pageIndex - 1,
+              pageSize: pagination.pageSize,
+            })
+          }
+          variant="outline"
+          disabled={pagination.pageIndex === 0 || isLoading || !data}
+        >
+          Previous
+        </Button>
+        <Button
+          onClick={() =>
+            setPagination({
+              pageIndex: pagination.pageIndex + 1,
+              pageSize: pagination.pageSize,
+            })
+          }
+          variant="outline"
+          disabled={
+            data.length === 0 ||
+            isLoading ||
+            !data ||
+            pagination.pageIndex * pagination.pageSize >= totalResults
+          }
+        >
+          Next
+        </Button>
+      </div>
+    </div>
+  );
 }

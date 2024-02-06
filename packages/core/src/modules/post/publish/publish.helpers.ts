@@ -3,7 +3,7 @@ import type { Job } from "bullmq";
 import { Queue, Worker } from "bullmq";
 
 import { bullMQConnectionOptions } from "../../../config/app.config";
-import { constants,Platform } from "../../../config/constants";
+import { constants, Platform } from "../../../config/constants";
 import BloggerController from "../../platform/blogger/blogger.controller";
 import DevToController from "../../platform/devto/devto.controller";
 import GhostController from "../../platform/ghost/ghost.controller";
