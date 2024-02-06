@@ -16,21 +16,34 @@ export function GoogleAuth() {
 
   const { theme } = useTheme();
   const authButtonRef = useRef<HTMLDivElement>(null);
-  const [, setCookie] = useCookies(["ps_access_token"]);
+  const [, setCookie] = useCookies(["ps_access_token", "ps_refresh_token"]);
 
   const { mutateAsync: connectGoogle, isLoading } =
     trpc.auth.connectGoogle.useMutation({
       onSuccess({ data }) {
-        if (!data.access_token) {
+        if (!data.access_token || !data.refresh_token) {
           setError("Something went wrong. Please try again.");
           return;
         }
 
-        const decoded = jwtDecode<{ exp: number }>(data.access_token);
+        const accessTokenDecoded = jwtDecode<{ exp: number }>(
+          data.access_token,
+        );
         setCookie("ps_access_token", data.access_token, {
           path: "/",
-          expires: new Date(decoded.exp * 1000),
+          expires: new Date(accessTokenDecoded.exp * 1000),
           sameSite: "lax",
+          secure: process.env.NODE_ENV === "production",
+        });
+
+        const refreshTokenDecoded = jwtDecode<{ exp: number }>(
+          data.refresh_token,
+        );
+        setCookie("ps_refresh_token", data.refresh_token, {
+          path: "/",
+          expires: new Date(refreshTokenDecoded.exp * 1000),
+          sameSite: "lax",
+          secure: process.env.NODE_ENV === "production",
         });
 
         toast.success(`Authenticated as ${data.user.email}`);

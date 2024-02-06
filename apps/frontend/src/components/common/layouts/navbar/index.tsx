@@ -66,7 +66,10 @@ const NavItem = ({
 type NavbarProps = React.HTMLAttributes<HTMLElement>;
 
 export function Navbar({ className, ...props }: Readonly<NavbarProps>) {
-  const removeCookie = useCookies(["ps_access_token"])[2];
+  const removeCookie = useCookies([
+    "ps_access_token",
+    "ps_refresh_token",
+  ])[2];
 
   const { user, setUser, setIsLoading } = useUserStore();
 
@@ -80,6 +83,7 @@ export function Navbar({ className, ...props }: Readonly<NavbarProps>) {
   const handleLogout = () => {
     try {
       removeCookie("ps_access_token");
+      removeCookie("ps_refresh_token");
 
       window.google?.accounts.id.disableAutoSelect();
       window.location.href = siteConfig.pages.login.link;
