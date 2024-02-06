@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { toast } from "@itsrakesh/ui";
+import { setCookie } from "cookies-next";
 import { jwtDecode } from "jwt-decode";
 import { useTheme } from "next-themes";
-import { useCookies } from "react-cookie";
 
 import { Center } from "@/components/ui/center";
 import { ErrorBox } from "@/components/ui/error-box";
@@ -16,8 +16,6 @@ export function GoogleAuth() {
 
   const { theme } = useTheme();
   const authButtonRef = useRef<HTMLDivElement>(null);
-  const [, setCookie] = useCookies(["ps_access_token", "ps_refresh_token"]);
-
   const { mutateAsync: connectGoogle, isLoading } =
     trpc.auth.connectGoogle.useMutation({
       onSuccess({ data }) {

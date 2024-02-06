@@ -11,7 +11,7 @@ import {
   splitLink,
   wsLink,
 } from "@trpc/client";
-import { useCookies } from "react-cookie";
+import { getCookie } from "cookies-next";
 import superjson from "superjson";
 
 import { trpc } from "../../utils/trpc";
@@ -19,8 +19,6 @@ import { trpc } from "../../utils/trpc";
 export function TRPCProvider({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const [cookies] = useCookies(["ps_access_token"]);
-
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -45,7 +43,7 @@ export function TRPCProvider({
     url: process.env.NEXT_PUBLIC_WEBSOCKET_URL,
   });
 
-  const token = cookies.ps_access_token;
+  const token = getCookie("ps_access_token");
 
   const trpcClient = trpc.createClient({
     transformer: superjson,
@@ -64,7 +62,7 @@ export function TRPCProvider({
             }
 
             return {
-              Authorization: `Bearer ${token as string}`,
+              Authorization: `Bearer ${token}`,
             };
           },
           fetch: async (input, init?) => {

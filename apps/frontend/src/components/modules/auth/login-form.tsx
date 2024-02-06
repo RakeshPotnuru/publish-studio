@@ -16,8 +16,8 @@ import {
   toast,
 } from "@itsrakesh/ui";
 import { ErrorCause } from "@publish-studio/core/src/config/constants";
+import { setCookie } from "cookies-next";
 import { jwtDecode } from "jwt-decode";
-import { useCookies } from "react-cookie";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -46,8 +46,6 @@ export function LoginForm() {
   const [isCaptchaCompleted, setIsCaptchaCompleted] = useState(false);
   const [isCaptchaVerificationLoading, setIsCaptchaVerificationLoading] =
     useState(false);
-
-  const [, setCookie] = useCookies(["ps_access_token", "ps_refresh_token"]);
 
   const { mutateAsync: login, isLoading: isLoggingIn } =
     trpc.auth.login.useMutation({

@@ -1,4 +1,3 @@
-import { CookiesProvider } from "./cookies";
 import { ThemeProvider } from "./theme";
 import { TRPCProvider } from "./trpc";
 
@@ -12,9 +11,7 @@ export function Providers({
       enableSystem
       disableTransitionOnChange
     >
-      <CookiesProvider>
-        <TRPCProvider>{children}</TRPCProvider>
-      </CookiesProvider>
+      <TRPCProvider>{children}</TRPCProvider>
     </ThemeProvider>
   );
 }

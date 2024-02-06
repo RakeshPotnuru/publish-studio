@@ -18,7 +18,7 @@ import {
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import { UserType } from "@publish-studio/core/src/config/constants";
-import { useCookies } from "react-cookie";
+import { deleteCookie } from "cookies-next";
 
 import { siteConfig } from "@/config/site";
 import useUserStore from "@/lib/store/user";
@@ -66,8 +66,6 @@ const NavItem = ({
 type NavbarProps = React.HTMLAttributes<HTMLElement>;
 
 export function Navbar({ className, ...props }: Readonly<NavbarProps>) {
-  const removeCookie = useCookies(["ps_access_token", "ps_refresh_token"])[2];
-
   const { user, setUser, setIsLoading } = useUserStore();
 
   const { isFetching } = trpc.auth.getMe.useQuery(undefined, {
@@ -79,8 +77,8 @@ export function Navbar({ className, ...props }: Readonly<NavbarProps>) {
 
   const handleLogout = () => {
     try {
-      removeCookie("ps_access_token");
-      removeCookie("ps_refresh_token");
+      deleteCookie("ps_access_token", { path: "/" });
+      deleteCookie("ps_refresh_token", { path: "/" });
 
       window.google?.accounts.id.disableAutoSelect();
       window.location.href = siteConfig.pages.login.link;

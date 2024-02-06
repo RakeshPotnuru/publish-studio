@@ -28,7 +28,7 @@ interface ICustomConfig {
 }
 
 const defaultConfig: ICustomConfig = {
-    accessTokenExpiresIn: 1, // 24 hours
+    accessTokenExpiresIn: 1440, // 24 hours
     refreshTokenExpiresIn: 10_080, // 7 days
     verificationTokenExpiresIn: 60, // 1 hour
     resetPasswordTokenExpiresIn: 60, // 1 hour
