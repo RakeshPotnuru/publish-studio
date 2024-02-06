@@ -66,10 +66,7 @@ const NavItem = ({
 type NavbarProps = React.HTMLAttributes<HTMLElement>;
 
 export function Navbar({ className, ...props }: Readonly<NavbarProps>) {
-  const removeCookie = useCookies([
-    "ps_access_token",
-    "ps_refresh_token",
-  ])[2];
+  const removeCookie = useCookies(["ps_access_token", "ps_refresh_token"])[2];
 
   const { user, setUser, setIsLoading } = useUserStore();
 
