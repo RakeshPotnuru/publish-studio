@@ -28,11 +28,11 @@ interface ICustomConfig {
 }
 
 const defaultConfig: ICustomConfig = {
-    accessTokenExpiresIn: 1440, // 24 hours
+    accessTokenExpiresIn: 1, // 24 hours
     refreshTokenExpiresIn: 10_080, // 7 days
     verificationTokenExpiresIn: 60, // 1 hour
     resetPasswordTokenExpiresIn: 60, // 1 hour
-    redisCacheExpiresIn: 1440, // 24 hours
+    redisCacheExpiresIn: 10_080, // 7 days
     accessTokenPrivateKey: process.env.ACCESS_TOKEN_PRIVATE_KEY,
     accessTokenPublicKey: process.env.ACCESS_TOKEN_PUBLIC_KEY,
     refreshTokenPrivateKey: process.env.REFRESH_TOKEN_PRIVATE_KEY,

@@ -54,9 +54,7 @@ const authRouter = router({
         return new UserController().getMeHandler(ctx);
     }),
 
-    refresh: protectedProcedure.query(({ ctx }) =>
-        new AuthController().refreshAccessTokenHandler(ctx),
-    ),
+    refresh: t.procedure.query(({ ctx }) => new AuthController().refreshAccessTokenHandler(ctx)),
 
     email: router({
         verify: t.procedure

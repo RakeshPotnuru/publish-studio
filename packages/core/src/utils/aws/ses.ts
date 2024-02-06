@@ -8,6 +8,7 @@ import defaultConfig, { bullMQConnectionOptions } from "../../config/app.config"
 import type { EmailTemplate } from "../../config/constants";
 import { constants } from "../../config/constants";
 import type { ISES } from "../../types/aws.types";
+import { logtail } from "../logtail";
 
 const ses = new SESv2Client({
     region: process.env.AWS_REGION,
@@ -42,7 +43,7 @@ export const sendEmail = async (
         const command = new SendEmailCommand(input);
         await ses.send(command);
     } catch (error) {
-        console.log(error);
+        await logtail.error(JSON.stringify(error));
 
         throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
@@ -66,7 +67,6 @@ export const scheduleEmail = async (data: IEmail) => {
         });
 
         const delay = Number(new Date(data.scheduled_at)) - Date.now();
-        console.log(`⏰ Sending email in ${delay}ms`);
 
         await emailQueue.add(`${constants.bullmq.queues.EMAIL}-job`, data, {
             delay,
@@ -84,26 +84,19 @@ export const scheduleEmail = async (data: IEmail) => {
                     job.data.from_address as string,
                 );
 
-                console.log(`✅ Sent email ${job.id ?? ""} at ${job.data.scheduled_at as string}`);
                 return job.data as IEmail;
             },
             { connection: bullMQConnectionOptions },
         );
 
-        worker.on("completed", (job: Job) => {
-            console.log(`✅ Completed scheduled email ${job.id ?? ""}`);
-        });
-
-        worker.on("failed", () => {
-            console.log("❌ Job Failed");
+        worker.on("failed", job => {
+            void logtail.error(job?.failedReason ?? "Email job failed due to unknown reason");
         });
 
         worker.on("error", error => {
-            console.log(error);
+            void logtail.error(JSON.stringify(error));
         });
     } catch (error) {
-        console.log("❌ Failed to schedule email");
-
-        console.log(error);
+        await logtail.error(JSON.stringify(error));
     }
 };

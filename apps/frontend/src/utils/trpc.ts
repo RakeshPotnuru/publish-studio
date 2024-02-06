@@ -1,4 +1,6 @@
 import type { AppRouter } from "@publish-studio/core";
+import type {
+  HTTPHeaders} from "@trpc/react-query";
 import {
   createTRPCProxyClient,
   createTRPCReact,
@@ -9,7 +11,7 @@ import {
 import superjson from "superjson";
 
 export const trpc = createTRPCReact<AppRouter>();
-export const createTRPCServerClient = (token: string) => {
+export const createTRPCServerClient = (headers: HTTPHeaders) => {
   if (!process.env.NEXT_PUBLIC_TRPC_API_URL) {
     throw new Error("NEXT_PUBLIC_TRPC_API_URL is not set");
   }
@@ -23,13 +25,7 @@ export const createTRPCServerClient = (token: string) => {
       httpBatchLink({
         url: process.env.NEXT_PUBLIC_TRPC_API_URL,
         headers() {
-          if (!token) {
-            return {};
-          }
-
-          return {
-            Authorization: `Bearer ${token}`,
-          };
+          return headers;
         },
         fetch: async (input, init?) => {
           const fetch = getFetch();

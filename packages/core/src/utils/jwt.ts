@@ -2,8 +2,9 @@ import type { SignOptions } from "jsonwebtoken";
 import jwt from "jsonwebtoken";
 
 import defaultConfig from "../config/app.config";
+import { logtail } from "./logtail";
 
-export const signJwt = (
+export const signJwt = async (
     payload: object,
     key:
         | "accessTokenPrivateKey"
@@ -20,25 +21,27 @@ export const signJwt = (
             algorithm: "RS256",
         });
     } catch (error) {
-        console.log(error);
+        await logtail.error(JSON.stringify(error));
+
         return null;
     }
 };
 
-export const verifyJwt = <T>(
+export const verifyJwt = async <T>(
     token: string,
     key:
         | "accessTokenPublicKey"
         | "refreshTokenPublicKey"
         | "verificationTokenPublicKey"
         | "resetPasswordTokenPublicKey",
-): T | null => {
+): Promise<T | null> => {
     try {
         // eslint-disable-next-line security/detect-object-injection
         const publicKey = Buffer.from(defaultConfig[key], "base64").toString("ascii");
         return jwt.verify(token, publicKey) as T;
     } catch (error) {
-        console.log(error);
+        await logtail.error(JSON.stringify(error));
+
         return null;
     }
 };

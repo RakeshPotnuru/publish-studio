@@ -32,8 +32,6 @@ export const Captcha = ({
 
   const handleVerify = async (token: string) => {
     try {
-      console.log("token", token);
-
       setIsLoading(true);
       await verify(token);
     } catch {

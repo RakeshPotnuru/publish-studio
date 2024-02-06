@@ -1,7 +1,9 @@
-node_modules/
 apps/*/node_modules/
 apps/*/.next/
 
 packages/*/node_modules/
 packages/*/dist/
+
+node_modules/
 email-templates/
+pnpm-lock.yaml

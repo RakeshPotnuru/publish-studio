@@ -25,7 +25,7 @@ export const deserializeUser = async ({ req, res }: CreateExpressContextOptions)
         }
 
         // Validate Access Token
-        const decoded = verifyJwt<{ sub: string }>(access_token, "accessTokenPublicKey");
+        const decoded = await verifyJwt<{ sub: string }>(access_token, "accessTokenPublicKey");
 
         if (!decoded) {
             return notAuthenticated;

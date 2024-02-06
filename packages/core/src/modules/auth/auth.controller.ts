@@ -1,95 +1,37 @@
 import { TRPCError } from "@trpc/server";
 import axios from "axios";
 import bycrypt from "bcryptjs";
-import { getCookie, setCookie } from "cookies-next";
-import type { OptionsType } from "cookies-next/lib/types";
+import type { SetOption } from "cookies";
+import Cookies from "cookies";
 import type { Types } from "mongoose";
 
 import defaultConfig from "../../config/app.config";
-import { AuthMode, EmailTemplate, ErrorCause, UserType } from "../../config/constants";
+import { AuthMode, ErrorCause, UserType } from "../../config/constants";
 import type { Context } from "../../trpc";
-import { scheduleEmail, sendEmail } from "../../utils/aws/ses";
 import { verifyGoogleToken } from "../../utils/google/auth";
 import { signJwt, verifyJwt } from "../../utils/jwt";
+import { logtail } from "../../utils/logtail";
 import redisClient from "../../utils/redis";
 import type { ILoginInput, IRegisterInput, IResetPasswordInput } from "../auth/auth.types";
-import UserService from "../user/user.service";
+import AuthService from "./auth.service";
 
-const cookieOptions: OptionsType = {
+const cookieOptions: SetOption = {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
 };
 
-const accessTokenCookieOptions: OptionsType = {
+const accessTokenCookieOptions: SetOption = {
     ...cookieOptions,
     expires: new Date(Date.now() + defaultConfig.accessTokenExpiresIn * 60 * 1000), // milliseconds
 };
 
-const refreshTokenCookieOptions: OptionsType = {
+const refreshTokenCookieOptions: SetOption = {
     ...cookieOptions,
     expires: new Date(Date.now() + defaultConfig.refreshTokenExpiresIn * 60 * 1000),
 };
 
-export default class AuthController extends UserService {
-    private async isDisposableEmail(email: string) {
-        try {
-            const response = await axios.get(`${defaultConfig.kickboxApiUrl}/${email}`);
-            return response.data.disposable as boolean;
-        } catch {
-            return false;
-        }
-    }
-
-    private async sendVerificationEmail(email: string, token: string) {
-        const verificationUrl = `${process.env.CLIENT_URL}/verify-email?token=${token}`;
-
-        await sendEmail(
-            [email],
-            EmailTemplate.VERIFY_EMAIL,
-            {
-                verification_url: verificationUrl,
-            },
-            process.env.AWS_SES_AUTO_FROM_EMAIL,
-        );
-
-        return {
-            status: "success",
-            data: {
-                message: "Verification email sent successfully",
-            },
-        };
-    }
-
-    private async sendResetPasswordEmail(email: string, token: string) {
-        try {
-            const resetPasswordUrl = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
-
-            await sendEmail(
-                [email],
-                EmailTemplate.RESET_PASSWORD,
-                {
-                    reset_password_url: resetPasswordUrl,
-                },
-                process.env.AWS_SES_AUTO_FROM_EMAIL,
-            );
-
-            return {
-                status: "success",
-                data: {
-                    message: "Reset password email sent successfully",
-                },
-            };
-        } catch (error) {
-            console.log(error);
-
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: defaultConfig.defaultErrorMessage,
-            });
-        }
-    }
-
+export default class AuthController extends AuthService {
     async resendVerificationEmailHandler(input: { email: string }) {
         const user = await super.getUserByEmail(input.email);
 
@@ -107,7 +49,7 @@ export default class AuthController extends UserService {
             });
         }
 
-        const token = signJwt({ email: user.email }, "verificationTokenPrivateKey", {
+        const token = await signJwt({ email: user.email }, "verificationTokenPrivateKey", {
             expiresIn: `${defaultConfig.verificationTokenExpiresIn}m`,
         });
 
@@ -122,7 +64,10 @@ export default class AuthController extends UserService {
     }
 
     async verifyEmailHandler(input: { token: string }) {
-        const payload = verifyJwt<{ email: string }>(input.token, "verificationTokenPublicKey");
+        const payload = await verifyJwt<{ email: string }>(
+            input.token,
+            "verificationTokenPublicKey",
+        );
 
         if (!payload) {
             throw new TRPCError({
@@ -149,16 +94,7 @@ export default class AuthController extends UserService {
 
         await super.updateUser(user._id, { is_verified: true });
 
-        await scheduleEmail({
-            emails: [user.email],
-            template: EmailTemplate.WELCOME_EMAIL,
-            variables: {
-                first_name: user.first_name,
-                last_name: user.last_name,
-            },
-            from_address: process.env.AWS_SES_PERSONAL_FROM_EMAIL,
-            scheduled_at: new Date(Date.now() + 5 * 60 * 1000), // 5 minutes from now
-        });
+        await super.sendWelcomeEmail(user);
 
         return {
             status: "success",
@@ -185,9 +121,13 @@ export default class AuthController extends UserService {
             });
         }
 
-        const verification_token = signJwt({ email: input.email }, "verificationTokenPrivateKey", {
-            expiresIn: `${defaultConfig.verificationTokenExpiresIn}m`,
-        });
+        const verification_token = await signJwt(
+            { email: input.email },
+            "verificationTokenPrivateKey",
+            {
+                expiresIn: `${defaultConfig.verificationTokenExpiresIn}m`,
+            },
+        );
 
         if (!verification_token) {
             throw new TRPCError({
@@ -240,23 +180,24 @@ export default class AuthController extends UserService {
                 is_verified: true,
             });
 
-            const { access_token, refresh_token } = await super.signTokens(newUser);
+            const tokens = await super.signTokens(newUser);
+
+            const access_token = await tokens.access_token;
+            const refresh_token = await tokens.refresh_token;
 
             const { req, res } = ctx;
+            const cookies = new Cookies(req, res);
+            cookies.set("access_token", access_token, accessTokenCookieOptions);
+            cookies.set("refresh_token", refresh_token, refreshTokenCookieOptions);
+            cookies.set("logged_in", "true", accessTokenCookieOptions);
 
-            setCookie("access_token", access_token, { req, res, ...accessTokenCookieOptions });
-            setCookie("refresh_token", refresh_token, { req, res, ...refreshTokenCookieOptions });
-            setCookie("logged_in", "true", {
-                req,
-                res,
-                ...accessTokenCookieOptions,
-                httpOnly: false,
-            });
+            await super.sendWelcomeEmail(newUser);
 
             return {
                 status: "success",
                 data: {
                     access_token,
+                    refresh_token,
                     user: newUser,
                 },
             };
@@ -273,23 +214,22 @@ export default class AuthController extends UserService {
             }
         }
 
-        const { access_token, refresh_token } = await super.signTokens(user);
+        const tokens = await super.signTokens(user);
+
+        const access_token = await tokens.access_token;
+        const refresh_token = await tokens.refresh_token;
 
         const { req, res } = ctx;
-
-        setCookie("access_token", access_token, { req, res, ...accessTokenCookieOptions });
-        setCookie("refresh_token", refresh_token, { req, res, ...refreshTokenCookieOptions });
-        setCookie("logged_in", "true", {
-            req,
-            res,
-            ...accessTokenCookieOptions,
-            httpOnly: false,
-        });
+        const cookies = new Cookies(req, res);
+        cookies.set("access_token", access_token, accessTokenCookieOptions);
+        cookies.set("refresh_token", refresh_token, refreshTokenCookieOptions);
+        cookies.set("logged_in", "true", accessTokenCookieOptions);
 
         return {
             status: "success",
             data: {
                 access_token,
+                refresh_token,
                 user,
             },
         };
@@ -320,17 +260,16 @@ export default class AuthController extends UserService {
             });
         }
 
-        const { access_token, refresh_token } = await super.signTokens(user);
-        const { req, res } = ctx;
+        const tokens = await super.signTokens(user);
 
-        setCookie("access_token", access_token, { req, res, ...accessTokenCookieOptions });
-        setCookie("refresh_token", refresh_token, { req, res, ...refreshTokenCookieOptions });
-        setCookie("logged_in", "true", {
-            req,
-            res,
-            ...accessTokenCookieOptions,
-            httpOnly: false,
-        });
+        const access_token = await tokens.access_token;
+        const refresh_token = await tokens.refresh_token;
+
+        const { req, res } = ctx;
+        const cookies = new Cookies(req, res);
+        cookies.set("access_token", access_token, accessTokenCookieOptions);
+        cookies.set("refresh_token", refresh_token, refreshTokenCookieOptions);
+        cookies.set("logged_in", "true", accessTokenCookieOptions);
 
         await super.updateUser(user._id, { last_login: new Date() });
 
@@ -338,6 +277,7 @@ export default class AuthController extends UserService {
             status: "success",
             data: {
                 access_token,
+                refresh_token,
                 user,
             },
         };
@@ -361,9 +301,13 @@ export default class AuthController extends UserService {
             });
         }
 
-        const resetEmailToken = signJwt({ email: input.email }, "resetPasswordTokenPrivateKey", {
-            expiresIn: `${defaultConfig.resetPasswordTokenExpiresIn}m`,
-        });
+        const resetEmailToken = await signJwt(
+            { email: input.email },
+            "resetPasswordTokenPrivateKey",
+            {
+                expiresIn: `${defaultConfig.resetPasswordTokenExpiresIn}m`,
+            },
+        );
 
         if (!resetEmailToken) {
             throw new TRPCError({
@@ -383,7 +327,10 @@ export default class AuthController extends UserService {
     }
 
     async resetPasswordHandler(input: IResetPasswordInput) {
-        const payload = verifyJwt<{ email: string }>(input.token, "resetPasswordTokenPublicKey");
+        const payload = await verifyJwt<{ email: string }>(
+            input.token,
+            "resetPasswordTokenPublicKey",
+        );
 
         if (!payload) {
             throw new TRPCError({
@@ -415,7 +362,8 @@ export default class AuthController extends UserService {
     async refreshAccessTokenHandler(ctx: Context) {
         // Get the refresh token from cookie
         const { req, res } = ctx;
-        const refreshToken = getCookie("refresh_token", { req, res });
+        const cookies = new Cookies(req, res);
+        const refreshToken = cookies.get("refresh_token");
 
         const errorMessage = "Could not refresh access token.";
 
@@ -427,7 +375,7 @@ export default class AuthController extends UserService {
         }
 
         // Validate the Refresh token
-        const decoded = verifyJwt<{ sub: string }>(refreshToken, "refreshTokenPublicKey");
+        const decoded = await verifyJwt<{ sub: string }>(refreshToken, "refreshTokenPublicKey");
 
         if (!decoded) {
             throw new TRPCError({
@@ -457,18 +405,13 @@ export default class AuthController extends UserService {
         }
 
         // Sign new access token
-        const accessToken = signJwt({ sub: user._id }, "accessTokenPrivateKey", {
+        const accessToken = await signJwt({ sub: user._id }, "accessTokenPrivateKey", {
             expiresIn: `${defaultConfig.accessTokenExpiresIn}m`,
         });
 
         // Send the access token as cookie
-        setCookie("access_token", accessToken, { req, res, ...accessTokenCookieOptions });
-        setCookie("logged_in", "true", {
-            req,
-            res,
-            ...accessTokenCookieOptions,
-            httpOnly: false,
-        });
+        cookies.set("access_token", accessToken, accessTokenCookieOptions);
+        cookies.set("logged_in", "true", accessTokenCookieOptions);
 
         return {
             status: "success",
@@ -484,15 +427,16 @@ export default class AuthController extends UserService {
 
             await redisClient.del(String(user._id));
 
-            setCookie("access_token", "", { req, res, maxAge: -1 });
-            setCookie("refresh_token", "", { req, res, maxAge: -1 });
-            setCookie("logged_in", "", { req, res, maxAge: -1 });
+            const cookies = new Cookies(req, res);
+            cookies.set("access_token", "", { maxAge: -1 });
+            cookies.set("refresh_token", "", { maxAge: -1 });
+            cookies.set("logged_in", "", { maxAge: -1 });
 
             return {
                 status: "success",
             };
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error));
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
@@ -503,9 +447,11 @@ export default class AuthController extends UserService {
 
     async verifyCaptchaHandler(input: string, ctx: Context) {
         try {
+            const remoteip = ctx.req.ip ? `&remoteip=${encodeURIComponent(ctx.req.ip)}` : "";
+
             const response = await axios.post(
                 defaultConfig.turnstileVerifyEndpoint,
-                `secret=${encodeURIComponent(process.env.TURNSTILE_SECRET)}&response=${encodeURIComponent(input)}&remoteip=${ctx.req.ip}`,
+                `secret=${encodeURIComponent(process.env.TURNSTILE_SECRET)}&response=${encodeURIComponent(input)}${remoteip}`,
                 {
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded",
@@ -524,7 +470,7 @@ export default class AuthController extends UserService {
                 status: "success",
             };
         } catch (error) {
-            console.log(error);
+            await logtail.error(JSON.stringify(error));
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",

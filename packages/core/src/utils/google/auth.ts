@@ -1,6 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import { OAuth2Client } from "google-auth-library";
 
+import { logtail } from "../logtail";
+
 const gOAuth = new OAuth2Client(process.env.GOOGLE_OAUTH_CLIENT_ID);
 
 export default gOAuth;
@@ -20,7 +22,7 @@ export const verifyGoogleToken = async (token: string) => {
             picture: string;
         };
     } catch (error) {
-        console.log(error);
+        await logtail.error(JSON.stringify(error));
 
         throw new TRPCError({
             code: "UNAUTHORIZED",
