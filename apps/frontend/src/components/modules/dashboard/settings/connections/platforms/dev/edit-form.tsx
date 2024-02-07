@@ -19,53 +19,40 @@ import {
   toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
-import { MediumStatus } from "@publish-studio/core/src/config/constants";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Icons } from "@/assets/icons";
+import { Center } from "@/components/ui/center";
 import { ErrorBox } from "@/components/ui/error-box";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { siteConfig } from "@/config/site";
-import useUserStore from "@/lib/store/user";
 import { trpc } from "@/utils/trpc";
 
-interface MediumConnectFormProps extends React.HTMLAttributes<HTMLDivElement> {
+interface DevEditFormProps extends React.HTMLAttributes<HTMLDivElement> {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  status: string;
 }
 
 const formSchema = z.object({
-  api_key: z.string().min(1, { message: "API key is required" }),
-  status: z.nativeEnum(MediumStatus).default(MediumStatus.DRAFT),
-  notify_followers: z.string().default("false"),
+  api_key: z.string().optional(),
+  status: z.string().optional(),
 });
 
-export function MediumConnectForm({
+export function DevEditForm({
+  status,
   setIsOpen,
   ...props
-}: Readonly<MediumConnectFormProps>) {
+}: Readonly<DevEditFormProps>) {
   const [error, setError] = useState<string | null>(null);
 
   const utils = trpc.useUtils();
-  const { setUser, setIsLoading } = useUserStore();
 
-  const { refetch: getUser } = trpc.auth.getMe.useQuery(undefined, {
-    enabled: false,
-    onSuccess: ({ data }) => {
-      setUser(data.user);
-      setIsLoading(false);
-    },
-  });
-
-  const { mutateAsync: connect, isLoading: isConnecting } =
-    trpc.platforms.medium.connect.useMutation({
+  const { mutateAsync: edit, isLoading: isUpdating } =
+    trpc.platforms.devto.update.useMutation({
       onSuccess: async ({ data }) => {
         toast.success(data.message);
         await utils.platforms.getAll.invalidate();
-
-        setIsLoading(true);
-        await getUser();
-
         setIsOpen(false);
       },
       onError: (error) => {
@@ -77,24 +64,23 @@ export function MediumConnectForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       api_key: "",
-      status: MediumStatus.DRAFT,
-      notify_followers: "false",
+      status,
     },
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       setError(null);
-      await connect({
+      await edit({
         ...data,
-        notify_followers: data.notify_followers === "true",
+        status: data.status === "true",
       });
     } catch {
       // Ignore
     }
   };
 
-  const isLoading = form.formState.isSubmitting || isConnecting;
+  const isLoading = form.formState.isSubmitting || isUpdating;
 
   return (
     <div
@@ -104,7 +90,9 @@ export function MediumConnectForm({
       {...props}
     >
       {error && (
-        <ErrorBox title="Could not connect Medium" description={error} />
+        <Center>
+          <ErrorBox title="Could not update Dev" description={error} />
+        </Center>
       )}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -134,7 +122,7 @@ export function MediumConnectForm({
                           asChild
                         >
                           <Link
-                            href={siteConfig.links.mediumAPIKeyGuide}
+                            href={siteConfig.links.devAPIKeyGuide}
                             target="_blank"
                           >
                             Learn
@@ -167,7 +155,6 @@ export function MediumConnectForm({
                     type="password"
                     placeholder="*******"
                     autoComplete="off"
-                    autoFocus
                     {...field}
                   />
                 </FormControl>
@@ -181,7 +168,7 @@ export function MediumConnectForm({
             disabled={isLoading}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Set default publish status for Medium</FormLabel>
+                <FormLabel>Update publish status for Dev</FormLabel>
                 <FormControl>
                   <RadioGroup
                     onValueChange={field.onChange}
@@ -190,55 +177,15 @@ export function MediumConnectForm({
                   >
                     <FormItem className="flex items-center space-x-3 space-y-0">
                       <FormControl>
-                        <RadioGroupItem value={MediumStatus.DRAFT} />
+                        <RadioGroupItem value="false" />
                       </FormControl>
                       <FormLabel className="font-normal">Draft</FormLabel>
                     </FormItem>
                     <FormItem className="flex items-center space-x-3 space-y-0">
                       <FormControl>
-                        <RadioGroupItem value={MediumStatus.PUBLIC} />
-                      </FormControl>
-                      <FormLabel className="font-normal">Public</FormLabel>
-                    </FormItem>
-                    <FormItem className="flex items-center space-x-3 space-y-0">
-                      <FormControl>
-                        <RadioGroupItem value={MediumStatus.UNLISTED} />
-                      </FormControl>
-                      <FormLabel className="font-normal">Unlisted</FormLabel>
-                    </FormItem>
-                  </RadioGroup>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="notify_followers"
-            disabled={isLoading}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  Do you want to notify your Medium followers on publishing a
-                  post?
-                </FormLabel>
-                <FormControl>
-                  <RadioGroup
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    className="flex flex-row space-x-2"
-                  >
-                    <FormItem className="flex items-center space-x-3 space-y-0">
-                      <FormControl>
                         <RadioGroupItem value="true" />
                       </FormControl>
-                      <FormLabel className="font-normal">Yes</FormLabel>
-                    </FormItem>
-                    <FormItem className="flex items-center space-x-3 space-y-0">
-                      <FormControl>
-                        <RadioGroupItem value="false" />
-                      </FormControl>
-                      <FormLabel className="font-normal">No</FormLabel>
+                      <FormLabel className="font-normal">Publish</FormLabel>
                     </FormItem>
                   </RadioGroup>
                 </FormControl>
@@ -251,7 +198,7 @@ export function MediumConnectForm({
             disabled={!form.formState.isDirty || isLoading}
             className="w-full"
           >
-            <ButtonLoader isLoading={isLoading}>Connect</ButtonLoader>
+            <ButtonLoader isLoading={isLoading}>Update</ButtonLoader>
           </Button>
         </form>
       </Form>

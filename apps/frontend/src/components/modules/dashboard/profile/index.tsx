@@ -158,6 +158,7 @@ export function Profile({ ...props }: Readonly<ProfileProps>) {
                   variant="ghost"
                   size="icon"
                   disabled={isLoading}
+                  aria-label="Edit Profile"
                 >
                   <Icons.EditProfile size={25} />
                 </Button>

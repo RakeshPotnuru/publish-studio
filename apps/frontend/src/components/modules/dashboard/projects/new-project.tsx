@@ -125,7 +125,6 @@ export function NewProject({
                       <Input
                         type="text"
                         placeholder="Enter a name for your project"
-                        autoFocus
                         {...field}
                       />
                     </FormControl>

@@ -89,7 +89,9 @@ export function TopicStats() {
     </Center>
   ) : (
     <div className="flex flex-col items-center space-y-4">
-      <Heading level={3}>Top categories</Heading>
+      <Heading level={2} className="text-xl">
+        Top categories
+      </Heading>
       <div className="flex flex-row items-center space-x-6">
         <div className="size-52">
           {isFetching ? (

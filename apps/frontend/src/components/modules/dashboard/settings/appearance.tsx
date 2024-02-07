@@ -30,7 +30,7 @@ export function Appearance() {
       >
         <div className="space-y-2">
           <div className="grid grid-cols-2 items-center space-x-4 rounded-lg border bg-white p-4">
-            <RadioGroupItem value="light" />
+            <RadioGroupItem value="light" aria-label="light theme" />
             <Image
               src={Images.logo}
               alt="Light theme"
@@ -43,7 +43,7 @@ export function Appearance() {
         </div>
         <div className="space-y-2">
           <div className="grid grid-cols-2 items-center space-x-4 rounded-lg border bg-black p-4">
-            <RadioGroupItem value="dark" />
+            <RadioGroupItem value="dark" aria-label="dark theme" />
             <Image
               src={Images.logo}
               alt="Dark theme"
@@ -57,7 +57,7 @@ export function Appearance() {
         <div className="space-y-2">
           <div className="grid grid-cols-2 items-center rounded-lg border">
             <div className="rounded-l-lg bg-white p-4">
-              <RadioGroupItem value="system" />
+              <RadioGroupItem value="system" aria-label="system preference" />
             </div>
             <div className="rounded-r-lg bg-black p-4">
               <Image

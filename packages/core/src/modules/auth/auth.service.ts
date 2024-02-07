@@ -34,6 +34,7 @@ export default class AuthService extends UserService {
             },
             from_address: process.env.AWS_SES_PERSONAL_FROM_EMAIL,
             scheduled_at: new Date(Date.now() + 5 * 60 * 1000), // 5 minutes from now
+            user_id: user._id,
         });
 
         await createCaller(ctx).notifications.create({

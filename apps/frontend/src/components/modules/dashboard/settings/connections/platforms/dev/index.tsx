@@ -13,7 +13,7 @@ import { Images } from "@/assets/images";
 import { useEditor } from "@/hooks/use-editor";
 import { trpc } from "@/utils/trpc";
 
-import { deserialize } from "../../../../../editor/transform-markdown";
+import { deserialize } from "../../../../../../editor/transform-markdown";
 import { ConnectionCard } from "../../connection-card";
 import { ImportPostsBody } from "../import-dialog";
 import { DevConnectForm } from "./connect-form";

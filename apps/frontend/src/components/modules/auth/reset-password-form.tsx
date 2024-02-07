@@ -264,7 +264,6 @@ export function ResetPasswordForm() {
                         type="email"
                         placeholder="me@example.com"
                         autoComplete="email"
-                        autoFocus
                         {...field}
                       />
                     </FormControl>
@@ -316,7 +315,6 @@ export function ResetPasswordForm() {
                         type={passwordVisible ? "text" : "password"}
                         placeholder="********"
                         autoComplete="new-password"
-                        autoFocus
                         {...field}
                       />
                     </FormControl>

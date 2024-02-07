@@ -51,6 +51,7 @@ export function MenuAction({
               "rounded-none": isBubbleMenu,
             })}
             disabled={disabled}
+            aria-label="tooltip"
           >
             {icon}
           </Button>

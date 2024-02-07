@@ -37,6 +37,7 @@ export function AskForConfirmation({
           size="icon"
           className={cn("h-8 w-8", classNames?.confirmButton)}
           disabled={isLoading}
+          aria-label="Confirm"
         >
           {isLoading ? (
             <Icons.Loading className="animate-spin" />
@@ -51,6 +52,8 @@ export function AskForConfirmation({
           variant="outline"
           size="icon"
           className={cn("h-8 w-8", classNames?.cancelButton)}
+          disabled={isLoading}
+          aria-label="Cancel"
         >
           <Icons.Close />
         </Button>

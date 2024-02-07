@@ -14,6 +14,7 @@ import "./wss";
 import defaultConfig from "./config/app.config";
 import appRouter from "./routes";
 import { createContext } from "./trpc";
+import { logtail } from "./utils/logtail";
 
 const app: Application = express();
 
@@ -58,6 +59,23 @@ app.use("/panel", (_, res) => {
 
 app.listen(process.env.PORT, () => {
     console.log(`✅ Server running on port ${process.env.PORT}`);
+});
+
+process.on("uncaughtException", error => {
+    logtail.error(error).catch(error => {
+        console.log(error);
+    });
+});
+
+process.on("unhandledRejection", (reason, promise) => {
+    logtail
+        .error("Unhandled Rejection at: Promise", {
+            reason,
+            promise,
+        })
+        .catch(error => {
+            console.log(error);
+        });
 });
 
 export type AppRouter = typeof appRouter;

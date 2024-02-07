@@ -94,7 +94,12 @@ export function ConnectionCard({
           form={editForm}
           tooltip="Edit account"
         >
-          <Button size="icon" variant="outline" className="h-8 w-8">
+          <Button
+            size="icon"
+            variant="outline"
+            className="h-8 w-8"
+            aria-label="Edit account"
+          >
             <Icons.Edit />
           </Button>
         </ConnectionDialog>
@@ -106,7 +111,12 @@ export function ConnectionCard({
             component={importComponent}
             tooltip="Import posts"
           >
-            <Button size="icon" variant="outline" className="h-8 w-8">
+            <Button
+              size="icon"
+              variant="outline"
+              className="h-8 w-8"
+              aria-label="Import posts"
+            >
               <Icons.Import />
             </Button>
           </ImportDialog>

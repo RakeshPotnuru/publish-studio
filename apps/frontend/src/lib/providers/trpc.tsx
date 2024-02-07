@@ -16,6 +16,19 @@ import superjson from "superjson";
 
 import { trpc } from "../../utils/trpc";
 
+if (
+  !process.env.NEXT_PUBLIC_TRPC_API_URL ||
+  !process.env.NEXT_PUBLIC_WEBSOCKET_URL
+) {
+  throw new Error(
+    "One of NEXT_PUBLIC_TRPC_API_URL or NEXT_PUBLIC_WEBSOCKET_URL is not set",
+  );
+}
+
+const wsClient = createWSClient({
+  url: process.env.NEXT_PUBLIC_WEBSOCKET_URL,
+});
+
 export function TRPCProvider({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
@@ -38,10 +51,6 @@ export function TRPCProvider({
       "One of NEXT_PUBLIC_TRPC_API_URL or NEXT_PUBLIC_WEBSOCKET_URL is not set",
     );
   }
-
-  const wsClient = createWSClient({
-    url: process.env.NEXT_PUBLIC_WEBSOCKET_URL,
-  });
 
   const token = getCookie("ps_access_token");
 
@@ -70,9 +79,7 @@ export function TRPCProvider({
             return fetch(input, {
               ...init,
               credentials:
-                process.env.NEXT_PUBLIC_TRPC_API_URL === "production"
-                  ? "include"
-                  : "omit",
+                process.env.NODE_ENV === "production" ? "include" : "omit",
             });
           },
         }),

@@ -51,6 +51,7 @@ export function LinkAction({ editor, isBubbleMenu }: Readonly<MenuProps>) {
               "text-primary": editor.isActive("link") && isBubbleMenu,
               "rounded-none": isBubbleMenu,
             })}
+            aria-label="Remove Link"
           >
             <Icons.Link />
           </Button>
@@ -66,6 +67,7 @@ export function LinkAction({ editor, isBubbleMenu }: Readonly<MenuProps>) {
                 "text-primary": editor.isActive("link") && isBubbleMenu,
                 "rounded-none": isBubbleMenu,
               })}
+              aria-label="Insert Link"
             >
               <Icons.Link />
             </Button>

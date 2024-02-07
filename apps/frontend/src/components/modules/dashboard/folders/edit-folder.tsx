@@ -110,7 +110,6 @@ export function EditFolder({ children, ...props }: Readonly<EditFolderProps>) {
                       <Input
                         type="text"
                         placeholder="Enter a name for your folder"
-                        autoFocus
                         {...field}
                       />
                     </FormControl>

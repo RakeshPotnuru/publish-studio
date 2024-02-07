@@ -67,5 +67,13 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: "/((?!api|static|.*\\..*|_next).*)",
+  matcher: [
+    {
+      source: "/((?!api|static|.*\\..*|_next).*)",
+      missing: [
+        { type: "header", key: "next-router-prefetch" },
+        { type: "header", key: "purpose", value: "prefetch" },
+      ],
+    },
+  ],
 };

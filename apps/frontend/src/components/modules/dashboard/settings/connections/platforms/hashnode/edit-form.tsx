@@ -169,7 +169,6 @@ export function HashnodeEditForm({
                     type="password"
                     placeholder="********"
                     autoComplete="off"
-                    autoFocus
                     {...field}
                   />
                 </FormControl>

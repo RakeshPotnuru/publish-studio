@@ -6,13 +6,24 @@ import { UserType } from "@publish-studio/core/src/config/constants";
 
 import useUserStore from "@/lib/store/user";
 
-import { Upgrade } from "../misc/upgrade";
+import { Upgrade } from "../common/upgrade";
 import { ButtonLoader } from "./loaders/button-loader";
 
 interface ProButtonProps extends React.ComponentProps<typeof Button> {
   featureText?: string;
 }
 
+/**
+ * A custom button component for Pro users.
+ *
+ * @param className - Additional CSS class names for the button.
+ * @param children - The content of the button.
+ * @param onClick - The click event handler for the button.
+ * @param featureText - The text to display when the button is clicked by non-Pro users.
+ * @param ref - The ref to attach to the button element.
+ * @param props - Additional props to pass to the button component.
+ * @returns The rendered ProButton component.
+ */
 const ProButton = forwardRef<HTMLButtonElement, ProButtonProps>(
   ({ className, children, onClick, featureText, ...props }, ref) => {
     const [open, setOpen] = useState(false);

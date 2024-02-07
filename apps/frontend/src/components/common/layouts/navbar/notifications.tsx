@@ -80,6 +80,7 @@ export function Notifications() {
                     onClick={() => handleMarkAsRead([notification._id])}
                     variant="ghost"
                     size="icon"
+                    aria-label="Mark as read"
                   >
                     <Icons.Check />
                   </Button>
@@ -121,9 +122,10 @@ export function Notifications() {
     (notification) => notification.status !== "read",
   ).length;
 
+  const noun = numUnread > 1 ? "s" : "";
   const tooltip =
     numUnread > 0
-      ? `You have ${numUnread} unread notification${numUnread > 1 ? "s" : ""}`
+      ? `You have ${numUnread} unread notification${noun}`
       : "You have no unread notifications";
 
   return (
@@ -136,6 +138,7 @@ export function Notifications() {
             className={cn("rounded-full", {
               "border border-success": numUnread > 0,
             })}
+            aria-label="Notifications"
           >
             <Icons.Notification
               className={cn("size-5", {

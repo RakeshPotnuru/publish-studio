@@ -5,13 +5,6 @@ import type { Metadata } from "next";
 import { Footer } from "@/components/common/layouts/footer";
 import { siteConfig } from "@/config/site";
 
-declare global {
-  interface Window {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    google: any;
-  }
-}
-
 export const metadata: Metadata = {
   title: { template: `%s | ${siteConfig.title}`, default: "Authentication" },
 };

@@ -77,7 +77,9 @@ export function ProjectStats() {
     </Center>
   ) : (
     <div className="flex flex-col items-center space-y-4">
-      <Heading level={3}>Activity</Heading>
+      <Heading level={2} className="text-xl">
+        Activity
+      </Heading>
       <div className="h-full">
         {isFetching ? <Skeleton className="h-full w-80" /> : chartView}
       </div>

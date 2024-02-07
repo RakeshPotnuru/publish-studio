@@ -29,6 +29,7 @@ export function ProjectToolbar({
             variant="ghost"
             size="icon"
             className="hover:bg-transparent hover:opacity-80"
+            aria-label="Rename project"
           >
             <Icons.Edit />
           </Button>
@@ -39,12 +40,12 @@ export function ProjectToolbar({
           <Button variant="secondary">Publish</Button>
         </PublishPost>
         <ProjectTools editor={editor} project={project}>
-          <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" aria-label="Tools">
             <Icons.Tools />
           </Button>
         </ProjectTools>
         <ProjectSettings project={project}>
-          <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" aria-label="Settings">
             <Icons.Settings />
           </Button>
         </ProjectSettings>

@@ -119,7 +119,6 @@ export function RenameProject({
                       <Input
                         type="text"
                         placeholder="Enter a name for your project"
-                        autoFocus
                         {...field}
                       />
                     </FormControl>

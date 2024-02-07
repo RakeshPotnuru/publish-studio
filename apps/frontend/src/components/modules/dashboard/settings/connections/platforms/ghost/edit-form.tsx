@@ -19,8 +19,7 @@ import {
   toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
-import type { IMedium } from "@publish-studio/core";
-import { MediumStatus } from "@publish-studio/core/src/config/constants";
+import { GhostStatus } from "@publish-studio/core/src/config/constants";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -30,30 +29,29 @@ import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
 
-interface MediumEditFormProps extends React.HTMLAttributes<HTMLDivElement> {
+interface DevEditFormProps extends React.HTMLAttributes<HTMLDivElement> {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  status: IMedium["status"];
-  notify_followers: string;
+  api_url: string;
+  status: GhostStatus;
 }
 
 const formSchema = z.object({
-  api_key: z.string().optional(),
-  status: z.nativeEnum(MediumStatus),
-  notify_followers: z.string(),
+  admin_api_key: z.string().optional(),
+  api_url: z.string().url().optional(),
+  status: z.nativeEnum(GhostStatus).optional(),
 });
 
-export function MediumEditForm({
-  setIsOpen,
+export function GhostEditForm({
   status,
-  notify_followers,
+  setIsOpen,
   ...props
-}: Readonly<MediumEditFormProps>) {
+}: Readonly<DevEditFormProps>) {
   const [error, setError] = useState<string | null>(null);
 
   const utils = trpc.useUtils();
 
   const { mutateAsync: edit, isLoading: isUpdating } =
-    trpc.platforms.medium.update.useMutation({
+    trpc.platforms.ghost.update.useMutation({
       onSuccess: async ({ data }) => {
         toast.success(data.message);
         await utils.platforms.getAll.invalidate();
@@ -67,25 +65,21 @@ export function MediumEditForm({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      api_key: "",
-      status,
-      notify_followers,
+      api_url: props.api_url,
+      status: status,
     },
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       setError(null);
-      await edit({
-        ...data,
-        notify_followers: data.notify_followers === "true",
-      });
+      await edit(data);
     } catch {
       // Ignore
     }
   };
 
-  const isLoading = isUpdating || form.formState.isSubmitting;
+  const isLoading = form.formState.isSubmitting || isUpdating;
 
   return (
     <div
@@ -94,20 +88,18 @@ export function MediumEditForm({
       })}
       {...props}
     >
-      {error && (
-        <ErrorBox title="Could not update Medium" description={error} />
-      )}
+      {error && <ErrorBox title="Could not update Ghost" description={error} />}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
             control={form.control}
-            name="api_key"
+            name="admin_api_key"
             disabled={isLoading}
             render={({ field }) => (
               <FormItem>
                 <div className="space-y-1">
                   <FormLabel className="flex flex-row space-x-1">
-                    <span>API key</span>{" "}
+                    <span>Admin API key</span>{" "}
                     <HoverCard>
                       <HoverCardTrigger asChild>
                         <Button
@@ -125,7 +117,7 @@ export function MediumEditForm({
                           asChild
                         >
                           <Link
-                            href={siteConfig.links.mediumAPIKeyGuide}
+                            href={siteConfig.links.ghostAPIKeyGuide}
                             target="_blank"
                           >
                             Learn
@@ -158,7 +150,55 @@ export function MediumEditForm({
                     type="password"
                     placeholder="*******"
                     autoComplete="off"
-                    autoFocus
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="api_url"
+            disabled={isLoading}
+            render={({ field }) => (
+              <FormItem>
+                <div className="space-y-1">
+                  <FormLabel className="flex flex-row space-x-1">
+                    <span>API URL</span>{" "}
+                    <HoverCard>
+                      <HoverCardTrigger asChild>
+                        <Button
+                          variant="link"
+                          className="h-max p-0 text-foreground"
+                        >
+                          <Icons.Question />
+                        </Button>
+                      </HoverCardTrigger>
+                      <HoverCardContent className="w-44" side="right">
+                        <Button
+                          type="button"
+                          variant="link"
+                          className="h-max p-0"
+                          asChild
+                        >
+                          <Link
+                            href={siteConfig.links.ghostAPIKeyGuide}
+                            target="_blank"
+                          >
+                            Learn
+                          </Link>
+                        </Button>{" "}
+                        how to get your API URL.
+                      </HoverCardContent>
+                    </HoverCard>
+                  </FormLabel>
+                </div>
+                <FormControl>
+                  <Input
+                    type="url"
+                    placeholder="https://demo.ghost.io"
+                    autoComplete="off"
                     {...field}
                   />
                 </FormControl>
@@ -172,7 +212,7 @@ export function MediumEditForm({
             disabled={isLoading}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Edit default publish status for Medium</FormLabel>
+                <FormLabel>Set default publish status for Ghost</FormLabel>
                 <FormControl>
                   <RadioGroup
                     onValueChange={field.onChange}
@@ -181,55 +221,15 @@ export function MediumEditForm({
                   >
                     <FormItem className="flex items-center space-x-3 space-y-0">
                       <FormControl>
-                        <RadioGroupItem value={MediumStatus.DRAFT} />
+                        <RadioGroupItem value={GhostStatus.DRAFT} />
                       </FormControl>
                       <FormLabel className="font-normal">Draft</FormLabel>
                     </FormItem>
                     <FormItem className="flex items-center space-x-3 space-y-0">
                       <FormControl>
-                        <RadioGroupItem value={MediumStatus.PUBLIC} />
+                        <RadioGroupItem value={GhostStatus.PUBLISHED} />
                       </FormControl>
-                      <FormLabel className="font-normal">Public</FormLabel>
-                    </FormItem>
-                    <FormItem className="flex items-center space-x-3 space-y-0">
-                      <FormControl>
-                        <RadioGroupItem value={MediumStatus.UNLISTED} />
-                      </FormControl>
-                      <FormLabel className="font-normal">Unlisted</FormLabel>
-                    </FormItem>
-                  </RadioGroup>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="notify_followers"
-            disabled={isLoading}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  Do you want to notify your Medium followers on publishing a
-                  post?
-                </FormLabel>
-                <FormControl>
-                  <RadioGroup
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    className="flex flex-row space-x-2"
-                  >
-                    <FormItem className="flex items-center space-x-3 space-y-0">
-                      <FormControl>
-                        <RadioGroupItem value="true" />
-                      </FormControl>
-                      <FormLabel className="font-normal">Yes</FormLabel>
-                    </FormItem>
-                    <FormItem className="flex items-center space-x-3 space-y-0">
-                      <FormControl>
-                        <RadioGroupItem value="false" />
-                      </FormControl>
-                      <FormLabel className="font-normal">No</FormLabel>
+                      <FormLabel className="font-normal">Published</FormLabel>
                     </FormItem>
                   </RadioGroup>
                 </FormControl>

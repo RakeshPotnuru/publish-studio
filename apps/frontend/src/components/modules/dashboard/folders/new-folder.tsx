@@ -119,7 +119,6 @@ export function NewFolderDialog({
                       <Input
                         type="text"
                         placeholder="Enter a name for your folder"
-                        autoFocus
                         autoComplete="off"
                         {...field}
                       />

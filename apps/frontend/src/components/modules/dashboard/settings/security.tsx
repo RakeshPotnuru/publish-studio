@@ -39,7 +39,7 @@ export function Security() {
       </div>
       <div className="mt-8 space-y-4">
         <div className="flex justify-between">
-          <Heading level={3}>Logout from all sessions</Heading>
+          <Heading level={2}>Logout from all sessions</Heading>
           <Button onClick={handleLogout} variant="destructive">
             <ButtonLoader isLoading={isLoading}>Logout</ButtonLoader>
           </Button>

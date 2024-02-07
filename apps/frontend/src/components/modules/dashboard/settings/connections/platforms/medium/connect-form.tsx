@@ -19,30 +19,31 @@ import {
   toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
+import { MediumStatus } from "@publish-studio/core/src/config/constants";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Icons } from "@/assets/icons";
-import { Center } from "@/components/ui/center";
 import { ErrorBox } from "@/components/ui/error-box";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { siteConfig } from "@/config/site";
 import useUserStore from "@/lib/store/user";
 import { trpc } from "@/utils/trpc";
 
-interface DevConnectFormProps extends React.HTMLAttributes<HTMLDivElement> {
+interface MediumConnectFormProps extends React.HTMLAttributes<HTMLDivElement> {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const formSchema = z.object({
   api_key: z.string().min(1, { message: "API key is required" }),
-  status: z.string().default("false"),
+  status: z.nativeEnum(MediumStatus).default(MediumStatus.DRAFT),
+  notify_followers: z.string().default("false"),
 });
 
-export function DevConnectForm({
+export function MediumConnectForm({
   setIsOpen,
   ...props
-}: Readonly<DevConnectFormProps>) {
+}: Readonly<MediumConnectFormProps>) {
   const [error, setError] = useState<string | null>(null);
 
   const utils = trpc.useUtils();
@@ -57,7 +58,7 @@ export function DevConnectForm({
   });
 
   const { mutateAsync: connect, isLoading: isConnecting } =
-    trpc.platforms.devto.connect.useMutation({
+    trpc.platforms.medium.connect.useMutation({
       onSuccess: async ({ data }) => {
         toast.success(data.message);
         await utils.platforms.getAll.invalidate();
@@ -76,7 +77,8 @@ export function DevConnectForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       api_key: "",
-      status: "false",
+      status: MediumStatus.DRAFT,
+      notify_followers: "false",
     },
   });
 
@@ -85,7 +87,7 @@ export function DevConnectForm({
       setError(null);
       await connect({
         ...data,
-        status: data.status === "true",
+        notify_followers: data.notify_followers === "true",
       });
     } catch {
       // Ignore
@@ -102,9 +104,7 @@ export function DevConnectForm({
       {...props}
     >
       {error && (
-        <Center>
-          <ErrorBox title="Could not connect Dev" description={error} />
-        </Center>
+        <ErrorBox title="Could not connect Medium" description={error} />
       )}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -134,7 +134,7 @@ export function DevConnectForm({
                           asChild
                         >
                           <Link
-                            href={siteConfig.links.devAPIKeyGuide}
+                            href={siteConfig.links.mediumAPIKeyGuide}
                             target="_blank"
                           >
                             Learn
@@ -167,7 +167,6 @@ export function DevConnectForm({
                     type="password"
                     placeholder="*******"
                     autoComplete="off"
-                    autoFocus
                     {...field}
                   />
                 </FormControl>
@@ -181,7 +180,7 @@ export function DevConnectForm({
             disabled={isLoading}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Set default publish status for Dev</FormLabel>
+                <FormLabel>Set default publish status for Medium</FormLabel>
                 <FormControl>
                   <RadioGroup
                     onValueChange={field.onChange}
@@ -190,15 +189,55 @@ export function DevConnectForm({
                   >
                     <FormItem className="flex items-center space-x-3 space-y-0">
                       <FormControl>
-                        <RadioGroupItem value="false" />
+                        <RadioGroupItem value={MediumStatus.DRAFT} />
                       </FormControl>
                       <FormLabel className="font-normal">Draft</FormLabel>
                     </FormItem>
                     <FormItem className="flex items-center space-x-3 space-y-0">
                       <FormControl>
+                        <RadioGroupItem value={MediumStatus.PUBLIC} />
+                      </FormControl>
+                      <FormLabel className="font-normal">Public</FormLabel>
+                    </FormItem>
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value={MediumStatus.UNLISTED} />
+                      </FormControl>
+                      <FormLabel className="font-normal">Unlisted</FormLabel>
+                    </FormItem>
+                  </RadioGroup>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="notify_followers"
+            disabled={isLoading}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  Do you want to notify your Medium followers on publishing a
+                  post?
+                </FormLabel>
+                <FormControl>
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    className="flex flex-row space-x-2"
+                  >
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
                         <RadioGroupItem value="true" />
                       </FormControl>
-                      <FormLabel className="font-normal">Publish</FormLabel>
+                      <FormLabel className="font-normal">Yes</FormLabel>
+                    </FormItem>
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="false" />
+                      </FormControl>
+                      <FormLabel className="font-normal">No</FormLabel>
                     </FormItem>
                   </RadioGroup>
                 </FormControl>

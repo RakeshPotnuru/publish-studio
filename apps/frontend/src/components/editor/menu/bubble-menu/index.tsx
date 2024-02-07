@@ -9,7 +9,7 @@ import { MenuSeparator } from "../menu-separator";
 
 type BubbleMenuProps = MenuProps;
 
-export function BubbleMenu({ editor }: BubbleMenuProps) {
+export function BubbleMenu({ editor }: Readonly<BubbleMenuProps>) {
   return (
     <TiptapBubbleMenu
       editor={editor}

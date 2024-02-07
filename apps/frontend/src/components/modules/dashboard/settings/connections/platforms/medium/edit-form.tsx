@@ -19,6 +19,8 @@ import {
   toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
+import type { IMedium } from "@publish-studio/core";
+import { MediumStatus } from "@publish-studio/core/src/config/constants";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -26,49 +28,35 @@ import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { siteConfig } from "@/config/site";
-import useUserStore from "@/lib/store/user";
 import { trpc } from "@/utils/trpc";
 
-interface HashnodeConnectFormProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+interface MediumEditFormProps extends React.HTMLAttributes<HTMLDivElement> {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  status: IMedium["status"];
+  notify_followers: string;
 }
 
 const formSchema = z.object({
-  api_key: z.string().min(1, { message: "API key is required" }),
-  settings: z.object({
-    enable_table_of_contents: z.string().default("false"),
-    send_newsletter: z.string().default("false"),
-    delisted: z.string().default("false"),
-  }),
+  api_key: z.string().optional(),
+  status: z.nativeEnum(MediumStatus),
+  notify_followers: z.string(),
 });
 
-export function HashnodeConnectForm({
+export function MediumEditForm({
   setIsOpen,
+  status,
+  notify_followers,
   ...props
-}: Readonly<HashnodeConnectFormProps>) {
+}: Readonly<MediumEditFormProps>) {
   const [error, setError] = useState<string | null>(null);
 
   const utils = trpc.useUtils();
-  const { setUser, setIsLoading } = useUserStore();
 
-  const { refetch: getUser } = trpc.auth.getMe.useQuery(undefined, {
-    enabled: false,
-    onSuccess: ({ data }) => {
-      setUser(data.user);
-      setIsLoading(false);
-    },
-  });
-
-  const { mutateAsync: connect, isLoading: isConnecting } =
-    trpc.platforms.hashnode.connect.useMutation({
+  const { mutateAsync: edit, isLoading: isUpdating } =
+    trpc.platforms.medium.update.useMutation({
       onSuccess: async ({ data }) => {
         toast.success(data.message);
         await utils.platforms.getAll.invalidate();
-
-        setIsLoading(true);
-        await getUser();
-
         setIsOpen(false);
       },
       onError: (error) => {
@@ -80,32 +68,24 @@ export function HashnodeConnectForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       api_key: "",
-      settings: {
-        enable_table_of_contents: "false",
-        send_newsletter: "false",
-        delisted: "false",
-      },
+      status,
+      notify_followers,
     },
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       setError(null);
-      await connect({
+      await edit({
         ...data,
-        settings: {
-          enable_table_of_contents:
-            data.settings.enable_table_of_contents === "true",
-          send_newsletter: data.settings.send_newsletter === "true",
-          delisted: data.settings.delisted === "true",
-        },
+        notify_followers: data.notify_followers === "true",
       });
     } catch {
       // Ignore
     }
   };
 
-  const isLoading = form.formState.isSubmitting || isConnecting;
+  const isLoading = isUpdating || form.formState.isSubmitting;
 
   return (
     <div
@@ -115,7 +95,7 @@ export function HashnodeConnectForm({
       {...props}
     >
       {error && (
-        <ErrorBox title="Could not connect Hashnode" description={error} />
+        <ErrorBox title="Could not update Medium" description={error} />
       )}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -145,7 +125,7 @@ export function HashnodeConnectForm({
                           asChild
                         >
                           <Link
-                            href={siteConfig.links.hashnodeAPIKeyGuide}
+                            href={siteConfig.links.mediumAPIKeyGuide}
                             target="_blank"
                           >
                             Learn
@@ -176,9 +156,8 @@ export function HashnodeConnectForm({
                 <FormControl>
                   <Input
                     type="password"
-                    placeholder="API key"
+                    placeholder="*******"
                     autoComplete="off"
-                    autoFocus
                     {...field}
                   />
                 </FormControl>
@@ -188,14 +167,11 @@ export function HashnodeConnectForm({
           />
           <FormField
             control={form.control}
-            name="settings.send_newsletter"
+            name="status"
             disabled={isLoading}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>
-                  Would you like to send a newsletter to your subscribers after
-                  publishing a post?
-                </FormLabel>
+                <FormLabel>Edit default publish status for Medium</FormLabel>
                 <FormControl>
                   <RadioGroup
                     onValueChange={field.onChange}
@@ -204,15 +180,21 @@ export function HashnodeConnectForm({
                   >
                     <FormItem className="flex items-center space-x-3 space-y-0">
                       <FormControl>
-                        <RadioGroupItem value="false" />
+                        <RadioGroupItem value={MediumStatus.DRAFT} />
                       </FormControl>
-                      <FormLabel className="font-normal">No</FormLabel>
+                      <FormLabel className="font-normal">Draft</FormLabel>
                     </FormItem>
                     <FormItem className="flex items-center space-x-3 space-y-0">
                       <FormControl>
-                        <RadioGroupItem value="true" />
+                        <RadioGroupItem value={MediumStatus.PUBLIC} />
                       </FormControl>
-                      <FormLabel className="font-normal">Yes</FormLabel>
+                      <FormLabel className="font-normal">Public</FormLabel>
+                    </FormItem>
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value={MediumStatus.UNLISTED} />
+                      </FormControl>
+                      <FormLabel className="font-normal">Unlisted</FormLabel>
                     </FormItem>
                   </RadioGroup>
                 </FormControl>
@@ -222,12 +204,13 @@ export function HashnodeConnectForm({
           />
           <FormField
             control={form.control}
-            name="settings.enable_table_of_contents"
+            name="notify_followers"
             disabled={isLoading}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>
-                  Would you like to enable table of contents for your posts?
+                  Do you want to notify your Medium followers on publishing a
+                  post?
                 </FormLabel>
                 <FormControl>
                   <RadioGroup
@@ -237,48 +220,15 @@ export function HashnodeConnectForm({
                   >
                     <FormItem className="flex items-center space-x-3 space-y-0">
                       <FormControl>
-                        <RadioGroupItem value="false" />
-                      </FormControl>
-                      <FormLabel className="font-normal">No</FormLabel>
-                    </FormItem>
-                    <FormItem className="flex items-center space-x-3 space-y-0">
-                      <FormControl>
                         <RadioGroupItem value="true" />
                       </FormControl>
                       <FormLabel className="font-normal">Yes</FormLabel>
                     </FormItem>
-                  </RadioGroup>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="settings.delisted"
-            disabled={isLoading}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  Would you like to hide your posts from Hashnode feed?
-                </FormLabel>
-                <FormControl>
-                  <RadioGroup
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    className="flex flex-row space-x-2"
-                  >
                     <FormItem className="flex items-center space-x-3 space-y-0">
                       <FormControl>
                         <RadioGroupItem value="false" />
                       </FormControl>
                       <FormLabel className="font-normal">No</FormLabel>
-                    </FormItem>
-                    <FormItem className="flex items-center space-x-3 space-y-0">
-                      <FormControl>
-                        <RadioGroupItem value="true" />
-                      </FormControl>
-                      <FormLabel className="font-normal">Yes</FormLabel>
                     </FormItem>
                   </RadioGroup>
                 </FormControl>
@@ -291,7 +241,7 @@ export function HashnodeConnectForm({
             disabled={!form.formState.isDirty || isLoading}
             className="w-full"
           >
-            <ButtonLoader isLoading={isLoading}>Connect</ButtonLoader>
+            <ButtonLoader isLoading={isLoading}>Update</ButtonLoader>
           </Button>
         </form>
       </Form>

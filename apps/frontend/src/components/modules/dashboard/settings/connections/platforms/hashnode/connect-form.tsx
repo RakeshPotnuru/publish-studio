@@ -23,36 +23,52 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Icons } from "@/assets/icons";
-import { Center } from "@/components/ui/center";
 import { ErrorBox } from "@/components/ui/error-box";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { siteConfig } from "@/config/site";
+import useUserStore from "@/lib/store/user";
 import { trpc } from "@/utils/trpc";
 
-interface DevEditFormProps extends React.HTMLAttributes<HTMLDivElement> {
+interface HashnodeConnectFormProps
+  extends React.HTMLAttributes<HTMLDivElement> {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  status: string;
 }
 
 const formSchema = z.object({
-  api_key: z.string().optional(),
-  status: z.string().optional(),
+  api_key: z.string().min(1, { message: "API key is required" }),
+  settings: z.object({
+    enable_table_of_contents: z.string().default("false"),
+    send_newsletter: z.string().default("false"),
+    delisted: z.string().default("false"),
+  }),
 });
 
-export function DevEditForm({
-  status,
+export function HashnodeConnectForm({
   setIsOpen,
   ...props
-}: Readonly<DevEditFormProps>) {
+}: Readonly<HashnodeConnectFormProps>) {
   const [error, setError] = useState<string | null>(null);
 
   const utils = trpc.useUtils();
+  const { setUser, setIsLoading } = useUserStore();
 
-  const { mutateAsync: edit, isLoading: isUpdating } =
-    trpc.platforms.devto.update.useMutation({
+  const { refetch: getUser } = trpc.auth.getMe.useQuery(undefined, {
+    enabled: false,
+    onSuccess: ({ data }) => {
+      setUser(data.user);
+      setIsLoading(false);
+    },
+  });
+
+  const { mutateAsync: connect, isLoading: isConnecting } =
+    trpc.platforms.hashnode.connect.useMutation({
       onSuccess: async ({ data }) => {
         toast.success(data.message);
         await utils.platforms.getAll.invalidate();
+
+        setIsLoading(true);
+        await getUser();
+
         setIsOpen(false);
       },
       onError: (error) => {
@@ -64,23 +80,32 @@ export function DevEditForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       api_key: "",
-      status,
+      settings: {
+        enable_table_of_contents: "false",
+        send_newsletter: "false",
+        delisted: "false",
+      },
     },
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       setError(null);
-      await edit({
+      await connect({
         ...data,
-        status: data.status === "true",
+        settings: {
+          enable_table_of_contents:
+            data.settings.enable_table_of_contents === "true",
+          send_newsletter: data.settings.send_newsletter === "true",
+          delisted: data.settings.delisted === "true",
+        },
       });
     } catch {
       // Ignore
     }
   };
 
-  const isLoading = form.formState.isSubmitting || isUpdating;
+  const isLoading = form.formState.isSubmitting || isConnecting;
 
   return (
     <div
@@ -90,9 +115,7 @@ export function DevEditForm({
       {...props}
     >
       {error && (
-        <Center>
-          <ErrorBox title="Could not update Dev" description={error} />
-        </Center>
+        <ErrorBox title="Could not connect Hashnode" description={error} />
       )}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -122,7 +145,7 @@ export function DevEditForm({
                           asChild
                         >
                           <Link
-                            href={siteConfig.links.devAPIKeyGuide}
+                            href={siteConfig.links.hashnodeAPIKeyGuide}
                             target="_blank"
                           >
                             Learn
@@ -153,9 +176,8 @@ export function DevEditForm({
                 <FormControl>
                   <Input
                     type="password"
-                    placeholder="*******"
+                    placeholder="API key"
                     autoComplete="off"
-                    autoFocus
                     {...field}
                   />
                 </FormControl>
@@ -165,11 +187,14 @@ export function DevEditForm({
           />
           <FormField
             control={form.control}
-            name="status"
+            name="settings.send_newsletter"
             disabled={isLoading}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Update publish status for Dev</FormLabel>
+                <FormLabel>
+                  Would you like to send a newsletter to your subscribers after
+                  publishing a post?
+                </FormLabel>
                 <FormControl>
                   <RadioGroup
                     onValueChange={field.onChange}
@@ -180,13 +205,79 @@ export function DevEditForm({
                       <FormControl>
                         <RadioGroupItem value="false" />
                       </FormControl>
-                      <FormLabel className="font-normal">Draft</FormLabel>
+                      <FormLabel className="font-normal">No</FormLabel>
                     </FormItem>
                     <FormItem className="flex items-center space-x-3 space-y-0">
                       <FormControl>
                         <RadioGroupItem value="true" />
                       </FormControl>
-                      <FormLabel className="font-normal">Publish</FormLabel>
+                      <FormLabel className="font-normal">Yes</FormLabel>
+                    </FormItem>
+                  </RadioGroup>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="settings.enable_table_of_contents"
+            disabled={isLoading}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  Would you like to enable table of contents for your posts?
+                </FormLabel>
+                <FormControl>
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    className="flex flex-row space-x-2"
+                  >
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="false" />
+                      </FormControl>
+                      <FormLabel className="font-normal">No</FormLabel>
+                    </FormItem>
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="true" />
+                      </FormControl>
+                      <FormLabel className="font-normal">Yes</FormLabel>
+                    </FormItem>
+                  </RadioGroup>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="settings.delisted"
+            disabled={isLoading}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  Would you like to hide your posts from Hashnode feed?
+                </FormLabel>
+                <FormControl>
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    className="flex flex-row space-x-2"
+                  >
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="false" />
+                      </FormControl>
+                      <FormLabel className="font-normal">No</FormLabel>
+                    </FormItem>
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="true" />
+                      </FormControl>
+                      <FormLabel className="font-normal">Yes</FormLabel>
                     </FormItem>
                   </RadioGroup>
                 </FormControl>
@@ -199,7 +290,7 @@ export function DevEditForm({
             disabled={!form.formState.isDirty || isLoading}
             className="w-full"
           >
-            <ButtonLoader isLoading={isLoading}>Update</ButtonLoader>
+            <ButtonLoader isLoading={isLoading}>Connect</ButtonLoader>
           </Button>
         </form>
       </Form>
