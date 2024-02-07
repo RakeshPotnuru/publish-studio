@@ -33,6 +33,7 @@ import {
   MdSettings,
   MdSpaceDashboard,
 } from "react-icons/md";
+import { MdSecurity } from "react-icons/md";
 import { PiDotsThreeBold } from "react-icons/pi";
 import { RiFoldersFill } from "react-icons/ri";
 import { RxMixerHorizontal } from "react-icons/rx";
@@ -71,4 +72,5 @@ export const GeneralIcons = {
   Tools: FaTools,
   Pro: AiFillThunderbolt,
   MobileOff: MdOutlineMobileOff,
+  Security: MdSecurity,
 };

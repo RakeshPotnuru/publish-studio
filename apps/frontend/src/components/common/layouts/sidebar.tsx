@@ -49,7 +49,7 @@ const SidebarItem = ({
   );
 };
 
-export function Sidebar({ className, ...props }: SidebarProps) {
+export function Sidebar({ className, ...props }: Readonly<SidebarProps>) {
   const segment = useSelectedLayoutSegment();
 
   return (
@@ -73,6 +73,11 @@ export function Sidebar({ className, ...props }: SidebarProps) {
                 label="Connections"
                 link="/settings/connections"
                 icon={<Icons.Connections />}
+              />
+              <SidebarItem
+                label="Security"
+                link="/settings/security"
+                icon={<Icons.Security />}
               />
             </>
           ) : (

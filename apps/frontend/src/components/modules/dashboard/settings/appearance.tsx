@@ -9,9 +9,7 @@ import { useTheme } from "next-themes";
 import { Images } from "@/assets/images";
 import { Heading } from "@/components/ui/heading";
 
-type AppearanceProps = React.HTMLAttributes<HTMLDivElement>;
-
-export function Appearance({ ...props }: Readonly<AppearanceProps>) {
+export function Appearance() {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
 
@@ -20,7 +18,7 @@ export function Appearance({ ...props }: Readonly<AppearanceProps>) {
   if (!mounted) return null;
 
   return (
-    <div {...props}>
+    <div>
       <div className="space-y-2">
         <Heading>Appearance</Heading>
         <p className="text-muted-foreground">Select your preferred theme</p>

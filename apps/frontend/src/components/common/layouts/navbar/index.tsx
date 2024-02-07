@@ -73,6 +73,12 @@ export function Navbar({ className, ...props }: Readonly<NavbarProps>) {
       setUser(data.user);
       setIsLoading(false);
     },
+    onError: (error) => {
+      if (error.data?.code === "UNAUTHORIZED") {
+        handleLogout();
+      }
+      setIsLoading(false);
+    },
   });
 
   const handleLogout = () => {

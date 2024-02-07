@@ -16,9 +16,7 @@ import { Hashnode } from "./platforms/hashnode";
 import { Medium } from "./platforms/medium";
 import { WordPress } from "./platforms/wordpress";
 
-type IntegrationsProps = React.HTMLAttributes<HTMLDivElement>;
-
-export function Connections({ ...props }: Readonly<IntegrationsProps>) {
+export function Connections() {
   const {
     data,
     isFetching,
@@ -52,7 +50,7 @@ export function Connections({ ...props }: Readonly<IntegrationsProps>) {
   } = trpc.cloudinary.get.useQuery();
 
   return (
-    <div className="space-y-8" {...props}>
+    <div className="space-y-8">
       <div className="space-y-2">
         <Heading>Connections</Heading>
         <p className="text-muted-foreground">
