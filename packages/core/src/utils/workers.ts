@@ -1,12 +1,12 @@
-import type { Job} from "bullmq";
+import type { Job } from "bullmq";
 import { Worker } from "bullmq";
 
 import { bullMQConnectionOptions } from "../config/app.config";
-import type { EmailTemplate} from "../config/constants";
+import type { EmailTemplate } from "../config/constants";
 import { constants } from "../config/constants";
 import type { ISchedule } from "../modules/post/post.types";
 import PublishService from "../modules/post/publish/publish.service";
-import type { IEmail} from "./aws/ses";
+import type { IEmail } from "./aws/ses";
 import { sendEmail } from "./aws/ses";
 import { logtail } from "./logtail";
 

@@ -20,23 +20,23 @@ interface LinkButtonProps extends React.ComponentProps<typeof Button> {
  * @returns The rendered link button component.
  */
 export function LinkButton({
-    children,
-    className,
-    href,
-    target = "_blank",
-    ...props
+  children,
+  className,
+  href,
+  target = "_blank",
+  ...props
 }: Readonly<LinkButtonProps>) {
-    return (
-        <Button
-            type="button"
-            variant="link"
-            className={cn("h-max p-0", className)}
-            asChild
-            {...props}
-        >
-            <Link href={href} target={target}>
-                {children}
-            </Link>
-        </Button>
-    );
+  return (
+    <Button
+      type="button"
+      variant="link"
+      className={cn("h-max p-0", className)}
+      asChild
+      {...props}
+    >
+      <Link href={href} target={target}>
+        {children}
+      </Link>
+    </Button>
+  );
 }
