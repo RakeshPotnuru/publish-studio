@@ -27,6 +27,7 @@ import { HiExternalLink } from "react-icons/hi";
 import { IoCalendar, IoCheckmarkDoneCircleSharp } from "react-icons/io5";
 import {
   MdEditDocument,
+  MdOutlineMobileOff,
   MdOutlineSupport,
   MdPermMedia,
   MdSettings,
@@ -69,4 +70,5 @@ export const GeneralIcons = {
   Support: MdOutlineSupport,
   Tools: FaTools,
   Pro: AiFillThunderbolt,
+  MobileOff: MdOutlineMobileOff,
 };

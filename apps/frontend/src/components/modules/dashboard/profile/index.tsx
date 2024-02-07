@@ -56,7 +56,12 @@ export function Profile({ ...props }: Readonly<ProfileProps>) {
   const [error, setError] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
 
-  const { user, isLoading: isUserLoading } = useUserStore();
+  const {
+    user,
+    isLoading: isUserLoading,
+    setUser,
+    setIsLoading,
+  } = useUserStore();
   const utils = trpc.useUtils();
 
   const { mutateAsync: editProfile, isLoading: isUpdating } =
@@ -86,9 +91,20 @@ export function Profile({ ...props }: Readonly<ProfileProps>) {
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
-      await editProfile(data);
+      setIsLoading(true);
+      setError(null);
+
+      const { data: updatedUser } = await editProfile(data);
+
+      if (!updatedUser.user) {
+        setIsLoading(false);
+        return;
+      }
+
+      setUser(updatedUser.user);
+      setIsLoading(false);
     } catch {
-      // Ignore
+      setIsLoading(false);
     }
   };
 
@@ -113,7 +129,7 @@ export function Profile({ ...props }: Readonly<ProfileProps>) {
       {...props}
     >
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form className="space-y-4">
           <div className="flex flex-row justify-between">
             <Heading>Profile</Heading>
             {isEditing ? (
@@ -128,7 +144,8 @@ export function Profile({ ...props }: Readonly<ProfileProps>) {
                   Cancel
                 </Button>
                 <Button
-                  type="submit"
+                  type="button"
+                  onClick={form.handleSubmit(onSubmit)}
                   disabled={isLoading || !form.formState.isDirty}
                 >
                   <ButtonLoader isLoading={isUpdating}>Save</ButtonLoader>
@@ -185,8 +202,8 @@ export function Profile({ ...props }: Readonly<ProfileProps>) {
                 </AvatarFallback>
               ) : (
                 <AvatarFallback>
-                  {user?.first_name.charAt(0)}
-                  {user?.last_name.charAt(0)}
+                  {user?.first_name.charAt(0) ?? "P"}
+                  {user?.last_name.charAt(0) ?? "S"}
                 </AvatarFallback>
               )}
             </Avatar>

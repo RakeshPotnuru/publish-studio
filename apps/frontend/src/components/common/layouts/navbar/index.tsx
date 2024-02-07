@@ -95,16 +95,22 @@ export function Navbar({ className, ...props }: Readonly<NavbarProps>) {
       )}
       {...props}
     >
-      <Link href="/">
-        <Image
-          src={Images.logo}
-          alt="Publish Studio"
-          width={35}
-          height={35}
-          priority={true}
-          className="rounded-md drop-shadow-md"
-        />
-      </Link>
+      <div className="flex flex-row items-start space-x-1">
+        <Link href="/">
+          <Image
+            src={Images.logo}
+            alt="Publish Studio"
+            width={35}
+            height={35}
+            priority={true}
+            className="rounded-md drop-shadow-md"
+          />
+        </Link>
+
+        <div className="-mt-2 select-none rounded-md bg-secondary p-1 py-[0.5px] text-xs font-bold">
+          Beta
+        </div>
+      </div>
       <div className="flex flex-row items-center space-x-2">
         {isFetching ||
           (user?.user_type !== UserType.PRO && (

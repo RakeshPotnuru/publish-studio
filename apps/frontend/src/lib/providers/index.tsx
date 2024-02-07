@@ -1,3 +1,5 @@
+import { MobileNotice } from "@/components/ui/mobile-notice";
+
 import { ThemeProvider } from "./theme";
 import { TRPCProvider } from "./trpc";
 
@@ -11,7 +13,9 @@ export function Providers({
       enableSystem
       disableTransitionOnChange
     >
-      <TRPCProvider>{children}</TRPCProvider>
+      <MobileNotice>
+        <TRPCProvider>{children}</TRPCProvider>
+      </MobileNotice>
     </ThemeProvider>
   );
 }
