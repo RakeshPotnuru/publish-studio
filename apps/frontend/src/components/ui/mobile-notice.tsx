@@ -9,15 +9,16 @@ import { Center } from "./center";
 export function MobileNotice({ children }: { children: React.ReactNode }) {
   const [isMobile, setIsMobile] = useState(false);
 
-  const userAgent = navigator.userAgent;
-
   useEffect(() => {
-    setIsMobile(
-      /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(
-        userAgent,
-      ),
-    );
-  }, [userAgent]);
+    if (typeof navigator !== "undefined") {
+      const userAgent = navigator.userAgent;
+      setIsMobile(
+        /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(
+          userAgent,
+        ),
+      );
+    }
+  }, []);
 
   return isMobile ? (
     <Center className="flex h-screen flex-col items-center space-y-4 bg-white text-muted-foreground">
