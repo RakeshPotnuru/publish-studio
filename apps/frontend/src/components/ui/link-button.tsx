@@ -31,6 +31,7 @@ export function LinkButton({
       type="button"
       variant="link"
       className={cn("h-max p-0", className)}
+      rel={target === "_blank" ? "noopener noreferrer" : undefined}
       asChild
       {...props}
     >
