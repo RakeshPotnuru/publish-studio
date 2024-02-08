@@ -13,6 +13,7 @@ import {
   FormLabel,
   FormMessage,
   Input,
+  toast,
 } from "@itsrakesh/ui";
 import { constants } from "@publish-studio/core/src/config/constants";
 import { useForm } from "react-hook-form";
@@ -24,6 +25,7 @@ import { Heading } from "@/components/ui/heading";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { Shake } from "@/components/ui/shake";
 import { siteConfig } from "@/config/site";
+import { useCoolDown } from "@/hooks/use-cool-down";
 import { trpc } from "@/utils/trpc";
 
 import { Captcha } from "./captcha";
@@ -74,6 +76,9 @@ export function RegisterForm() {
   const [isCaptchaCompleted, setIsCaptchaCompleted] = useState(false);
   const [isCaptchaVerificationLoading, setIsCaptchaVerificationLoading] =
     useState(false);
+  const [email, setEmail] = useState("");
+
+  const { coolDown, setCoolDown } = useCoolDown();
 
   const { mutateAsync: register, isLoading: isRegistering } =
     trpc.auth.register.useMutation({
@@ -105,7 +110,34 @@ export function RegisterForm() {
 
     try {
       setError(null);
+      setEmail(data.email);
       await register(data);
+    } catch {
+      // Ignore
+    }
+  };
+
+  const {
+    mutateAsync: resendVerificationEmail,
+    isLoading: isResendVerificationEmailLoading,
+  } = trpc.auth.email.resendVerification.useMutation({
+    onSuccess() {
+      toast.success("Verification email sent");
+    },
+    onError(error) {
+      toast.error(error.message);
+    },
+  });
+
+  const handleResendVerificationEmail = async () => {
+    if (coolDown > 0) {
+      return;
+    }
+
+    try {
+      await resendVerificationEmail({ email });
+
+      setCoolDown(60);
     } catch {
       // Ignore
     }
@@ -114,11 +146,14 @@ export function RegisterForm() {
   const isLoading =
     isRegistering ||
     form.formState.isSubmitting ||
-    isCaptchaVerificationLoading;
+    isCaptchaVerificationLoading ||
+    isResendVerificationEmailLoading;
 
-  return (
-    <Shake isShaking={error}>
-      {step === "register" ? (
+  let component;
+
+  switch (step) {
+    case "register": {
+      component = (
         <div className="space-y-6">
           <Heading level={2}>Create an account to get started</Heading>
           {error && (
@@ -258,7 +293,11 @@ export function RegisterForm() {
             </Button>
           </p>
         </div>
-      ) : (
+      );
+      break;
+    }
+    case "success": {
+      component = (
         <span className="space-y-6">
           <Heading level={2}>Verify your email</Heading>
           <p>
@@ -274,12 +313,22 @@ export function RegisterForm() {
             try a different email address
           </Button>{" "}
           or{" "}
-          <Button variant="link" className="h-max p-0">
-            resend
+          <Button
+            onClick={handleResendVerificationEmail}
+            variant="link"
+            className="h-max p-0"
+            disabled={coolDown > 0 || isLoading}
+          >
+            <ButtonLoader isLoading={isResendVerificationEmailLoading}>
+              {coolDown > 0 ? `resend in ${coolDown}s` : "resend"}
+            </ButtonLoader>
           </Button>
           .
         </span>
-      )}
-    </Shake>
-  );
+      );
+      break;
+    }
+  }
+
+  return <Shake isShaking={error}>{component}</Shake>;
 }

@@ -96,11 +96,6 @@ export function Profile({ ...props }: Readonly<ProfileProps>) {
 
       const { data: updatedUser } = await editProfile(data);
 
-      if (!updatedUser.user) {
-        setIsLoading(false);
-        return;
-      }
-
       setUser(updatedUser.user);
       setIsLoading(false);
     } catch {

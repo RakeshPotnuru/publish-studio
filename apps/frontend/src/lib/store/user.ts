@@ -3,7 +3,7 @@ import { create } from "zustand";
 
 interface IUserState {
   user: IUser | null;
-  setUser: (user: IUser) => void;
+  setUser: (user: IUser | null) => void;
   isLoading: boolean;
   setIsLoading: (isLoading: boolean) => void;
 }

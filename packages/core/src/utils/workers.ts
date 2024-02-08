@@ -26,16 +26,14 @@ const postWorker = new Worker<ISchedule, ISchedule>(
     },
 );
 
-postWorker.on("completed", job => {
-    void job.remove();
-});
-
 postWorker.on("failed", job => {
-    void logtail.error(job?.failedReason ?? "Post job failed due to unknown reason");
+    logtail
+        .error(job?.failedReason ?? "Post job failed due to unknown reason")
+        .catch(() => console.log("Error logging failed post job"));
 });
 
 postWorker.on("error", error => {
-    void logtail.error(JSON.stringify(error));
+    logtail.error(JSON.stringify(error)).catch(() => console.log("Error logging post job error"));
 });
 
 const emailWorker = new Worker<IEmail, IEmail>(
@@ -57,14 +55,12 @@ const emailWorker = new Worker<IEmail, IEmail>(
     },
 );
 
-emailWorker.on("completed", job => {
-    void job.remove();
-});
-
 emailWorker.on("failed", job => {
-    void logtail.error(job?.failedReason ?? "Email job failed due to unknown reason");
+    logtail
+        .error(job?.failedReason ?? "Email job failed due to unknown reason")
+        .catch(() => console.log("Error logging failed email job"));
 });
 
 emailWorker.on("error", error => {
-    void logtail.error(JSON.stringify(error));
+    logtail.error(JSON.stringify(error)).catch(() => console.log("Error logging email job error"));
 });

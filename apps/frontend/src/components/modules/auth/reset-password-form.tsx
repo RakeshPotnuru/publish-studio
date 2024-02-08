@@ -24,6 +24,7 @@ import { Heading } from "@/components/ui/heading";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { Shake } from "@/components/ui/shake";
 import { siteConfig } from "@/config/site";
+import { useCoolDown } from "@/hooks/use-cool-down";
 import { trpc } from "@/utils/trpc";
 
 import { Captcha } from "./captcha";
@@ -64,6 +65,7 @@ export function ResetPasswordForm() {
   const [isCaptchaVerificationLoading, setIsCaptchaVerificationLoading] =
     useState(false);
 
+  const { coolDown, setCoolDown } = useCoolDown();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
@@ -111,7 +113,10 @@ export function ResetPasswordForm() {
 
     try {
       setError(null);
+
       await sendResetPasswordEmail({ email });
+
+      setCoolDown(60);
     } catch {
       // Ignore
     }
@@ -235,10 +240,10 @@ export function ResetPasswordForm() {
                     onClick={handleResend}
                     variant="link"
                     className="h-max p-0"
-                    disabled={isSendingResetPassword}
+                    disabled={isSendingResetPassword || coolDown > 0}
                   >
                     <ButtonLoader isLoading={isSendingResetPassword}>
-                      resend
+                      {coolDown > 0 ? `resend in ${coolDown}s` : "resend"}
                     </ButtonLoader>
                   </Button>
                   .

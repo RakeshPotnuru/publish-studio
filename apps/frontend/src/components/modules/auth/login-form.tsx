@@ -27,6 +27,7 @@ import { Heading } from "@/components/ui/heading";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { Shake } from "@/components/ui/shake";
 import { siteConfig } from "@/config/site";
+import { useCoolDown } from "@/hooks/use-cool-down";
 import { trpc } from "@/utils/trpc";
 
 import { Captcha } from "./captcha";
@@ -46,6 +47,8 @@ export function LoginForm() {
   const [isCaptchaCompleted, setIsCaptchaCompleted] = useState(false);
   const [isCaptchaVerificationLoading, setIsCaptchaVerificationLoading] =
     useState(false);
+
+  const { coolDown, setCoolDown } = useCoolDown();
 
   const { mutateAsync: login, isLoading: isLoggingIn } =
     trpc.auth.login.useMutation({
@@ -137,7 +140,10 @@ export function LoginForm() {
 
     try {
       setError(null);
+
       await resendVerificationEmail({ email });
+
+      setCoolDown(60);
     } catch {
       // Ignore
     }
@@ -163,10 +169,12 @@ export function LoginForm() {
             <Button
               onClick={handleResendVerificationEmail}
               variant="ghost"
-              disabled={isLoading}
+              disabled={isLoading || coolDown > 0}
             >
               <ButtonLoader isLoading={isResendLoading}>
-                Resend verification email
+                {coolDown > 0
+                  ? `Resend verification email in ${coolDown}s`
+                  : "Resend verification email"}
               </ButtonLoader>
             </Button>
           </Center>
