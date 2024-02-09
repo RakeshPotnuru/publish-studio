@@ -14,6 +14,10 @@ jobs:
             - uses: pnpm/action-setup@v3
               with:
                   version: 8
+            - name: Configure pnpm
+              run: |
+                  pnpm config set "@tiptap-pro:registry" https://registry.tiptap.dev/
+                  pnpm config set "//registry.tiptap.dev/:_authToken" ${{ secrets.TIPTAP_PRO_TOKEN }}
             - name: Install Vercel CLI
               run: pnpm install --global vercel@latest
             - name: Pull Vercel Environment Information
