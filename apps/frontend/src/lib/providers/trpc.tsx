@@ -58,7 +58,7 @@ export function TRPCProvider({
     transformer: superjson,
     links: [
       loggerLink({
-        enabled: () => true,
+        enabled: () => process.env.NODE_ENV === "development",
       }),
       splitLink({
         condition: (op) => op.type === "subscription",

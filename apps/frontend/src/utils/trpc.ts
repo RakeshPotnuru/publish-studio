@@ -19,7 +19,7 @@ export const createTRPCServerClient = (headers: HTTPHeaders) => {
     transformer: superjson,
     links: [
       loggerLink({
-        enabled: () => true,
+        enabled: () => process.env.NODE_ENV === "development",
       }),
       httpBatchLink({
         url: process.env.NEXT_PUBLIC_TRPC_API_URL,

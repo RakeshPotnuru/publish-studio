@@ -1,0 +1,9 @@
+{
+    "extends": ["next/core-web-vitals", "@bravo68web/eslint-config/typescript-strict"],
+    "parserOptions": {
+        "project": "./tsconfig.json"
+    },
+    "rules": {
+        "security/detect-object-injection": "off"
+    }
+}
