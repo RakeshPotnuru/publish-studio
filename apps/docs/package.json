@@ -1,7 +1,16 @@
 {
     "private": true,
-    "name": "docs",
-    "version": "0.1.0",
+    "name": "@publish-studio/docs",
+    "version": "0.0.1",
+    "author": "Rakesh Potnuru",
+    "homepage": "https://github.com/RakeshPotnuru/publish-studio#readme",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/RakeshPotnuru/publish-studio.git"
+    },
+    "bugs": {
+        "url": "https://github.com/RakeshPotnuru/publish-studio/issues"
+    },
     "scripts": {
         "build": "next build",
         "dev": "next dev",
