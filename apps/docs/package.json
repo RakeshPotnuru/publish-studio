@@ -13,6 +13,7 @@
     },
     "scripts": {
         "build": "next build",
+        "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf .next",
         "dev": "next dev",
         "lint": "next lint",
         "lint:fix": "next lint --fix",

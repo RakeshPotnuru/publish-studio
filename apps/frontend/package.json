@@ -18,7 +18,7 @@
   },
   "scripts": {
     "build": "next build",
-    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf .next",
     "dev": "doppler run -- next dev",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
