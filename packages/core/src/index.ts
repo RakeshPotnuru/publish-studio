@@ -45,6 +45,10 @@ const corsOptions: CorsOptions = {
 
 app.use(cors(corsOptions));
 
+app.use("/health", (_, res) => {
+    return res.send("OK");
+});
+
 app.use(
     "/api",
     createExpressMiddleware({
