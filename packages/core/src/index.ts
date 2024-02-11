@@ -5,7 +5,6 @@ import type { CorsOptions } from "cors";
 import cors from "cors";
 import type { Application } from "express";
 import express from "express";
-import { renderTrpcPanel } from "trpc-panel";
 
 import "./config/env";
 import "./utils/db";
@@ -56,10 +55,6 @@ app.use(
         createContext,
     }),
 );
-
-app.use("/panel", (_, res) => {
-    return res.send(renderTrpcPanel(appRouter, { url: process.env.BASE_URL }));
-});
 
 app.listen(process.env.PORT, () => {
     console.log(`✅ Server running on port ${process.env.PORT}`);

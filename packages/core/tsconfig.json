@@ -1,10 +1,10 @@
 {
     "compilerOptions": {
-        "lib": ["ES2021.String"],
+        "lib": ["ES2021"],
         "module": "ES2022",
         "outDir": "dist",
         "target": "es2022",
     },
     "extends": "@bravo68web/tsconfig/base.json",
-    "include": ["src/**/*", "jest.config.ts"],
+    "include": ["src/**/*"],
 }
