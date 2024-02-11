@@ -28,7 +28,7 @@ wss.on("connection", ws => {
         console.log(`-- Connection (${wss.clients.size})`);
     });
 });
-console.log("✅ WebSocket Server listening on ws://localhost:4001");
+console.log(`✅ WebSocket Server listening on port ${process.env.WEBSOCKET_PORT}`);
 
 process.on("SIGTERM", () => {
     console.log("SIGTERM");
