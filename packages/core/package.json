@@ -21,7 +21,7 @@
         "dev": "doppler run -- cross-env NODE_ENV=development nodemon --watch '**/*.ts' --exec node --loader @esbuild-kit/esm-loader src/index.ts",
         "lint": "eslint --ext .ts .",
         "lint:fix": "eslint --ext .ts . --fix",
-        "start": "NODE_ENV=production node --loader @esbuild-kit/esm-loader src/index.ts",
+        "start": "NODE_ENV=production node src/index.ts",
         "test": "jest"
     },
     "dependencies": {
