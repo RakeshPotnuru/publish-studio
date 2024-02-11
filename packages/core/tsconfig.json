@@ -1,10 +1,40 @@
 {
     "compilerOptions": {
         "lib": ["ES2021.String"],
-        "module": "ES2022",
         "outDir": "dist",
-        "target": "es2022",
+        "allowJs": true,
+        "allowSyntheticDefaultImports": true,
+
+        "allowUnreachableCode": false,
+        "allowUnusedLabels": false,
+        "alwaysStrict": true,
+        "checkJs": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+
+        "isolatedModules": true,
+        "module": "esnext",
+        "moduleResolution": "node",
+
+        "noEmit": false,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitAny": true,
+        "noImplicitOverride": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noUncheckedIndexedAccess": false,
+
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "strict": true,
+        "strictFunctionTypes": true,
+        "strictNullChecks": true,
+        "strictPropertyInitialization": true,
+        "target": "esnext"
     },
-    "extends": "@bravo68web/tsconfig/base.json",
+    // "extends": "@bravo68web/tsconfig/base.json",
     "include": ["src/**/*", "jest.config.ts"],
+    "exclude": ["node_modules"]
 }
