@@ -32,8 +32,8 @@ const corsOptions: CorsOptions = {
                   origin: string | undefined,
                   callback: (error: Error | null, allow?: boolean) => void,
               ) => {
-                console.log("origin", origin);
-                
+                  console.log("origin", origin);
+
                   if (origin && process.env.WHITELIST_ORIGINS.split(",")?.includes(origin)) {
                       callback(null, true);
                   } else {
