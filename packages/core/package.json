@@ -16,12 +16,12 @@
         "dist"
     ],
     "scripts": {
-        "build": "pnpm clear && NODE_ENV=production",
+        "build": "pnpm clear && NODE_ENV=production tsc",
         "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
         "dev": "doppler run -- cross-env NODE_ENV=development nodemon --watch '**/*.ts' --exec node --loader @esbuild-kit/esm-loader src/index.ts",
         "lint": "eslint --ext .ts .",
         "lint:fix": "eslint --ext .ts . --fix",
-        "start": "NODE_ENV=production node src/index.js",
+        "start": "NODE_ENV=production node --loader @esbuild-kit/esm-loader src/index.ts",
         "test": "jest"
     },
     "dependencies": {
