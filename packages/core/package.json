@@ -16,7 +16,7 @@
         "dist"
     ],
     "scripts": {
-        "build": "pnpm clear && NODE_ENV=production tsc",
+        "build": "pnpm clear && NODE_ENV=production",
         "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
         "dev": "doppler run -- cross-env NODE_ENV=development nodemon --watch '**/*.ts' --exec node --loader @esbuild-kit/esm-loader src/index.ts",
         "lint": "eslint --ext .ts .",
@@ -57,7 +57,6 @@
         "zod": "^3.22.4"
     },
     "devDependencies": {
-        "@bravo68web/tsconfig": "^1.2.3",
         "@esbuild-kit/esm-loader": "^2.6.5",
         "@logtail/types": "^0.4.19",
         "@types/amqplib": "^0.10.4",
