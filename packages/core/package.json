@@ -21,7 +21,7 @@
         "dev": "doppler run -- cross-env NODE_ENV=development nodemon --watch '**/*.ts' --exec node --loader @esbuild-kit/esm-loader src/index.ts",
         "lint": "eslint --ext .ts .",
         "lint:fix": "eslint --ext .ts . --fix",
-        "start": "doppler run -- node --loader @esbuild-kit/esm-loader src/index.ts"
+        "start": "node --loader @esbuild-kit/esm-loader src/index.ts"
     },
     "dependencies": {
         "@aws-sdk/client-s3": "^3.456.0",
