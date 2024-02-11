@@ -25,6 +25,10 @@ app.use((req, res, next) => {
     }
 });
 
+app.use("/health", (_, res) => {
+    return res.send("OK");
+});
+
 const corsOptions: CorsOptions = {
     origin:
         process.env.NODE_ENV === "production"
@@ -32,8 +36,6 @@ const corsOptions: CorsOptions = {
                   origin: string | undefined,
                   callback: (error: Error | null, allow?: boolean) => void,
               ) => {
-                  console.log("origin", origin);
-
                   if (origin && process.env.WHITELIST_ORIGINS.split(",")?.includes(origin)) {
                       callback(null, true);
                   } else {
@@ -46,9 +48,6 @@ const corsOptions: CorsOptions = {
 
 app.use(cors(corsOptions));
 
-app.use("/health", (_, res) => {
-    return res.send("OK");
-});
 
 app.use(
     "/api",
