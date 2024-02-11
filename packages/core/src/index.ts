@@ -48,7 +48,6 @@ const corsOptions: CorsOptions = {
 
 app.use(cors(corsOptions));
 
-
 app.use(
     "/api",
     createExpressMiddleware({
