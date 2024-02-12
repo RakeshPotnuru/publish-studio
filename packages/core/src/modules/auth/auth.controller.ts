@@ -187,7 +187,9 @@ export default class AuthController extends AuthService {
             const refresh_token = await tokens.refresh_token;
 
             const { req, res } = ctx;
-            const cookies = new Cookies(req, res);
+            const cookies = new Cookies(req, res, {
+                secure: process.env.NODE_ENV === "production",
+            });
             cookies.set("access_token", access_token, accessTokenCookieOptions);
             cookies.set("refresh_token", refresh_token, refreshTokenCookieOptions);
             cookies.set("logged_in", "true", accessTokenCookieOptions);
@@ -224,7 +226,9 @@ export default class AuthController extends AuthService {
         const refresh_token = await tokens.refresh_token;
 
         const { req, res } = ctx;
-        const cookies = new Cookies(req, res);
+        const cookies = new Cookies(req, res, {
+            secure: process.env.NODE_ENV === "production",
+        });
         cookies.set("access_token", access_token, accessTokenCookieOptions);
         cookies.set("refresh_token", refresh_token, refreshTokenCookieOptions);
         cookies.set("logged_in", "true", accessTokenCookieOptions);
@@ -270,7 +274,7 @@ export default class AuthController extends AuthService {
         const refresh_token = await tokens.refresh_token;
 
         const { req, res } = ctx;
-        const cookies = new Cookies(req, res);
+        const cookies = new Cookies(req, res, { secure: process.env.NODE_ENV === "production" });
         cookies.set("access_token", access_token, { ...accessTokenCookieOptions });
         cookies.set("refresh_token", refresh_token, { ...refreshTokenCookieOptions });
         cookies.set("logged_in", "true", { ...accessTokenCookieOptions });
@@ -366,7 +370,9 @@ export default class AuthController extends AuthService {
     async refreshAccessTokenHandler(ctx: Context) {
         // Get the refresh token from cookie
         const { req, res } = ctx;
-        const cookies = new Cookies(req, res);
+        const cookies = new Cookies(req, res, {
+            secure: process.env.NODE_ENV === "production",
+        });
         const refreshToken = cookies.get("refresh_token");
 
         const errorMessage = "Could not refresh access token.";
@@ -431,7 +437,9 @@ export default class AuthController extends AuthService {
 
             await redisClient.del(String(user._id));
 
-            const cookies = new Cookies(req, res);
+            const cookies = new Cookies(req, res, {
+                secure: process.env.NODE_ENV === "production",
+            });
             cookies.set("access_token", "", { maxAge: -1 });
             cookies.set("refresh_token", "", { maxAge: -1 });
             cookies.set("logged_in", "", { maxAge: -1 });
