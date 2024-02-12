@@ -51,7 +51,6 @@ const corsOptions: CorsOptions = {
                   }
               }
             : "*",
-
     optionsSuccessStatus: 200,
     credentials: process.env.NODE_ENV === "production",
 };

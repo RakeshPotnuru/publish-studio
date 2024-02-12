@@ -16,6 +16,7 @@ import type { ILoginInput, IRegisterInput, IResetPasswordInput } from "../auth/a
 import AuthService from "./auth.service";
 
 const cookieOptions: SetOption = {
+    path: "/",
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
