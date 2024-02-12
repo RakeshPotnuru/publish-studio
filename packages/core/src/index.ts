@@ -19,8 +19,6 @@ import { logtail } from "./utils/logtail";
 const app: Application = express();
 
 app.use((req, res, next) => {
-    console.log(req.originalUrl);
-
     if (req.originalUrl === defaultConfig.stripeWebhookPath) {
         express.raw({ type: "application/json" })(req, res, next);
     } else {
