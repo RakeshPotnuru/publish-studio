@@ -1,5 +1,6 @@
 import "dotenv/config";
 
+import { TRPCError } from "@trpc/server";
 import { createClient } from "redis";
 
 import { logtail } from "./logtail";
@@ -14,15 +15,18 @@ const redisClient = createClient({
 
 const connectRedis = async () => {
     try {
-        await redisClient.connect();
+        await redisClient.on("error", async (error: Error) => await logtail.error(error)).connect();
         console.log("✅ Connected to Redis 📦");
     } catch (error) {
         await logtail.error(JSON.stringify(error));
+
+        throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "❌ Failed to connect to redis.",
+        });
     }
 };
 
 await connectRedis();
-
-redisClient.on("error", (error: Error) => console.log(error));
 
 export default redisClient;
