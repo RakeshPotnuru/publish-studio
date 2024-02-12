@@ -22,6 +22,7 @@ export const signJwt = async (
         });
     } catch (error) {
         await logtail.error(JSON.stringify(error));
+        console.log(error);
 
         return null;
     }
