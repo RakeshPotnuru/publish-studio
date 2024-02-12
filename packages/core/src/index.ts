@@ -1,5 +1,6 @@
 import "dotenv/config";
 
+import { TRPCError } from "@trpc/server";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import type { CorsOptions } from "cors";
 import cors from "cors";
@@ -41,10 +42,16 @@ const corsOptions: CorsOptions = {
                   } else {
                       console.log("origin", origin);
 
-                      callback(new Error("Not allowed by CORS"));
+                      callback(
+                          new TRPCError({
+                              code: "UNAUTHORIZED",
+                              message: "Not allowed by CORS",
+                          }),
+                      );
                   }
               }
             : "*",
+
     optionsSuccessStatus: 200,
     credentials: process.env.NODE_ENV === "production",
 };

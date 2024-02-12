@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+import { logtail } from "./logtail";
+
 const connectDB = async () => {
     try {
         await mongoose.connect(process.env.MONGO_URI);
@@ -9,7 +11,7 @@ const connectDB = async () => {
             console.log("❌ Failed to connect to MongoDB 🍃");
         }
     } catch (error) {
-        console.log(error);
+        await logtail.error(JSON.stringify(error));
     }
 };
 

@@ -2,6 +2,8 @@ import "dotenv/config";
 
 import { createClient } from "redis";
 
+import { logtail } from "./logtail";
+
 const redisUrl = process.env.REDIS_URL;
 const redisClient = createClient({
     url: redisUrl,
@@ -12,7 +14,7 @@ const connectRedis = async () => {
         await redisClient.connect();
         console.log("✅ Connected to Redis 📦");
     } catch (error) {
-        console.log(error);
+        await logtail.error(JSON.stringify(error));
     }
 };
 

@@ -8,6 +8,7 @@ declare global {
 }
 
 const ZodEnvironmentVariables = z.object({
+    NODE_ENV: z.string(),
     PORT: z.string(),
     WEBSOCKET_PORT: z.string(),
     MONGO_URI: z.string(),
