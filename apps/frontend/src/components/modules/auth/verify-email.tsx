@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 
 import { Button } from "@itsrakesh/ui";
 
+import { Center } from "@/components/ui/center";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
 import { DotsLoader } from "@/components/ui/loaders/dots-loader";
@@ -54,20 +55,20 @@ export function VerifyEmail() {
 
   if (!token) {
     return (
-      <div>
+      <Center>
         <ErrorBox
           title="Invalid URL"
           description="Please check your email for correct URL."
         />
-      </div>
+      </Center>
     );
   }
 
   if (error) {
     return (
-      <div>
+      <Center>
         <ErrorBox title="Error" description={error} />
-      </div>
+      </Center>
     );
   }
 
