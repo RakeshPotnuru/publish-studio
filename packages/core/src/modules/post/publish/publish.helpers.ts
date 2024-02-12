@@ -1,5 +1,6 @@
 import { TRPCError } from "@trpc/server";
-import { Queue } from "bullmq";
+import type { Job} from "bullmq";
+import { Queue, Worker } from "bullmq";
 
 import { bullMQConnectionOptions } from "../../../config/app.config";
 import { constants, Platform } from "../../../config/constants";
@@ -30,6 +31,34 @@ export default class PublishHelpers extends PublishService {
                 },
             );
             await postQueue.trimEvents(10);
+
+            const postWorker = new Worker<ISchedule, ISchedule>(
+                constants.bullmq.queues.POST,
+                async (job: Job): Promise<ISchedule> => {
+                    const data = job.data as ISchedule;
+                    const publishService = new PublishService();
+                    await publishService.publishPost(data.platforms, data.project, data.user_id);
+
+                    return job.data as ISchedule;
+                },
+                {
+                    connection: bullMQConnectionOptions,
+                    removeOnComplete: { count: 0 },
+                    removeOnFail: { count: 0 },
+                },
+            );
+
+            postWorker.on("failed", job => {
+                logtail
+                    .error(job?.failedReason ?? "Post job failed due to unknown reason")
+                    .catch(() => console.log("Error logging failed post job"));
+            });
+
+            postWorker.on("error", error => {
+                logtail
+                    .error(JSON.stringify(error))
+                    .catch(() => console.log("Error logging post job error"));
+            });
         } catch (error) {
             await logtail.error(JSON.stringify(error), {
                 user_id: data.user_id,

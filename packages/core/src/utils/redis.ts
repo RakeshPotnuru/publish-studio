@@ -7,6 +7,9 @@ import { logtail } from "./logtail";
 const redisUrl = process.env.REDIS_URL;
 const redisClient = createClient({
     url: redisUrl,
+    socket: {
+        tls: process.env.NODE_ENV === "production",
+    },
 });
 
 const connectRedis = async () => {

@@ -54,9 +54,17 @@ const defaultConfig: ICustomConfig = {
     stripeWebhookPath: "/api/payment.stripeWebhook",
 };
 
-export const bullMQConnectionOptions: ConnectionOptions = {
-    host: process.env.REDIS_HOST,
-    port: Number.parseInt(process.env.REDIS_PORT),
-};
+export const bullMQConnectionOptions: ConnectionOptions =
+    process.env.NODE_ENV === "production"
+        ? {
+              tls: {
+                  host: process.env.REDIS_HOST,
+                  port: Number.parseInt(process.env.REDIS_PORT),
+              },
+          }
+        : {
+              host: process.env.REDIS_HOST,
+              port: Number.parseInt(process.env.REDIS_PORT),
+          };
 
 export default defaultConfig;
