@@ -18,6 +18,8 @@ import { logtail } from "./utils/logtail";
 
 const app: Application = express();
 
+app.set("trust proxy", 1);
+
 app.use((req, res, next) => {
     if (req.originalUrl === defaultConfig.stripeWebhookPath) {
         express.raw({ type: "application/json" })(req, res, next);

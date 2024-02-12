@@ -15,7 +15,9 @@ const redisClient = createClient({
 
 const connectRedis = async () => {
     try {
-        await redisClient.on("error", async (error: Error) => await logtail.error(error)).connect();
+        await redisClient
+            .on("error", (error: Error) => logtail.error(error).catch(error => console.log(error)))
+            .connect();
         console.log("✅ Connected to Redis 📦");
     } catch (error) {
         await logtail.error(JSON.stringify(error));
