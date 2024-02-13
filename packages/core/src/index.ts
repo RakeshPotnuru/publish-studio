@@ -39,11 +39,9 @@ const corsOptions: CorsOptions = {
                   origin: string | undefined,
                   callback: (error: Error | null, allow?: boolean) => void,
               ) => {
-                  if (origin && process.env.WHITELIST_ORIGINS.split(",")?.includes(origin)) {
+                  if (!origin || process.env.WHITELIST_ORIGINS.split(",")?.includes(origin)) {
                       callback(null, true);
                   } else {
-                      console.log("origin", origin);
-
                       callback(
                           new TRPCError({
                               code: "UNAUTHORIZED",

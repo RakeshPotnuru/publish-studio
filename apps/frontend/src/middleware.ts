@@ -31,8 +31,6 @@ export async function middleware(request: NextRequest) {
   }
 
   if (!accessToken && refreshToken && !authUrls.has(request.nextUrl.pathname)) {
-    console.log("refreshing token");
-
     try {
       const client = createTRPCServerClient({
         Cookie: `refresh_token=${refreshToken.value}`,

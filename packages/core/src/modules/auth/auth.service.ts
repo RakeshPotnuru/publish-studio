@@ -39,7 +39,7 @@ export default class AuthService extends UserService {
 
         await createCaller(ctx).notifications.create({
             type: "welcome",
-            message: `Welcome to ${process.env.APP_NAME}! Feel free to reach out to support by clicking "?" button if you have any questions.`,
+            message: `Welcome to ${defaultConfig.appName}! Feel free to reach out to support by clicking "?" button if you have any questions.`,
         });
     }
 
@@ -113,7 +113,6 @@ export default class AuthService extends UserService {
             await logtail.error(JSON.stringify(error), {
                 user_id: user._id,
             });
-            console.log(error);
 
             throw new TRPCError({
                 code: "INTERNAL_SERVER_ERROR",
