@@ -117,7 +117,7 @@ export function PublishPost({
     });
 
   async function handleRefresh() {
-    await utils.projects.getById.invalidate({ _id: project._id });
+    await utils.projects.getById.invalidate(project._id);
     await utils.post.getAllByProjectId.invalidate(project._id);
   }
 

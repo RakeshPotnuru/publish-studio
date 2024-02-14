@@ -1,3 +1,5 @@
+const docsDomain = "https://docs.publishstudio.one";
+
 export const siteConfig = {
   title: "Publish Studio",
   description:
@@ -7,14 +9,11 @@ export const siteConfig = {
     color: "#EB5757",
   },
   links: {
-    devAPIKeyGuide: "https://docs.publishstudio.one/platforms/dev#api-key",
-    mediumAPIKeyGuide:
-      "https://docs.publishstudio.one/platforms/medium#api-key",
-    hashnodeAPIKeyGuide:
-      "https://docs.publishstudio.one/platforms/hashnode#api-key",
-    ghostAPIKeyGuide: "https://docs.publishstudio.one/platforms/ghost#api-key",
-    cloudinaryAPIKeyGuide:
-      "https://docs.publishstudio.one/integrations/cloudinary#api-key",
+    devAPIKeyGuide: `${docsDomain}/connections/platforms/dev#how-to-get-api-key`,
+    mediumAPIKeyGuide: `${docsDomain}/connections/platforms/dev#how-to-get-api-key`,
+    hashnodeAPIKeyGuide: `${docsDomain}/connections/platforms/dev#how-to-get-api-key`,
+    ghostAPIKeyGuide: `${docsDomain}/connections/platforms/dev#how-to-get-api-key`,
+    cloudinaryAPIKeyGuide: `${docsDomain}/connections/platforms/dev#how-to-get-api-key`,
     apiKeysSecureStorage:
       "https://docs.publishstudio.one/platforms#secure-storage-of-api-keys",
     devTags: "https://dev.to/tags",
@@ -28,22 +27,14 @@ export const siteConfig = {
     wordpressConnectedApps:
       "https://wordpress.com/me/security/connected-applications",
     pricing: "https://publishstudio.one/pricing",
+    privacyPolicy: "https://publishstudio.one/privacy-policy",
+    termsOfService: "https://publishstudio.one/terms-of-service",
   },
   twitter: {
     site: "@publishstudio",
     creator: "@rakesh_at_tweet",
   },
   pages: {
-    privacyPolicy: {
-      title: "Privacy Policy",
-      description: "Privacy Policy",
-      link: "/privacy-policy",
-    },
-    termsOfService: {
-      title: "Terms of Service",
-      description: "Terms of Service",
-      link: "/terms-of-service",
-    },
     login: {
       title: "Login",
       description: "Login to Publish Studio",

@@ -1,7 +1,7 @@
 import type { SendEmailCommandInput } from "@aws-sdk/client-sesv2";
 import { SendEmailCommand, SESv2Client } from "@aws-sdk/client-sesv2";
 import { TRPCError } from "@trpc/server";
-import type { Job} from "bullmq";
+import type { Job } from "bullmq";
 import { Queue, Worker } from "bullmq";
 import type { Types } from "mongoose";
 

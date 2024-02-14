@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import type { Job} from "bullmq";
+import type { Job } from "bullmq";
 import { Queue, Worker } from "bullmq";
 
 import { bullMQConnectionOptions } from "../../../config/app.config";

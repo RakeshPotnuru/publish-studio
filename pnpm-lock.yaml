@@ -10,7 +10,7 @@ importers:
     devDependencies:
       '@bravo68web/eslint-config':
         specifier: ^1.2.3
-        version: 1.2.3(eslint@8.54.0)(prettier@3.2.4)(tailwindcss@3.4.0)(typescript@5.3.2)
+        version: 1.2.3(eslint@8.54.0)(prettier@3.2.4)(tailwindcss@3.4.1)(typescript@5.3.2)
       '@bravo68web/prettier-config':
         specifier: ^1.2.3
         version: 1.2.3(eslint@8.54.0)(prettier@3.2.4)
@@ -44,6 +44,9 @@ importers:
 
   apps/docs:
     dependencies:
+      '@itsrakesh/ui':
+        specifier: ^0.11.1
+        version: 0.11.1(@types/react-dom@18.2.17)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.4.1)
       next:
         specifier: 14.1.0
         version: 14.1.0(react-dom@18.2.0)(react@18.2.0)
@@ -61,7 +64,7 @@ importers:
         version: 18.2.0(react@18.2.0)
       tailwindcss-animate:
         specifier: ^1.0.7
-        version: 1.0.7(tailwindcss@3.4.0)
+        version: 1.0.7(tailwindcss@3.4.1)
     devDependencies:
       '@types/node':
         specifier: ^20
@@ -88,8 +91,8 @@ importers:
         specifier: ^8
         version: 8.4.32
       tailwindcss:
-        specifier: ^3.3.0
-        version: 3.4.0(ts-node@10.9.1)
+        specifier: ^3.4.1
+        version: 3.4.1
       typescript:
         specifier: ^5
         version: 5.3.2
@@ -1504,7 +1507,7 @@ packages:
     resolution: {integrity: sha512-s3jaWicZd0pkP0jf5ysyHUI/RE7MHos6qlToFcGWXVp+ykHOy77OUMrfbgJ9it2C5bow7OIQwYYaHjk9XlBQ2A==}
     dev: false
 
-  /@bravo68web/eslint-config@1.2.3(eslint@8.54.0)(prettier@3.2.4)(tailwindcss@3.4.0)(typescript@5.3.2):
+  /@bravo68web/eslint-config@1.2.3(eslint@8.54.0)(prettier@3.2.4)(tailwindcss@3.4.1)(typescript@5.3.2):
     resolution: {integrity: sha512-FQQneHb6zRKkwLiLZzajF0dXALBUmv/ERazvQvB3K5DDtrhaVB6NF5qIp1xYzusdkGipnvJE4H3olO/vG5/xxQ==}
     peerDependencies:
       eslint: 8.x
@@ -1525,7 +1528,7 @@ packages:
       eslint-plugin-security: 1.7.1
       eslint-plugin-simple-import-sort: 10.0.0(eslint@8.54.0)
       eslint-plugin-sonarjs: 0.23.0(eslint@8.54.0)
-      eslint-plugin-tailwindcss: 3.13.0(tailwindcss@3.4.0)
+      eslint-plugin-tailwindcss: 3.13.0(tailwindcss@3.4.1)
       eslint-plugin-unicorn: 49.0.0(eslint@8.54.0)
       typescript: 5.3.2
     transitivePeerDependencies:
@@ -2395,6 +2398,50 @@ packages:
       react-resizable-panels: 1.0.7(react-dom@18.2.0)(react@18.2.0)
       sonner: 1.3.1(react-dom@18.2.0)(react@18.2.0)
       tailwindcss-animate: 1.0.7(tailwindcss@3.4.0)
+    transitivePeerDependencies:
+      - '@types/react'
+      - '@types/react-dom'
+      - react-dom
+      - tailwindcss
+    dev: false
+
+  /@itsrakesh/ui@0.11.1(@types/react-dom@18.2.17)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.4.1):
+    resolution: {integrity: sha512-AARjaQ7WMKRYoCcI+C4jo+KRuXbHrlf8+cuojZa/BUZEAcVKDGwlivCKYcj2FWEmcM+l4j65zBYbbMznKrkZ3w==}
+    peerDependencies:
+      react: ^18.2.0
+    dependencies:
+      '@itsrakesh/utils': 1.2.1(react@18.2.0)
+      '@radix-ui/react-accordion': 1.1.2(@types/react-dom@18.2.17)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-alert-dialog': 1.0.5(@types/react-dom@18.2.17)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-aspect-ratio': 1.0.3(@types/react-dom@18.2.17)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-avatar': 1.0.4(@types/react-dom@18.2.17)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-checkbox': 1.0.4(@types/react-dom@18.2.17)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-dialog': 1.0.5(@types/react-dom@18.2.17)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-dropdown-menu': 2.0.6(@types/react-dom@18.2.17)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-hover-card': 1.0.7(@types/react-dom@18.2.17)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-icons': 1.3.0(react@18.2.0)
+      '@radix-ui/react-label': 2.0.2(@types/react-dom@18.2.17)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-menubar': 1.0.4(@types/react-dom@18.2.17)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-popover': 1.0.7(@types/react-dom@18.2.17)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-radio-group': 1.1.3(@types/react-dom@18.2.17)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-scroll-area': 1.0.5(@types/react-dom@18.2.17)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-select': 1.2.2(@types/react-dom@18.2.17)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-separator': 1.0.3(@types/react-dom@18.2.17)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-slot': 1.0.2(@types/react@18.2.38)(react@18.2.0)
+      '@radix-ui/react-switch': 1.0.3(@types/react-dom@18.2.17)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-tabs': 1.0.4(@types/react-dom@18.2.17)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-toast': 1.1.5(@types/react-dom@18.2.17)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-toggle': 1.0.3(@types/react-dom@18.2.17)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-tooltip': 1.0.7(@types/react-dom@18.2.17)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)
+      class-variance-authority: 0.7.0
+      cmdk: 0.2.0(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)
+      date-fns: 2.30.0
+      react: 18.2.0
+      react-day-picker: 8.9.1(date-fns@2.30.0)(react@18.2.0)
+      react-hook-form: 7.48.2(react@18.2.0)
+      react-resizable-panels: 1.0.7(react-dom@18.2.0)(react@18.2.0)
+      sonner: 1.3.1(react-dom@18.2.0)(react@18.2.0)
+      tailwindcss-animate: 1.0.7(tailwindcss@3.4.1)
     transitivePeerDependencies:
       - '@types/react'
       - '@types/react-dom'
@@ -8489,7 +8536,7 @@ packages:
       eslint: 8.54.0
     dev: true
 
-  /eslint-plugin-tailwindcss@3.13.0(tailwindcss@3.4.0):
+  /eslint-plugin-tailwindcss@3.13.0(tailwindcss@3.4.1):
     resolution: {integrity: sha512-Fcep4KDRLWaK3KmkQbdyKHG0P4GdXFmXdDaweTIPcgOP60OOuWFbh1++dufRT28Q4zpKTKaHwTsXPJ4O/EjU2Q==}
     engines: {node: '>=12.13.0'}
     peerDependencies:
@@ -8497,7 +8544,7 @@ packages:
     dependencies:
       fast-glob: 3.3.2
       postcss: 8.4.32
-      tailwindcss: 3.4.0(ts-node@10.9.1)
+      tailwindcss: 3.4.1
     dev: true
 
   /eslint-plugin-unicorn@49.0.0(eslint@8.54.0):
@@ -14726,8 +14773,46 @@ packages:
       tailwindcss: 3.4.0(ts-node@10.9.1)
     dev: false
 
+  /tailwindcss-animate@1.0.7(tailwindcss@3.4.1):
+    resolution: {integrity: sha512-bl6mpH3T7I3UFxuvDEXLxy/VuFxBk5bbzplh7tXI68mwMokNYd1t9qPBHlnyTwfa4JGC4zP516I1hYYtQ/vspA==}
+    peerDependencies:
+      tailwindcss: '>=3.0.0 || insiders'
+    dependencies:
+      tailwindcss: 3.4.1
+    dev: false
+
   /tailwindcss@3.4.0(ts-node@10.9.1):
     resolution: {integrity: sha512-VigzymniH77knD1dryXbyxR+ePHihHociZbXnLZHUyzf2MMs2ZVqlUrZ3FvpXP8pno9JzmILt1sZPD19M3IxtA==}
+    engines: {node: '>=14.0.0'}
+    hasBin: true
+    dependencies:
+      '@alloc/quick-lru': 5.2.0
+      arg: 5.0.2
+      chokidar: 3.5.3
+      didyoumean: 1.2.2
+      dlv: 1.1.3
+      fast-glob: 3.3.2
+      glob-parent: 6.0.2
+      is-glob: 4.0.3
+      jiti: 1.21.0
+      lilconfig: 2.1.0
+      micromatch: 4.0.5
+      normalize-path: 3.0.0
+      object-hash: 3.0.0
+      picocolors: 1.0.0
+      postcss: 8.4.32
+      postcss-import: 15.1.0(postcss@8.4.32)
+      postcss-js: 4.0.1(postcss@8.4.32)
+      postcss-load-config: 4.0.2(postcss@8.4.32)(ts-node@10.9.1)
+      postcss-nested: 6.0.1(postcss@8.4.32)
+      postcss-selector-parser: 6.0.13
+      resolve: 1.22.8
+      sucrase: 3.34.0
+    transitivePeerDependencies:
+      - ts-node
+
+  /tailwindcss@3.4.1:
+    resolution: {integrity: sha512-qAYmXRfk3ENzuPBakNK0SRrUDipP8NQnEY6772uDhflcQz5EhRdD7JNZxyrFHVQNCwULPBn6FNPp9brpO7ctcA==}
     engines: {node: '>=14.0.0'}
     hasBin: true
     dependencies:

@@ -139,8 +139,9 @@ export function NewAssetDialog({
           : undefined,
       });
       data = response;
-    } catch (error) {
-      console.log(error);
+    } catch {
+      toast.error("Something went wrong. Please try again later.");
+      // TODO: Send error to log server
     }
 
     if (!data) return;
@@ -160,6 +161,8 @@ export function NewAssetDialog({
       setOpen(false);
     } catch {
       await deleteAsset([data.asset._id]);
+      toast.error("Something went wrong. Please try again later.");
+      // TODO: Send error to log server
     }
   };
 

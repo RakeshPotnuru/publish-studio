@@ -120,6 +120,12 @@ export const PlatformsField = ({
 
   const publishedPlatforms = data?.data.posts;
 
+  const getPost = (platform: IPlatform["name"]) => {
+    return publishedPlatforms?.find(
+      (publishedPlatform) => publishedPlatform.platform === platform,
+    );
+  };
+
   const bodyView = platformConfig
     .filter((platform) => connectedPlatforms.includes(platform.value))
     .map((platform) => (
@@ -153,10 +159,7 @@ export const PlatformsField = ({
                         }}
                         disabled={
                           isLoading ||
-                          publishedPlatforms?.find(
-                            (publishedPlatform) =>
-                              publishedPlatform.platform === platform.value,
-                          )?.status === PostStatus.SUCCESS
+                          getPost(platform.value)?.status === PostStatus.SUCCESS
                         }
                         {...field}
                       />
@@ -167,24 +170,13 @@ export const PlatformsField = ({
                   </FormItem>
 
                   {/* success */}
-                  {publishedPlatforms?.find(
-                    (publishedPlatform) =>
-                      publishedPlatform.platform === platform.value,
-                  )?.status === PostStatus.SUCCESS &&
-                    publishedPlatforms.find(
-                      (publishedPlatform) =>
-                        publishedPlatform.platform === platform.value,
-                    )?.published_url && (
+                  {getPost(platform.value)?.status === PostStatus.SUCCESS &&
+                    getPost(platform.value)?.published_url && (
                       <div className="flex items-center space-x-2">
                         <Badge variant="success">Published</Badge>
                         <Button variant="link" size="sm" asChild>
                           <Link
-                            href={
-                              publishedPlatforms.find(
-                                (publishedPlatform) =>
-                                  publishedPlatform.platform === platform.value,
-                              )?.published_url ?? ""
-                            }
+                            href={getPost(platform.value)?.published_url ?? ""}
                             target="_blank"
                           >
                             View
@@ -195,10 +187,7 @@ export const PlatformsField = ({
                     )}
 
                   {/* error */}
-                  {publishedPlatforms?.find(
-                    (publishedPlatform) =>
-                      publishedPlatform.platform === platform.value,
-                  )?.status === PostStatus.ERROR && (
+                  {getPost(platform.value)?.status === PostStatus.ERROR && (
                     <div className="flex items-center space-x-2">
                       <Badge variant="destructive">Failed</Badge>
                       <Button
@@ -221,10 +210,7 @@ export const PlatformsField = ({
                   )}
 
                   {/* pending */}
-                  {publishedPlatforms?.find(
-                    (publishedPlatform) =>
-                      publishedPlatform.platform === platform.value,
-                  )?.status === PostStatus.PENDING && (
+                  {getPost(platform.value)?.status === PostStatus.PENDING && (
                     <div className="flex items-center space-x-2">
                       <Badge variant="warning">Pending</Badge>
                       {scheduledAt && new Date(scheduledAt) > new Date() ? (

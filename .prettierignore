@@ -7,3 +7,5 @@ packages/*/dist/
 node_modules/
 email-templates/
 pnpm-lock.yaml
+
+**/_meta.json

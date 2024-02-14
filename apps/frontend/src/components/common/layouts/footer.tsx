@@ -9,7 +9,7 @@ import { siteConfig } from "@/config/site";
 
 type FooterProps = React.HTMLAttributes<HTMLElement>;
 
-export function Footer({ className, ...props }: FooterProps) {
+export function Footer({ className, ...props }: Readonly<FooterProps>) {
   return (
     <footer
       className={cn(
@@ -20,12 +20,12 @@ export function Footer({ className, ...props }: FooterProps) {
     >
       <p className="text-sm">&copy; Publish Studio</p>
       <Button variant="link" className="h-max p-0" asChild>
-        <Link href={siteConfig.pages.privacyPolicy.link} target="_blank">
+        <Link href={siteConfig.links.privacyPolicy} target="_blank">
           Privacy Policy
         </Link>
       </Button>
       <Button variant="link" className="h-max p-0" asChild>
-        <Link href={siteConfig.pages.termsOfService.link} target="_blank">
+        <Link href={siteConfig.links.termsOfService} target="_blank">
           Terms of Service
         </Link>
       </Button>

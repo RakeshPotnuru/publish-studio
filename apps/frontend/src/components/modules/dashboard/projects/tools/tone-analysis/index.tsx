@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Button, Skeleton, toast } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import type { IProject } from "@publish-studio/core";
+import { constants } from "@publish-studio/core/src/config/constants";
 
 import { Icons } from "@/assets/icons";
 import { Heading } from "@/components/ui/heading";
@@ -31,9 +32,26 @@ export function ToneAnalysis({ editor, project }: Readonly<ToneAnalysisProps>) {
 
   const handleAnalyzeContent = async () => {
     try {
+      const text = editor.getText();
+
+      if (text.length > constants.project.tone_analysis.input.MAX_LENGTH) {
+        toast.info(
+          `Content is too long. First ${constants.project.tone_analysis.input.MAX_LENGTH} characters will be analyzed.`,
+        );
+      }
+
+      if (text.length < constants.project.tone_analysis.input.MIN_LENGTH) {
+        toast.error(
+          `Content is too short. Minimum ${constants.project.tone_analysis.input.MIN_LENGTH} characters required.`,
+        );
+        return;
+      }
+
       const { data } = await analyzeContent({
         project_id: project._id,
-        text: editor.getText(),
+        text: editor
+          .getText()
+          .slice(0, constants.project.tone_analysis.input.MAX_LENGTH),
       });
 
       setData(data.analysis);

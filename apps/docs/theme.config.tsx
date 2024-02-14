@@ -1,7 +1,8 @@
 import { Images } from "@/assets/images";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import { DocsThemeConfig } from "nextra-theme-docs";
+import { DocsThemeConfig, ThemeSwitch } from "nextra-theme-docs";
 
 const config: DocsThemeConfig = {
     logo: (
@@ -53,7 +54,23 @@ const config: DocsThemeConfig = {
         content: null,
     },
     footer: {
-        text: `© ${new Date().getFullYear()} Publish Studio`,
+        text: (
+            <span>
+                © {new Date().getFullYear()}{" "}
+                <Link href="https://publishstudio.one" target="_blank">
+                    Publish Studio
+                </Link>
+            </span>
+        ),
+    },
+    sidebar: {
+        toggleButton: true,
+    },
+    themeSwitch: {
+        component: null,
+    },
+    navbar: {
+        extraContent: <ThemeSwitch />,
     },
 };
 

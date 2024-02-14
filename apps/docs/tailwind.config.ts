@@ -2,9 +2,10 @@ import type { Config } from "tailwindcss";
 
 const config: Config = {
     content: [
-        "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-        "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-        "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+        "./src/pages/**/*.{js,ts,md,jsx,tsx,mdx}",
+        "./src/components/**/*.{js,ts,md,jsx,tsx,mdx}",
+        "./src/app/**/*.{js,ts,md,jsx,tsx,mdx}",
+        "./node_modules/@itsrakesh/ui/dist/**/*.{mjs,mts,jsx,tsx}",
     ],
     theme: {
         container: {
