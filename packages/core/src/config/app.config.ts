@@ -57,6 +57,9 @@ const defaultConfig: ICustomConfig = {
 
 export const bullMQConnectionOptions: ConnectionOptions = new Redis(process.env.REDIS_URL, {
     maxRetriesPerRequest: null,
+    retryStrategy: function (times: number) {
+        return Math.max(Math.min(Math.exp(times), 20_000), 1000);
+    },
 });
 
 export default defaultConfig;
