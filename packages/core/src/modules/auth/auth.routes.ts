@@ -46,7 +46,7 @@ const authRouter = router({
                 password: z.string().min(1),
             }),
         )
-        .mutation(async ({ input, ctx }) => new AuthController().loginHandler(input, ctx)),
+        .mutation(({ input, ctx }) => new AuthController().loginHandler(input, ctx)),
 
     logout: protectedProcedure.mutation(({ ctx }) => new AuthController().logoutHandler(ctx)),
 

@@ -104,13 +104,13 @@ export function ExportProject({
         </p>
       </div>
       <div className="flex flex-wrap gap-2">
-        {/* <Button
-                    // onClick={handlePDF}
-                    size="sm"
-                    className="bg-pdf text-pdf-foreground hover:opacity-80"
-                >
-                    <Icons.Pdf className="mr-2 size-4" /> PDF
-                </Button> */}
+        <Button
+          size="sm"
+          className="bg-pdf text-pdf-foreground hover:opacity-80"
+          disabled
+        >
+          <Icons.Pdf className="mr-2 size-4" /> PDF (Coming Soon)
+        </Button>
         <Button
           onClick={handleCSV}
           size="sm"
