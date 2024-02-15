@@ -8,15 +8,12 @@ import { logtail } from "./logtail";
 const redisUrl = process.env.REDIS_URL;
 const redisClient = createClient({
     url: redisUrl,
-    socket: {
-        tls: process.env.NODE_ENV === "production",
-    },
 });
 
 const connectRedis = async () => {
     try {
         await redisClient
-            .on("error", (error: Error) => logtail.error(error).catch(error => console.log(error)))
+            .on("error", (error: Error) => console.log("❌ Redis Error:", error))
             .connect();
         console.log("✅ Connected to Redis 📦");
     } catch (error) {
