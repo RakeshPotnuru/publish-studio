@@ -18,17 +18,16 @@
     "scripts": {
         "build": "pnpm clear && NODE_ENV=production tsc",
         "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
-        "dev": "doppler run -- cross-env NODE_ENV=development nodemon --watch '**/*.ts' --exec node --loader @esbuild-kit/esm-loader src/index.ts",
+        "dev": "doppler run -- cross-env NODE_ENV=development nodemon --watch '**/*.ts' --exec node --import tsx/esm src/index.ts",
         "lint": "eslint --ext .ts .",
         "lint:fix": "eslint --ext .ts . --fix",
-        "start": "node --loader @esbuild-kit/esm-loader src/index.ts"
+        "start": "node --import tsx/esm src/index.ts"
     },
     "dependencies": {
         "@aws-sdk/client-s3": "^3.456.0",
         "@aws-sdk/client-sesv2": "^3.454.0",
         "@aws-sdk/s3-presigned-post": "^3.456.0",
         "@bravo68web/tsconfig": "^1.2.3",
-        "@esbuild-kit/esm-loader": "^2.6.5",
         "@google/generative-ai": "^0.1.3",
         "@googleapis/blogger": "^1.1.5",
         "@logtail/node": "^0.4.19",
@@ -53,6 +52,7 @@
         "redis": "^4.6.11",
         "stripe": "^14.5.0",
         "superjson": "^2.2.1",
+        "tsx": "^4.7.1",
         "typescript": "5.3.2",
         "unsplash-js": "^7.0.19",
         "uuid": "^9.0.1",
@@ -72,9 +72,6 @@
         "@types/uuid": "^9.0.7",
         "@types/ws": "^8.5.10",
         "eslint": "8.54.0",
-        "jest": "^29.7.0",
-        "nodemon": "^3.0.1",
-        "ts-jest": "^29.1.1",
-        "ts-node": "^10.9.1"
+        "nodemon": "^3.0.1"
     }
 }
