@@ -10,12 +10,11 @@ export const siteConfig = {
   },
   links: {
     devAPIKeyGuide: `${docsDomain}/connections/platforms/dev#how-to-get-api-key`,
-    mediumAPIKeyGuide: `${docsDomain}/connections/platforms/dev#how-to-get-api-key`,
-    hashnodeAPIKeyGuide: `${docsDomain}/connections/platforms/dev#how-to-get-api-key`,
-    ghostAPIKeyGuide: `${docsDomain}/connections/platforms/dev#how-to-get-api-key`,
-    cloudinaryAPIKeyGuide: `${docsDomain}/connections/platforms/dev#how-to-get-api-key`,
-    apiKeysSecureStorage:
-      "https://docs.publishstudio.one/platforms#secure-storage-of-api-keys",
+    mediumAPIKeyGuide: `${docsDomain}/connections/platforms/medium#how-to-get-api-key`,
+    hashnodeAPIKeyGuide: `${docsDomain}/connections/platforms/hashnode#how-to-get-api-key`,
+    ghostAPIKeyGuide: `${docsDomain}/connections/platforms/ghost#how-to-get-api-key-and-api-url`,
+    cloudinaryAPIKeyGuide: `${docsDomain}/connections/integrations/cloudinary#how-to-get-api-key-and-cloud-name`,
+    apiKeysSecureStorage: `${docsDomain}/connections#will-my-credentials-be-safe`,
     devTags: "https://dev.to/tags",
     mediumTags: "https://medium.com/topics",
     ghostTags: "https://ghost.org/help/tags/",
@@ -26,6 +25,7 @@ export const siteConfig = {
     wordpressAuthorize: "https://public-api.wordpress.com/oauth2/authorize",
     wordpressConnectedApps:
       "https://wordpress.com/me/security/connected-applications",
+    googleConnectedApps: "https://myaccount.google.com/connections",
     pricing: "https://publishstudio.one/pricing",
     privacyPolicy: "https://publishstudio.one/privacy-policy",
     termsOfService: "https://publishstudio.one/terms-of-service",

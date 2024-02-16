@@ -32,7 +32,6 @@ export function WordPress({ data, isLoading }: Readonly<WordPressProps>) {
   const {
     refetch: disconnect,
     isFetching: isDisconnecting,
-    data: disconnectResponse,
     error: disconnectError,
   } = trpc.platforms.wordpress.disconnect.useQuery(undefined, {
     enabled: false,
@@ -41,14 +40,17 @@ export function WordPress({ data, isLoading }: Readonly<WordPressProps>) {
   const handleDisconnect = async () => {
     try {
       await disconnect();
-      toast.success(disconnectResponse?.data.message, {
-        action: {
-          label: "Open",
-          onClick: () => {
-            window.open(siteConfig.links.wordpressConnectedApps, "_blank");
+      toast.success(
+        "Platform disconnected successfully. Also, please disconnect from your connected accounts in your WordPress account.",
+        {
+          action: {
+            label: "Open",
+            onClick: () => {
+              window.open(siteConfig.links.wordpressConnectedApps, "_blank");
+            },
           },
         },
-      });
+      );
     } catch {
       toast.error(disconnectError?.message ?? "Something went wrong.");
     }

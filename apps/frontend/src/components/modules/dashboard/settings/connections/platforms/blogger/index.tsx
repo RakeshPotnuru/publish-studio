@@ -9,6 +9,7 @@ import {
 } from "@publish-studio/core/src/config/constants";
 
 import { Images } from "@/assets/images";
+import { siteConfig } from "@/config/site";
 import { useEditor } from "@/hooks/use-editor";
 import { trpc } from "@/utils/trpc";
 
@@ -37,6 +38,17 @@ export function Blogger({ data, isLoading }: Readonly<BloggerProps>) {
   const handleDisconnect = async () => {
     try {
       await disconnect();
+      toast.success(
+        "Platform disconnected successfully. Also, please disconnect from your connected accounts in your Google account.",
+        {
+          action: {
+            label: "Open",
+            onClick: () => {
+              window.open(siteConfig.links.googleConnectedApps, "_blank");
+            },
+          },
+        },
+      );
     } catch {
       toast.error(disconnectError?.message ?? "Something went wrong.");
     }
