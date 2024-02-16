@@ -106,10 +106,17 @@ export default class AuthController extends AuthService {
     }
 
     async registerHandler(input: IRegisterInput) {
-        if (await this.isDisposableEmail(input.email)) {
+        if (await super.isDisposableEmail(input.email)) {
             throw new TRPCError({
                 code: "BAD_REQUEST",
                 message: "Disposable email is not allowed",
+            });
+        }
+
+        if (!(await super.isEmailWhitelisted(input.email))) {
+            throw new TRPCError({
+                code: "BAD_REQUEST",
+                message: "Your email is not whitelisted. Please contact support.",
             });
         }
 
@@ -169,7 +176,15 @@ export default class AuthController extends AuthService {
 
         const user = await super.getUserByEmail(payload.email);
 
+        // If user does not exist, create a new user and login the user.
         if (!user) {
+            if (!(await super.isEmailWhitelisted(payload.email))) {
+                throw new TRPCError({
+                    code: "BAD_REQUEST",
+                    message: "Your email is not whitelisted. Please contact support.",
+                });
+            }
+
             const newUser = await super.createUser({
                 first_name: payload.given_name,
                 last_name: payload.family_name,
@@ -209,6 +224,7 @@ export default class AuthController extends AuthService {
             };
         }
 
+        // If user exists, just login the user. If user does not have google auth mode, add it.
         if (!user.auth_modes.includes(AuthMode.GOOGLE)) {
             await super.updateUser(user._id, {
                 auth_modes: [...user.auth_modes, AuthMode.GOOGLE],

@@ -1,11 +1,13 @@
 import { TRPCError } from "@trpc/server";
 import axios from "axios";
+import configcat from "configcat-node";
 
 import defaultConfig from "../../config/app.config";
 import { EmailTemplate } from "../../config/constants";
 import { createCaller } from "../../routes";
 import type { Context } from "../../trpc";
 import { scheduleEmail, sendEmail } from "../../utils/aws/ses";
+import { configCatClient } from "../../utils/configcat";
 import { signJwt } from "../../utils/jwt";
 import { logtail } from "../../utils/logtail";
 import redisClient from "../../utils/redis";
@@ -13,7 +15,7 @@ import UserService from "../user/user.service";
 import type { IUser } from "../user/user.types";
 
 export default class AuthService extends UserService {
-    async isDisposableEmail(email: string) {
+    async isDisposableEmail(email: string): Promise<boolean> {
         try {
             const response = await axios.get(`${defaultConfig.kickboxApiUrl}/${email}`);
             return response.data.disposable as boolean;
@@ -22,6 +24,14 @@ export default class AuthService extends UserService {
 
             return false;
         }
+    }
+
+    async isEmailWhitelisted(email: string): Promise<boolean> {
+        return await configCatClient.getValueAsync(
+            "isEmailWhitelisted",
+            false,
+            new configcat.User(email, email),
+        );
     }
 
     async sendWelcomeEmail(user: IUser, ctx: Context) {

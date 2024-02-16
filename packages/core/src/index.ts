@@ -2,6 +2,7 @@ import "dotenv/config";
 
 import { TRPCError } from "@trpc/server";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
+import configcat from "configcat-node";
 import type { CorsOptions } from "cors";
 import cors from "cors";
 import type { Application } from "express";
@@ -69,6 +70,9 @@ app.listen(process.env.PORT, () => {
     console.log(`✅ Server running on port ${process.env.PORT}`);
 });
 
+export type AppRouter = typeof appRouter;
+export * from "./types";
+
 process.on("uncaughtException", error => {
     logtail.error(error).catch(error => {
         console.log(error);
@@ -86,5 +90,18 @@ process.on("unhandledRejection", (reason, promise) => {
         });
 });
 
-export type AppRouter = typeof appRouter;
-export * from "./types";
+process.on("SIGTERM", () => {
+    console.log("SIGTERM received");
+
+    configcat.disposeAllClients();
+
+    process.exit(0);
+});
+
+process.on("SIGINT", () => {
+    console.log("SIGINT received");
+
+    configcat.disposeAllClients();
+
+    process.exit(0);
+});

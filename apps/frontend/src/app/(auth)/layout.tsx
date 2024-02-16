@@ -19,8 +19,8 @@ export default function AuthLayout({
           <div className="container mx-auto flex w-full flex-col justify-center space-y-6 rounded-lg bg-background p-14 shadow-xl sm:w-[500px]">
             {children}
           </div>
+          <Footer className="mx-auto mt-8 max-w-max justify-center rounded-lg bg-background p-2 py-1 shadow-md" />
         </div>
-        <Footer className="mx-auto max-w-max justify-center rounded-lg bg-background p-2 py-1 shadow-md" />
       </main>
       <Script
         src="https://accounts.google.com/gsi/client"

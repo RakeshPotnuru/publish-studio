@@ -21,7 +21,7 @@ export function MobileNotice({ children }: { children: React.ReactNode }) {
   }, []);
 
   return isMobile ? (
-    <Center className="flex h-screen flex-col items-center space-y-4 bg-white text-muted-foreground">
+    <Center className="flex h-screen flex-col items-center space-y-4 bg-white px-4 text-center text-muted-foreground">
       <Icons.MobileOff className="size-20" />
       <p>
         This application is not optimized for mobile yet. Please use a desktop

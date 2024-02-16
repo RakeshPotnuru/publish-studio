@@ -49,7 +49,9 @@ export function Project({ ...props }: Readonly<ProjectProps>) {
     last_edited: data.data.project.updated_at,
   };
 
-  useDocumentTitle(`Projects | ${project?.name ?? "Not Found"}`);
+  const title = isFetching ? "Loading..." : project?.name ?? "Not Found";
+
+  useDocumentTitle(`Projects | ${title}`);
 
   const projectView = isFetching ? (
     <div className="flex flex-row space-x-4">

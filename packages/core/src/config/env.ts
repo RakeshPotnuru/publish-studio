@@ -46,6 +46,7 @@ const ZodEnvironmentVariables = z.object({
     TURNSTILE_SECRET: z.string(),
     DB_ENCRYPTION_SECRET: z.string(),
     LOGTAIL_SOURCE_TOKEN: z.string(),
+    CONFIGCAT_SDK_KEY: z.string(),
 });
 
 ZodEnvironmentVariables.parse(process.env);
