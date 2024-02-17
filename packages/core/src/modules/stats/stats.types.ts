@@ -1,9 +1,9 @@
 export interface ICategoryStats {
-    category: string;
-    count: number;
+  category: string;
+  count: number;
 }
 
 export interface IProjectStats {
-    count: number;
-    date: Date;
+  count: number;
+  date: Date;
 }

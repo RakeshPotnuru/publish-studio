@@ -1,44 +1,44 @@
 import type { Sentiment } from "../../config/constants";
 
 export interface IToneAnalysis {
-    result: Result;
+  result: Result;
 }
 
 export interface Result {
-    data: Data;
+  data: Data;
 }
 
 export interface Data {
-    usage: Usage;
-    sentiment: ISentiment;
-    language: string;
-    emotion: DataEmotion;
+  usage: Usage;
+  sentiment: ISentiment;
+  language: string;
+  emotion: DataEmotion;
 }
 
 export interface DataEmotion {
-    document: EmotionDocument;
+  document: EmotionDocument;
 }
 
 export interface EmotionDocument {
-    emotion: IEmotionScores;
+  emotion: IEmotionScores;
 }
 
 export type IEmotionScores = {
-    [key in "joy" | "anger" | "disgust" | "fear" | "sadness"]?: number;
+  [key in "joy" | "anger" | "disgust" | "fear" | "sadness"]?: number;
 };
 
 export interface ISentiment {
-    document: SentimentDocument;
+  document: SentimentDocument;
 }
 
 export interface SentimentDocument {
-    score: number;
-    mixed: string;
-    label: Sentiment;
+  score: number;
+  mixed: string;
+  label: Sentiment;
 }
 
 export interface Usage {
-    text_units: number;
-    text_characters: number;
-    features: number;
+  text_units: number;
+  text_characters: number;
+  features: number;
 }

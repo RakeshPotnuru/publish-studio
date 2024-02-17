@@ -12,45 +12,48 @@ import type { INotification } from "./notification.types";
 const ee = new EventEmitter();
 
 const notificationRouter = router({
-    create: protectedProcedure
-        .input(
-            z.object({
-                message: z.string(),
-                type: z.string(),
-            }),
-        )
-        .mutation(async ({ input, ctx }) => {
-            const { data } = await new NotificationController().createNotificationHandler(
-                input,
-                ctx,
-            );
+  create: protectedProcedure
+    .input(
+      z.object({
+        message: z.string(),
+        type: z.string(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { data } =
+        await new NotificationController().createNotificationHandler(
+          input,
+          ctx,
+        );
 
-            ee.emit("create", data.notification);
+      ee.emit("create", data.notification);
 
-            return data.notification;
-        }),
-
-    onCreate: t.procedure.subscription(() => {
-        return observable<INotification>(emit => {
-            const onCreate = (data: INotification) => {
-                emit.next(data);
-            };
-
-            ee.on("create", onCreate);
-
-            return () => {
-                ee.off("create", onCreate);
-            };
-        });
+      return data.notification;
     }),
 
-    markRead: protectedProcedure
-        .input(z.array(z.custom<Types.ObjectId>()))
-        .mutation(({ input, ctx }) => new NotificationController().markReadHandler(input, ctx)),
+  onCreate: t.procedure.subscription(() => {
+    return observable<INotification>((emit) => {
+      const onCreate = (data: INotification) => {
+        emit.next(data);
+      };
 
-    getAll: protectedProcedure.query(({ ctx }) =>
-        new NotificationController().getNotificationsHandler(ctx),
+      ee.on("create", onCreate);
+
+      return () => {
+        ee.off("create", onCreate);
+      };
+    });
+  }),
+
+  markRead: protectedProcedure
+    .input(z.array(z.custom<Types.ObjectId>()))
+    .mutation(({ input, ctx }) =>
+      new NotificationController().markReadHandler(input, ctx),
     ),
+
+  getAll: protectedProcedure.query(({ ctx }) =>
+    new NotificationController().getNotificationsHandler(ctx),
+  ),
 });
 
 export default notificationRouter;

@@ -22,86 +22,89 @@ const app: Application = express();
 app.set("trust proxy", 1);
 
 app.use((req, res, next) => {
-    if (req.originalUrl === defaultConfig.stripeWebhookPath) {
-        express.raw({ type: "application/json" })(req, res, next);
-    } else {
-        express.json()(req, res, next);
-    }
+  if (req.originalUrl === defaultConfig.stripeWebhookPath) {
+    express.raw({ type: "application/json" })(req, res, next);
+  } else {
+    express.json()(req, res, next);
+  }
 });
 
 const corsOptions: CorsOptions = {
-    origin:
-        process.env.NODE_ENV === "production"
-            ? (
-                  origin: string | undefined,
-                  callback: (error: Error | null, allow?: boolean) => void,
-              ) => {
-                  if (!origin || process.env.WHITELIST_ORIGINS.split(",")?.includes(origin)) {
-                      callback(null, true);
-                  } else {
-                      callback(
-                          new TRPCError({
-                              code: "UNAUTHORIZED",
-                              message: "Not allowed by CORS",
-                          }),
-                      );
-                  }
-              }
-            : "*",
-    optionsSuccessStatus: 200,
-    credentials: process.env.NODE_ENV === "production",
+  origin:
+    process.env.NODE_ENV === "production"
+      ? (
+          origin: string | undefined,
+          callback: (error: Error | null, allow?: boolean) => void,
+        ) => {
+          if (
+            !origin ||
+            process.env.WHITELIST_ORIGINS.split(",")?.includes(origin)
+          ) {
+            callback(null, true);
+          } else {
+            callback(
+              new TRPCError({
+                code: "UNAUTHORIZED",
+                message: "Not allowed by CORS",
+              }),
+            );
+          }
+        }
+      : "*",
+  optionsSuccessStatus: 200,
+  credentials: process.env.NODE_ENV === "production",
 };
 
 app.use(cors(corsOptions));
 
 app.use("/health", (_, res) => {
-    return res.send("OK");
+  return res.send("OK");
 });
 
 app.use(
-    "/api",
-    createExpressMiddleware({
-        router: appRouter,
-        createContext,
-    }),
+  "/api",
+  createExpressMiddleware({
+    router: appRouter,
+    createContext,
+  }),
 );
 
 app.listen(process.env.PORT, () => {
-    console.log(`✅ Server running on port ${process.env.PORT}`);
+  console.log(`✅ Server running on port ${process.env.PORT}`);
 });
 
 export type AppRouter = typeof appRouter;
 export * from "./types";
 
-process.on("uncaughtException", error => {
-    logtail.error(error).catch(error => {
-        console.log(error);
-    });
+process.on("uncaughtException", (error) => {
+  logtail.error(error).catch((error) => {
+    console.log(error);
+  });
 });
 
 process.on("unhandledRejection", (reason, promise) => {
-    logtail
-        .error("Unhandled Rejection at: Promise", {
-            reason,
-            promise,
-        })
-        .catch(error => {
-            console.log(error);
-        });
+  logtail
+    .error("Unhandled Rejection at: Promise", {
+      reason,
+      promise,
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 });
 
 process.on("SIGTERM", () => {
-    console.log("SIGTERM received");
+  console.log("SIGTERM received");
 
-    configcat.disposeAllClients();
+  configcat.disposeAllClients();
 
-    process.exit(0);
+  process.exit(0);
 });
 
 process.on("SIGINT", () => {
-    console.log("SIGINT received");
+  console.log("SIGINT received");
 
-    configcat.disposeAllClients();
+  configcat.disposeAllClients();
 
-    process.exit(0);
+  process.exit(0);
 });

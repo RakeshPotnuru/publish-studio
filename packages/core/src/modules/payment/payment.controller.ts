@@ -10,172 +10,172 @@ import stripe from "../../utils/stripe";
 import PaymentService from "./payment.service";
 
 export default class PaymentController extends PaymentService {
-    async stripeWebhookHandler(ctx: Context) {
-        const signature = ctx.req.headers["stripe-signature"] as string;
-        const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  async stripeWebhookHandler(ctx: Context) {
+    const signature = ctx.req.headers["stripe-signature"] as string;
+    const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
-        let event: Stripe.Event;
+    let event: Stripe.Event;
 
-        // Verify webhook signature and extract the event.
-        try {
-            event = stripe.webhooks.constructEvent(
-                ctx.req.body as Buffer,
-                signature,
-                endpointSecret,
-            );
-        } catch (error) {
-            await logtail.error(JSON.stringify(error));
+    // Verify webhook signature and extract the event.
+    try {
+      event = stripe.webhooks.constructEvent(
+        ctx.req.body as Buffer,
+        signature,
+        endpointSecret,
+      );
+    } catch (error) {
+      await logtail.error(JSON.stringify(error));
 
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: "Error creating event",
-            });
-        }
-
-        // Handle the event
-        switch (event.type) {
-            case "checkout.session.completed": {
-                const session = event.data.object;
-
-                if (session.client_reference_id && session.payment_status === "paid") {
-                    await this.upgradePlan(
-                        session.id,
-                        new mongoose.Types.ObjectId(session.client_reference_id),
-                    );
-                }
-
-                break;
-            }
-            case "subscription_schedule.canceled": {
-                const subscription = event.data.object;
-
-                await this.downgradePlan(subscription.id);
-
-                break;
-            }
-            default: {
-                console.log(`Unhandled event type ${event.type} from stripe`);
-            }
-        }
-
-        return {
-            status: "success",
-            data: {
-                message: "Webhook received successfully",
-            },
-        };
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Error creating event",
+      });
     }
 
-    async makePaymentHandler(ctx: Context) {
-        const payment = await super.getPayment(ctx.user._id);
+    // Handle the event
+    switch (event.type) {
+      case "checkout.session.completed": {
+        const session = event.data.object;
 
-        if (payment?.isPaid) {
-            throw new TRPCError({
-                code: "BAD_REQUEST",
-                message: "You already have an active subscription",
-            });
+        if (session.client_reference_id && session.payment_status === "paid") {
+          await this.upgradePlan(
+            session.id,
+            new mongoose.Types.ObjectId(session.client_reference_id),
+          );
         }
 
-        const session = await super.createCheckoutSession(ctx);
+        break;
+      }
+      case "subscription_schedule.canceled": {
+        const subscription = event.data.object;
 
-        return {
-            status: "success",
-            data: {
-                url: session.url,
-            },
-        };
+        await this.downgradePlan(subscription.id);
+
+        break;
+      }
+      default: {
+        console.log(`Unhandled event type ${event.type} from stripe`);
+      }
     }
 
-    private async upgradePlan(session_id: string, user_id: Types.ObjectId) {
-        const session = await super.fetchCheckoutSession(session_id, user_id);
+    return {
+      status: "success",
+      data: {
+        message: "Webhook received successfully",
+      },
+    };
+  }
 
-        await super.updateUser(user_id, {
-            user_type: UserType.PRO,
-            stripe_customer_id: session.customer as string,
-        });
+  async makePaymentHandler(ctx: Context) {
+    const payment = await super.getPayment(ctx.user._id);
 
-        await super.createPayment({
-            user_id: user_id,
-            subscription_id: session.subscription as string,
-            isPaid: true,
-            amount: session.amount_total ?? 0 / 100,
-            currency: session.currency ?? constants.payment.currency.NAME,
-        });
-
-        const user = await super.getUserById(user_id);
-
-        if (!user) return;
-
-        await super.updateCustomer(user, session.customer as string);
-
-        return {
-            status: "success",
-            data: {
-                message: "Plan upgraded successfully",
-            },
-        };
+    if (payment?.isPaid) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "You already have an active subscription",
+      });
     }
 
-    private async downgradePlan(subscription_id: string) {
-        const payment = await super.getPaymentBySubscriptionId(subscription_id);
+    const session = await super.createCheckoutSession(ctx);
 
-        if (!payment) {
-            throw new TRPCError({
-                code: "NOT_FOUND",
-                message: "No subscription found",
-            });
-        }
+    return {
+      status: "success",
+      data: {
+        url: session.url,
+      },
+    };
+  }
 
-        await super.deletePayment(payment._id, payment.user_id);
+  private async upgradePlan(session_id: string, user_id: Types.ObjectId) {
+    const session = await super.fetchCheckoutSession(session_id, user_id);
 
-        const user = await super.getUserById(payment.user_id);
+    await super.updateUser(user_id, {
+      user_type: UserType.PRO,
+      stripe_customer_id: session.customer as string,
+    });
 
-        if (!user) return;
+    await super.createPayment({
+      user_id: user_id,
+      subscription_id: session.subscription as string,
+      isPaid: true,
+      amount: session.amount_total ?? 0 / 100,
+      currency: session.currency ?? constants.payment.currency.NAME,
+    });
 
-        if (user.stripe_customer_id) {
-            await super.deleteCustomer(user.stripe_customer_id, user._id);
-        }
+    const user = await super.getUserById(user_id);
 
-        await super.updateUser(user._id, {
-            user_type: UserType.FREE,
-            stripe_customer_id: undefined,
-        });
+    if (!user) return;
 
-        return {
-            status: "success",
-            data: {
-                message: "Plan downgraded successfully",
-            },
-        };
+    await super.updateCustomer(user, session.customer as string);
+
+    return {
+      status: "success",
+      data: {
+        message: "Plan upgraded successfully",
+      },
+    };
+  }
+
+  private async downgradePlan(subscription_id: string) {
+    const payment = await super.getPaymentBySubscriptionId(subscription_id);
+
+    if (!payment) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "No subscription found",
+      });
     }
 
-    async cancelSubscriptionHandler(ctx: Context) {
-        const payment = await super.getPayment(ctx.user._id);
+    await super.deletePayment(payment._id, payment.user_id);
 
-        if (!payment) {
-            throw new TRPCError({
-                code: "NOT_FOUND",
-                message: "No subscription found",
-            });
-        }
+    const user = await super.getUserById(payment.user_id);
 
-        await super.cancelSubscription(payment.subscription_id, ctx.user._id);
+    if (!user) return;
 
-        return {
-            status: "success",
-            data: {
-                message:
-                    "Subscription cancelled successfully. You will be downgraded to the free plan at the end of your billing cycle.",
-            },
-        };
+    if (user.stripe_customer_id) {
+      await super.deleteCustomer(user.stripe_customer_id, user._id);
     }
 
-    async getSessionHandler(session_id: string, ctx: Context) {
-        const session = await super.fetchCheckoutSession(session_id, ctx.user._id);
+    await super.updateUser(user._id, {
+      user_type: UserType.FREE,
+      stripe_customer_id: undefined,
+    });
 
-        return {
-            status: "success",
-            data: { session },
-        };
+    return {
+      status: "success",
+      data: {
+        message: "Plan downgraded successfully",
+      },
+    };
+  }
+
+  async cancelSubscriptionHandler(ctx: Context) {
+    const payment = await super.getPayment(ctx.user._id);
+
+    if (!payment) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "No subscription found",
+      });
     }
+
+    await super.cancelSubscription(payment.subscription_id, ctx.user._id);
+
+    return {
+      status: "success",
+      data: {
+        message:
+          "Subscription cancelled successfully. You will be downgraded to the free plan at the end of your billing cycle.",
+      },
+    };
+  }
+
+  async getSessionHandler(session_id: string, ctx: Context) {
+    const session = await super.fetchCheckoutSession(session_id, ctx.user._id);
+
+    return {
+      status: "success",
+      data: { session },
+    };
+  }
 }

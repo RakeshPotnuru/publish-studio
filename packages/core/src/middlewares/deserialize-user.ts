@@ -8,55 +8,61 @@ import { verifyJwt } from "../utils/jwt";
 import { logtail } from "../utils/logtail";
 import redisClient from "../utils/redis";
 
-export const deserializeUser = async ({ req, res }: CreateExpressContextOptions) => {
-    try {
-        let access_token = "";
-        if (req.headers.authorization?.startsWith("Bearer")) {
-            access_token = req.headers.authorization.split(" ")[1];
-        }
-
-        const notAuthenticated = {
-            req,
-            res,
-            user: {} as unknown as IUser,
-        };
-
-        if (!access_token) {
-            return notAuthenticated;
-        }
-
-        // Validate Access Token
-        const decoded = await verifyJwt<{ sub: string }>(access_token, "accessTokenPublicKey");
-
-        if (!decoded) {
-            return notAuthenticated;
-        }
-
-        // Check if user has a valid session
-        const session = await redisClient.get(decoded.sub);
-
-        if (!session) {
-            return notAuthenticated;
-        }
-
-        // Check if the user still exists
-        const user = await User.findById(JSON.parse(session)._id).exec();
-
-        if (!user) {
-            return notAuthenticated;
-        }
-
-        return {
-            req,
-            res,
-            user: { ...user.toJSON() },
-        };
-    } catch (error) {
-        await logtail.error(JSON.stringify(error));
-
-        throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: defaultConfig.defaultErrorMessage,
-        });
+export const deserializeUser = async ({
+  req,
+  res,
+}: CreateExpressContextOptions) => {
+  try {
+    let access_token = "";
+    if (req.headers.authorization?.startsWith("Bearer")) {
+      access_token = req.headers.authorization.split(" ")[1];
     }
+
+    const notAuthenticated = {
+      req,
+      res,
+      user: {} as unknown as IUser,
+    };
+
+    if (!access_token) {
+      return notAuthenticated;
+    }
+
+    // Validate Access Token
+    const decoded = await verifyJwt<{ sub: string }>(
+      access_token,
+      "accessTokenPublicKey",
+    );
+
+    if (!decoded) {
+      return notAuthenticated;
+    }
+
+    // Check if user has a valid session
+    const session = await redisClient.get(decoded.sub);
+
+    if (!session) {
+      return notAuthenticated;
+    }
+
+    // Check if the user still exists
+    const user = await User.findById(JSON.parse(session)._id).exec();
+
+    if (!user) {
+      return notAuthenticated;
+    }
+
+    return {
+      req,
+      res,
+      user: { ...user.toJSON() },
+    };
+  } catch (error) {
+    await logtail.error(JSON.stringify(error));
+
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: defaultConfig.defaultErrorMessage,
+    });
+  }
 };

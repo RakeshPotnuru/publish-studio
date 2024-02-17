@@ -1,9 +1,9 @@
 {
-    "recommendations": [
-        "sonarsource.sonarlint-vscode",
-        "bradlc.vscode-tailwindcss",
-        "esbenp.prettier-vscode",
-        "ms-vscode.vscode-typescript-next",
-        "usernamehw.errorlens"
-    ]
+  "recommendations": [
+    "sonarsource.sonarlint-vscode",
+    "bradlc.vscode-tailwindcss",
+    "esbenp.prettier-vscode",
+    "ms-vscode.vscode-typescript-next",
+    "usernamehw.errorlens"
+  ]
 }

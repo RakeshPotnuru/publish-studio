@@ -10,233 +10,256 @@ import type { IPaginationOptions } from "../../../types/common.types";
 import { logtail } from "../../../utils/logtail";
 import Ghost from "./ghost.model";
 import type {
-    IGhost,
-    IGhostCreatePostInput,
-    IGhostUpdatePostOutput,
-    TGhostCreateInput,
-    TGhostUpdateInput,
-    TGhostUpdatePostInput,
+  IGhost,
+  IGhostCreatePostInput,
+  IGhostUpdatePostOutput,
+  TGhostCreateInput,
+  TGhostUpdateInput,
+  TGhostUpdatePostInput,
 } from "./ghost.types";
 
 export default class GhostService {
-    private readonly PLATFORM = Platform.GHOST;
-    private readonly GHOST_API_VERSION = "v5.72.1";
+  private readonly PLATFORM = Platform.GHOST;
+  private readonly GHOST_API_VERSION = "v5.72.1";
 
-    private async ghost(user_id: Types.ObjectId) {
-        const platform = await Ghost.findOne({ user_id }).exec();
+  private async ghost(user_id: Types.ObjectId) {
+    const platform = await Ghost.findOne({ user_id }).exec();
 
-        if (!platform) {
-            throw new TRPCError({
-                code: "NOT_FOUND",
-                message: "Platform not found",
-            });
-        }
-
-        try {
-            return new TSGhostAdminAPI(
-                platform.api_url,
-                platform.admin_api_key,
-                this.GHOST_API_VERSION,
-            );
-        } catch (error) {
-            await logtail.error(JSON.stringify(error), {
-                user_id,
-            });
-
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: defaultConfig.defaultErrorMessage,
-            });
-        }
+    if (!platform) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Platform not found",
+      });
     }
 
-    async createPlatform(platform: TGhostCreateInput): Promise<boolean> {
-        try {
-            const newPlatform = await Ghost.create(platform);
+    try {
+      return new TSGhostAdminAPI(
+        platform.api_url,
+        platform.admin_api_key,
+        this.GHOST_API_VERSION,
+      );
+    } catch (error) {
+      await logtail.error(JSON.stringify(error), {
+        user_id,
+      });
 
-            await User.findByIdAndUpdate(platform.user_id, {
-                $push: {
-                    platforms: this.PLATFORM,
-                },
-            }).exec();
-
-            await PlatformModel.create({
-                user_id: platform.user_id,
-                name: this.PLATFORM,
-                data: newPlatform._id,
-            });
-
-            return true;
-        } catch (error) {
-            await logtail.error(JSON.stringify(error), {
-                user_id: platform.user_id,
-            });
-
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while connecting the platform. Please try again later.",
-            });
-        }
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: defaultConfig.defaultErrorMessage,
+      });
     }
+  }
 
-    async updatePlatform(platform: TGhostUpdateInput, user_id: Types.ObjectId): Promise<boolean> {
-        try {
-            const doc = await Ghost.findOne({ user_id }).exec();
+  async createPlatform(platform: TGhostCreateInput): Promise<boolean> {
+    try {
+      const newPlatform = await Ghost.create(platform);
 
-            if (!doc) {
-                throw new TRPCError({
-                    code: "NOT_FOUND",
-                    message: "Platform not found",
-                });
-            }
+      await User.findByIdAndUpdate(platform.user_id, {
+        $push: {
+          platforms: this.PLATFORM,
+        },
+      }).exec();
 
-            doc.set(platform);
-            await doc.save();
+      await PlatformModel.create({
+        user_id: platform.user_id,
+        name: this.PLATFORM,
+        data: newPlatform._id,
+      });
 
-            return true;
-        } catch (error) {
-            console.log(error);
+      return true;
+    } catch (error) {
+      await logtail.error(JSON.stringify(error), {
+        user_id: platform.user_id,
+      });
 
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while updating the platform. Please try again later.",
-            });
-        }
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message:
+          "An error occurred while connecting the platform. Please try again later.",
+      });
     }
+  }
 
-    async deletePlatform(user_id: Types.ObjectId): Promise<boolean> {
-        try {
-            await PlatformModel.findOneAndDelete({
-                user_id,
-                name: this.PLATFORM,
-            }).exec();
+  async updatePlatform(
+    platform: TGhostUpdateInput,
+    user_id: Types.ObjectId,
+  ): Promise<boolean> {
+    try {
+      const doc = await Ghost.findOne({ user_id }).exec();
 
-            await User.findByIdAndUpdate(user_id, {
-                $pull: {
-                    platforms: this.PLATFORM,
-                },
-            }).exec();
+      if (!doc) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Platform not found",
+        });
+      }
 
-            await Ghost.findOneAndDelete({ user_id }).exec();
+      doc.set(platform);
+      await doc.save();
 
-            return true;
-        } catch (error) {
-            await logtail.error(JSON.stringify(error), {
-                user_id,
-            });
+      return true;
+    } catch (error) {
+      console.log(error);
 
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message:
-                    "An error occurred while disconnecting the platform. Please try again later.",
-            });
-        }
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message:
+          "An error occurred while updating the platform. Please try again later.",
+      });
     }
+  }
 
-    async getPlatform(user_id: Types.ObjectId): Promise<IGhost | null> {
-        try {
-            return await Ghost.findOne({ user_id }).exec();
-        } catch (error) {
-            await logtail.error(JSON.stringify(error), {
-                user_id,
-            });
+  async deletePlatform(user_id: Types.ObjectId): Promise<boolean> {
+    try {
+      await PlatformModel.findOneAndDelete({
+        user_id,
+        name: this.PLATFORM,
+      }).exec();
 
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while fetching the platform. Please try again later.",
-            });
-        }
+      await User.findByIdAndUpdate(user_id, {
+        $pull: {
+          platforms: this.PLATFORM,
+        },
+      }).exec();
+
+      await Ghost.findOneAndDelete({ user_id }).exec();
+
+      return true;
+    } catch (error) {
+      await logtail.error(JSON.stringify(error), {
+        user_id,
+      });
+
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message:
+          "An error occurred while disconnecting the platform. Please try again later.",
+      });
     }
+  }
 
-    async getPlatformByAPIUrl(api_url: string, user_id: Types.ObjectId): Promise<IGhost | null> {
-        try {
-            return await Ghost.findOne({ api_url }).exec();
-        } catch (error) {
-            await logtail.error(JSON.stringify(error), {
-                user_id,
-            });
+  async getPlatform(user_id: Types.ObjectId): Promise<IGhost | null> {
+    try {
+      return await Ghost.findOne({ user_id }).exec();
+    } catch (error) {
+      await logtail.error(JSON.stringify(error), {
+        user_id,
+      });
 
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while fetching the platform. Please try again later.",
-            });
-        }
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message:
+          "An error occurred while fetching the platform. Please try again later.",
+      });
     }
+  }
 
-    async getPost(post_id: string, user_id: Types.ObjectId) {
-        const ghost = await this.ghost(user_id);
+  async getPlatformByAPIUrl(
+    api_url: string,
+    user_id: Types.ObjectId,
+  ): Promise<IGhost | null> {
+    try {
+      return await Ghost.findOne({ api_url }).exec();
+    } catch (error) {
+      await logtail.error(JSON.stringify(error), {
+        user_id,
+      });
 
-        return await ghost.posts.read({ id: post_id }).fetch();
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message:
+          "An error occurred while fetching the platform. Please try again later.",
+      });
     }
+  }
 
-    /* This method is used exactly twice before creating or updating site in `GhostController()` class
+  async getPost(post_id: string, user_id: Types.ObjectId) {
+    const ghost = await this.ghost(user_id);
+
+    return await ghost.posts.read({ id: post_id }).fetch();
+  }
+
+  /* This method is used exactly twice before creating or updating site in `GhostController()` class
     to check if the site exists or not. That's why api key is being used directly. */
-    async getGhostSite(user_id: Types.ObjectId, api_url: string, admin_api_key?: string) {
-        try {
-            if (!admin_api_key) {
-                return {
-                    success: false,
-                };
-            }
-
-            const ghost = new TSGhostAdminAPI(api_url, admin_api_key, this.GHOST_API_VERSION);
-
-            return await ghost.site.fetch();
-        } catch (error) {
-            await logtail.error(JSON.stringify(error), {
-                user_id,
-            });
-
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message:
-                    "An error occurred while fetching the site. Make sure all the details are correct and try again.",
-            });
-        }
-    }
-
-    async publishPost(post: IGhostCreatePostInput, user_id: Types.ObjectId) {
-        const ghost = await this.ghost(user_id);
-
-        return await ghost.posts.add({ ...post }, { source: "html" });
-    }
-
-    async updatePost(
-        post: TGhostUpdatePostInput,
-        post_id: string,
-        user_id: Types.ObjectId,
-    ): Promise<IGhostUpdatePostOutput> {
-        const ghost = await this.ghost(user_id);
-
-        const response = await ghost.posts.edit(post_id, { ...post }, { source: "html" });
-
-        if (!response.success) {
-            return {
-                isError: true,
-            };
-        }
-
+  async getGhostSite(
+    user_id: Types.ObjectId,
+    api_url: string,
+    admin_api_key?: string,
+  ) {
+    try {
+      if (!admin_api_key) {
         return {
-            isError: false,
+          success: false,
         };
+      }
+
+      const ghost = new TSGhostAdminAPI(
+        api_url,
+        admin_api_key,
+        this.GHOST_API_VERSION,
+      );
+
+      return await ghost.site.fetch();
+    } catch (error) {
+      await logtail.error(JSON.stringify(error), {
+        user_id,
+      });
+
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message:
+          "An error occurred while fetching the site. Make sure all the details are correct and try again.",
+      });
+    }
+  }
+
+  async publishPost(post: IGhostCreatePostInput, user_id: Types.ObjectId) {
+    const ghost = await this.ghost(user_id);
+
+    return await ghost.posts.add({ ...post }, { source: "html" });
+  }
+
+  async updatePost(
+    post: TGhostUpdatePostInput,
+    post_id: string,
+    user_id: Types.ObjectId,
+  ): Promise<IGhostUpdatePostOutput> {
+    const ghost = await this.ghost(user_id);
+
+    const response = await ghost.posts.edit(
+      post_id,
+      { ...post },
+      { source: "html" },
+    );
+
+    if (!response.success) {
+      return {
+        isError: true,
+      };
     }
 
-    async getAllPosts(pagination: IPaginationOptions, user_id: Types.ObjectId) {
-        const ghost = await this.ghost(user_id);
+    return {
+      isError: false,
+    };
+  }
 
-        const response = await ghost.posts.browse(pagination).fetch();
+  async getAllPosts(pagination: IPaginationOptions, user_id: Types.ObjectId) {
+    const ghost = await this.ghost(user_id);
 
-        if (!response.success) {
-            await logtail.error(JSON.stringify(response), {
-                user_id,
-            });
+    const response = await ghost.posts.browse(pagination).fetch();
 
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while fetching the posts. Please try again later.",
-            });
-        }
+    if (!response.success) {
+      await logtail.error(JSON.stringify(response), {
+        user_id,
+      });
 
-        return response.data;
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message:
+          "An error occurred while fetching the posts. Please try again later.",
+      });
     }
+
+    return response.data;
+  }
 }

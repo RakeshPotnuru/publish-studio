@@ -1,34 +1,32 @@
 {
-    "private": true,
-    "name": "publish-studio",
-    "version": "0.0.0",
-    "description": "Publish Studio",
-    "license": "MIT",
-    "author": "Rakesh Potnuru",
-    "scripts": {
-        "build": "turbo build",
-        "clean": "turbo run clean && rm -rf node_modules",
-        "dev": "turbo dev",
-        "dev:frontend": "turbo dev --filter=@publish-studio/frontend",
-        "format": "prettier --write .",
-        "preinstall": "npx only-allow pnpm",
-        "lint": "turbo lint",
-        "prepare": "npx is-ci || npx husky install",
-        "test": "turbo test"
-    },
-    "devDependencies": {
-        "@bravo68web/eslint-config": "^1.2.3",
-        "@bravo68web/prettier-config": "^1.2.3",
-        "@bravo68web/tsconfig": "^1.2.3",
-        "cross-env": "^7.0.3",
-        "husky": "^8.0.3",
-        "is-ci": "3.0.1",
-        "lint-staged": "^13.2.3",
-        "prettier": "3.2.4",
-        "prettier-plugin-tailwindcss": "^0.5.11",
-        "rimraf": "^5.0.1",
-        "turbo": "1.11.3"
-    },
-    "packageManager": "pnpm@8.15.3",
-    "prettier": "@bravo68web/prettier-config"
+  "private": true,
+  "name": "publish-studio",
+  "version": "0.0.0",
+  "description": "Publish Studio",
+  "license": "MIT",
+  "author": "Rakesh Potnuru",
+  "scripts": {
+    "build": "turbo build",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "dev": "turbo dev",
+    "dev:frontend": "turbo dev --filter=@publish-studio/frontend",
+    "format": "prettier --write .",
+    "preinstall": "npx only-allow pnpm",
+    "lint": "turbo lint",
+    "lint:fix": "turbo lint -- --fix",
+    "prepare": "npx is-ci || npx husky install",
+    "test": "turbo test"
+  },
+  "devDependencies": {
+    "@bravo68web/eslint-config": "^1.2.3",
+    "@bravo68web/tsconfig": "^1.2.3",
+    "cross-env": "^7.0.3",
+    "husky": "^8.0.3",
+    "is-ci": "3.0.1",
+    "lint-staged": "^13.2.3",
+    "prettier": "3.2.4",
+    "rimraf": "^5.0.1",
+    "turbo": "1.11.3"
+  },
+  "packageManager": "pnpm@8.15.3"
 }

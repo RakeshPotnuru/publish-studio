@@ -1,8 +1,8 @@
 {
-    "compilerOptions": {
-        "module": "ESNext",
-        "outDir": "dist",
-        "target": "es2017",
-    },
-    "extends": "@bravo68web/tsconfig/base.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "outDir": "dist",
+    "target": "es2017",
+  },
+  "extends": "@bravo68web/tsconfig/base.json",
 }

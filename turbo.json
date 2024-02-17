@@ -1,22 +1,22 @@
 {
-    "$schema": "https://turbo.build/schema.json",
-    "pipeline": {
-        "build": {
-            "cache": true,
-            "outputs": ["**/dist", "**/.next"]
-        },
-        "clean": {
-            "cache": false
-        },
-        "dev": {
-            "cache": true,
-            "outputs": ["**/.next"]
-        },
-        "lint": {
-            "cache": true,
-            "inputs": ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"],
-            "outputs": ["**/.eslintcache"]
-        },
-        "test": {}
-    }
+  "$schema": "https://turbo.build/schema.json",
+  "pipeline": {
+    "build": {
+      "cache": true,
+      "outputs": ["**/dist", "**/.next"]
+    },
+    "clean": {
+      "cache": false
+    },
+    "dev": {
+      "cache": true,
+      "outputs": ["**/.next"]
+    },
+    "lint": {
+      "cache": true,
+      "inputs": ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"],
+      "outputs": ["**/.eslintcache"]
+    },
+    "test": {}
+  }
 }

@@ -9,210 +9,222 @@ import User from "../../user/user.model";
 import PlatformModel from "../platform.model";
 import Medium from "./medium.model";
 import type {
-    IMedium,
-    IMediumCreatePostInput,
-    IMediumUserOutput,
-    TMediumCreateInput,
-    TMediumCreatePostOutput,
-    TMediumToUpdateInput,
+  IMedium,
+  IMediumCreatePostInput,
+  IMediumUserOutput,
+  TMediumCreateInput,
+  TMediumCreatePostOutput,
+  TMediumToUpdateInput,
 } from "./medium.types";
 
 export default class MediumService {
-    private readonly PLATFORM = Platform.MEDIUM;
+  private readonly PLATFORM = Platform.MEDIUM;
 
-    private async medium(user_id: Types.ObjectId) {
-        const platform = await Medium.findOne({ user_id }).exec();
+  private async medium(user_id: Types.ObjectId) {
+    const platform = await Medium.findOne({ user_id }).exec();
 
-        if (!platform) {
-            throw new TRPCError({
-                code: "NOT_FOUND",
-                message: "Platform not found",
-            });
-        }
-
-        try {
-            return axios.create({
-                baseURL: defaultConfig.mediumApiUrl,
-                timeout: 10_000,
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${platform.api_key}`,
-                },
-            });
-        } catch (error) {
-            await logtail.error(JSON.stringify(error), {
-                user_id,
-            });
-
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: defaultConfig.defaultErrorMessage,
-            });
-        }
+    if (!platform) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Platform not found",
+      });
     }
 
-    async createPlatform(platform: TMediumCreateInput): Promise<boolean> {
-        try {
-            const newPlatform = await Medium.create(platform);
+    try {
+      return axios.create({
+        baseURL: defaultConfig.mediumApiUrl,
+        timeout: 10_000,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${platform.api_key}`,
+        },
+      });
+    } catch (error) {
+      await logtail.error(JSON.stringify(error), {
+        user_id,
+      });
 
-            await User.findByIdAndUpdate(platform.user_id, {
-                $push: {
-                    platforms: this.PLATFORM,
-                },
-            }).exec();
-
-            await PlatformModel.create({
-                user_id: platform.user_id,
-                name: this.PLATFORM,
-                data: newPlatform._id,
-            });
-
-            return true;
-        } catch (error) {
-            await logtail.error(JSON.stringify(error), {
-                user_id: platform.user_id,
-            });
-
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while connecting the platform. Please try again later.",
-            });
-        }
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: defaultConfig.defaultErrorMessage,
+      });
     }
+  }
 
-    async updatePlatform(
-        platform: TMediumToUpdateInput,
-        user_id: Types.ObjectId,
-    ): Promise<boolean> {
-        try {
-            const doc = await Medium.findOne({ user_id }).exec();
+  async createPlatform(platform: TMediumCreateInput): Promise<boolean> {
+    try {
+      const newPlatform = await Medium.create(platform);
 
-            if (!doc) {
-                throw new TRPCError({
-                    code: "NOT_FOUND",
-                    message: "Platform not found",
-                });
-            }
+      await User.findByIdAndUpdate(platform.user_id, {
+        $push: {
+          platforms: this.PLATFORM,
+        },
+      }).exec();
 
-            doc.set(platform);
-            await doc.save();
+      await PlatformModel.create({
+        user_id: platform.user_id,
+        name: this.PLATFORM,
+        data: newPlatform._id,
+      });
 
-            return true;
-        } catch (error) {
-            await logtail.error(JSON.stringify(error), {
-                user_id,
-            });
+      return true;
+    } catch (error) {
+      await logtail.error(JSON.stringify(error), {
+        user_id: platform.user_id,
+      });
 
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while updating the platform. Please try again later.",
-            });
-        }
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message:
+          "An error occurred while connecting the platform. Please try again later.",
+      });
     }
+  }
 
-    async deletePlatform(user_id: Types.ObjectId): Promise<boolean> {
-        try {
-            await PlatformModel.findOneAndDelete({
-                user_id,
-                name: this.PLATFORM,
-            }).exec();
+  async updatePlatform(
+    platform: TMediumToUpdateInput,
+    user_id: Types.ObjectId,
+  ): Promise<boolean> {
+    try {
+      const doc = await Medium.findOne({ user_id }).exec();
 
-            await User.findByIdAndUpdate(user_id, {
-                $pull: {
-                    platforms: this.PLATFORM,
-                },
-            }).exec();
+      if (!doc) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Platform not found",
+        });
+      }
 
-            await Medium.findOneAndDelete({ user_id }).exec();
+      doc.set(platform);
+      await doc.save();
 
-            return true;
-        } catch (error) {
-            await logtail.error(JSON.stringify(error), {
-                user_id,
-            });
+      return true;
+    } catch (error) {
+      await logtail.error(JSON.stringify(error), {
+        user_id,
+      });
 
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message:
-                    "An error occurred while disconnecting the platform. Please try again later.",
-            });
-        }
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message:
+          "An error occurred while updating the platform. Please try again later.",
+      });
     }
+  }
 
-    async getPlatform(user_id: Types.ObjectId): Promise<Omit<IMedium, "api_key"> | null> {
-        try {
-            return await Medium.findOne({ user_id }).select("-api_key").exec();
-        } catch (error) {
-            await logtail.error(JSON.stringify(error), {
-                user_id,
-            });
+  async deletePlatform(user_id: Types.ObjectId): Promise<boolean> {
+    try {
+      await PlatformModel.findOneAndDelete({
+        user_id,
+        name: this.PLATFORM,
+      }).exec();
 
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while fetching the platform. Please try again later.",
-            });
-        }
+      await User.findByIdAndUpdate(user_id, {
+        $pull: {
+          platforms: this.PLATFORM,
+        },
+      }).exec();
+
+      await Medium.findOneAndDelete({ user_id }).exec();
+
+      return true;
+    } catch (error) {
+      await logtail.error(JSON.stringify(error), {
+        user_id,
+      });
+
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message:
+          "An error occurred while disconnecting the platform. Please try again later.",
+      });
     }
+  }
 
-    async getPlatformByUsername(
-        username: string,
-        user_id: Types.ObjectId,
-    ): Promise<Omit<IMedium, "api_key"> | null> {
-        try {
-            return await Medium.findOne({ username }).select("-api_key").exec();
-        } catch (error) {
-            await logtail.error(JSON.stringify(error), {
-                user_id,
-            });
+  async getPlatform(
+    user_id: Types.ObjectId,
+  ): Promise<Omit<IMedium, "api_key"> | null> {
+    try {
+      return await Medium.findOne({ user_id }).select("-api_key").exec();
+    } catch (error) {
+      await logtail.error(JSON.stringify(error), {
+        user_id,
+      });
 
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: "An error occurred while fetching the platform. Please try again later.",
-            });
-        }
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message:
+          "An error occurred while fetching the platform. Please try again later.",
+      });
     }
+  }
 
-    /* This method is used exactly twice before creating or updating user in `MediumController()` method
+  async getPlatformByUsername(
+    username: string,
+    user_id: Types.ObjectId,
+  ): Promise<Omit<IMedium, "api_key"> | null> {
+    try {
+      return await Medium.findOne({ username }).select("-api_key").exec();
+    } catch (error) {
+      await logtail.error(JSON.stringify(error), {
+        user_id,
+      });
+
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message:
+          "An error occurred while fetching the platform. Please try again later.",
+      });
+    }
+  }
+
+  /* This method is used exactly twice before creating or updating user in `MediumController()` method
     to fetch user Medium details and update them in database. That's why api key is being used directly. */
-    async getMediumUser(api_key: string, user_id: Types.ObjectId): Promise<IMediumUserOutput> {
-        try {
-            const response = await axios.get(`${defaultConfig.mediumApiUrl}/me`, {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${api_key}`,
-                },
-            });
+  async getMediumUser(
+    api_key: string,
+    user_id: Types.ObjectId,
+  ): Promise<IMediumUserOutput> {
+    try {
+      const response = await axios.get(`${defaultConfig.mediumApiUrl}/me`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${api_key}`,
+        },
+      });
 
-            return response.data.data as IMediumUserOutput;
-        } catch (error) {
-            await logtail.error(JSON.stringify(error), {
-                user_id,
-            });
+      return response.data.data as IMediumUserOutput;
+    } catch (error) {
+      await logtail.error(JSON.stringify(error), {
+        user_id,
+      });
 
-            throw new TRPCError({
-                code: "UNAUTHORIZED",
-                message: "Invalid API key",
-            });
-        }
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Invalid API key",
+      });
     }
+  }
 
-    async publishPost(
-        post: IMediumCreatePostInput,
-        author_id: string,
-        user_id: Types.ObjectId,
-    ): Promise<TMediumCreatePostOutput> {
-        try {
-            const medium = await this.medium(user_id);
+  async publishPost(
+    post: IMediumCreatePostInput,
+    author_id: string,
+    user_id: Types.ObjectId,
+  ): Promise<TMediumCreatePostOutput> {
+    try {
+      const medium = await this.medium(user_id);
 
-            const response = await medium.post("/users/" + author_id + "/posts", post);
+      const response = await medium.post(
+        "/users/" + author_id + "/posts",
+        post,
+      );
 
-            return response.data as TMediumCreatePostOutput;
-        } catch (error) {
-            await logtail.error(JSON.stringify(error), {
-                user_id,
-            });
+      return response.data as TMediumCreatePostOutput;
+    } catch (error) {
+      await logtail.error(JSON.stringify(error), {
+        user_id,
+      });
 
-            return { isError: true };
-        }
+      return { isError: true };
     }
+  }
 }

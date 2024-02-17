@@ -7,54 +7,54 @@ import UserService from "./user.service";
 import type { IUserUpdate } from "./user.types";
 
 export default class UserController extends UserService {
-    async getMeHandler(ctx: Context) {
-        try {
-            const user = ctx.user;
+  async getMeHandler(ctx: Context) {
+    try {
+      const user = ctx.user;
 
-            return {
-                status: "success",
-                data: {
-                    user,
-                },
-            };
-        } catch (error) {
-            await logtail.error(JSON.stringify(error), {
-                user_id: ctx.user._id,
-            });
+      return {
+        status: "success",
+        data: {
+          user,
+        },
+      };
+    } catch (error) {
+      await logtail.error(JSON.stringify(error), {
+        user_id: ctx.user._id,
+      });
 
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: defaultConfig.defaultErrorMessage,
-            });
-        }
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: defaultConfig.defaultErrorMessage,
+      });
+    }
+  }
+
+  async getUserByIdHandler(ctx: Context) {
+    const user = await super.getUserById(ctx.user._id);
+
+    if (!user) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "User not found",
+      });
     }
 
-    async getUserByIdHandler(ctx: Context) {
-        const user = await super.getUserById(ctx.user._id);
+    return {
+      status: "success",
+      data: {
+        user: user,
+      },
+    };
+  }
 
-        if (!user) {
-            throw new TRPCError({
-                code: "NOT_FOUND",
-                message: "User not found",
-            });
-        }
+  async updateUserHandler(input: IUserUpdate, ctx: Context) {
+    const user = await super.updateUser(ctx.user._id, input);
 
-        return {
-            status: "success",
-            data: {
-                user: user,
-            },
-        };
-    }
-
-    async updateUserHandler(input: IUserUpdate, ctx: Context) {
-        const user = await super.updateUser(ctx.user._id, input);
-
-        return {
-            status: "success",
-            data: {
-                user: user,
-            },
-        };
-    }
+    return {
+      status: "success",
+      data: {
+        user: user,
+      },
+    };
+  }
 }

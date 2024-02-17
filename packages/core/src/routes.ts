@@ -16,21 +16,21 @@ import userRouter from "./modules/user/user.routes";
 import { router, t } from "./trpc";
 
 const appRouter = router({
-    auth: authRouter,
-    users: userRouter,
-    folders: folderRouter,
-    projects: projectRouter,
-    assets: assetRouter,
-    platforms: platformRouter,
-    stats: statsRouter,
-    payment: paymentRouter,
-    genAI: generativeAIRouter,
-    nlu: nluRouter,
-    pexels: pexelsRouter,
-    unsplash: unsplashRouter,
-    cloudinary: cloudinaryRouter,
-    notifications: notificationRouter,
-    post: postRouter,
+  auth: authRouter,
+  users: userRouter,
+  folders: folderRouter,
+  projects: projectRouter,
+  assets: assetRouter,
+  platforms: platformRouter,
+  stats: statsRouter,
+  payment: paymentRouter,
+  genAI: generativeAIRouter,
+  nlu: nluRouter,
+  pexels: pexelsRouter,
+  unsplash: unsplashRouter,
+  cloudinary: cloudinaryRouter,
+  notifications: notificationRouter,
+  post: postRouter,
 });
 
 export type AppRouter = typeof appRouter;
