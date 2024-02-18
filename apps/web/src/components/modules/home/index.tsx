@@ -36,7 +36,7 @@ export function Home() {
 
   return (
     <div className="flex h-[80vh] flex-col items-center justify-center space-y-10 text-center">
-      <h1 className="bg-gradient-to-r from-primary via-purple-500 to-blue-500 bg-clip-text py-4 text-9xl sm:text-4xl font-black text-transparent">
+      <h1 className="bg-gradient-to-r from-primary via-purple-500 to-blue-500 bg-clip-text py-4 text-9xl font-black text-transparent sm:text-4xl">
         Coming soon
       </h1>
       <Form {...form}>
