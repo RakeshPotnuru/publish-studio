@@ -1,9 +1,12 @@
 import { Inter } from "next/font/google";
 
+import { cn } from "@itsrakesh/utils";
 import type { Metadata, Viewport } from "next";
 
 import "@/styles/globals.css";
+import { Toaster } from "@/components/ui/toaster";
 import { siteConfig } from "@/config/site";
+import { Providers } from "@/lib/providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -123,7 +126,12 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#EB5757" />
         <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
       </head>
-      <body className={inter.className}>{children}</body>
+      <body className={cn(inter.className, "min-h-dvh")}>
+        <Providers>
+          {children}
+          <Toaster />
+        </Providers>
+      </body>
     </html>
   );
 }
