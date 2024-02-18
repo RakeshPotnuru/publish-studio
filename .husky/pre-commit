@@ -2,6 +2,6 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 # pnpm format
-pnpm lint:fix
+pnpm lint
 # pnpm build
 # npx lint-staged
