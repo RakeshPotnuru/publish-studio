@@ -6,10 +6,28 @@ export const siteConfig = {
   theme: {
     color: "#EB5757",
   },
-  links: {},
+  links: {
+    mainApp: "https://app.publishstudio.one",
+  },
   twitter: {
     site: "@publishstudio",
     creator: "@rakesh_at_tweet",
   },
-  pages: {},
+  pages: {
+    home: {
+      title: "Home",
+      description: "Home",
+      link: "/",
+    },
+    privacyPolicy: {
+      title: "Privacy Policy",
+      description: "Privacy Policy",
+      link: "/privacy-policy",
+    },
+    termsOfService: {
+      title: "Terms of Service",
+      description: "Terms of Service",
+      link: "/terms-of-service",
+    },
+  },
 };

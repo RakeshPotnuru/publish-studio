@@ -4,6 +4,8 @@ import { cn } from "@itsrakesh/utils";
 import type { Metadata, Viewport } from "next";
 
 import "@/styles/globals.css";
+import { Footer } from "@/components/common/layout/footer";
+import { Navbar } from "@/components/common/layout/navbar";
 import { Toaster } from "@/components/ui/toaster";
 import { siteConfig } from "@/config/site";
 import { Providers } from "@/lib/providers";
@@ -128,7 +130,9 @@ export default function RootLayout({
       </head>
       <body className={cn(inter.className, "min-h-dvh")}>
         <Providers>
-          {children}
+          <Navbar />
+          <main className="p-8">{children}</main>
+          <Footer />
           <Toaster />
         </Providers>
       </body>
