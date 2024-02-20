@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { Sidebar } from "@/components/common/layouts/sidebar";
+import { Sidebar } from "@/components/common/layout/sidebar";
 import { Shell } from "@/components/ui/shell";
 import { siteConfig } from "@/config/site";
 

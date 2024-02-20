@@ -2,7 +2,7 @@ import Script from "next/script";
 
 import type { Metadata } from "next";
 
-import { Footer } from "@/components/common/layouts/footer";
+import { Footer } from "@/components/common/layout/footer";
 import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {

@@ -14,7 +14,7 @@ export function Footer({ className, ...props }: Readonly<FooterProps>) {
     <footer
       className={cn(
         "dark:bg-background-dark flex flex-row items-center space-x-4",
-        className,
+        className
       )}
       {...props}
     >

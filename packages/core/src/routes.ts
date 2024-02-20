@@ -1,3 +1,4 @@
+import inviteRouter from "./modules/admin/invite/invite.routes";
 import assetRouter from "./modules/asset/asset.routes";
 import authRouter from "./modules/auth/auth.routes";
 import folderRouter from "./modules/folder/folder.routes";
@@ -15,7 +16,12 @@ import statsRouter from "./modules/stats/stats.routes";
 import userRouter from "./modules/user/user.routes";
 import { router, t } from "./trpc";
 
+const adminRouter = router({
+  invite: inviteRouter,
+});
+
 const appRouter = router({
+  admin: adminRouter,
   auth: authRouter,
   users: userRouter,
   folders: folderRouter,

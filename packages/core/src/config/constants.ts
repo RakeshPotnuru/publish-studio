@@ -143,6 +143,7 @@ export enum EmailTemplate {
   VERIFY_EMAIL = "ps_verify_email",
   RESET_PASSWORD = "ps_reset_password",
   WELCOME_EMAIL = "ps_welcome_email",
+  INVITE = "ps_invite",
 }
 
 export enum MimeType {

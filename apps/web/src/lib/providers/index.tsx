@@ -1,4 +1,5 @@
 import { ThemeProvider } from "./theme";
+import { TRPCProvider } from "./trpc";
 
 export function Providers({
   children,
@@ -10,7 +11,7 @@ export function Providers({
       enableSystem
       disableTransitionOnChange
     >
-      {children}
+      <TRPCProvider>{children}</TRPCProvider>
     </ThemeProvider>
   );
 }

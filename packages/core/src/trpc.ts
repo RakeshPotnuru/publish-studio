@@ -1,10 +1,12 @@
 import type { inferAsyncReturnType } from "@trpc/server";
 import { initTRPC, TRPCError } from "@trpc/server";
 import type { CreateExpressContextOptions } from "@trpc/server/adapters/express";
+import configcat from "configcat-node";
 import superjson from "superjson";
 
 import { UserType } from "./config/constants";
 import { deserializeUser } from "./middlewares/deserialize-user";
+import { configCatClient } from "./utils/configcat";
 
 export const createContext = async ({
   req,
@@ -39,8 +41,27 @@ const isPro = t.middleware(({ next, ctx }) => {
   return next();
 });
 
+const isAdmin = t.middleware(async ({ next, ctx }) => {
+  const isAdmin = await configCatClient.getValueAsync(
+    "isAdmin",
+    false,
+    new configcat.User(ctx.user.email, ctx.user.email)
+  );
+
+  if (!isAdmin) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "You must be an admin user to access this resource",
+    });
+  }
+  return next();
+});
+
 export const router = t.router;
 export const protectedProcedure = t.procedure.use(isAuthenticated);
 export const proProtectedProcedure = t.procedure
   .use(isAuthenticated)
   .use(isPro);
+export const adminProtectedProcedure = t.procedure
+  .use(isAuthenticated)
+  .use(isAdmin);

@@ -15,11 +15,24 @@ import {
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { ButtonLoader } from "@/components/ui/loaders/button-loader";
+import { trpc } from "@/utils/trpc";
+
 const formSchema = z.object({
   email: z.string().email(),
 });
 
 export function Home() {
+  const { mutateAsync: addToWaitList, isLoading } =
+    trpc.admin.invite.addToWaitList.useMutation({
+      onSuccess: ({ data }) => {
+        toast.success(data.message);
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
+    });
+
   const form = useForm<z.infer<typeof formSchema>>({
     mode: "onBlur",
     resolver: zodResolver(formSchema),
@@ -28,10 +41,14 @@ export function Home() {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log(data);
-    toast.success("Thanks for joining the wait list!");
-    form.reset();
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    try {
+      await addToWaitList(data);
+
+      form.reset();
+    } catch {
+      // Ignore
+    }
   };
 
   return (
@@ -48,7 +65,7 @@ export function Home() {
             <FormField
               control={form.control}
               name="email"
-              // disabled={isLoading}
+              disabled={isLoading}
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -63,7 +80,9 @@ export function Home() {
                 </FormItem>
               )}
             />
-            <Button type="submit">Join</Button>
+            <Button type="submit">
+              <ButtonLoader isLoading={isLoading}>Join</ButtonLoader>
+            </Button>
           </div>
         </form>
       </Form>

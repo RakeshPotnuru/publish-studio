@@ -63,7 +63,7 @@ export default function TermsOfServicePage() {
       </Section>
       <Section>
         <Heading level={2}>TABLE OF CONTENTS</Heading>
-        <ol className="list-inside list-decimal space-y-4">
+        <ol className="list-inside list-decimal">
           <li>
             <LinkButton href="#services">OUR SERVICES</LinkButton>
           </li>
