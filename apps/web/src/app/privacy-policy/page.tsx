@@ -1,8 +1,15 @@
+import type { Metadata } from "next";
+
 import { Heading } from "@/components/ui/heading";
 import { LinkButton } from "@/components/ui/link-button";
 import { siteConfig } from "@/config/site";
 
-const Section = ({
+export const metadata: Metadata = {
+  title: siteConfig.pages.privacyPolicy.title,
+  description: siteConfig.pages.privacyPolicy.description,
+};
+
+export const Section = ({
   children,
   ...props
 }: Readonly<React.HTMLAttributes<HTMLElement>>) => {
@@ -13,7 +20,9 @@ const Section = ({
   );
 };
 
-const List = ({ children }: Readonly<React.HTMLAttributes<HTMLElement>>) => {
+export const List = ({
+  children,
+}: Readonly<React.HTMLAttributes<HTMLElement>>) => {
   return <ul className="list-inside list-disc">{children}</ul>;
 };
 
@@ -27,9 +36,9 @@ export default function PrivacyPolicyPage() {
       <Section>
         <p>
           This privacy notice for Publish Studio (
-          <strong>&quot;we,&quot; &quot;us,&quot;</strong> or{" "}
-          <strong>&quot;our&quot;</strong>
-          ), describes how and why we might collect, store, use, and/or share (
+          <strong>&quot;we,&quot; &quot;us,&quot;</strong> or
+          <strong>&quot;our&quot;</strong>), describes how and why we might
+          collect, store, use, and/or share (
           <strong>&quot;process&quot;</strong>) your information when you use
           our services (<strong>&quot;Services&quot;</strong>), such as when
           you:

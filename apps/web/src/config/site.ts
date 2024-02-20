@@ -29,5 +29,10 @@ export const siteConfig = {
       description: "Terms of Service",
       link: "/terms-of-service",
     },
+    cookies: {
+      title: "Cookies",
+      description: "Cookies",
+      link: "/cookies",
+    },
   },
 };
