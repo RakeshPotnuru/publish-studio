@@ -65,7 +65,7 @@ export function AssetsTable<TData, TValue>({
       pageIndex,
       pageSize,
     }),
-    [pageIndex, pageSize],
+    [pageIndex, pageSize]
   );
 
   const table = useReactTable({
@@ -73,7 +73,10 @@ export function AssetsTable<TData, TValue>({
     columns,
     state: {
       sorting,
-      columnVisibility,
+      columnVisibility: {
+        ...columnVisibility,
+        _id: false,
+      },
       rowSelection,
       columnFilters,
       pagination,
@@ -106,14 +109,11 @@ export function AssetsTable<TData, TValue>({
           data-state={row.getIsSelected() && "selected"}
           className="dark:hover:bg-zinc-800"
         >
-          {row
-            .getVisibleCells()
-            .filter((cell) => cell.column.id !== "_id")
-            .map((cell) => (
-              <TableCell key={cell.id}>
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </TableCell>
-            ))}
+          {row.getVisibleCells().map((cell) => (
+            <TableCell key={cell.id}>
+              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+            </TableCell>
+          ))}
         </TableRow>
       ))
     ) : (
@@ -136,20 +136,18 @@ export function AssetsTable<TData, TValue>({
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers
-                  .filter((header) => header.column.id !== "_id")
-                  .map((header) => {
-                    return (
-                      <TableHead key={header.id}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
-                      </TableHead>
-                    );
-                  })}
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
+                  );
+                })}
               </TableRow>
             ))}
           </TableHeader>
@@ -164,7 +162,7 @@ export function AssetsTable<TData, TValue>({
                         .filter(
                           (column) =>
                             column.accessorFn !== undefined &&
-                            column.getCanHide(),
+                            column.getCanHide()
                         ).length
                     }
                   />

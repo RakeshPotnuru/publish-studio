@@ -24,12 +24,12 @@ const ZodEnvironmentVariables = z.object({
   VERIFICATION_TOKEN_PUBLIC_KEY: z.string(),
   RESET_PASSWORD_TOKEN_PRIVATE_KEY: z.string(),
   RESET_PASSWORD_TOKEN_PUBLIC_KEY: z.string(),
-  AWS_BUCKET_NAME: z.string(),
-  AWS_ACCESS_KEY: z.string(),
-  AWS_SECRET_ACCESS_KEY: z.string(),
-  AWS_REGION: z.string(),
-  AWS_SES_AUTO_FROM_EMAIL: z.string(),
-  AWS_SES_PERSONAL_FROM_EMAIL: z.string(),
+  R2_BUCKET_NAME: z.string(),
+  R2_ACCESS_KEY_ID: z.string(),
+  R2_SECRET_ACCESS_KEY: z.string(),
+  R2_REGION: z.string(),
+  FROM_EMAIL_AUTO: z.string(),
+  FROM_EMAIL_PERSONAL: z.string(),
   WHITELIST_ORIGINS: z.string(),
   CLIENT_URL: z.string().url(),
   GOOGLE_OAUTH_CLIENT_ID: z.string(),
@@ -47,6 +47,7 @@ const ZodEnvironmentVariables = z.object({
   DB_ENCRYPTION_SECRET: z.string(),
   LOGTAIL_SOURCE_TOKEN: z.string(),
   CONFIGCAT_SDK_KEY: z.string(),
+  SENDGRID_API_KEY: z.string(),
 });
 
 ZodEnvironmentVariables.parse(process.env);

@@ -8,8 +8,7 @@ import {
 } from "react-icons/bi";
 import { BsArrowDownShort, BsArrowUpShort } from "react-icons/bs";
 import { HiDocumentDuplicate } from "react-icons/hi";
-import { IoMdLogOut } from "react-icons/io";
-import { IoMdRefresh } from "react-icons/io";
+import { IoMdLogOut, IoMdRefresh } from "react-icons/io";
 import {
   MdDriveFileMoveRtl,
   MdManageAccounts,

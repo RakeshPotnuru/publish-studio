@@ -1,50 +1,35 @@
-import type { SendEmailCommandInput } from "@aws-sdk/client-sesv2";
-import { SendEmailCommand, SESv2Client } from "@aws-sdk/client-sesv2";
+import type { MailDataRequired } from "@sendgrid/mail";
+import sgMail from "@sendgrid/mail";
 import { TRPCError } from "@trpc/server";
 import type { Job } from "bullmq";
 import { Queue, Worker } from "bullmq";
 import type { Types } from "mongoose";
 
-import defaultConfig, {
-  bullMQConnectionOptions,
-} from "../../config/app.config";
-import type { EmailTemplate } from "../../config/constants";
-import { constants } from "../../config/constants";
-import type { ISES } from "../../types/aws.types";
-import { logtail } from "../logtail";
+import defaultConfig, { bullMQConnectionOptions } from "../config/app.config";
+import type { EmailTemplate } from "../config/constants";
+import { constants } from "../config/constants";
+import { logtail } from "./logtail";
 
-const ses = new SESv2Client({
-  region: process.env.AWS_REGION,
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  },
-} as ISES);
-
-export default ses;
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 export const sendEmail = async (
   emails: string[],
   template: EmailTemplate,
-  variables: Record<string, string>,
-  from_address: string,
+  from_address: MailDataRequired["from"],
+  variables?: MailDataRequired["dynamicTemplateData"]
 ) => {
   try {
-    const input: SendEmailCommandInput = {
-      Content: {
-        Template: {
-          TemplateName: template,
-          TemplateData: JSON.stringify(variables),
-        },
-      },
-      Destination: {
-        ToAddresses: emails,
-      },
-      FromEmailAddress: from_address,
+    const input: MailDataRequired = {
+      from: from_address,
+      isMultiple: true,
+      templateId: template,
+      personalizations: emails.map((email) => ({
+        to: [{ email }],
+        dynamicTemplateData: { ...variables, email },
+      })),
     };
 
-    const command = new SendEmailCommand(input);
-    await ses.send(command);
+    await sgMail.send(input);
   } catch (error) {
     await logtail.error(JSON.stringify(error));
 
@@ -85,8 +70,8 @@ export const scheduleEmail = async (data: IEmail) => {
         await sendEmail(
           job.data.emails as string[],
           job.data.template as EmailTemplate,
-          job.data.variables as Record<string, string>,
           job.data.from_address as string,
+          job.data.variables as Record<string, string>
         );
 
         return job.data as IEmail;
@@ -95,7 +80,7 @@ export const scheduleEmail = async (data: IEmail) => {
         connection: bullMQConnectionOptions,
         removeOnComplete: { count: 0 },
         removeOnFail: { count: 0 },
-      },
+      }
     );
 
     emailWorker.on("failed", (job) => {

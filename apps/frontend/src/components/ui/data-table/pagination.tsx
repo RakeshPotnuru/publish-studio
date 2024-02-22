@@ -9,7 +9,7 @@ import {
 } from "@itsrakesh/ui";
 import type { Table } from "@tanstack/react-table";
 
-import { Icons } from "../../../assets/icons";
+import { Icons } from "@/assets/icons";
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;

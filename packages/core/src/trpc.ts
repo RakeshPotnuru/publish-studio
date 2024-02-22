@@ -1,12 +1,11 @@
 import type { inferAsyncReturnType } from "@trpc/server";
 import { initTRPC, TRPCError } from "@trpc/server";
 import type { CreateExpressContextOptions } from "@trpc/server/adapters/express";
-import configcat from "configcat-node";
 import superjson from "superjson";
 
 import { UserType } from "./config/constants";
 import { deserializeUser } from "./middlewares/deserialize-user";
-import { configCatClient } from "./utils/configcat";
+import AuthService from "./modules/auth/auth.service";
 
 export const createContext = async ({
   req,
@@ -42,11 +41,7 @@ const isPro = t.middleware(({ next, ctx }) => {
 });
 
 const isAdmin = t.middleware(async ({ next, ctx }) => {
-  const isAdmin = await configCatClient.getValueAsync(
-    "isAdmin",
-    false,
-    new configcat.User(ctx.user.email, ctx.user.email)
-  );
+  const isAdmin = await new AuthService().isAdmin(ctx.user.email);
 
   if (!isAdmin) {
     throw new TRPCError({

@@ -1,3 +1,4 @@
+export type { IInvite } from "../modules/admin/invite/invite.types";
 export type { IAsset } from "../modules/asset/asset.types";
 export type { IFolder } from "../modules/folder/folder.types";
 export type { ICloudinary } from "../modules/integration/cloudinary/cloudinary.types";

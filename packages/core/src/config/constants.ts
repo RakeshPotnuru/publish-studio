@@ -140,10 +140,10 @@ export enum AuthMode {
 }
 
 export enum EmailTemplate {
-  VERIFY_EMAIL = "ps_verify_email",
-  RESET_PASSWORD = "ps_reset_password",
-  WELCOME_EMAIL = "ps_welcome_email",
-  INVITE = "ps_invite",
+  VERIFY_EMAIL = "d-8272913d7ea145109ebe45015dcecc41",
+  RESET_PASSWORD = "d-e90b0f1810764e9295e964acb83c283d",
+  WELCOME_EMAIL = "d-b5a3601a35df449ca51440b7c02bbdf2",
+  INVITE = "d-a40273604e3449b7ac63530cf5a8c6f9",
 }
 
 export enum MimeType {

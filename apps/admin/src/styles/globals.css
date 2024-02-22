@@ -1,0 +1,235 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 47.4% 11.2%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 47.4% 11.2%;
+
+    --primary: 0, 79%, 63%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 12, 91%, 46%;
+    --destructive-foreground: 210 40% 98%;
+
+    --success: 120, 60%, 50%;
+    --success-foreground: 210 40% 98%;
+
+    --warning: 33, 100%, 56%;
+    --warning-foreground: 210 40% 98%;
+
+    --info: 216, 100%, 40%;
+    --info-foreground: 210 40% 98%;
+
+    --ring: 215 20.2% 65.1%;
+
+    --radius: 0.5rem;
+
+    --code: 219, 25%, 21%;
+    --code-foreground: 213 31% 91%;
+  }
+
+  .dark {
+    --background: 230, 7.5%, 15.7%;
+    --foreground: 213 31% 91%;
+
+    --muted: 217, 7%, 22%;
+    --muted-foreground: 234, 4%, 44%;
+
+    --accent: 217, 7%, 22%;
+    --accent-foreground: 210 40% 98%;
+
+    --popover: 220, 8%, 7%;
+    --popover-foreground: 213, 8%, 73%;
+
+    --border: 220, 7%, 26%;
+    --input: 220, 7%, 26%;
+
+    --card: 220, 8%, 7%;
+    --card-foreground: 213, 8%, 73%;
+
+    --primary: 0, 79%, 63%;
+    --primary-foreground: 222.2 47.4% 1.2%;
+
+    --secondary: 217, 7%, 22%;
+    --secondary-foreground: 210 40% 98%;
+
+    --destructive: 12, 91%, 46%;
+    --destructive-foreground: 210 40% 98%;
+
+    --success: 120, 60%, 50%;
+    --success-foreground: 210 40% 98%;
+
+    --warning: 33, 100%, 56%;
+    --warning-foreground: 210 40% 98%;
+
+    --info: 216, 100%, 40%;
+    --info-foreground: 210 40% 98%;
+
+    --ring: 216 34% 17%;
+
+    --radius: 0.5rem;
+
+    --code: 219, 25%, 21%;
+    --code-foreground: 213 31% 91%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
+  }
+}
+
+@keyframes shake {
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+
+@keyframes slide-left {
+  0% {
+    transform: translateX(25%);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-right {
+  0% {
+    transform: translateX(-25%);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-down {
+  0% {
+    transform: translateY(-25%);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes ring {
+  0% {
+    transform: rotate(0);
+  }
+  1% {
+    transform: rotate(30deg);
+  }
+  3% {
+    transform: rotate(-28deg);
+  }
+  5% {
+    transform: rotate(34deg);
+  }
+  7% {
+    transform: rotate(-32deg);
+  }
+  9% {
+    transform: rotate(30deg);
+  }
+  11% {
+    transform: rotate(-28deg);
+  }
+  13% {
+    transform: rotate(26deg);
+  }
+  15% {
+    transform: rotate(-24deg);
+  }
+  17% {
+    transform: rotate(22deg);
+  }
+  19% {
+    transform: rotate(-20deg);
+  }
+  21% {
+    transform: rotate(18deg);
+  }
+  23% {
+    transform: rotate(-16deg);
+  }
+  25% {
+    transform: rotate(14deg);
+  }
+  27% {
+    transform: rotate(-12deg);
+  }
+  29% {
+    transform: rotate(10deg);
+  }
+  31% {
+    transform: rotate(-8deg);
+  }
+  33% {
+    transform: rotate(6deg);
+  }
+  35% {
+    transform: rotate(-4deg);
+  }
+  37% {
+    transform: rotate(2deg);
+  }
+  39% {
+    transform: rotate(-1deg);
+  }
+  41% {
+    transform: rotate(1deg);
+  }
+  43% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(0);
+  }
+}

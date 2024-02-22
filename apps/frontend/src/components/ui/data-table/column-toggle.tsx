@@ -9,7 +9,7 @@ import {
 } from "@itsrakesh/ui";
 import type { Table } from "@tanstack/react-table";
 
-import { Icons } from "../../../assets/icons";
+import { Icons } from "@/assets/icons";
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>;
@@ -36,7 +36,7 @@ export function DataTableViewOptions<TData>({
         {table
           .getAllColumns()
           .filter(
-            (column) => column.accessorFn !== undefined && column.getCanHide(),
+            (column) => column.accessorFn !== undefined && column.getCanHide()
           )
           .map((column) => {
             return (

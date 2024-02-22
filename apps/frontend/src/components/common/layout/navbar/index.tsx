@@ -20,15 +20,15 @@ import { cn } from "@itsrakesh/utils";
 import { UserType } from "@publish-studio/core/src/config/constants";
 import { deleteCookie } from "cookies-next";
 
+import { Icons } from "@/assets/icons";
+import { Images } from "@/assets/images";
+import { ProBorder } from "@/components/ui/pro-border";
+import { ProButton } from "@/components/ui/pro-button";
+import { Tooltip } from "@/components/ui/tooltip";
 import { siteConfig } from "@/config/site";
 import useUserStore from "@/lib/store/user";
 import { trpc } from "@/utils/trpc";
 
-import { Icons } from "../../../../assets/icons";
-import { Images } from "../../../../assets/images";
-import { ProBorder } from "../../../ui/pro-border";
-import { ProButton } from "../../../ui/pro-button";
-import { Tooltip } from "../../../ui/tooltip";
 import { Notifications } from "./notifications";
 
 const NavItem = ({
@@ -97,7 +97,7 @@ export function Navbar({ className, ...props }: Readonly<NavbarProps>) {
     <nav
       className={cn(
         "mx-12 mt-4 flex items-center justify-between rounded-2xl bg-background px-8 py-4 shadow-lg",
-        className,
+        className
       )}
       {...props}
     >

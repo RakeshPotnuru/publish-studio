@@ -66,7 +66,7 @@ export const columns: ColumnDef<IProject>[] = [
       <DataTableColumnHeader column={column} title="Name" />
     ),
     cell: ({ row }) => (
-      <span title={row.getValue("name")}>
+      <span title={row.original.name}>
         {shortenText(row.original.name, 50)}
       </span>
     ),
@@ -76,7 +76,7 @@ export const columns: ColumnDef<IProject>[] = [
     header: "Status",
     cell: ({ row }) => {
       const status = statuses.find(
-        (status) => status.value === row.original.status,
+        (status) => status.value === row.original.status
       );
 
       if (!status) {

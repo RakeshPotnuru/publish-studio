@@ -26,6 +26,7 @@ interface ICustomConfig {
   resetPasswordTokenPublicKey: string;
   turnstileVerifyEndpoint: string;
   stripeWebhookPath: string;
+  r2Endpoint: string;
 }
 
 const defaultConfig: ICustomConfig = {
@@ -54,6 +55,8 @@ const defaultConfig: ICustomConfig = {
   turnstileVerifyEndpoint:
     "https://challenges.cloudflare.com/turnstile/v0/siteverify",
   stripeWebhookPath: "/api/payment.stripeWebhook",
+  r2Endpoint:
+    "https://7f5708cb8ffd7ebc4099df644b1f66c7.r2.cloudflarestorage.com",
 };
 
 export const bullMQConnectionOptions: ConnectionOptions = new Redis(
@@ -63,7 +66,7 @@ export const bullMQConnectionOptions: ConnectionOptions = new Redis(
     retryStrategy: function (times: number) {
       return Math.max(Math.min(Math.exp(times), 20_000), 1000);
     },
-  },
+  }
 );
 
 export default defaultConfig;

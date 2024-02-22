@@ -1,3 +1,4 @@
+import type { Types } from "mongoose";
 import { z } from "zod";
 
 import { adminProtectedProcedure, router, t } from "../../../trpc";
@@ -15,11 +16,7 @@ const inviteRouter = router({
     ),
 
   invite: adminProtectedProcedure
-    .input(
-      z.object({
-        emails: z.array(z.string().email()),
-      })
-    )
+    .input(z.array(z.custom<Types.ObjectId>()))
     .mutation(({ input }) => new InviteController().inviteHandler(input)),
 
   getAll: adminProtectedProcedure

@@ -24,7 +24,7 @@ const formSchema = z.object({
 
 export function Home() {
   const { mutateAsync: addToWaitList, isLoading } =
-    trpc.admin.invite.addToWaitList.useMutation({
+    trpc.admin.invites.addToWaitList.useMutation({
       onSuccess: ({ data }) => {
         toast.success(data.message);
       },

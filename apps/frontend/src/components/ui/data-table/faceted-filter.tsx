@@ -18,7 +18,7 @@ import {
 import { cn } from "@itsrakesh/utils";
 import type { Column } from "@tanstack/react-table";
 
-import { Icons } from "../../../assets/icons";
+import { Icons } from "@/assets/icons";
 
 interface DataTableFacetedFilterProps<TData, TValue> {
   column?: Column<TData, TValue>;
@@ -98,7 +98,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                       }
                       const filterValues = [...selectedValues];
                       column?.setFilterValue(
-                        filterValues.length > 0 ? filterValues : undefined,
+                        filterValues.length > 0 ? filterValues : undefined
                       );
                     }}
                   >
@@ -107,7 +107,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                         "mr-2 flex size-4 items-center justify-center rounded-sm border border-primary",
                         isSelected
                           ? "bg-primary text-primary-foreground"
-                          : "opacity-50 [&_svg]:invisible",
+                          : "opacity-50 [&_svg]:invisible"
                       )}
                     >
                       <Icons.Check className={cn("size-4")} />

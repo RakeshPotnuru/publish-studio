@@ -30,16 +30,16 @@ export default class AssetController extends AssetService {
 
   async uploadImageHandler(
     input: { file: IFile; project_id?: Types.ObjectId },
-    ctx: Context,
+    ctx: Context
   ) {
     const { file, project_id } = input;
 
     this.validateFile(file);
 
-    const { asset, fields, url } = await super.uploadImage(
+    const { asset, url } = await super.uploadImage(
       file,
       project_id,
-      ctx.user._id,
+      ctx.user._id
     );
 
     return {
@@ -47,7 +47,6 @@ export default class AssetController extends AssetService {
       data: {
         submitTo: {
           url,
-          fields,
         },
         asset,
       },
@@ -58,11 +57,11 @@ export default class AssetController extends AssetService {
     input: {
       pagination: IPaginationOptions;
     },
-    ctx: Context,
+    ctx: Context
   ) {
     const { assets, pagination } = await super.getAllAssetsByUserId(
       input.pagination,
-      ctx.user._id,
+      ctx.user._id
     );
 
     return {

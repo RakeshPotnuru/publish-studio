@@ -6,11 +6,12 @@ import defaultConfig from "../../config/app.config";
 import { EmailTemplate } from "../../config/constants";
 import { createCaller } from "../../routes";
 import type { Context } from "../../trpc";
-import { scheduleEmail, sendEmail } from "../../utils/aws/ses";
 import { configCatClient } from "../../utils/configcat";
 import { signJwt } from "../../utils/jwt";
 import { logtail } from "../../utils/logtail";
 import redisClient from "../../utils/redis";
+import { scheduleEmail, sendEmail } from "../../utils/sendgrid";
+import InviteController from "../admin/invite/invite.controller";
 import UserService from "../user/user.service";
 import type { IUser } from "../user/user.types";
 
@@ -18,7 +19,7 @@ export default class AuthService extends UserService {
   async isDisposableEmail(email: string): Promise<boolean> {
     try {
       const response = await axios.get(
-        `${defaultConfig.kickboxApiUrl}/${email}`,
+        `${defaultConfig.kickboxApiUrl}/${email}`
       );
       return response.data.disposable as boolean;
     } catch (error) {
@@ -29,10 +30,16 @@ export default class AuthService extends UserService {
   }
 
   async isEmailWhitelisted(email: string): Promise<boolean> {
+    const invite = await new InviteController().getInviteByEmail(email);
+
+    return invite?.is_invited ?? false;
+  }
+
+  async isAdmin(email: string): Promise<boolean> {
     return await configCatClient.getValueAsync(
-      "isEmailWhitelisted",
+      "isAdmin",
       false,
-      new configcat.User(email, email),
+      new configcat.User(email, email)
     );
   }
 
@@ -42,9 +49,9 @@ export default class AuthService extends UserService {
       template: EmailTemplate.WELCOME_EMAIL,
       variables: {
         first_name: user.first_name,
-        last_name: user.last_name,
+        email: user.email,
       },
-      from_address: process.env.AWS_SES_PERSONAL_FROM_EMAIL,
+      from_address: process.env.FROM_EMAIL_PERSONAL,
       scheduled_at: new Date(Date.now() + 5 * 60 * 1000), // 5 minutes from now
       user_id: user._id,
     });
@@ -61,10 +68,10 @@ export default class AuthService extends UserService {
     await sendEmail(
       [email],
       EmailTemplate.VERIFY_EMAIL,
+      process.env.FROM_EMAIL_AUTO,
       {
         verification_url: verificationUrl,
-      },
-      process.env.AWS_SES_AUTO_FROM_EMAIL,
+      }
     );
 
     return {
@@ -82,10 +89,10 @@ export default class AuthService extends UserService {
       await sendEmail(
         [email],
         EmailTemplate.RESET_PASSWORD,
+        process.env.FROM_EMAIL_AUTO,
         {
           reset_password_url: resetPasswordUrl,
-        },
-        process.env.AWS_SES_AUTO_FROM_EMAIL,
+        }
       );
 
       return {
@@ -121,7 +128,7 @@ export default class AuthService extends UserService {
         "refreshTokenPrivateKey",
         {
           expiresIn: `${defaultConfig.refreshTokenExpiresIn}m`,
-        },
+        }
       );
 
       return { access_token, refresh_token };

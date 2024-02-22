@@ -14,7 +14,7 @@ import {
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import type { IAsset } from "@publish-studio/core";
-import { constants, MimeType } from "@publish-studio/core/src/config/constants";
+import { constants,MimeType } from "@publish-studio/core/src/config/constants";
 import axios from "axios";
 import mongoose from "mongoose";
 
@@ -147,13 +147,11 @@ export function NewAssetDialog({
     if (!data) return;
 
     try {
-      const formData = new FormData();
-      for (const [field, value] of Object.entries(data.submitTo.fields)) {
-        formData.append(field, value);
-      }
-      formData.append("file", file);
-
-      await axios.post(data.submitTo.url, formData);
+      await axios.put(data.submitTo.url, file, {
+        headers: {
+          "Content-Type": file.type,
+        },
+      });
 
       toast.success("Image has been uploaded successfully");
 
@@ -199,7 +197,7 @@ export function NewAssetDialog({
               "border-primary": isDragActive,
               "border-destructive": error,
               "border-success": file && !error,
-            },
+            }
           )}
         >
           {file ? (

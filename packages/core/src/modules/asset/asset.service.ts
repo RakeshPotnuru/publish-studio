@@ -1,15 +1,14 @@
 import type { DeleteObjectsCommandInput } from "@aws-sdk/client-s3";
-import { DeleteObjectsCommand } from "@aws-sdk/client-s3";
-import type { PresignedPostOptions } from "@aws-sdk/s3-presigned-post";
-import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
+import { DeleteObjectsCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 import { v4 as uuidV4 } from "uuid";
 
 import type { IPaginationOptions } from "../../types/common.types";
 import type { IFile } from "../../types/file.types";
-import s3 from "../../utils/aws/s3";
 import { logtail } from "../../utils/logtail";
+import r2 from "../../utils/r2";
 import ProjectService from "../project/project.service";
 import Asset from "./asset.model";
 import type { IAsset, IAssetsResponse } from "./asset.types";
@@ -18,7 +17,7 @@ export default class AssetService extends ProjectService {
   async uploadImage(
     file: IFile,
     project_id: Types.ObjectId | undefined,
-    user_id: Types.ObjectId,
+    user_id: Types.ObjectId
   ) {
     try {
       const { mimetype, originalname, size } = file;
@@ -27,22 +26,14 @@ export default class AssetService extends ProjectService {
 
       const filePath = `${user_id.toString()}/${uuid}_${originalname}`;
 
-      const params: PresignedPostOptions = {
-        Bucket: process.env.AWS_BUCKET_NAME,
+      const command = new PutObjectCommand({
+        Bucket: process.env.R2_BUCKET_NAME,
         Key: filePath,
-        Fields: {
-          "Content-Type": mimetype,
-          "Content-Length": size.toString(),
-        },
-        Expires: 60 * 60, // seconds
-        Conditions: [
-          ["content-length-range", 0, 5 * 1024 * 1024], // 5MB
-        ],
-      };
+      });
 
-      const post = await createPresignedPost(s3, params);
+      const url = await getSignedUrl(r2, command, { expiresIn: 60 * 60 });
 
-      const hostedUrl = `${post.url}${filePath}`;
+      const hostedUrl = `https://stg.assets.publishstudio.one/${filePath}`;
 
       const newAsset = await Asset.create({
         original_file_name: originalname,
@@ -55,14 +46,14 @@ export default class AssetService extends ProjectService {
       });
 
       return {
-        url: post.url,
-        fields: post.fields,
+        url,
         asset: newAsset,
       };
     } catch (error) {
       await logtail.error(JSON.stringify(error), {
         user_id,
       });
+      console.log("error", error);
 
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
@@ -75,7 +66,7 @@ export default class AssetService extends ProjectService {
   private async deleteImages(keys: string[]) {
     try {
       const params: DeleteObjectsCommandInput = {
-        Bucket: process.env.AWS_BUCKET_NAME,
+        Bucket: process.env.R2_BUCKET_NAME,
         Delete: {
           Objects: keys.map((key) => ({ Key: key })),
         },
@@ -83,7 +74,7 @@ export default class AssetService extends ProjectService {
 
       const command = new DeleteObjectsCommand(params);
 
-      return await s3.send(command);
+      return await r2.send(command);
     } catch (error) {
       await logtail.error(JSON.stringify(error));
 
@@ -97,7 +88,7 @@ export default class AssetService extends ProjectService {
 
   async getAllAssetsByUserId(
     pagination: IPaginationOptions,
-    user_id: Types.ObjectId,
+    user_id: Types.ObjectId
   ): Promise<IAssetsResponse> {
     try {
       const total_rows = await Asset.countDocuments({ user_id }).exec();
@@ -140,7 +131,7 @@ export default class AssetService extends ProjectService {
    */
   async deleteAssets(
     ids: Types.ObjectId[],
-    user_id: Types.ObjectId,
+    user_id: Types.ObjectId
   ): Promise<{
     deletedCount: number;
   }> {

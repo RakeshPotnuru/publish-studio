@@ -14,9 +14,7 @@ import { columns } from "./columns";
 import { NewProject } from "./new-project";
 import { ProjectsTable } from "./table";
 
-type ProjectsProps = React.HTMLAttributes<HTMLDivElement>;
-
-export function Projects({ ...props }: Readonly<ProjectsProps>) {
+export function Projects() {
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -30,7 +28,7 @@ export function Projects({ ...props }: Readonly<ProjectsProps>) {
   });
 
   return (
-    <div className="space-y-8" {...props}>
+    <div className="space-y-8">
       <div className="flex items-center justify-between">
         <Heading>My Projects</Heading>
         <NewProject>
