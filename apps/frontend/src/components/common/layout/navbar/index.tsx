@@ -23,7 +23,6 @@ import { deleteCookie } from "cookies-next";
 import { Icons } from "@/assets/icons";
 import { Images } from "@/assets/images";
 import { ProBorder } from "@/components/ui/pro-border";
-import { ProButton } from "@/components/ui/pro-button";
 import { Tooltip } from "@/components/ui/tooltip";
 import { siteConfig } from "@/config/site";
 import useUserStore from "@/lib/store/user";
@@ -118,13 +117,14 @@ export function Navbar({ className, ...props }: Readonly<NavbarProps>) {
         </div>
       </div>
       <div className="flex flex-row items-center space-x-2">
-        {isFetching ||
+        {/* NOSONAR */}
+        {/* {isFetching ||
           (user?.user_type !== UserType.PRO && (
             <ProButton size="sm">
               <Icons.Pro className="mr-2 size-4" />
               Upgrade
             </ProButton>
-          ))}
+          ))} */}
         <NavItem icon={<Icons.Question className="size-5" />} tooltip="Help">
           <DropdownMenuItem asChild>
             <Link href={siteConfig.links.support}>
