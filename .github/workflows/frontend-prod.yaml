@@ -8,6 +8,8 @@ jobs:
     permissions:
       contents: read
       deployments: write
+    env:
+      NODE_ENV: production
     name: Deploy to Cloudflare Pages
     steps:
       - name: Checkout
