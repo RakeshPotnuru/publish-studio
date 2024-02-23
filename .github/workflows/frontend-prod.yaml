@@ -28,7 +28,7 @@ jobs:
           pnpm config set "//registry.tiptap.dev/:_authToken" ${{ secrets.TIPTAP_PRO_TOKEN }}
 
       - name: Build
-        run: pnpm install && pnpm dlx turbo run build --filter=@publish-studio/frontend,@publish-studio/core && ls -la
+        run: pnpm install && pnpm dlx turbo run build --filter=@publish-studio/core && cd apps/frontend && pnpm dlx @cloudflare/next-on-pages@1
 
       - name: Publish
         uses: cloudflare/pages-action@1
