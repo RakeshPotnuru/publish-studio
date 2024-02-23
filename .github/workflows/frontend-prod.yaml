@@ -28,13 +28,14 @@ jobs:
           pnpm config set "//registry.tiptap.dev/:_authToken" ${{ secrets.TIPTAP_PRO_TOKEN }}
 
       - name: Build
-        run: pnpm install turbo -g && pnpm install && turbo run build --filter=@publish-studio/frontend,@publish-studio/core
+        run: pnpm install && pnpm dlx turbo run build --filter=@publish-studio/frontend,@publish-studio/core && ls -la
 
       - name: Publish
         uses: cloudflare/pages-action@1
         with:
+          workingDirectory: apps/frontend
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: publish-studio
-          directory: apps/frontend/.next
+          directory: .next
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
