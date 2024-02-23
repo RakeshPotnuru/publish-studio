@@ -23,6 +23,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
 
+      - run: |
+          pnpm config set "@tiptap-pro:registry" https://registry.tiptap.dev/
+          pnpm config set "//registry.tiptap.dev/:_authToken" ${{ secrets.TIPTAP_PRO_TOKEN }}
+
       - name: Build
         run: pnpm install && turbo run build --filter=@publish-studio/frontend,@publish-studio/core
 
