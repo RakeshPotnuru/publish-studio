@@ -2,6 +2,7 @@ on: [push, workflow_dispatch]
 
 env:
   NODE_ENV: production
+  TERM: xterm
 
 jobs:
   deploy:
