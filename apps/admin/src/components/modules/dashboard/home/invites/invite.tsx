@@ -5,10 +5,13 @@ import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { trpc } from "@/utils/trpc";
 
 export function Invite({ data }: Readonly<{ data: IInvite }>) {
+  const utils = trpc.useUtils();
+
   const { mutateAsync: invite, isLoading } =
     trpc.admin.invites.invite.useMutation({
-      onSuccess: ({ data }) => {
+      onSuccess: async ({ data }) => {
         toast.success(data.message);
+        await utils.admin.invites.getAll.invalidate();
       },
       onError: (error) => {
         toast.error(error.message);

@@ -153,10 +153,11 @@ export function NewAssetDialog({
         },
       });
 
+      setOpen(false);
+
       toast.success("Image has been uploaded successfully");
 
       await utils.assets.getAll.invalidate();
-      setOpen(false);
     } catch {
       await deleteAsset([data.asset._id]);
       toast.error("Something went wrong. Please try again later.");
