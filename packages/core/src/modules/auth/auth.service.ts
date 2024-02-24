@@ -10,7 +10,7 @@ import { configCatClient } from "../../utils/configcat";
 import { signJwt } from "../../utils/jwt";
 import { logtail } from "../../utils/logtail";
 import redisClient from "../../utils/redis";
-import { scheduleEmail, sendEmail } from "../../utils/sendgrid";
+import { sendEmail } from "../../utils/sendgrid";
 import InviteController from "../admin/invite/invite.controller";
 import UserService from "../user/user.service";
 import type { IUser } from "../user/user.types";
@@ -44,17 +44,15 @@ export default class AuthService extends UserService {
   }
 
   async sendWelcomeEmail(user: IUser, ctx: Context) {
-    await scheduleEmail({
-      emails: [user.email],
-      template: EmailTemplate.WELCOME_EMAIL,
-      variables: {
+    await sendEmail(
+      [user.email],
+      EmailTemplate.WELCOME_EMAIL,
+      process.env.FROM_EMAIL_PERSONAL,
+      {
         first_name: user.first_name,
-        email: user.email,
       },
-      from_address: process.env.FROM_EMAIL_PERSONAL,
-      scheduled_at: new Date(Date.now() + 5 * 60 * 1000), // 5 minutes from now
-      user_id: user._id,
-    });
+      Math.floor(Date.now() / 1000) + 5 * 60 // 5 minutes from now
+    );
 
     await createCaller(ctx).notifications.create({
       type: "welcome",

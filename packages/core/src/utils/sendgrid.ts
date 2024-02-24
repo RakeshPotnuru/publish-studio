@@ -12,12 +12,22 @@ import { logtail } from "./logtail";
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
+/**
+ * Sends an email to multiple recipients using a specified template.
+ * @param {string[]} emails - An array of email addresses to send the email to.
+ * @param {EmailTemplate} template - The template to use for the email.
+ * @param {MailDataRequired["from"]} from_address - The email address to send the email from.
+ * @param {MailDataRequired["dynamicTemplateData"]?} variables - Optional dynamic template data for the email.
+ * @param {number?} send_at - Optional Unix timestamp indicating when the email should be sent (**should be less than 72 hours from now**).
+ * @returns {Promise<void>} - A promise that resolves when the email has been sent.
+ */
 export const sendEmail = async (
   emails: string[],
   template: EmailTemplate,
   from_address: MailDataRequired["from"],
-  variables?: MailDataRequired["dynamicTemplateData"]
-) => {
+  variables?: MailDataRequired["dynamicTemplateData"],
+  send_at?: number // Unix timestamp, should be less than 72 hours from now
+): Promise<void> => {
   try {
     const input: MailDataRequired = {
       from: from_address,
@@ -27,6 +37,7 @@ export const sendEmail = async (
         to: [{ email }],
         dynamicTemplateData: { ...variables, email },
       })),
+      sendAt: send_at,
     };
 
     await sgMail.send(input);
@@ -64,9 +75,15 @@ export const scheduleEmail = async (data: IEmail) => {
     });
     await emailQueue.trimEvents(10);
 
+    emailQueue.on("error", (error) => {
+      logtail
+        .error(JSON.stringify(error))
+        .catch(() => console.log("Error logging email queue error"));
+    });
+
     const emailWorker = new Worker<IEmail, IEmail>(
       constants.bullmq.queues.EMAIL,
-      async (job: Job) => {
+      async (job: Job): Promise<IEmail> => {
         await sendEmail(
           job.data.emails as string[],
           job.data.template as EmailTemplate,
@@ -97,6 +114,11 @@ export const scheduleEmail = async (data: IEmail) => {
   } catch (error) {
     await logtail.error(JSON.stringify(error), {
       user_id: data.user_id,
+    });
+
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: defaultConfig.defaultErrorMessage,
     });
   }
 };

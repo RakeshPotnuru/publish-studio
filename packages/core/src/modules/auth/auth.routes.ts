@@ -13,7 +13,7 @@ const authRouter = router({
           .string()
           .regex(
             /^((?!\p{Extended_Pictographic}).)*$/u,
-            "Emojis are not allowed",
+            "Emojis are not allowed"
           )
           .min(constants.user.firstName.MIN_LENGTH)
           .max(constants.user.firstName.MAX_LENGTH),
@@ -21,7 +21,7 @@ const authRouter = router({
           .string()
           .regex(
             /^((?!\p{Extended_Pictographic}).)*$/u,
-            "Emojis are not allowed",
+            "Emojis are not allowed"
           )
           .min(constants.user.lastName.MIN_LENGTH)
           .max(constants.user.lastName.MAX_LENGTH),
@@ -29,11 +29,11 @@ const authRouter = router({
         password: z
           .string()
           .regex(
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!"#$%&'()*+,./:;<=>?@[\\\]^_{|}~-])(.{8,})$/,
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!"#$%&'()*+,./:;<=>?@[\\\]^_{|}~-])(.{8,})$/
           ),
         profile_pic: z.string().optional(),
         user_type: z.nativeEnum(UserType).optional().default(UserType.FREE),
-      }),
+      })
     )
     .mutation(({ input }) => new AuthController().registerHandler(input)),
 
@@ -41,10 +41,10 @@ const authRouter = router({
     .input(
       z.object({
         id_token: z.string(),
-      }),
+      })
     )
     .mutation(({ input, ctx }) =>
-      new AuthController().connectGoogleHandler(input, ctx),
+      new AuthController().connectGoogleHandler(input, ctx)
     ),
 
   login: t.procedure
@@ -52,14 +52,14 @@ const authRouter = router({
       z.object({
         email: z.string().email(),
         password: z.string().min(1),
-      }),
+      })
     )
     .mutation(({ input, ctx }) =>
-      new AuthController().loginHandler(input, ctx),
+      new AuthController().loginHandler(input, ctx)
     ),
 
   logout: protectedProcedure.mutation(({ ctx }) =>
-    new AuthController().logoutHandler(ctx),
+    new AuthController().logoutHandler(ctx)
   ),
 
   getMe: protectedProcedure.query(({ ctx }) => {
@@ -67,7 +67,7 @@ const authRouter = router({
   }),
 
   refresh: t.procedure.query(({ ctx }) =>
-    new AuthController().refreshAccessTokenHandler(ctx),
+    new AuthController().refreshAccessTokenHandler(ctx)
   ),
 
   email: router({
@@ -75,30 +75,30 @@ const authRouter = router({
       .input(
         z.object({
           token: z.string(),
-        }),
+        })
       )
       .mutation(({ input, ctx }) =>
-        new AuthController().verifyEmailHandler(input, ctx),
+        new AuthController().verifyEmailHandler(input, ctx)
       ),
 
     resendVerification: t.procedure
       .input(
         z.object({
           email: z.string().email(),
-        }),
+        })
       )
       .mutation(({ input }) =>
-        new AuthController().resendVerificationEmailHandler(input),
+        new AuthController().resendVerificationEmailHandler(input)
       ),
 
     sendResetPassword: t.procedure
       .input(
         z.object({
           email: z.string().email(),
-        }),
+        })
       )
       .mutation(({ input }) =>
-        new AuthController().sendResetPasswordEmailHandler(input),
+        new AuthController().sendResetPasswordEmailHandler(input)
       ),
   }),
 
@@ -109,16 +109,16 @@ const authRouter = router({
         password: z
           .string()
           .regex(
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!"#$%&'()*+,./:;<=>?@[\\\]^_{|}~-])(.{8,})$/,
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!"#$%&'()*+,./:;<=>?@[\\\]^_{|}~-])(.{8,})$/
           ),
-      }),
+      })
     )
     .mutation(({ input }) => new AuthController().resetPasswordHandler(input)),
 
   verifyCaptcha: t.procedure
     .input(z.string())
     .mutation(({ input, ctx }) =>
-      new AuthController().verifyCaptchaHandler(input, ctx),
+      new AuthController().verifyCaptchaHandler(input, ctx)
     ),
 });
 

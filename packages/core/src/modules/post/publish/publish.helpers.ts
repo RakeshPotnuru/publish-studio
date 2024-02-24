@@ -28,9 +28,17 @@ export default class PublishHelpers extends PublishService {
         data,
         {
           delay,
-        },
+          removeOnComplete: { count: 0 },
+          removeOnFail: { count: 0 },
+        }
       );
       await postQueue.trimEvents(10);
+
+      postQueue.on("error", (error) => {
+        logtail
+          .error(JSON.stringify(error))
+          .catch(() => console.log("Error logging email queue error"));
+      });
 
       const postWorker = new Worker<ISchedule, ISchedule>(
         constants.bullmq.queues.POST,
@@ -40,7 +48,7 @@ export default class PublishHelpers extends PublishService {
           await publishService.publishPost(
             data.platforms,
             data.project,
-            data.user_id,
+            data.user_id
           );
 
           return job.data as ISchedule;
@@ -49,7 +57,7 @@ export default class PublishHelpers extends PublishService {
           connection: bullMQConnectionOptions,
           removeOnComplete: { count: 0 },
           removeOnFail: { count: 0 },
-        },
+        }
       );
 
       postWorker.on("failed", (job) => {
@@ -76,7 +84,7 @@ export default class PublishHelpers extends PublishService {
   }
 
   getPlatformCreateController(
-    platform: Platform,
+    platform: Platform
   ):
     | DevToController
     | HashnodeController
@@ -112,7 +120,7 @@ export default class PublishHelpers extends PublishService {
   }
 
   getPlatformUpdateController(
-    platform: Platform,
+    platform: Platform
   ):
     | DevToController
     | HashnodeController

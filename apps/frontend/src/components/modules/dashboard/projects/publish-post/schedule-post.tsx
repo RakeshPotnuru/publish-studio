@@ -88,8 +88,8 @@ export function SchedulePost({
                 type="button"
                 onClick={async () => {
                   if (date && date > minDate) {
-                    await onConfirm(date);
                     setOpen(false);
+                    await onConfirm(date);
                   }
                 }}
                 size="sm"
