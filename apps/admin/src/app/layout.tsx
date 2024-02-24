@@ -91,6 +91,13 @@ export default function RootLayout({
         <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
       </head>
       <body className="min-h-dvh bg-slate-200 dark:bg-slate-700">
+        {process.env.NODE_ENV === "test" && (
+          <div className="flex justify-center bg-destructive py-[1px]">
+            <p className="text-xs text-destructive-foreground">
+              ⚠️ This is a staging environment. Data won&apos;t be retained.
+            </p>
+          </div>
+        )}
         <Providers>
           {children}
           <Toaster />
