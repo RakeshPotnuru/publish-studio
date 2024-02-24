@@ -129,6 +129,15 @@ export default function RootLayout({
         <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
       </head>
       <body className={cn(inter.className, "min-h-dvh")}>
+        {(process.env.NODE_ENV === "test" ||
+          process.env.NEXT_PUBLIC_VERCEL_ENV === "preview" ||
+          process.env.SITE_ENV === "test") && (
+          <div className="flex justify-center bg-destructive py-[1px]">
+            <p className="text-xs text-destructive-foreground">
+              ⚠️ This is a staging environment. Data won&apos;t be retained.
+            </p>
+          </div>
+        )}
         <Providers>
           <Navbar />
           <main className="p-8">{children}</main>
