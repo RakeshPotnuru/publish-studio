@@ -5,6 +5,7 @@ import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 import { v4 as uuidV4 } from "uuid";
 
+import defaultConfig from "../../config/app.config";
 import type { IPaginationOptions } from "../../types/common.types";
 import type { IFile } from "../../types/file.types";
 import { logtail } from "../../utils/logtail";
@@ -33,7 +34,7 @@ export default class AssetService extends ProjectService {
 
       const url = await getSignedUrl(r2, command, { expiresIn: 60 * 60 });
 
-      const hostedUrl = `https://stg.assets.publishstudio.one/${filePath}`;
+      const hostedUrl = `${defaultConfig.assetsUrl}/${filePath}`;
 
       const newAsset = await Asset.create({
         original_file_name: originalname,

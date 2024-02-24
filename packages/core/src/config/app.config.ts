@@ -27,6 +27,7 @@ interface ICustomConfig {
   turnstileVerifyEndpoint: string;
   stripeWebhookPath: string;
   r2Endpoint: string;
+  assetsUrl: string;
 }
 
 const defaultConfig: ICustomConfig = {
@@ -57,6 +58,10 @@ const defaultConfig: ICustomConfig = {
   stripeWebhookPath: "/api/payment.stripeWebhook",
   r2Endpoint:
     "https://7f5708cb8ffd7ebc4099df644b1f66c7.r2.cloudflarestorage.com",
+  assetsUrl:
+    process.env.NODE_ENV === "production"
+      ? "https://assets.publishstudio.one"
+      : "https://stg.assets.publishstudio.one",
 };
 
 export const bullMQConnectionOptions: ConnectionOptions = new Redis(
