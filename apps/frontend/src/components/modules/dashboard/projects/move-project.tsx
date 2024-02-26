@@ -121,15 +121,11 @@ export function MoveProject({
                     <Popover open={open} onOpenChange={setOpen}>
                       <PopoverTrigger asChild>
                         <FormControl>
-                          <Button
-                            variant="outline"
-                            // role="combobox"
-                            className="justify-between"
-                          >
-                            {
-                              items.find((item) => item.value === field.value)
-                                ?.label
-                            }
+                          <Button variant="outline" className="justify-between">
+                            {field.value
+                              ? items.find((item) => item.value === field.value)
+                                  ?.label
+                              : "Select folder"}
                             <Icons.Sort className="ml-2 size-4 shrink-0 opacity-50" />
                           </Button>
                         </FormControl>
@@ -172,7 +168,7 @@ export function MoveProject({
                                         "ml-auto size-4",
                                         item.value === field.value
                                           ? "opacity-100"
-                                          : "opacity-0",
+                                          : "opacity-0"
                                       )}
                                     />
                                   </CommandItem>
