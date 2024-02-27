@@ -20,27 +20,8 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: "http",
-        hostname: "res.cloudinary.com",
-      },
-      {
         protocol: "https",
-        hostname: "images.unsplash.com",
-      },
-      {
-        protocol: "https",
-        hostname: "images.pexels.com",
-      },
-      {
-        protocol: "https",
-        hostname:
-          process.env.NODE_ENV === "production"
-            ? "assets.publishstudio.one"
-            : "stg.assets.publishstudio.one",
-      },
-      {
-        protocol: "https",
-        hostname: "ik.imagekit.io",
+        hostname: "**",
       },
     ],
   },
