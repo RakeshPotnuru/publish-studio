@@ -28,7 +28,7 @@ export const List = ({
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 m-10">
       <Section>
         <Heading>PRIVACY POLICY</Heading>
         <p className="text-xs font-bold">Last updated February 19, 2024</p>
