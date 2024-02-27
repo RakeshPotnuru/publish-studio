@@ -17,6 +17,7 @@
     "kickbox",
     "LOGTAIL",
     "lowlight",
+    "Macbook",
     "marsidev",
     "maxlength",
     "MIMETYPES",
@@ -30,11 +31,13 @@
     "SENDGRID",
     "sitekey",
     "superjson",
+    "tabler",
     "tanstack",
     "tiptap",
     "TRPC",
     "unoptimized",
     "upstash",
+    "waitlist",
     "zustand"
   ]
 }

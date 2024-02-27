@@ -1,5 +1,5 @@
-import { TbLoader } from "react-icons/tb";
+import { IconLoader } from "@tabler/icons-react";
 
 export const Icons = {
-  Loading: TbLoader,
+  Loading: IconLoader,
 };

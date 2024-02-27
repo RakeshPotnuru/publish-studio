@@ -1,91 +1,44 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Button,
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-  Input,
-  Label,
-  toast,
-} from "@itsrakesh/ui";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { IconBook2, IconLifebuoy } from "@tabler/icons-react";
 
-import { ButtonLoader } from "@/components/ui/loaders/button-loader";
-import { trpc } from "@/utils/trpc";
+import { FloatingNav } from "@/components/ui/floating-navbar";
 
-const formSchema = z.object({
-  email: z.string().email(),
-});
+import { Cta } from "./cta";
+import { Features } from "./features";
+import { Hero } from "./hero";
+import { Integrations } from "./integrations";
+import { Platforms } from "./platforms";
 
 export function Home() {
-  const { mutateAsync: addToWaitList, isLoading } =
-    trpc.admin.invites.addToWaitList.useMutation({
-      onSuccess: ({ data }) => {
-        toast.success(data.message);
+  const navItems = [
+    {
+      name: "Docs",
+      link: {
+        href: "https://docs.publishstudio.one",
+        target: "_blank",
       },
-      onError: (error) => {
-        toast.error(error.message);
-      },
-    });
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    mode: "onBlur",
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: "",
+      icon: <IconBook2 className="h-4 w-4 text-neutral-500 dark:text-white" />,
     },
-  });
-
-  const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    try {
-      await addToWaitList(data);
-
-      form.reset();
-    } catch {
-      // Ignore
-    }
-  };
+    {
+      name: "Support",
+      link: {
+        href: "mailto:support@publishstudio.one?subject=%5BLANDING%5D%3A%20Write%20your%20subject%20here",
+      },
+      icon: (
+        <IconLifebuoy className="h-4 w-4 text-neutral-500 dark:text-white" />
+      ),
+    },
+  ];
 
   return (
-    <div className="flex h-[80vh] flex-col items-center justify-center space-y-10 text-center">
-      <h1 className="bg-gradient-to-r from-primary via-purple-500 to-blue-500 bg-clip-text py-4 text-4xl font-black text-transparent sm:text-9xl">
-        Coming soon
-      </h1>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-          <Label htmlFor="email" className="text-xl">
-            Join wait list
-          </Label>
-          <div className="flex space-x-2">
-            <FormField
-              control={form.control}
-              name="email"
-              disabled={isLoading}
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="me@example.com"
-                      autoComplete="email"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit">
-              <ButtonLoader isLoading={isLoading}>Join</ButtonLoader>
-            </Button>
-          </div>
-        </form>
-      </Form>
-    </div>
+    <>
+      <FloatingNav navItems={navItems} />
+      <Hero />
+      <Platforms />
+      <Integrations />
+      <Features />
+      <Cta />
+    </>
   );
 }
