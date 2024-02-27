@@ -1,11 +1,9 @@
 import { Inter } from "next/font/google";
 
-import { cn } from "@itsrakesh/utils";
 import type { Metadata, Viewport } from "next";
 
 import "@/styles/globals.css";
-import { Footer } from "@/components/common/layout/footer";
-import { Navbar } from "@/components/common/layout/navbar";
+import { Images } from "@/assets/images";
 import { Toaster } from "@/components/ui/toaster";
 import { siteConfig } from "@/config/site";
 import { Providers } from "@/lib/providers";
@@ -20,6 +18,7 @@ export const metadata: Metadata = {
   description: siteConfig.description,
   metadataBase: new URL(siteConfig.url),
   openGraph: {
+    images: [Images.og],
     title: siteConfig.title,
     description: siteConfig.description,
     url: siteConfig.url,
@@ -29,6 +28,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    images: [Images.og],
     title: siteConfig.title,
     description: siteConfig.description,
     creator: siteConfig.twitter.creator,
@@ -54,7 +54,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link
           rel="apple-touch-icon"
@@ -128,7 +128,7 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#EB5757" />
         <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
       </head>
-      <body className={cn(inter.className, "min-h-dvh")}>
+      <body className={inter.className}>
         {(process.env.NODE_ENV === "test" ||
           process.env.NEXT_PUBLIC_VERCEL_ENV === "preview" ||
           process.env.SITE_ENV === "test") && (
@@ -139,9 +139,7 @@ export default function RootLayout({
           </div>
         )}
         <Providers>
-          <Navbar />
-          <main className="p-8">{children}</main>
-          <Footer />
+          <main>{children}</main>
           <Toaster />
         </Providers>
       </body>

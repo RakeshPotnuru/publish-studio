@@ -4,9 +4,8 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: "*",
-      disallow: "/",
-      allow: ["/login", "/register"],
+      allow: "/",
     },
-    sitemap: "https://app.publishstudio.one/sitemap.xml",
+    sitemap: "https://publishstudio.one/sitemap.xml",
   };
 }
