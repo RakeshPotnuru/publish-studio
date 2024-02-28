@@ -15,4 +15,15 @@ export default class UnsplashController extends UnsplashService {
       },
     };
   }
+
+  async triggerDownloadHandler(download_location: string) {
+    const download = await super.triggerDownload(download_location);
+
+    return {
+      status: "success",
+      data: {
+        download,
+      },
+    };
+  }
 }

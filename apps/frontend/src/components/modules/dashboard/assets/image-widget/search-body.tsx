@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import { Button, Skeleton } from "@itsrakesh/ui";
+import { cn } from "@itsrakesh/utils";
 import type { PaginationState } from "@tanstack/react-table";
 
 import { Center } from "@/components/ui/center";
@@ -18,6 +19,8 @@ interface SearchBodyProps {
   setPagination: React.Dispatch<React.SetStateAction<PaginationState>>;
   totalResults: number;
   handleInsert: (photoId: string | number) => void;
+  isInserting?: boolean;
+  insertingPhotoId?: string | number;
 }
 
 export function SearchBody({
@@ -28,6 +31,8 @@ export function SearchBody({
   setPagination,
   totalResults,
   handleInsert,
+  isInserting,
+  insertingPhotoId,
 }: Readonly<SearchBodyProps>) {
   const photosView =
     data.length > 0 ? (
@@ -43,7 +48,9 @@ export function SearchBody({
               alt={photo.alt}
               width={100}
               height={100}
-              className="h-auto w-auto hover:opacity-80"
+              className={cn("h-auto w-auto hover:opacity-80", {
+                "animate-pulse": isInserting && photo.id === insertingPhotoId,
+              })}
             />
           </slot>
         ))}
