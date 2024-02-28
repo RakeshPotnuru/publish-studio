@@ -1,4 +1,8 @@
+import { TRPCError } from "@trpc/server";
 import { createApi } from "unsplash-js";
+
+import defaultConfig from "../../../config/app.config";
+import { logtail } from "../../../utils/logtail";
 
 export default class UnsplashService {
   private unsplash() {
@@ -15,9 +19,31 @@ export default class UnsplashService {
         page: input.page,
       });
     } catch (error) {
-      console.log(error);
+      await logtail.error("Error searching photos", {
+        error: JSON.stringify(error),
+      });
 
-      throw new Error("Internal Server Error");
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Error searching photos",
+      });
+    }
+  }
+
+  async triggerDownload(download_location: string) {
+    try {
+      return await this.unsplash().photos.trackDownload({
+        downloadLocation: download_location,
+      });
+    } catch (error) {
+      await logtail.error("Error triggering download", {
+        error: JSON.stringify(error),
+      });
+
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: defaultConfig.defaultErrorMessage,
+      });
     }
   }
 }
