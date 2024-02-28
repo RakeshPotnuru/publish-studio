@@ -59,7 +59,7 @@ const defaultConfig: ICustomConfig = {
   r2Endpoint:
     "https://7f5708cb8ffd7ebc4099df644b1f66c7.r2.cloudflarestorage.com",
   assetsUrl:
-    process.env.NODE_ENV === "production"
+    process.env.SITE_ENV === "production"
       ? "https://assets.publishstudio.one"
       : "https://stg.assets.publishstudio.one",
 };

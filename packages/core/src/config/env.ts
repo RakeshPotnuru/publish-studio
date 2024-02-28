@@ -48,6 +48,7 @@ const ZodEnvironmentVariables = z.object({
   LOGTAIL_SOURCE_TOKEN: z.string(),
   CONFIGCAT_SDK_KEY: z.string(),
   SENDGRID_API_KEY: z.string(),
+  SITE_ENV: z.string(),
 });
 
 ZodEnvironmentVariables.parse(process.env);
