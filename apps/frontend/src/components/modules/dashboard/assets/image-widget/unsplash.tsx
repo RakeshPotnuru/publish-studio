@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import { toast } from "@itsrakesh/ui";
 import type { PaginationState } from "@tanstack/react-table";
 import type { z } from "zod";
 
@@ -20,6 +21,7 @@ export function Unsplash({ onImageInsert }: Readonly<UnsplashProps>) {
     pageSize: 12,
   });
   const [query, setQuery] = useState<string>("");
+  const [insertingPhotoId, setInsertingPhotoId] = useState<string | number>("");
 
   const {
     data,
@@ -35,7 +37,7 @@ export function Unsplash({ onImageInsert }: Readonly<UnsplashProps>) {
     {
       enabled: false,
       staleTime: 60_000,
-    },
+    }
   );
 
   const handleSearch = (data: z.infer<typeof formSchema>) => {
@@ -46,11 +48,22 @@ export function Unsplash({ onImageInsert }: Readonly<UnsplashProps>) {
     setQuery(data.query);
   };
 
-  const handleInsert = (photoId: string | number) => {
+  const { mutateAsync: triggerDownload, isLoading } =
+    trpc.unsplash.triggerDownload.useMutation({
+      onError: (error) => {
+        toast.error(error.message);
+      },
+    });
+
+  const handleInsert = async (photoId: string | number) => {
     const photo = data?.data.photos.response?.results.find(
-      (photo) => photo.id === photoId,
+      (photo) => photo.id === photoId
     );
     if (photo) {
+      setInsertingPhotoId(photo.id);
+
+      await triggerDownload(photo.links.download_location);
+
       onImageInsert({
         src: photo.urls.regular,
         alt: photo.alt_description || photo.user.name,
@@ -90,6 +103,8 @@ export function Unsplash({ onImageInsert }: Readonly<UnsplashProps>) {
         setPagination={setPagination}
         totalResults={data?.data.photos.response?.total || 0}
         handleInsert={handleInsert}
+        isInserting={isLoading}
+        insertingPhotoId={insertingPhotoId}
       />
     </div>
   );

@@ -10,9 +10,15 @@ const unsplashRouter = router({
         query: z.string(),
         per_page: z.number().int().positive().default(20),
         page: z.number().int().positive().default(1),
-      }),
+      })
     )
     .query(({ input }) => new UnsplashController().searchPhotosHandler(input)),
+
+  triggerDownload: protectedProcedure
+    .input(z.string())
+    .mutation(({ input }) =>
+      new UnsplashController().triggerDownloadHandler(input)
+    ),
 });
 
 export default unsplashRouter;
