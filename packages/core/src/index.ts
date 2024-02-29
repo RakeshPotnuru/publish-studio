@@ -7,6 +7,8 @@ import type { CorsOptions } from "cors";
 import cors from "cors";
 import type { Application } from "express";
 import express from "express";
+import helmet from "helmet";
+import { v4 as uuidv4 } from "uuid";
 
 import "./config/env";
 import "./utils/db";
@@ -19,9 +21,14 @@ import { logtail } from "./utils/logtail";
 
 const app: Application = express();
 
-app.disable("x-powered-by");
+app.use((_, res, next) => {
+  res.locals.nonce = uuidv4();
+  next();
+});
 
 app.set("trust proxy", 1);
+
+app.use(helmet());
 
 app.use((req, res, next) => {
   if (req.originalUrl === defaultConfig.stripeWebhookPath) {
