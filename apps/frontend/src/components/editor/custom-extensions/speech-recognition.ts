@@ -5,6 +5,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable unicorn/consistent-function-scoping */
+/* eslint-disable unicorn/prefer-at */
 
 import { Node } from "@tiptap/core";
 import type { Commands } from "@tiptap/react";
@@ -89,23 +90,24 @@ const SpeechRecognition = SRNode.create<SpeechRecognitionOptions>({
             // Add the last recognized sentence (currentResult) in the editor with a style
             this.editor.commands.insertContentAt(
               this.recognition.contentLength,
-              `<code>${this.recognition.currentResult}</code>`,
+              `<code>${this.recognition.currentResult}</code>`
             );
 
             // If the last recognized sentence is final, delete the last recognized sentence (currentResult) in the editor and rewrite the last recognized sentence (currentResult) in the editor without style
-            if (event.results.at(-1).isFinal) {
+            if (event.results[event.results.length - 1].isFinal) {
               this.editor.commands.deleteRange({
                 from: this.recognition.contentLength,
                 to: this.editor.getText().length + 1,
               });
               this.editor.commands.insertContentAt(
                 this.recognition.contentLength,
-                this.recognition.currentResult,
+                this.recognition.currentResult
               );
 
               // Redefine the variable contentLength taking into account the last recognized sentence
               this.recognition.contentLength +=
-                event.results.at(-1)[0].transcript.length + 1;
+                event.results[event.results.length - 1][0].transcript.length +
+                1;
             }
           };
 
