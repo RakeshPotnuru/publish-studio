@@ -576,6 +576,9 @@ importers:
       google-auth-library:
         specifier: ^9.2.0
         version: 9.2.0
+      helmet:
+        specifier: ^7.1.0
+        version: 7.1.0
       ibm-watson:
         specifier: ^8.0.0
         version: 8.0.0
@@ -8489,6 +8492,11 @@ packages:
 
   /heap@0.2.7:
     resolution: {integrity: sha512-2bsegYkkHO+h/9MGbn6KWcE45cHZgPANo5LXF7EvWdT0yT2EguSVO1nDgU5c8+ZOPwp2vMNa7YFsJhVcDR9Sdg==}
+    dev: false
+
+  /helmet@7.1.0:
+    resolution: {integrity: sha512-g+HZqgfbpXdCkme/Cd/mZkV0aV3BZZZSugecH03kl38m/Kmdx8jKjBikpDj2cr+Iynv4KpYEviojNdTJActJAg==}
+    engines: {node: '>=16.0.0'}
     dev: false
 
   /highlight.js@11.9.0:

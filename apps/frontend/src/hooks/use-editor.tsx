@@ -59,7 +59,7 @@ export function useEditor(project?: IProject) {
         // Ignore
       });
     },
-    content: project?.body?.json ?? project?.body?.html,
+    content: project && (project.body?.json ?? project.body?.html),
   });
 
   return {
