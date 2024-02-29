@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 
 const cspHeader = `
-    default-src 'none';
+    default-src 'self';
     connect-src 'self' ${process.env.NEXT_PUBLIC_CORE_URL} ${process.env.NEXT_PUBLIC_WEBSOCKET_URL} ${process.env.NEXT_PUBLIC_R2_BUCKET_URL} https://accounts.google.com;
     script-src 'self' 'unsafe-eval' 'unsafe-inline' https://challenges.cloudflare.com https://accounts.google.com https://media-library.cloudinary.com;
     frame-src 'self' https://challenges.cloudflare.com https://accounts.google.com https://eml.imagekit.io https://media-library.cloudinary.com https://console.cloudinary.com;

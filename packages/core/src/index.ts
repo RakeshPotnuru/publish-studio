@@ -19,6 +19,8 @@ import { logtail } from "./utils/logtail";
 
 const app: Application = express();
 
+app.disable("x-powered-by");
+
 app.set("trust proxy", 1);
 
 app.use((req, res, next) => {
@@ -34,7 +36,7 @@ const corsOptions: CorsOptions = {
     process.env.NODE_ENV === "production"
       ? (
           origin: string | undefined,
-          callback: (error: Error | null, allow?: boolean) => void,
+          callback: (error: Error | null, allow?: boolean) => void
         ) => {
           if (
             !origin ||
@@ -46,7 +48,7 @@ const corsOptions: CorsOptions = {
               new TRPCError({
                 code: "UNAUTHORIZED",
                 message: "Not allowed by CORS",
-              }),
+              })
             );
           }
         }
@@ -66,7 +68,7 @@ app.use(
   createExpressMiddleware({
     router: appRouter,
     createContext,
-  }),
+  })
 );
 
 app.listen(process.env.PORT, () => {
