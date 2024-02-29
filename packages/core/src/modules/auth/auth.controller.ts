@@ -169,7 +169,8 @@ export default class AuthController extends AuthService {
 
     await super.sendVerificationEmail(input.email, verification_token);
 
-    const hashedPassword = await bycrypt.hash(input.password, 12);
+    const salt = await bycrypt.genSalt(12);
+    const hashedPassword = await bycrypt.hash(input.password, salt);
     const newUser = await super.createUser({
       first_name: input.first_name,
       last_name: input.last_name,
@@ -409,7 +410,8 @@ export default class AuthController extends AuthService {
       });
     }
 
-    const hashedPassword = await bycrypt.hash(input.password, 12);
+    const salt = await bycrypt.genSalt(12);
+    const hashedPassword = await bycrypt.hash(input.password, salt);
     await super.updateUser(user._id, { password: hashedPassword });
 
     return {
