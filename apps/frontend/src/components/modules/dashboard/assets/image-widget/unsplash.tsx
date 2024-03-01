@@ -59,6 +59,7 @@ export function Unsplash({ onImageInsert }: Readonly<UnsplashProps>) {
     const photo = data?.data.photos.response?.results.find(
       (photo) => photo.id === photoId
     );
+
     if (photo) {
       setInsertingPhotoId(photo.id);
 
@@ -69,7 +70,9 @@ export function Unsplash({ onImageInsert }: Readonly<UnsplashProps>) {
         alt: photo.alt_description || photo.user.name,
         title: photo.alt_description || photo.user.name,
         hasCaption: true,
-        captionMarkdown: `(_Photo by [${photo.user.name}](${photo.user.portfolio_url}) on [Unsplash](${photo.links.html})_)`,
+        captionMarkdown: `(_Photo by [${photo.user.name}](
+          ${photo.user.links.html ?? "https://unsplash.com"}
+          ) on [Unsplash](${photo.links.html ?? "https://unsplash.com"})_)`,
       });
     }
   };

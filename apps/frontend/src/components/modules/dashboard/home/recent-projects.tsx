@@ -45,7 +45,7 @@ export function RecentProjects() {
             </Button>
           ))}
           <Button variant="outline" asChild>
-            <Link href="/folders">
+            <Link href="/projects">
               All projects <Icons.Right className="ml-2 size-4" />
             </Link>
           </Button>

@@ -36,9 +36,12 @@ export function Ghost({ data, isLoading }: Readonly<GhostProps>) {
     enabled: false,
   });
 
+  const utils = trpc.useUtils();
+
   const handleDisconnect = async () => {
     try {
       await disconnect();
+      await utils.platforms.getAll.invalidate();
     } catch {
       toast.error(disconnectError?.message ?? "Something went wrong.");
     }
@@ -87,7 +90,7 @@ export function ImportPosts() {
     },
     {
       staleTime: 60_000,
-    },
+    }
   );
 
   const posts = data?.data.posts ?? [];

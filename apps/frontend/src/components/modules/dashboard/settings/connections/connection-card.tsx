@@ -69,7 +69,6 @@ export function ConnectionCard({
           onConfirm={async () => {
             onDisconnect();
             setAskingForConfirmation(false);
-            await utils.platforms.getAll.invalidate();
             await utils.auth.getMe.invalidate();
           }}
           classNames={{

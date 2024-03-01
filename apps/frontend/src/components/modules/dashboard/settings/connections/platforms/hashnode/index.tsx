@@ -35,9 +35,12 @@ export function Hashnode({ data, isLoading }: Readonly<HashnodeToProps>) {
     enabled: false,
   });
 
+  const utils = trpc.useUtils();
+
   const handleDisconnect = async () => {
     try {
       await disconnect();
+      await utils.platforms.getAll.invalidate();
     } catch {
       toast.error(disconnectError?.message ?? "Something went wrong.");
     }
@@ -94,7 +97,7 @@ export function ImportPosts() {
       },
       {
         staleTime: 60_000,
-      },
+      }
     );
 
   useEffect(() => {
