@@ -133,7 +133,7 @@ export function Navbar({ className, ...props }: Readonly<NavbarProps>) {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href={siteConfig.links.docs} target="_blank">
+            <Link href={siteConfig.links.docs}>
               <Icons.Docs className="mr-2 size-4" />
               Docs
             </Link>
