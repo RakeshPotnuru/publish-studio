@@ -22,6 +22,7 @@ export const siteConfig = {
     bloggerLabels:
       "https://support.google.com/blogger/answer/154172?visit_id=638407487949946224-3277732177&rd=1#:~:text=Add%20labels%20to,find%20your%20labels.",
     support: "mailto:support@publishstudio.one",
+    docs: docsDomain,
     wordpressAuthorize: "https://public-api.wordpress.com/oauth2/authorize",
     wordpressConnectedApps:
       "https://wordpress.com/me/security/connected-applications",

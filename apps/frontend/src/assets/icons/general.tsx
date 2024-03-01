@@ -37,6 +37,7 @@ import {
 import { PiDotsThreeBold } from "react-icons/pi";
 import { RiFoldersFill } from "react-icons/ri";
 import { RxMixerHorizontal } from "react-icons/rx";
+import { SiReadthedocs } from "react-icons/si";
 import { TbLoader } from "react-icons/tb";
 
 export const GeneralIcons = {
@@ -73,4 +74,5 @@ export const GeneralIcons = {
   Pro: AiFillThunderbolt,
   MobileOff: MdOutlineMobileOff,
   Security: MdSecurity,
+  Docs: SiReadthedocs,
 };

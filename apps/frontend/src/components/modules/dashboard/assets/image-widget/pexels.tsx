@@ -35,7 +35,7 @@ export function Pexels({ onImageInsert }: Readonly<PexelsProps>) {
     {
       enabled: false,
       staleTime: 60_000,
-    },
+    }
   );
 
   const handleSearch = (data: z.infer<typeof formSchema>) => {
@@ -55,7 +55,7 @@ export function Pexels({ onImageInsert }: Readonly<PexelsProps>) {
         alt: photo.alt || photo.photographer,
         title: photo.alt || photo.photographer,
         hasCaption: true,
-        captionMarkdown: `(_Photo by [${photo.photographer}](${photo.photographer_url}) on [Pexels](${photo.url})_)`,
+        captionMarkdown: `(_Photo by [${photo.photographer}](${photo.photographer_url ?? "https://pexels.com"}) on [Pexels](${photo.url ?? "https://pexels.com"})_)`,
       });
     }
   };

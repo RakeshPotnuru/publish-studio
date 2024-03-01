@@ -3,7 +3,7 @@ import { cn } from "@itsrakesh/utils";
 import type { IProject } from "@publish-studio/core";
 import { ProjectStatus } from "@publish-studio/core/src/config/constants";
 import type { ColumnDef } from "@tanstack/react-table";
-import { formatDistanceToNow } from "date-fns";
+import { differenceInDays, format, formatDistanceToNow } from "date-fns";
 
 import { Icons } from "@/assets/icons";
 import { DataTableColumnHeader } from "@/components/ui/data-table";
@@ -101,14 +101,19 @@ export const columns: ColumnDef<IProject>[] = [
     ),
     cell: ({ row }) => (
       <span>
-        {formatDistanceToNow(row.original.created_at, {
-          addSuffix: true,
-          includeSeconds: true,
-        })}
+        {differenceInDays(new Date(), new Date(row.original.created_at)) > 1
+          ? format(row.original.created_at, "PPp")
+          : formatDistanceToNow(row.original.created_at, {
+              addSuffix: true,
+              includeSeconds: true,
+            })}
       </span>
     ),
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id)) as boolean;
+    },
+    sortingFn: (rowA, rowB) => {
+      return rowA.original.created_at > rowB.original.created_at ? 1 : -1;
     },
   },
   {
@@ -118,14 +123,19 @@ export const columns: ColumnDef<IProject>[] = [
     ),
     cell: ({ row }) => (
       <span>
-        {formatDistanceToNow(row.original.updated_at, {
-          addSuffix: true,
-          includeSeconds: true,
-        })}
+        {differenceInDays(new Date(), new Date(row.original.updated_at)) > 1
+          ? format(row.original.updated_at, "PPp")
+          : formatDistanceToNow(row.original.updated_at, {
+              addSuffix: true,
+              includeSeconds: true,
+            })}
       </span>
     ),
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id)) as boolean;
+    },
+    sortingFn: (rowA, rowB) => {
+      return rowA.original.updated_at > rowB.original.updated_at ? 1 : -1;
     },
   },
   {

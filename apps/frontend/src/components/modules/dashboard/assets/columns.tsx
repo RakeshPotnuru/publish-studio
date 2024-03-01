@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Badge, Checkbox } from "@itsrakesh/ui";
 import type { IAsset } from "@publish-studio/core";
 import type { ColumnDef } from "@tanstack/react-table";
-import { formatDistanceToNow } from "date-fns";
+import { differenceInDays, format, formatDistanceToNow } from "date-fns";
 
 import { DataTableColumnHeader } from "@/components/ui/data-table";
 import { formatFileSize } from "@/utils/format-file-size";
@@ -73,7 +73,7 @@ export const columns: ColumnDef<IAsset>[] = [
       <span title={row.getValue("name")}>
         {shortenText(
           row.original.original_file_name.split(".").reverse().pop() ?? "",
-          50,
+          50
         )}
       </span>
     ),
@@ -107,14 +107,19 @@ export const columns: ColumnDef<IAsset>[] = [
     ),
     cell: ({ row }) => (
       <span>
-        {formatDistanceToNow(row.original.created_at, {
-          addSuffix: true,
-          includeSeconds: true,
-        })}
+        {differenceInDays(new Date(), new Date(row.original.created_at)) > 1
+          ? format(row.original.created_at, "PPp")
+          : formatDistanceToNow(row.original.created_at, {
+              addSuffix: true,
+              includeSeconds: true,
+            })}
       </span>
     ),
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id)) as boolean;
+    },
+    sortingFn: (rowA, rowB) => {
+      return rowA.original.created_at > rowB.original.created_at ? 1 : -1;
     },
   },
   {

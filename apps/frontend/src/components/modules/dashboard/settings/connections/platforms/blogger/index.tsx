@@ -35,9 +35,12 @@ export function Blogger({ data, isLoading }: Readonly<BloggerProps>) {
     enabled: false,
   });
 
+  const utils = trpc.useUtils();
+
   const handleDisconnect = async () => {
     try {
       await disconnect();
+      await utils.platforms.getAll.invalidate();
       toast.success(
         "Platform disconnected successfully. Also, please disconnect from your connected accounts in your Google account.",
         {
@@ -47,7 +50,7 @@ export function Blogger({ data, isLoading }: Readonly<BloggerProps>) {
               window.open(siteConfig.links.googleConnectedApps, "_blank");
             },
           },
-        },
+        }
       );
     } catch {
       toast.error(disconnectError?.message ?? "Something went wrong.");
@@ -101,7 +104,7 @@ export function ImportPosts() {
       },
       {
         staleTime: 60_000,
-      },
+      }
     );
 
   useEffect(() => {

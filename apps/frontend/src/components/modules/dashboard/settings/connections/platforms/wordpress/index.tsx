@@ -37,9 +37,12 @@ export function WordPress({ data, isLoading }: Readonly<WordPressProps>) {
     enabled: false,
   });
 
+  const utils = trpc.useUtils();
+
   const handleDisconnect = async () => {
     try {
       await disconnect();
+      await utils.platforms.getAll.invalidate();
       toast.success(
         "Platform disconnected successfully. Also, please disconnect from your connected accounts in your WordPress account.",
         {
@@ -49,7 +52,7 @@ export function WordPress({ data, isLoading }: Readonly<WordPressProps>) {
               window.open(siteConfig.links.wordpressConnectedApps, "_blank");
             },
           },
-        },
+        }
       );
     } catch {
       toast.error(disconnectError?.message ?? "Something went wrong.");
@@ -100,7 +103,7 @@ export function ImportPosts() {
       },
       {
         staleTime: 60_000,
-      },
+      }
     );
 
   const posts = data?.data.posts ?? [];

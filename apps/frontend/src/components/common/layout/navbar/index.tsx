@@ -132,6 +132,12 @@ export function Navbar({ className, ...props }: Readonly<NavbarProps>) {
               Support
             </Link>
           </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href={siteConfig.links.docs} target="_blank">
+              <Icons.Docs className="mr-2 size-4" />
+              Docs
+            </Link>
+          </DropdownMenuItem>
         </NavItem>
         <Notifications />
         <DropdownMenu>
