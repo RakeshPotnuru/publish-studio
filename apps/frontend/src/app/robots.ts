@@ -7,6 +7,7 @@ export default function robots(): MetadataRoute.Robots {
       disallow: "/",
       allow: ["/login", "/register"],
     },
+    host: "https://app.publishstudio.one",
     sitemap: "https://app.publishstudio.one/sitemap.xml",
   };
 }
