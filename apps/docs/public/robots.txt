@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://docs.publishstudio.one
+
+# Sitemaps
+Sitemap: https://docs.publishstudio.one/sitemap.xml
