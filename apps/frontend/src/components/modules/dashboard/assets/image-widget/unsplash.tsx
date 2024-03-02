@@ -4,6 +4,7 @@ import { toast } from "@itsrakesh/ui";
 import type { PaginationState } from "@tanstack/react-table";
 import type { z } from "zod";
 
+import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
 
 import type { TInsertImageOptions } from ".";
@@ -65,14 +66,16 @@ export function Unsplash({ onImageInsert }: Readonly<UnsplashProps>) {
 
       await triggerDownload(photo.links.download_location);
 
+      const utm = `utm_source=${siteConfig.title.replaceAll(" ", "_")}&utm_medium=referral`;
+
       onImageInsert({
-        src: photo.urls.regular,
+        src: `${photo.urls.regular}&${utm}`,
         alt: photo.alt_description || photo.user.name,
         title: photo.alt_description || photo.user.name,
         hasCaption: true,
         captionMarkdown: `(_Photo by [${photo.user.name}](
-          ${photo.user.links.html ?? "https://unsplash.com"}
-          ) on [Unsplash](${photo.links.html ?? "https://unsplash.com"})_)`,
+          ${photo.user.links.html ?? "https://unsplash.com"}?${utm}
+          ) on [Unsplash](${photo.links.html ?? "https://unsplash.com"}?${utm})_)`,
       });
     }
   };
