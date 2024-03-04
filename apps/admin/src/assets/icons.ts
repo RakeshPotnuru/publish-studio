@@ -1,3 +1,4 @@
+import { AiFillDelete } from "react-icons/ai";
 import {
   BiChevronLeft,
   BiChevronRight,
@@ -30,4 +31,5 @@ export const Icons = {
   Close: RxCross2,
   Logout: IoMdLogOut,
   Hide: BiSolidHide,
+  Delete: AiFillDelete,
 };

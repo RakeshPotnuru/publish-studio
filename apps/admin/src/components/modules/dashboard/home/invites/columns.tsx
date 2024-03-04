@@ -1,10 +1,13 @@
-import { Checkbox } from "@itsrakesh/ui";
+import { Button, Checkbox, toast } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import type { IInvite } from "@publish-studio/core";
 import type { ColumnDef } from "@tanstack/react-table";
 
+import { Icons } from "@/assets/icons";
 import { DataTableColumnHeader } from "@/components/ui/data-table";
+import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { shortenText } from "@/utils/text-shortener";
+import { trpc } from "@/utils/trpc";
 
 import { Invite } from "./invite";
 
@@ -20,6 +23,39 @@ export const statuses = [
     color: "text-success",
   },
 ];
+
+export const DeleteInvites = ({ data }: { data: IInvite[] }) => {
+  const inviteIds = data.map((invite) => invite._id);
+
+  const utils = trpc.useUtils();
+
+  const { mutateAsync: deleteInvites, isLoading } =
+    trpc.admin.invites.delete.useMutation({
+      onSuccess: async ({ data }) => {
+        await utils.admin.invites.getAll.invalidate();
+        toast.success(data.message);
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
+    });
+
+  const handleDelete = async () => {
+    try {
+      await deleteInvites(inviteIds);
+    } catch {
+      // Ignore
+    }
+  };
+
+  return (
+    <Button onClick={handleDelete} variant="destructive" size="sm">
+      <ButtonLoader isLoading={isLoading} isIcon>
+        <Icons.Delete />
+      </ButtonLoader>
+    </Button>
+  );
+};
 
 export const columns: ColumnDef<IInvite>[] = [
   {
@@ -86,5 +122,10 @@ export const columns: ColumnDef<IInvite>[] = [
     accessorKey: "action",
     header: "Action",
     cell: ({ row }) => <Invite data={row.original} />,
+  },
+  {
+    accessorKey: "delete",
+    header: "Delete",
+    cell: ({ row }) => <DeleteInvites data={[row.original]} />,
   },
 ];

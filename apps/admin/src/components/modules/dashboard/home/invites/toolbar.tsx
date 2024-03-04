@@ -10,7 +10,7 @@ import { DataTableViewOptions } from "@/components/ui/data-table";
 import { DataTableFacetedFilter } from "@/components/ui/data-table/faceted-filter";
 import { trpc } from "@/utils/trpc";
 
-import { statuses } from "./columns";
+import { DeleteInvites, statuses } from "./columns";
 
 interface ToolbarProps<TData> {
   table: Table<TData>;
@@ -78,22 +78,30 @@ export function Toolbar<TData>({ table }: Readonly<ToolbarProps<TData>>) {
         )}
       </div>
       <div className="flex flex-row items-center space-x-2">
-        {table.getFilteredSelectedRowModel().rows.length > 0 &&
-          (askingForConfirmation ? (
-            <AskForConfirmation
-              onCancel={() => setAskingForConfirmation(false)}
-              onConfirm={handleInvite}
-              isLoading={isLoading}
+        {table.getFilteredSelectedRowModel().rows.length > 0 && (
+          <>
+            {askingForConfirmation ? (
+              <AskForConfirmation
+                onCancel={() => setAskingForConfirmation(false)}
+                onConfirm={handleInvite}
+                isLoading={isLoading}
+              />
+            ) : (
+              <Button
+                onClick={() => setAskingForConfirmation(true)}
+                variant="info"
+                size="sm"
+              >
+                Invite ({table.getFilteredSelectedRowModel().rows.length})
+              </Button>
+            )}
+            <DeleteInvites
+              data={table
+                .getFilteredSelectedRowModel()
+                .rows.map((row) => row.original as IInvite)}
             />
-          ) : (
-            <Button
-              onClick={() => setAskingForConfirmation(true)}
-              variant="destructive"
-              size="sm"
-            >
-              Invite ({table.getFilteredSelectedRowModel().rows.length})
-            </Button>
-          ))}
+          </>
+        )}
 
         <DataTableViewOptions table={table} />
       </div>

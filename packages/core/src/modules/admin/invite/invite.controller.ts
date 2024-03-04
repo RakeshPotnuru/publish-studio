@@ -74,4 +74,15 @@ export default class InviteController extends InviteService {
       },
     };
   }
+
+  async deleteInvitesHandler(input: IInvite["_id"][]) {
+    await super.deleteInvites(input);
+
+    return {
+      status: "success",
+      data: {
+        message: "Invites deleted",
+      },
+    };
+  }
 }
