@@ -29,6 +29,12 @@ const inviteRouter = router({
       })
     )
     .query(({ input }) => new InviteController().getAllHandler(input)),
+
+  delete: adminProtectedProcedure
+    .input(z.array(z.custom<Types.ObjectId>()))
+    .mutation(({ input }) =>
+      new InviteController().deleteInvitesHandler(input)
+    ),
 });
 
 export default inviteRouter;

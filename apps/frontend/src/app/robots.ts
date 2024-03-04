@@ -6,7 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    host: "https://app.publishstudio.one",
     sitemap: "https://app.publishstudio.one/sitemap.xml",
   };
 }

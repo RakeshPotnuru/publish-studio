@@ -101,4 +101,20 @@ export default class InviteService {
       });
     }
   }
+
+  async deleteInvites(ids: IInvite["_id"][]): Promise<boolean> {
+    try {
+      await Invite.deleteMany({ _id: { $in: ids } }).exec();
+
+      return true;
+    } catch (error) {
+      await logtail.error(JSON.stringify(error));
+
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message:
+          "An error occurred while deleting the invites. Please try again later.",
+      });
+    }
+  }
 }
