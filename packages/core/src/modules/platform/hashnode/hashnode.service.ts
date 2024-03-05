@@ -86,7 +86,7 @@ export default class HashnodeService {
 
   async updatePlatform(
     platform: THashnodeUpdateInput,
-    user_id: Types.ObjectId,
+    user_id: Types.ObjectId
   ): Promise<boolean> {
     try {
       const doc = await Hashnode.findOne({ user_id }).exec();
@@ -145,7 +145,7 @@ export default class HashnodeService {
   }
 
   async getPlatform(
-    user_id: Types.ObjectId,
+    user_id: Types.ObjectId
   ): Promise<Omit<IHashnode, "api_key"> | null> {
     try {
       return await Hashnode.findOne({ user_id }).select("-api_key").exec();
@@ -164,7 +164,7 @@ export default class HashnodeService {
 
   async getPlatformByUsername(
     username: string,
-    user_id: Types.ObjectId,
+    user_id: Types.ObjectId
   ): Promise<Omit<IHashnode, "api_key"> | null> {
     try {
       return await Hashnode.findOne({ username }).select("-api_key").exec();
@@ -185,7 +185,7 @@ export default class HashnodeService {
     to fetch user Hashnode details and update them in database. That's why api key is being used directly. */
   async getHashnodeUser(
     api_key: string,
-    user_id: Types.ObjectId,
+    user_id: Types.ObjectId
   ): Promise<IHashnodeUserOutput> {
     try {
       const response = await axios.post(
@@ -213,7 +213,7 @@ export default class HashnodeService {
             "Content-Type": "application/json",
             Authorization: api_key,
           },
-        },
+        }
       );
 
       return response.data as IHashnodeUserOutput;
@@ -231,7 +231,7 @@ export default class HashnodeService {
 
   async publishPost(
     post: IHashnodeCreatePostInput,
-    user_id: Types.ObjectId,
+    user_id: Types.ObjectId
   ): Promise<THashnodeCreatePostOutput> {
     try {
       const hashnode = await this.hashnode(user_id);
@@ -255,6 +255,7 @@ export default class HashnodeService {
       await logtail.error(JSON.stringify(error), {
         user_id,
       });
+      console.log(error);
 
       return { isError: true };
     }
@@ -263,7 +264,7 @@ export default class HashnodeService {
   async updatePost(
     post: THashnodeToUpdatePost,
     post_id: string,
-    user_id: Types.ObjectId,
+    user_id: Types.ObjectId
   ): Promise<IHashnodeUpdatePostOutput> {
     try {
       const hashnode = await this.hashnode(user_id);
@@ -300,7 +301,7 @@ export default class HashnodeService {
       limit: number;
       end_cursor?: string;
     },
-    user_id: Types.ObjectId,
+    user_id: Types.ObjectId
   ): Promise<IHashnodeGetAllPostsOutput> {
     try {
       const platform = await this.getPlatform(user_id);

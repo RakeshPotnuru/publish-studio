@@ -87,7 +87,7 @@ export default class DevToService {
 
   async updatePlatform(
     platform: TDevToUpdateInput,
-    user_id: Types.ObjectId,
+    user_id: Types.ObjectId
   ): Promise<boolean> {
     try {
       const doc = await DevTo.findOne({ user_id }).exec();
@@ -146,7 +146,7 @@ export default class DevToService {
   }
 
   async getPlatform(
-    user_id: Types.ObjectId,
+    user_id: Types.ObjectId
   ): Promise<Omit<IDevTo, "api_key"> | null> {
     try {
       return await DevTo.findOne({ user_id }).select("-api_key").exec();
@@ -165,7 +165,7 @@ export default class DevToService {
 
   async getPlatformByUsername(
     username: string,
-    user_id: Types.ObjectId,
+    user_id: Types.ObjectId
   ): Promise<Omit<IDevTo, "api_key"> | null> {
     try {
       return await DevTo.findOne({ username }).select("-api_key").exec();
@@ -186,7 +186,7 @@ export default class DevToService {
     to fetch user Dev.to details and update them in database. That's why api key is being used directly. */
   async getDevUser(
     api_key: string,
-    user_id: Types.ObjectId,
+    user_id: Types.ObjectId
   ): Promise<IDevToUserOutput> {
     try {
       const response = await axios.get(
@@ -195,7 +195,7 @@ export default class DevToService {
           headers: {
             "api-key": api_key,
           },
-        },
+        }
       );
 
       return response.data as IDevToUserOutput;
@@ -213,7 +213,7 @@ export default class DevToService {
 
   async publishPost(
     post: IDevToCreatePostInput,
-    user_id: Types.ObjectId,
+    user_id: Types.ObjectId
   ): Promise<TDevToCreatePostOutput> {
     try {
       const devTo = await this.devTo(user_id);
@@ -225,6 +225,7 @@ export default class DevToService {
       return response.data as TDevToCreatePostOutput;
     } catch (error) {
       await logtail.error(JSON.stringify(error));
+      console.log(error);
 
       return { isError: true };
     }
@@ -233,7 +234,7 @@ export default class DevToService {
   async updatePost(
     post: IDevToUpdatePost,
     post_id: number,
-    user_id: Types.ObjectId,
+    user_id: Types.ObjectId
   ): Promise<IDevToUpdatePostOutput> {
     try {
       const devTo = await this.devTo(user_id);
@@ -254,13 +255,13 @@ export default class DevToService {
 
   async getAllPosts(
     pagination: IPaginationOptions,
-    user_id: Types.ObjectId,
+    user_id: Types.ObjectId
   ): Promise<IDevToGetAllPostsOutput[]> {
     try {
       const devTo = await this.devTo(user_id);
 
       const response = await devTo.get(
-        `/articles/me/all?page=${pagination.page}&per_page=${pagination.limit}`,
+        `/articles/me/all?page=${pagination.page}&per_page=${pagination.limit}`
       );
 
       return response.data as IDevToGetAllPostsOutput[];
