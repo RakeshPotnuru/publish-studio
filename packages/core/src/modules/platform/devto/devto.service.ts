@@ -41,6 +41,7 @@ export default class DevToService {
         headers: {
           "Content-Type": "application/json",
           "api-key": platform.api_key,
+          Accept: "application/vnd.forem.api-v1+json",
         },
       });
     } catch (error) {
@@ -225,7 +226,6 @@ export default class DevToService {
       return response.data as TDevToCreatePostOutput;
     } catch (error) {
       await logtail.error(JSON.stringify(error));
-      console.log(error);
 
       return { isError: true };
     }

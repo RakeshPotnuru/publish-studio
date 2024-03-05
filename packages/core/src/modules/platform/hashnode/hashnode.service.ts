@@ -255,7 +255,6 @@ export default class HashnodeService {
       await logtail.error(JSON.stringify(error), {
         user_id,
       });
-      console.log(error);
 
       return { isError: true };
     }
