@@ -76,7 +76,6 @@ export function BloggerEditForm({
       onSuccess: async ({ data }) => {
         toast.success(data.message);
         await utils.platforms.getAll.invalidate();
-        setIsOpen(false);
       },
       onError: (error) => {
         setError(error.message);
@@ -101,6 +100,7 @@ export function BloggerEditForm({
           status: data.status === "true",
         });
       }
+      setIsOpen(false);
     } catch {
       // Ignore
     }

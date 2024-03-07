@@ -53,7 +53,6 @@ export function DevEditForm({
       onSuccess: async ({ data }) => {
         toast.success(data.message);
         await utils.platforms.getAll.invalidate();
-        setIsOpen(false);
       },
       onError: (error) => {
         setError(error.message);
@@ -75,6 +74,7 @@ export function DevEditForm({
         ...data,
         status: data.status === "true",
       });
+      setIsOpen(false);
     } catch {
       // Ignore
     }

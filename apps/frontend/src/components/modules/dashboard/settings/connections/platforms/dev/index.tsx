@@ -16,6 +16,7 @@ import { trpc } from "@/utils/trpc";
 import { deserialize } from "../../../../../../editor/transform-markdown";
 import { ConnectionCard } from "../../connection-card";
 import { ImportPostsBody } from "../import-dialog";
+import { useResetUser } from "../use-reset-user";
 import { DevConnectForm } from "./connect-form";
 import { DevEditForm } from "./edit-form";
 
@@ -37,11 +38,13 @@ export function DevTo({ data, isLoading }: Readonly<DevToProps>) {
   });
 
   const utils = trpc.useUtils();
+  const { resetUser } = useResetUser();
 
   const handleDisconnect = async () => {
     try {
       await disconnect();
       await utils.platforms.getAll.invalidate();
+      await resetUser();
     } catch {
       toast.error(disconnectError?.message ?? "Something went wrong.");
     }
@@ -88,7 +91,7 @@ export function ImportPosts() {
     },
     {
       staleTime: 60_000,
-    }
+    },
   );
 
   const posts = data?.data.posts ?? [];

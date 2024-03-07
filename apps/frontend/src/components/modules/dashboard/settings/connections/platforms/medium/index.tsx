@@ -8,6 +8,7 @@ import { Images } from "@/assets/images";
 import { trpc } from "@/utils/trpc";
 
 import { ConnectionCard } from "../../connection-card";
+import { useResetUser } from "../use-reset-user";
 import { MediumConnectForm } from "./connect-form";
 import { MediumEditForm } from "./edit-form";
 
@@ -28,11 +29,13 @@ export function Medium({ data, isLoading }: Readonly<MediumToProps>) {
   });
 
   const utils = trpc.useUtils();
+  const { resetUser } = useResetUser();
 
   const handleDisconnect = async () => {
     try {
       await disconnect();
       await utils.platforms.getAll.invalidate();
+      await resetUser();
     } catch {
       toast.error(disconnectError?.message ?? "Something went wrong.");
     }

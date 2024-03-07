@@ -16,6 +16,7 @@ import { trpc } from "@/utils/trpc";
 
 import { ConnectionCard } from "../../connection-card";
 import { ImportPostsBody } from "../import-dialog";
+import { useResetUser } from "../use-reset-user";
 import { GhostConnectForm } from "./connect-form";
 import { GhostEditForm } from "./edit-form";
 
@@ -37,11 +38,13 @@ export function Ghost({ data, isLoading }: Readonly<GhostProps>) {
   });
 
   const utils = trpc.useUtils();
+  const { resetUser } = useResetUser();
 
   const handleDisconnect = async () => {
     try {
       await disconnect();
       await utils.platforms.getAll.invalidate();
+      await resetUser();
     } catch {
       toast.error(disconnectError?.message ?? "Something went wrong.");
     }
@@ -90,7 +93,7 @@ export function ImportPosts() {
     },
     {
       staleTime: 60_000,
-    }
+    },
   );
 
   const posts = data?.data.posts ?? [];

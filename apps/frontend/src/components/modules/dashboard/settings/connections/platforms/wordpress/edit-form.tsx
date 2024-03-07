@@ -50,7 +50,6 @@ export function WordPressEditForm({
       onSuccess: async ({ data }) => {
         toast.success(data.message);
         await utils.platforms.getAll.invalidate();
-        setIsOpen(false);
       },
       onError: (error) => {
         setError(error.message);
@@ -73,6 +72,7 @@ export function WordPressEditForm({
         ...data,
         publicize: data.publicize === "true",
       });
+      setIsOpen(false);
     } catch {
       // Ignore
     }
