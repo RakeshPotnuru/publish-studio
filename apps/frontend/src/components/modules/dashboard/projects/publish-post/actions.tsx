@@ -119,10 +119,7 @@ export function Actions({
         <Button
           type="submit"
           disabled={
-            !form.formState.isDirty ||
-            isLoading ||
-            project.status === ProjectStatus.SCHEDULED ||
-            watchPlatforms.length === 0
+            !form.formState.isDirty || isLoading || watchPlatforms.length === 0
           }
         >
           <ButtonLoader isLoading={isPostPublishing}>Publish Now</ButtonLoader>

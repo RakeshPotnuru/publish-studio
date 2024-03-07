@@ -145,26 +145,24 @@ export const PlatformsField = ({
                     key={platform.value}
                     className="flex items-center space-x-2 space-y-0"
                   >
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value.includes(platform.value)}
-                        onCheckedChange={(checked) => {
-                          return checked
-                            ? field.onChange([...field.value, platform.value])
-                            : field.onChange(
-                                field.value.filter(
-                                  (value) => value !== platform.value,
-                                ),
-                              );
-                        }}
-                        disabled={
-                          isLoading ||
-                          getPost(platform.value)?.status === PostStatus.SUCCESS
-                        }
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormLabel className="text-sm font-normal">
+                    {getPost(platform.value)?.status !== PostStatus.SUCCESS && (
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value.includes(platform.value)}
+                          onCheckedChange={(checked) => {
+                            return checked
+                              ? field.onChange([...field.value, platform.value])
+                              : field.onChange(
+                                  field.value.filter(
+                                    (value) => value !== platform.value,
+                                  ),
+                                );
+                          }}
+                          {...field}
+                        />
+                      </FormControl>
+                    )}
+                    <FormLabel className="text-sm font-semibold">
                       {platform.label}
                     </FormLabel>
                   </FormItem>
