@@ -26,8 +26,9 @@ import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { siteConfig } from "@/config/site";
-import useUserStore from "@/lib/store/user";
 import { trpc } from "@/utils/trpc";
+
+import { useResetUser } from "../use-reset-user";
 
 interface HashnodeConnectFormProps
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -50,15 +51,7 @@ export function HashnodeConnectForm({
   const [error, setError] = useState<string | null>(null);
 
   const utils = trpc.useUtils();
-  const { setUser, setIsLoading } = useUserStore();
-
-  const { refetch: getUser } = trpc.auth.getMe.useQuery(undefined, {
-    enabled: false,
-    onSuccess: ({ data }) => {
-      setUser(data.user);
-      setIsLoading(false);
-    },
-  });
+  const { resetUser } = useResetUser();
 
   const { mutateAsync: connect, isLoading: isConnecting } =
     trpc.platforms.hashnode.connect.useMutation({
@@ -66,10 +59,7 @@ export function HashnodeConnectForm({
         toast.success(data.message);
         await utils.platforms.getAll.invalidate();
 
-        setIsLoading(true);
-        await getUser();
-
-        setIsOpen(false);
+        await resetUser();
       },
       onError: (error) => {
         setError(error.message);
@@ -100,6 +90,7 @@ export function HashnodeConnectForm({
           delisted: data.settings.delisted === "true",
         },
       });
+      setIsOpen(false);
     } catch {
       // Ignore
     }

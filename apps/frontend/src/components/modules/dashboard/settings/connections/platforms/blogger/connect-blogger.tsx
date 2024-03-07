@@ -7,8 +7,9 @@ import { toast } from "@itsrakesh/ui";
 
 import { DotsLoader } from "@/components/ui/loaders/dots-loader";
 import { siteConfig } from "@/config/site";
-import useUserStore from "@/lib/store/user";
 import { trpc } from "@/utils/trpc";
+
+import { useResetUser } from "../use-reset-user";
 
 export function ConnectBlogger() {
   const searchParams = useSearchParams();
@@ -17,23 +18,14 @@ export function ConnectBlogger() {
   const code = searchParams.get("code");
 
   const utils = trpc.useUtils();
-  const { setUser, setIsLoading } = useUserStore();
-
-  const { refetch: getUser } = trpc.auth.getMe.useQuery(undefined, {
-    enabled: false,
-    onSuccess: ({ data }) => {
-      setUser(data.user);
-      setIsLoading(false);
-    },
-  });
+  const { resetUser } = useResetUser();
 
   const { mutateAsync: connect } = trpc.platforms.blogger.connect.useMutation({
     onSuccess: async ({ data }) => {
       toast.success(data.message);
       await utils.platforms.getAll.invalidate();
 
-      setIsLoading(true);
-      await getUser();
+      await resetUser();
 
       router.push(siteConfig.pages.settings.connections.link);
     },

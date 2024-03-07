@@ -60,7 +60,6 @@ export function HashnodeEditForm({
       onSuccess: async ({ data }) => {
         toast.success(data.message);
         await utils.platforms.getAll.invalidate();
-        setIsOpen(false);
       },
       onError: (error) => {
         setError(error.message);
@@ -91,6 +90,7 @@ export function HashnodeEditForm({
           delisted: data.settings.delisted === "true",
         },
       });
+      setIsOpen(false);
     } catch {
       // Ignore
     }

@@ -23,10 +23,10 @@ import { ErrorBox } from "@/components/ui/error-box";
 import { LinkButton } from "@/components/ui/link-button";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { siteConfig } from "@/config/site";
-import useUserStore from "@/lib/store/user";
 import { trpc } from "@/utils/trpc";
 
 import { InfoCard } from "../../info-card";
+import { useResetUser } from "../use-reset-user";
 
 interface DevConnectFormProps extends React.HTMLAttributes<HTMLDivElement> {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -44,15 +44,7 @@ export function DevConnectForm({
   const [error, setError] = useState<string | null>(null);
 
   const utils = trpc.useUtils();
-  const { setUser, setIsLoading } = useUserStore();
-
-  const { refetch: getUser } = trpc.auth.getMe.useQuery(undefined, {
-    enabled: false,
-    onSuccess: ({ data }) => {
-      setUser(data.user);
-      setIsLoading(false);
-    },
-  });
+  const { resetUser } = useResetUser();
 
   const { mutateAsync: connect, isLoading: isConnecting } =
     trpc.platforms.devto.connect.useMutation({
@@ -60,10 +52,7 @@ export function DevConnectForm({
         toast.success(data.message);
         await utils.platforms.getAll.invalidate();
 
-        setIsLoading(true);
-        await getUser();
-
-        setIsOpen(false);
+        await resetUser();
       },
       onError: (error) => {
         setError(error.message);
@@ -85,6 +74,7 @@ export function DevConnectForm({
         ...data,
         status: data.status === "true",
       });
+      setIsOpen(false);
     } catch {
       // Ignore
     }

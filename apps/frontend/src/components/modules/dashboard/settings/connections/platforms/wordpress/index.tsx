@@ -17,6 +17,7 @@ import { trpc } from "@/utils/trpc";
 
 import { ConnectionCard } from "../../connection-card";
 import { ImportPostsBody } from "../import-dialog";
+import { useResetUser } from "../use-reset-user";
 import { WordPressConnectForm } from "./connect-form";
 import { WordPressEditForm } from "./edit-form";
 
@@ -38,6 +39,7 @@ export function WordPress({ data, isLoading }: Readonly<WordPressProps>) {
   });
 
   const utils = trpc.useUtils();
+  const { resetUser } = useResetUser();
 
   const handleDisconnect = async () => {
     try {
@@ -52,8 +54,9 @@ export function WordPress({ data, isLoading }: Readonly<WordPressProps>) {
               window.open(siteConfig.links.wordpressConnectedApps, "_blank");
             },
           },
-        }
+        },
       );
+      await resetUser();
     } catch {
       toast.error(disconnectError?.message ?? "Something went wrong.");
     }
@@ -103,7 +106,7 @@ export function ImportPosts() {
       },
       {
         staleTime: 60_000,
-      }
+      },
     );
 
   const posts = data?.data.posts ?? [];

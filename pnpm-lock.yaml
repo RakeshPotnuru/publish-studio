@@ -71,6 +71,9 @@ importers:
       cookies-next:
         specifier: ^4.1.1
         version: 4.1.1
+      date-fns:
+        specifier: ^3.0.6
+        version: 3.0.6
       jwt-decode:
         specifier: ^4.0.0
         version: 4.0.0

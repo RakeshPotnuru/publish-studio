@@ -21,7 +21,7 @@ if (
   !process.env.NEXT_PUBLIC_WEBSOCKET_URL
 ) {
   throw new Error(
-    "One of NEXT_PUBLIC_TRPC_API_URL or NEXT_PUBLIC_WEBSOCKET_URL is not set",
+    "One of NEXT_PUBLIC_TRPC_API_URL or NEXT_PUBLIC_WEBSOCKET_URL is not set"
   );
 }
 
@@ -29,63 +29,63 @@ const wsClient = createWSClient({
   url: process.env.NEXT_PUBLIC_WEBSOCKET_URL,
 });
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 30_000,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      retry: false,
+    },
+  },
+});
+
+const token = getCookie("ps_access_token");
+
+const trpcClient = trpc.createClient({
+  transformer: superjson,
+  links: [
+    loggerLink({
+      enabled: () => process.env.NODE_ENV === "development",
+    }),
+    splitLink({
+      condition: (op) => op.type === "subscription",
+      true: wsLink<AppRouter>({ client: wsClient }),
+      false: httpBatchLink({
+        url: process.env.NEXT_PUBLIC_TRPC_API_URL,
+        headers() {
+          if (!token) {
+            return {};
+          }
+
+          return {
+            Authorization: `Bearer ${token}`,
+          };
+        },
+        fetch: async (input, init?) => {
+          const fetch = getFetch();
+          return fetch(input, {
+            ...init,
+            credentials:
+              process.env.NODE_ENV === "production" ? "include" : "omit",
+          });
+        },
+      }),
+    }),
+  ],
+});
+
 export function TRPCProvider({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        staleTime: 5000,
-        refetchOnWindowFocus: false,
-        refetchOnReconnect: false,
-        retry: false,
-      },
-    },
-  });
-
   if (
     !process.env.NEXT_PUBLIC_TRPC_API_URL ||
     !process.env.NEXT_PUBLIC_WEBSOCKET_URL
   ) {
     throw new Error(
-      "One of NEXT_PUBLIC_TRPC_API_URL or NEXT_PUBLIC_WEBSOCKET_URL is not set",
+      "One of NEXT_PUBLIC_TRPC_API_URL or NEXT_PUBLIC_WEBSOCKET_URL is not set"
     );
   }
-
-  const token = getCookie("ps_access_token");
-
-  const trpcClient = trpc.createClient({
-    transformer: superjson,
-    links: [
-      loggerLink({
-        enabled: () => process.env.NODE_ENV === "development",
-      }),
-      splitLink({
-        condition: (op) => op.type === "subscription",
-        true: wsLink<AppRouter>({ client: wsClient }),
-        false: httpBatchLink({
-          url: process.env.NEXT_PUBLIC_TRPC_API_URL,
-          headers() {
-            if (!token) {
-              return {};
-            }
-
-            return {
-              Authorization: `Bearer ${token}`,
-            };
-          },
-          fetch: async (input, init?) => {
-            const fetch = getFetch();
-            return fetch(input, {
-              ...init,
-              credentials:
-                process.env.NODE_ENV === "production" ? "include" : "omit",
-            });
-          },
-        }),
-      }),
-    ],
-  });
 
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>

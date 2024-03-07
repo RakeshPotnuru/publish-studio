@@ -27,8 +27,9 @@ import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { siteConfig } from "@/config/site";
-import useUserStore from "@/lib/store/user";
 import { trpc } from "@/utils/trpc";
+
+import { useResetUser } from "../use-reset-user";
 
 interface MediumConnectFormProps extends React.HTMLAttributes<HTMLDivElement> {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -47,15 +48,7 @@ export function MediumConnectForm({
   const [error, setError] = useState<string | null>(null);
 
   const utils = trpc.useUtils();
-  const { setUser, setIsLoading } = useUserStore();
-
-  const { refetch: getUser } = trpc.auth.getMe.useQuery(undefined, {
-    enabled: false,
-    onSuccess: ({ data }) => {
-      setUser(data.user);
-      setIsLoading(false);
-    },
-  });
+  const { resetUser } = useResetUser();
 
   const { mutateAsync: connect, isLoading: isConnecting } =
     trpc.platforms.medium.connect.useMutation({
@@ -63,10 +56,7 @@ export function MediumConnectForm({
         toast.success(data.message);
         await utils.platforms.getAll.invalidate();
 
-        setIsLoading(true);
-        await getUser();
-
-        setIsOpen(false);
+        await resetUser();
       },
       onError: (error) => {
         setError(error.message);
@@ -89,6 +79,7 @@ export function MediumConnectForm({
         ...data,
         notify_followers: data.notify_followers === "true",
       });
+      setIsOpen(false);
     } catch {
       // Ignore
     }

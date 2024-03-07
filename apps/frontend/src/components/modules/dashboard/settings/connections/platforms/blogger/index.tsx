@@ -15,6 +15,7 @@ import { trpc } from "@/utils/trpc";
 
 import { ConnectionCard } from "../../connection-card";
 import { ImportPostsBodyWithoutPrevious } from "../import-dialog";
+import { useResetUser } from "../use-reset-user";
 import { BloggerConnectForm } from "./connect-form";
 import { BloggerEditForm } from "./edit-form";
 
@@ -36,6 +37,7 @@ export function Blogger({ data, isLoading }: Readonly<BloggerProps>) {
   });
 
   const utils = trpc.useUtils();
+  const { resetUser } = useResetUser();
 
   const handleDisconnect = async () => {
     try {
@@ -50,8 +52,9 @@ export function Blogger({ data, isLoading }: Readonly<BloggerProps>) {
               window.open(siteConfig.links.googleConnectedApps, "_blank");
             },
           },
-        }
+        },
       );
+      await resetUser();
     } catch {
       toast.error(disconnectError?.message ?? "Something went wrong.");
     }
@@ -104,7 +107,7 @@ export function ImportPosts() {
       },
       {
         staleTime: 60_000,
-      }
+      },
     );
 
   useEffect(() => {

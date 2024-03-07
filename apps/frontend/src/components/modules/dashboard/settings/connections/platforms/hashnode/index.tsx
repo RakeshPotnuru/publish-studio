@@ -15,6 +15,7 @@ import { trpc } from "@/utils/trpc";
 import { deserialize } from "../../../../../../editor/transform-markdown";
 import { ConnectionCard } from "../../connection-card";
 import { ImportPostsBodyWithoutPrevious } from "../import-dialog";
+import { useResetUser } from "../use-reset-user";
 import { HashnodeConnectForm } from "./connect-form";
 import { HashnodeEditForm } from "./edit-form";
 
@@ -36,11 +37,13 @@ export function Hashnode({ data, isLoading }: Readonly<HashnodeToProps>) {
   });
 
   const utils = trpc.useUtils();
+  const { resetUser } = useResetUser();
 
   const handleDisconnect = async () => {
     try {
       await disconnect();
       await utils.platforms.getAll.invalidate();
+      await resetUser();
     } catch {
       toast.error(disconnectError?.message ?? "Something went wrong.");
     }
@@ -97,7 +100,7 @@ export function ImportPosts() {
       },
       {
         staleTime: 60_000,
-      }
+      },
     );
 
   useEffect(() => {

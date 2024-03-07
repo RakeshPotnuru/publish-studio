@@ -57,7 +57,6 @@ export function MediumEditForm({
       onSuccess: async ({ data }) => {
         toast.success(data.message);
         await utils.platforms.getAll.invalidate();
-        setIsOpen(false);
       },
       onError: (error) => {
         setError(error.message);
@@ -80,6 +79,7 @@ export function MediumEditForm({
         ...data,
         notify_followers: data.notify_followers === "true",
       });
+      setIsOpen(false);
     } catch {
       // Ignore
     }

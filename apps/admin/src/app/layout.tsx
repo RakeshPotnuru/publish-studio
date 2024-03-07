@@ -89,6 +89,7 @@ export default function RootLayout({
         />
         <meta name="msapplication-TileColor" content="#EB5757" />
         <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
+        <meta name="robots" content="noindex" />
       </head>
       <body className="min-h-dvh bg-slate-200 dark:bg-slate-700">
         {(process.env.NODE_ENV === "test" ||

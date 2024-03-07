@@ -55,7 +55,6 @@ export function GhostEditForm({
       onSuccess: async ({ data }) => {
         toast.success(data.message);
         await utils.platforms.getAll.invalidate();
-        setIsOpen(false);
       },
       onError: (error) => {
         setError(error.message);
@@ -74,6 +73,7 @@ export function GhostEditForm({
     try {
       setError(null);
       await edit(data);
+      setIsOpen(false);
     } catch {
       // Ignore
     }
