@@ -1,5 +1,5 @@
 export const Images = {
-  projectPage: "/images/demo/project-page.png",
+  projectPage: "/images/demo/project-page-dark.png",
   logo: "/images/logo.webp",
   devLogo: "/images/platforms/dev-logo.webp",
   mediumLogo: "/images/platforms/medium-logo.webp",

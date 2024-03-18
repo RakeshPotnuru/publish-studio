@@ -54,7 +54,16 @@ export function Platforms() {
         }}
         className="text-center"
       >
-        <div className="flex flex-col space-y-20">
+        <div className="flex justify-center -mt-96 relative z-10">
+          <Image
+            src={Images.projectPage}
+            width={1280}
+            height={900}
+            alt="project page"
+            className="rounded-xl"
+          />
+        </div>
+        <div className="flex flex-col space-y-20 mt-24">
           <h1 className="bg-gradient-to-br from-slate-200 to-slate-400 bg-clip-text pb-4 text-5xl font-medium tracking-tight text-transparent">
             Reach your audience, <br /> wherever they are.
           </h1>

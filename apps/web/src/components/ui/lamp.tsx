@@ -17,7 +17,7 @@ export const LampContainer = ({
     <div
       className={cn(
         "relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-slate-950 w-full rounded-md z-0",
-        className
+        className,
       )}
     >
       <div className="z-10 w-full">
@@ -33,7 +33,8 @@ export const LampContainer = ({
             ease: "easeInOut",
           }}
           style={{
-            backgroundImage: "conic-gradient(var(--conic-position), var(--tw-gradient-stops))",
+            backgroundImage:
+              "conic-gradient(var(--conic-position), var(--tw-gradient-stops))",
           }}
           className="bg-gradient-conic absolute inset-auto right-1/2 h-56 w-[30rem] overflow-visible from-red-500 via-transparent to-transparent text-white [--conic-position:from_70deg_at_center_top]"
         >
@@ -49,7 +50,8 @@ export const LampContainer = ({
             ease: "easeInOut",
           }}
           style={{
-            backgroundImage: "conic-gradient(var(--conic-position), var(--tw-gradient-stops))",
+            backgroundImage:
+              "conic-gradient(var(--conic-position), var(--tw-gradient-stops))",
           }}
           className="bg-gradient-conic absolute inset-auto left-1/2 h-56 w-[30rem] from-transparent via-transparent to-red-500 text-white [--conic-position:from_290deg_at_center_top]"
         >
