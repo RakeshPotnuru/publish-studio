@@ -34,8 +34,8 @@ export function Hero() {
                 </span>
                 <div className="relative z-10 flex items-center space-x-2 rounded-full bg-zinc-950 px-4 py-0.5 ring-1 ring-white/10 ">
                   <span>
-                    Publish Studio in now in closed beta. Read the announcement
-                    article.
+                    ✨NEW✨ - Publish Studio is now in closed beta. Read the
+                    announcement article and join the waitlist.
                   </span>
                   <svg
                     fill="none"
