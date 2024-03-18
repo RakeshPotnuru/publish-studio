@@ -17,7 +17,7 @@ export function Hero() {
             duration: 0.8,
             ease: "easeInOut",
           }}
-          className="mt-24 sm:mt-8 text-center"
+          className="mt-8 text-center"
         >
           <div className="flex flex-col space-y-10">
             <h1 className="bg-gradient-to-br from-rose-300 to-rose-500 bg-clip-text py-4 text-4xl font-medium tracking-tight text-transparent md:text-8xl">
