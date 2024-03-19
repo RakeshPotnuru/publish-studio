@@ -14,11 +14,11 @@ export function Footer({ className, ...props }: Readonly<FooterProps>) {
     <footer
       className={cn(
         "dark:bg-background-dark flex flex-row items-center space-x-4",
-        className
+        className,
       )}
       {...props}
     >
-      <p className="text-sm">&copy; Publish Studio</p>
+      <p className="text-sm">&copy; Publish Studio, 2024</p>
       <Button variant="link" className="h-max p-0" asChild>
         <Link href={siteConfig.links.privacyPolicy} target="_blank">
           Privacy Policy

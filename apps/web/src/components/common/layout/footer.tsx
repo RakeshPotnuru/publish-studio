@@ -11,7 +11,7 @@ export function Footer({ className, ...props }: Readonly<FooterProps>) {
   return (
     <footer className={cn("flex justify-center", className)} {...props}>
       <div className="flex flex-col items-center space-x-4 rounded-md bg-background px-2 py-1 sm:flex-row">
-        <p className="text-sm">&copy; Publish Studio</p>
+        <p className="text-sm">&copy; Publish Studio, 2024</p>
         <LinkButton href={siteConfig.pages.privacyPolicy.link} target="_parent">
           Privacy Policy
         </LinkButton>

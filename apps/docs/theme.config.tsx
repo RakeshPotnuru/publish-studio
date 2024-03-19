@@ -2,7 +2,7 @@ import { Images } from "@/assets/images";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { type DocsThemeConfig, ThemeSwitch } from "nextra-theme-docs";
+import { ThemeSwitch, type DocsThemeConfig } from "nextra-theme-docs";
 
 const config: DocsThemeConfig = {
   logo: (
@@ -96,10 +96,11 @@ const config: DocsThemeConfig = {
   footer: {
     text: (
       <span>
-        © {new Date().getFullYear()}{" "}
+        ©{" "}
         <Link href="https://publishstudio.one" target="_blank">
           Publish Studio
         </Link>
+        , 2024
       </span>
     ),
   },
