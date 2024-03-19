@@ -4,6 +4,7 @@
     "bradlc.vscode-tailwindcss",
     "esbenp.prettier-vscode",
     "ms-vscode.vscode-typescript-next",
-    "usernamehw.errorlens"
+    "usernamehw.errorlens",
+    "streetsidesoftware.code-spell-checker"
   ]
 }
