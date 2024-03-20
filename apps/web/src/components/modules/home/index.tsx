@@ -1,8 +1,9 @@
 "use client";
 
-import { IconBook2, IconLifebuoy } from "@tabler/icons-react";
+import { IconBook2, IconLifebuoy, IconLogin } from "@tabler/icons-react";
 
 import { FloatingNav } from "@/components/ui/floating-navbar";
+import { siteConfig } from "@/config/site";
 
 import { Cta } from "./cta";
 import { Features } from "./features";
@@ -20,6 +21,7 @@ export function Home() {
       },
       icon: <IconBook2 className="h-4 w-4 text-neutral-500 dark:text-white" />,
     },
+
     {
       name: "Support",
       link: {
@@ -28,6 +30,13 @@ export function Home() {
       icon: (
         <IconLifebuoy className="h-4 w-4 text-neutral-500 dark:text-white" />
       ),
+    },
+    {
+      name: "Login",
+      link: {
+        href: `${siteConfig.links.mainApp}/login`,
+      },
+      icon: <IconLogin className="h-4 w-4 text-neutral-500 dark:text-white" />,
     },
   ];
 

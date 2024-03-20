@@ -29,14 +29,14 @@ const cookieOptions: SetOption = {
 const accessTokenCookieOptions: SetOption = {
   ...cookieOptions,
   expires: new Date(
-    Date.now() + defaultConfig.accessTokenExpiresIn * 60 * 1000
+    Date.now() + defaultConfig.accessTokenExpiresIn * 60 * 1000,
   ), // milliseconds
 };
 
 const refreshTokenCookieOptions: SetOption = {
   ...cookieOptions,
   expires: new Date(
-    Date.now() + defaultConfig.refreshTokenExpiresIn * 60 * 1000
+    Date.now() + defaultConfig.refreshTokenExpiresIn * 60 * 1000,
   ),
 };
 
@@ -63,7 +63,7 @@ export default class AuthController extends AuthService {
       "verificationTokenPrivateKey",
       {
         expiresIn: `${defaultConfig.verificationTokenExpiresIn}m`,
-      }
+      },
     );
 
     if (!token) {
@@ -79,7 +79,7 @@ export default class AuthController extends AuthService {
   async verifyEmailHandler(input: { token: string }, ctx: Context) {
     const payload = await verifyJwt<{ email: string }>(
       input.token,
-      "verificationTokenPublicKey"
+      "verificationTokenPublicKey",
     );
 
     if (!payload) {
@@ -135,13 +135,6 @@ export default class AuthController extends AuthService {
       });
     }
 
-    if (!(await super.isEmailWhitelisted(input.email))) {
-      throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: "Your email is not whitelisted. Please contact support.",
-      });
-    }
-
     const user = await super.getUserByEmail(input.email);
 
     if (user) {
@@ -157,7 +150,7 @@ export default class AuthController extends AuthService {
       "verificationTokenPrivateKey",
       {
         expiresIn: `${defaultConfig.verificationTokenExpiresIn}m`,
-      }
+      },
     );
 
     if (!verification_token) {
@@ -195,13 +188,6 @@ export default class AuthController extends AuthService {
 
     // If user does not exist, create a new user and login the user.
     if (!user) {
-      if (!(await super.isEmailWhitelisted(payload.email))) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Your email is not whitelisted. Please contact support.",
-        });
-      }
-
       const newUser = await super.createUser({
         first_name: payload.given_name,
         last_name: payload.family_name,
@@ -368,7 +354,7 @@ export default class AuthController extends AuthService {
       "resetPasswordTokenPrivateKey",
       {
         expiresIn: `${defaultConfig.resetPasswordTokenExpiresIn}m`,
-      }
+      },
     );
 
     if (!resetEmailToken) {
@@ -391,7 +377,7 @@ export default class AuthController extends AuthService {
   async resetPasswordHandler(input: IResetPasswordInput) {
     const payload = await verifyJwt<{ email: string }>(
       input.token,
-      "resetPasswordTokenPublicKey"
+      "resetPasswordTokenPublicKey",
     );
 
     if (!payload) {
@@ -442,7 +428,7 @@ export default class AuthController extends AuthService {
     // Validate the Refresh token
     const decoded = await verifyJwt<{ sub: string }>(
       refreshToken,
-      "refreshTokenPublicKey"
+      "refreshTokenPublicKey",
     );
 
     if (!decoded) {
@@ -464,7 +450,7 @@ export default class AuthController extends AuthService {
 
     // Check if the user exist
     const user = await this.getUserById(
-      JSON.parse(session)._id as Types.ObjectId
+      JSON.parse(session)._id as Types.ObjectId,
     );
 
     if (!user) {
@@ -480,7 +466,7 @@ export default class AuthController extends AuthService {
       "accessTokenPrivateKey",
       {
         expiresIn: `${defaultConfig.accessTokenExpiresIn}m`,
-      }
+      },
     );
 
     // Send the access token as cookie
@@ -536,7 +522,7 @@ export default class AuthController extends AuthService {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
           },
-        }
+        },
       );
 
       if (!response.data.success) {

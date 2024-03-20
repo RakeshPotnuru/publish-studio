@@ -13,7 +13,7 @@ const MagicBorderBtn = forwardRef<HTMLButtonElement, MagicBorderBtnProps>(
         ref={ref}
         className={cn(
           className,
-          "relative h-min inline-flex overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
+          "relative h-9 inline-flex overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50",
         )}
         {...props}
       >
@@ -23,7 +23,7 @@ const MagicBorderBtn = forwardRef<HTMLButtonElement, MagicBorderBtnProps>(
         </span>
       </Button>
     );
-  }
+  },
 );
 MagicBorderBtn.displayName = "MagicBorderBtn";
 
