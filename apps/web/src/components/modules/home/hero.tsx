@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 
 import { LampContainer } from "@/components/ui/lamp";
 import { MagicBorderBtn } from "@/components/ui/magic-border-btn";
+import { siteConfig } from "@/config/site";
 
 export function Hero() {
   return (
@@ -25,17 +26,14 @@ export function Hero() {
               className="group relative inline-block max-w-max cursor-pointer self-center rounded-full bg-slate-800 p-px text-xs font-semibold leading-6 text-white no-underline shadow-2xl shadow-zinc-900"
               asChild
             >
-              <Link
-                href="https://medium.com/@itsrakesh/introducing-publish-studio-56681e27e767"
-                target="_blank"
-              >
+              <Link href={`${siteConfig.links.mainApp}/register`}>
                 <span className="absolute inset-0 overflow-hidden rounded-full">
                   <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(56,189,248,0.6)_0%,rgba(56,189,248,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                 </span>
                 <div className="relative z-10 flex items-center space-x-2 rounded-full bg-zinc-950 px-4 py-0.5 ring-1 ring-white/10 ">
                   <span>
-                    ✨NEW✨ - Publish Studio is now in closed beta. Read the
-                    announcement article and join the waitlist.
+                    ✨NEW✨ - Publish Studio is now in open beta. Sign Up for
+                    free.
                   </span>
                   <svg
                     fill="none"
@@ -63,8 +61,8 @@ export function Hero() {
               Seamlessly create captivating stories, and connect with your
               audience like never before.
             </p>
-            <Link href="/#cta">
-              <MagicBorderBtn>Join waitlist</MagicBorderBtn>
+            <Link href={`${siteConfig.links.mainApp}/register`}>
+              <MagicBorderBtn>Start Writing - It&apos;s free!</MagicBorderBtn>
             </Link>
           </div>
         </motion.div>
