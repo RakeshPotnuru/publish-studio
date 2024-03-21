@@ -1,6 +1,6 @@
 const cspHeader = `
 default-src 'self';
-connect-src 'self' ${process.env.NEXT_PUBLIC_CORE_URL} ${process.env.NEXT_PUBLIC_WEBSOCKET_URL} ${process.env.NEXT_PUBLIC_R2_BUCKET_URL} https://accounts.google.com;
+connect-src 'self' ${process.env.NEXT_PUBLIC_CORE_URL} ${process.env.NEXT_PUBLIC_WEBSOCKET_URL} ${process.env.NEXT_PUBLIC_R2_BUCKET_URL} https://accounts.google.com https://images.unsplash.com https://images.pexels.com https://ik.imagekit.io;
 script-src 'self' 'unsafe-eval' 'unsafe-inline' https://challenges.cloudflare.com https://accounts.google.com https://media-library.cloudinary.com;
 frame-src 'self' https://challenges.cloudflare.com https://accounts.google.com https://eml.imagekit.io https://media-library.cloudinary.com https://console.cloudinary.com;
 style-src 'self' 'unsafe-inline' https://accounts.google.com;

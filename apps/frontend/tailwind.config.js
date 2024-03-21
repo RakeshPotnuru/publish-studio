@@ -100,6 +100,10 @@ module.exports = {
           DEFAULT: "#333333",
           foreground: "#FFFFFF",
         },
+        docx: {
+          DEFAULT: "#2B579A",
+          foreground: "#FFFFFF",
+        },
       },
       borderRadius: {
         lg: `var(--radius)`,
