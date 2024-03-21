@@ -5,7 +5,7 @@ import type { Job } from "bullmq";
 import { Queue, Worker } from "bullmq";
 import type { Types } from "mongoose";
 
-import defaultConfig, { bullMQConnectionOptions } from "../config/app.config";
+import defaultConfig, { bullMQConnectionOptions } from "../config/app";
 import type { EmailTemplate } from "../config/constants";
 import { constants } from "../config/constants";
 import { logtail } from "./logtail";
@@ -26,7 +26,7 @@ export const sendEmail = async (
   template: EmailTemplate,
   from_address: MailDataRequired["from"],
   variables?: MailDataRequired["dynamicTemplateData"],
-  send_at?: number // Unix timestamp, should be less than 72 hours from now
+  send_at?: number, // Unix timestamp, should be less than 72 hours from now
 ): Promise<void> => {
   try {
     const input: MailDataRequired = {
@@ -88,7 +88,7 @@ export const scheduleEmail = async (data: IEmail) => {
           job.data.emails as string[],
           job.data.template as EmailTemplate,
           job.data.from_address as string,
-          job.data.variables as Record<string, string>
+          job.data.variables as Record<string, string>,
         );
 
         return job.data as IEmail;
@@ -97,7 +97,7 @@ export const scheduleEmail = async (data: IEmail) => {
         connection: bullMQConnectionOptions,
         removeOnComplete: { count: 0 },
         removeOnFail: { count: 0 },
-      }
+      },
     );
 
     emailWorker.on("failed", (job) => {

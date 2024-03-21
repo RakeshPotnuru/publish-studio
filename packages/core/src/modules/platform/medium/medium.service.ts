@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import axios from "axios";
 import type { Types } from "mongoose";
 
-import defaultConfig from "../../../config/app.config";
+import defaultConfig from "../../../config/app";
 import { Platform } from "../../../config/constants";
 import { logtail } from "../../../utils/logtail";
 import User from "../../user/user.model";

@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { OAuth2Client } from "google-auth-library";
 import type { Types } from "mongoose";
 
-import defaultConfig from "../../../config/app.config";
+import defaultConfig from "../../../config/app";
 import { Platform } from "../../../config/constants";
 import PlatformModel from "../../../modules/platform/platform.model";
 import User from "../../../modules/user/user.model";

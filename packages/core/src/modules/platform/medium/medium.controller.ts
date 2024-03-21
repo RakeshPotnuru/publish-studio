@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
-import defaultConfig from "../../../config/app.config";
+import defaultConfig from "../../../config/app";
 import type { MediumStatus } from "../../../config/constants";
 import { Platform, PostStatus } from "../../../config/constants";
 import type { Context } from "../../../trpc";

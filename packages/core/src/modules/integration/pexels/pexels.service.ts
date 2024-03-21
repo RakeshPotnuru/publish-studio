@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 import { createClient } from "pexels";
 
-import defaultConfig from "../../../config/app.config";
+import defaultConfig from "../../../config/app";
 import { logtail } from "../../../utils/logtail";
 
 export default class PexelsService {

@@ -5,7 +5,7 @@ import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 import { v4 as uuidV4 } from "uuid";
 
-import defaultConfig from "../../config/app.config";
+import defaultConfig from "../../config/app";
 import type { IPaginationOptions } from "../../types/common.types";
 import type { IFile } from "../../types/file.types";
 import { logtail } from "../../utils/logtail";
@@ -18,7 +18,7 @@ export default class AssetService extends ProjectService {
   async uploadImage(
     file: IFile,
     project_id: Types.ObjectId | undefined,
-    user_id: Types.ObjectId
+    user_id: Types.ObjectId,
   ) {
     try {
       const { mimetype, originalname, size } = file;
@@ -89,7 +89,7 @@ export default class AssetService extends ProjectService {
 
   async getAllAssetsByUserId(
     pagination: IPaginationOptions,
-    user_id: Types.ObjectId
+    user_id: Types.ObjectId,
   ): Promise<IAssetsResponse> {
     try {
       const total_rows = await Asset.countDocuments({ user_id }).exec();
@@ -132,7 +132,7 @@ export default class AssetService extends ProjectService {
    */
   async deleteAssets(
     ids: Types.ObjectId[],
-    user_id: Types.ObjectId
+    user_id: Types.ObjectId,
   ): Promise<{
     deletedCount: number;
   }> {

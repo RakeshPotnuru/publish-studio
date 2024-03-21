@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { createApi } from "unsplash-js";
 
-import defaultConfig from "../../../config/app.config";
+import defaultConfig from "../../../config/app";
 import { logtail } from "../../../utils/logtail";
 
 export default class UnsplashService {

@@ -14,7 +14,7 @@ import "./config/env";
 import "./utils/db";
 import "./wss";
 
-import defaultConfig from "./config/app.config";
+import defaultConfig from "./config/app";
 import appRouter from "./routes";
 import { createContext } from "./trpc";
 import { logtail } from "./utils/logtail";
@@ -43,7 +43,7 @@ const corsOptions: CorsOptions = {
     process.env.NODE_ENV === "production"
       ? (
           origin: string | undefined,
-          callback: (error: Error | null, allow?: boolean) => void
+          callback: (error: Error | null, allow?: boolean) => void,
         ) => {
           if (
             !origin ||
@@ -55,7 +55,7 @@ const corsOptions: CorsOptions = {
               new TRPCError({
                 code: "UNAUTHORIZED",
                 message: "Not allowed by CORS",
-              })
+              }),
             );
           }
         }
@@ -75,7 +75,7 @@ app.use(
   createExpressMiddleware({
     router: appRouter,
     createContext,
-  })
+  }),
 );
 
 app.listen(process.env.PORT, () => {

@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import type { CreateExpressContextOptions } from "@trpc/server/adapters/express";
 
-import defaultConfig from "../config/app.config";
+import defaultConfig from "../config/app";
 import User from "../modules/user/user.model";
 import type { IUser } from "../modules/user/user.types";
 import { verifyJwt } from "../utils/jwt";

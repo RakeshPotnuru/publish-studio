@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import axios from "axios";
 import configcat from "configcat-node";
 
-import defaultConfig from "../../config/app.config";
+import defaultConfig from "../../config/app";
 import { EmailTemplate } from "../../config/constants";
 import { createCaller } from "../../routes";
 import type { Context } from "../../trpc";
@@ -19,7 +19,7 @@ export default class AuthService extends UserService {
   async isDisposableEmail(email: string): Promise<boolean> {
     try {
       const response = await axios.get(
-        `${defaultConfig.kickboxApiUrl}/${email}`
+        `${defaultConfig.disposableEmailChecker}${email}`,
       );
       return response.data.disposable as boolean;
     } catch (error) {
@@ -39,7 +39,7 @@ export default class AuthService extends UserService {
     return await configCatClient.getValueAsync(
       "isAdmin",
       false,
-      new configcat.User(email, email)
+      new configcat.User(email, email),
     );
   }
 
@@ -51,7 +51,7 @@ export default class AuthService extends UserService {
       {
         first_name: user.first_name,
       },
-      Math.floor(Date.now() / 1000) + 5 * 60 // 5 minutes from now
+      Math.floor(Date.now() / 1000) + 5 * 60, // 5 minutes from now
     );
 
     await createCaller(ctx).notifications.create({
@@ -69,7 +69,7 @@ export default class AuthService extends UserService {
       process.env.FROM_EMAIL_AUTO,
       {
         verification_url: verificationUrl,
-      }
+      },
     );
 
     return {
@@ -90,7 +90,7 @@ export default class AuthService extends UserService {
         process.env.FROM_EMAIL_AUTO,
         {
           reset_password_url: resetPasswordUrl,
-        }
+        },
       );
 
       return {
@@ -126,7 +126,7 @@ export default class AuthService extends UserService {
         "refreshTokenPrivateKey",
         {
           expiresIn: `${defaultConfig.refreshTokenExpiresIn}m`,
-        }
+        },
       );
 
       return { access_token, refresh_token };

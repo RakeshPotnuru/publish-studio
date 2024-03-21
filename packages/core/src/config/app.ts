@@ -20,7 +20,7 @@ interface ICustomConfig {
   wordPressApiUrl: string;
   wordPressRedirectUri: string;
   bloggerRedirectUri: string;
-  kickboxApiUrl: string;
+  disposableEmailChecker: string;
   appName: string;
   resetPasswordTokenPrivateKey: string;
   resetPasswordTokenPublicKey: string;
@@ -51,7 +51,7 @@ const defaultConfig: ICustomConfig = {
   wordPressApiUrl: "https://public-api.wordpress.com",
   wordPressRedirectUri: `${process.env.CLIENT_URL}/settings/connections/connect-wp`,
   bloggerRedirectUri: `${process.env.CLIENT_URL}/settings/connections/connect-blogger`,
-  kickboxApiUrl: "https://open.kickbox.com/v1/disposable",
+  disposableEmailChecker: "https://disposable.debounce.io/?email=",
   appName: "Publish Studio",
   turnstileVerifyEndpoint:
     "https://challenges.cloudflare.com/turnstile/v0/siteverify",
@@ -71,7 +71,7 @@ export const bullMQConnectionOptions: ConnectionOptions = new Redis(
     retryStrategy: function (times: number) {
       return Math.max(Math.min(Math.exp(times), 20_000), 1000);
     },
-  }
+  },
 );
 
 export default defaultConfig;

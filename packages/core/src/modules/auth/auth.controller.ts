@@ -5,7 +5,7 @@ import type { SetOption } from "cookies";
 import Cookies from "cookies";
 import type { Types } from "mongoose";
 
-import defaultConfig from "../../config/app.config";
+import defaultConfig from "../../config/app";
 import { AuthMode, ErrorCause, UserType } from "../../config/constants";
 import type { Context } from "../../trpc";
 import { verifyGoogleToken } from "../../utils/google/auth";

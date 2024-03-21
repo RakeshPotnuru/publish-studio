@@ -1,7 +1,7 @@
 import type { SignOptions } from "jsonwebtoken";
 import jwt from "jsonwebtoken";
 
-import defaultConfig from "../config/app.config";
+import defaultConfig from "../config/app";
 import { logtail } from "./logtail";
 
 export const signJwt = async (

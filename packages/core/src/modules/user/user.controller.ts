@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
-import defaultConfig from "../../config/app.config";
+import defaultConfig from "../../config/app";
 import type { Context } from "../../trpc";
 import { logtail } from "../../utils/logtail";
 import UserService from "./user.service";

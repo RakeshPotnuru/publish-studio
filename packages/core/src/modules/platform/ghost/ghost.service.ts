@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { TSGhostAdminAPI } from "@ts-ghost/admin-api";
 import type { Types } from "mongoose";
 
-import defaultConfig from "../../../config/app.config";
+import defaultConfig from "../../../config/app";
 import { Platform } from "../../../config/constants";
 import PlatformModel from "../../../modules/platform/platform.model";
 import User from "../../../modules/user/user.model";

@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import type { Types } from "mongoose";
 
-import defaultConfig from "../../config/app.config";
+import defaultConfig from "../../config/app";
 import { logtail } from "../../utils/logtail";
 import nlu from "../../utils/nlu";
 import ProjectService from "../project/project.service";

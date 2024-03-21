@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import type { Job } from "bullmq";
 import { Queue, Worker } from "bullmq";
 
-import { bullMQConnectionOptions } from "../../../config/app.config";
+import { bullMQConnectionOptions } from "../../../config/app";
 import { constants, Platform } from "../../../config/constants";
 import { logtail } from "../../../utils/logtail";
 import BloggerController from "../../platform/blogger/blogger.controller";
@@ -30,7 +30,7 @@ export default class PublishHelpers extends PublishService {
           delay,
           removeOnComplete: { count: 0 },
           removeOnFail: { count: 0 },
-        }
+        },
       );
       await postQueue.trimEvents(10);
 
@@ -48,7 +48,7 @@ export default class PublishHelpers extends PublishService {
           await publishService.publishPost(
             data.platforms,
             data.project,
-            data.user_id
+            data.user_id,
           );
 
           return job.data as ISchedule;
@@ -57,7 +57,7 @@ export default class PublishHelpers extends PublishService {
           connection: bullMQConnectionOptions,
           removeOnComplete: { count: 0 },
           removeOnFail: { count: 0 },
-        }
+        },
       );
 
       postWorker.on("failed", (job) => {
@@ -84,7 +84,7 @@ export default class PublishHelpers extends PublishService {
   }
 
   getPlatformCreateController(
-    platform: Platform
+    platform: Platform,
   ):
     | DevToController
     | HashnodeController
@@ -120,7 +120,7 @@ export default class PublishHelpers extends PublishService {
   }
 
   getPlatformUpdateController(
-    platform: Platform
+    platform: Platform,
   ):
     | DevToController
     | HashnodeController
