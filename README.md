@@ -8,8 +8,6 @@ This project has a monorepo structure, with the following packages:
 
 - [![Better Stack Badge](https://uptime.betterstack.com/status-badges/v1/monitor/11ryg.svg)](https://status.publishstudio.one/) `@publish-studio/web`: Landing page for the project. Check it at [packages/web](packages/web).
 
-- [![Better Stack Badge](https://uptime.betterstack.com/status-badges/v1/monitor/11ryf.svg)](https://status.publishstudio.one/) `@publish-studio/docs`: Documentation site for the project. Check it at [packages/docs](packages/docs).
-
 - [![Better Stack Badge](https://uptime.betterstack.com/status-badges/v1/monitor/12396.svg)](https://status.publishstudio.one/) `@publish-studio/admin`: Admin panel for the project. Check it at [packages/admin](packages/admin).
 
 ## Development
