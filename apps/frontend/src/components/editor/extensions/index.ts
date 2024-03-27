@@ -20,30 +20,15 @@ import OrderedList from "@tiptap/extension-ordered-list";
 import Paragraph from "@tiptap/extension-paragraph";
 import Placeholder from "@tiptap/extension-placeholder";
 import Strike from "@tiptap/extension-strike";
-import Table from "@tiptap/extension-table";
-import TableCell from "@tiptap/extension-table-cell";
-import TableHeader from "@tiptap/extension-table-header";
-import TableRow from "@tiptap/extension-table-row";
 import Text from "@tiptap/extension-text";
 import Typography from "@tiptap/extension-typography";
 import Underline from "@tiptap/extension-underline";
-import { mergeAttributes } from "@tiptap/react";
 import { all, createLowlight } from "lowlight";
 
-import SpeechRecognition from "./custom-extensions/speech-recognition";
+import SpeechRecognition from "../custom-extensions/speech-recognition";
+import { Table, TableCell, TableHeader, TableRow } from "./table";
 
 const lowlight = createLowlight(all);
-
-type Level = 1 | 2 | 3 | 4 | 5 | 6;
-
-const classes: Record<Level, string> = {
-  1: "text-4xl",
-  2: "text-3xl",
-  3: "text-2xl",
-  4: "text-xl",
-  5: "text-lg",
-  6: "text-base",
-};
 
 export const extensions = [
   Document,
@@ -62,22 +47,11 @@ export const extensions = [
   Dropcursor,
   Gapcursor,
   TableRow,
-  TableHeader.configure({
-    HTMLAttributes: {
-      class: "border p-2 bg-secondary",
-    },
-  }),
-  TableCell.configure({
-    HTMLAttributes: {
-      class: "border p-2",
-    },
-  }),
-  Table.configure({
-    resizable: true,
-  }),
+  TableHeader,
+  TableCell,
+  Table,
   Code.configure({
     HTMLAttributes: {
-      class: "bg-secondary text-sm p-1 rounded-md",
       spellcheck: false,
     },
   }),
@@ -87,40 +61,16 @@ export const extensions = [
         "p-2 my-2 border-l-4 border-gray-300 bg-gray-50 italic dark:border-gray-500 dark:bg-gray-800",
     },
   }),
-  BulletList.configure({
-    HTMLAttributes: {
-      class: "list-disc",
-    },
-  }),
-  OrderedList.configure({
-    HTMLAttributes: {
-      class: "list-decimal",
-    },
-  }),
+  BulletList,
+  OrderedList,
   Placeholder.configure({
     placeholder: "Once upon a time...",
   }),
-  TiptapHeading.configure({
-    levels: [1, 2, 3, 4, 5, 6],
-  }).extend({
-    renderHTML({ node, HTMLAttributes }) {
-      const hasLevel = this.options.levels.includes(node.attrs.level as Level);
-      const level: Level = hasLevel ? node.attrs.level : this.options.levels[0];
-
-      return [
-        `h${level}`,
-        mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
-          class: `${classes[level]}`,
-        }),
-        0,
-      ];
-    },
-  }),
+  TiptapHeading,
   CodeBlockLowlight.configure({
     lowlight,
     HTMLAttributes: {
       spellcheck: false,
-      class: "bg-code text-code-foreground text-sm p-4 rounded-md",
     },
   }),
   Image.configure({

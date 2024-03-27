@@ -65,7 +65,7 @@ export function ProjectSettings({
       </Tooltip>
       <SheetContent onCloseAutoFocus={(e) => e.preventDefault()}>
         <SheetHeader>
-          <SheetTitle>Settings</SheetTitle>
+          <SheetTitle>SETTINGS</SheetTitle>
           <SheetDescription>Your project settings.</SheetDescription>
         </SheetHeader>
         <div className="my-4 space-y-6">

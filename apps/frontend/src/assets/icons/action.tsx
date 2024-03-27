@@ -7,7 +7,7 @@ import {
   BiSolidSave,
 } from "react-icons/bi";
 import { BsArrowDownShort, BsArrowUpShort } from "react-icons/bs";
-import { HiDocumentDuplicate } from "react-icons/hi";
+import { HiDocumentDuplicate, HiOutlineClipboardCopy } from "react-icons/hi";
 import { IoMdLogOut, IoMdRefresh } from "react-icons/io";
 import {
   MdDriveFileMoveRtl,
@@ -46,4 +46,5 @@ export const ActionIcons = {
   MicOff: BiSolidMicrophoneOff,
   Import: TiDownload,
   Refresh: IoMdRefresh,
+  Copy: HiOutlineClipboardCopy,
 };

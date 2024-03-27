@@ -37,7 +37,7 @@ const SidebarItem = ({
               path === link ||
               (link === "/" && !path) ||
               segment === label.toLowerCase(),
-            "hover:bg-muted": path !== link && (link !== "/" || path),
+            "hover:bg-accent": path !== link && (link !== "/" || path),
           },
         )}
         {...props}

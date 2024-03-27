@@ -1,5 +1,6 @@
 "use client";
 
+import { constants } from "@publish-studio/core/src/config/constants";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { getFetch, httpBatchLink, loggerLink } from "@trpc/client";
@@ -14,7 +15,7 @@ export function TRPCProvider({
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: 5000,
+        staleTime: constants.GLOBAL_STALE_TIME,
         refetchOnWindowFocus: false,
         refetchOnReconnect: false,
         retry: false,

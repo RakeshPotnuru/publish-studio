@@ -290,7 +290,7 @@ export function PublishPost({
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Publish post</SheetTitle>
+          <SheetTitle>PUBLISH POST</SheetTitle>
           <SheetDescription>
             Publish your post to multiple platforms with a single click.
           </SheetDescription>

@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { toast } from "@itsrakesh/ui";
 import type { IProject } from "@publish-studio/core";
+import { constants } from "@publish-studio/core/src/config/constants";
 import { useEditor as useTiptapEditor } from "@tiptap/react";
 import TableOfContent, {
   type TableOfContentDataItem,
@@ -36,7 +37,20 @@ export function useEditor(project?: IProject) {
     } catch {
       // Ignore
     }
-  }, 3000);
+  }, constants.AUTOSAVE_INTERVAL);
+
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (!isLoading) return;
+      event.preventDefault();
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [isLoading]);
 
   const editor = useTiptapEditor({
     extensions: [

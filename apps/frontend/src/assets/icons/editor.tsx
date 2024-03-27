@@ -8,6 +8,13 @@ import { FiItalic, FiUnderline } from "react-icons/fi";
 import { GoBold } from "react-icons/go";
 import { GrRedo, GrUndo } from "react-icons/gr";
 import { HiTableCells } from "react-icons/hi2";
+import {
+  LuArrowDownToLine,
+  LuArrowLeftToLine,
+  LuArrowRightToLine,
+  LuArrowUpToLine,
+} from "react-icons/lu";
+import { LuGripVertical } from "react-icons/lu";
 import { MdFormatClear } from "react-icons/md";
 import { PiCodeBlockBold } from "react-icons/pi";
 import { RxDividerHorizontal } from "react-icons/rx";
@@ -30,4 +37,9 @@ export const EditorIcons = {
   ClearFormatting: MdFormatClear,
   Hardbreak: VscNewline,
   Table: HiTableCells,
+  AddRowBefore: LuArrowUpToLine,
+  AddRowAfter: LuArrowDownToLine,
+  AddColumnBefore: LuArrowLeftToLine,
+  AddColumnAfter: LuArrowRightToLine,
+  DragHandle: LuGripVertical,
 };

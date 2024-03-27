@@ -29,6 +29,16 @@ const generativeAIRouter = router({
       .mutation(({ input, ctx }) =>
         new GenerativeAIController().generateCategoriesHandler(input, ctx),
       ),
+
+    // changeTone: proProtectedProcedure
+    //   .input(z.object({ text: z.string(), tone: z.nativeEnum(TextTone) }))
+    //   .mutation(({ input, ctx }) =>
+    //     new GenerativeAIController().changeTextTone(
+    //       input.text,
+    //       input.tone,
+    //       ctx.user._id,
+    //     ),
+    //   ),
   }),
 });
 

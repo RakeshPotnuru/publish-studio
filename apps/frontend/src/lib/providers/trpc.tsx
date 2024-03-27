@@ -1,6 +1,7 @@
 "use client";
 
 import type { AppRouter } from "@publish-studio/core";
+import { constants } from "@publish-studio/core/src/config/constants";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
@@ -21,7 +22,7 @@ if (
   !process.env.NEXT_PUBLIC_WEBSOCKET_URL
 ) {
   throw new Error(
-    "One of NEXT_PUBLIC_TRPC_API_URL or NEXT_PUBLIC_WEBSOCKET_URL is not set"
+    "One of NEXT_PUBLIC_TRPC_API_URL or NEXT_PUBLIC_WEBSOCKET_URL is not set",
   );
 }
 
@@ -32,7 +33,7 @@ const wsClient = createWSClient({
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 30_000,
+      staleTime: constants.GLOBAL_STALE_TIME,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: false,
@@ -83,7 +84,7 @@ export function TRPCProvider({
     !process.env.NEXT_PUBLIC_WEBSOCKET_URL
   ) {
     throw new Error(
-      "One of NEXT_PUBLIC_TRPC_API_URL or NEXT_PUBLIC_WEBSOCKET_URL is not set"
+      "One of NEXT_PUBLIC_TRPC_API_URL or NEXT_PUBLIC_WEBSOCKET_URL is not set",
     );
   }
 

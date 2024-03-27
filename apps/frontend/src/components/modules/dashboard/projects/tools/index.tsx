@@ -33,7 +33,7 @@ export function ProjectTools({
       </Tooltip>
       <SheetContent onCloseAutoFocus={(e) => e.preventDefault()}>
         <SheetHeader>
-          <SheetTitle>Tools</SheetTitle>
+          <SheetTitle>TOOLS</SheetTitle>
           <SheetDescription>
             Tools to help you manage your project.
           </SheetDescription>
