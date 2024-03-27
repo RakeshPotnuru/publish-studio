@@ -217,6 +217,9 @@ importers:
       '@tanstack/react-table':
         specifier: ^8.10.7
         version: 8.10.7(react-dom@18.2.0)(react@18.2.0)
+      '@tiptap-pro/extension-drag-handle-react':
+        specifier: ^2.7.6
+        version: 2.7.6(@tiptap-pro/extension-drag-handle@2.7.6)(@tiptap/pm@2.1.12)(@tiptap/react@2.1.12)(react-dom@18.2.0)(react@18.2.0)
       '@tiptap-pro/extension-table-of-content':
         specifier: ^2.3.3
         version: 2.3.3(@tiptap/core@2.1.12)(@tiptap/pm@2.1.12)
@@ -4668,6 +4671,49 @@ packages:
       unist-util-visit: 5.0.0
     dev: false
 
+  /@tiptap-pro/extension-drag-handle-react@2.7.6(@tiptap-pro/extension-drag-handle@2.7.6)(@tiptap/pm@2.1.12)(@tiptap/react@2.1.12)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-Zn9nW/H1WUQrsvV6rPUD/k48WjQ0rvsMBi2PmIo80b6+jI7927hR85t2sP43eubBDMsnrySSnTlB9LVNHaoxXw==}
+    peerDependencies:
+      '@tiptap-pro/extension-drag-handle': ^2.7.6
+      '@tiptap/pm': ^2.0.0
+      '@tiptap/react': ^2.0.0
+      react: ^17.0.0 || ^18.0.0
+      react-dom: ^17.0.0 || ^18.0.0
+    dependencies:
+      '@tiptap-pro/extension-drag-handle': 2.7.6(@tiptap-pro/extension-node-range@2.7.6)(@tiptap/core@2.1.12)(@tiptap/extension-collaboration@2.2.4)(@tiptap/pm@2.1.12)(y-prosemirror@1.2.3)
+      '@tiptap/pm': 2.1.12
+      '@tiptap/react': 2.1.12(@tiptap/core@2.1.12)(@tiptap/pm@2.1.12)(react-dom@18.2.0)(react@18.2.0)
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@tiptap-pro/extension-drag-handle@2.7.6(@tiptap-pro/extension-node-range@2.7.6)(@tiptap/core@2.1.12)(@tiptap/extension-collaboration@2.2.4)(@tiptap/pm@2.1.12)(y-prosemirror@1.2.3):
+    resolution: {integrity: sha512-LPjXt94b7SeWRKmhO2moKj49MEfq5AJQ17YnWpcwYnSnjvGDv96xgIizy478WPp5IDNNcBwxTuavXWMQhKenuw==}
+    peerDependencies:
+      '@tiptap-pro/extension-node-range': ^2.7.6
+      '@tiptap/core': ^2.0.0
+      '@tiptap/extension-collaboration': ^2.0.0
+      '@tiptap/pm': ^2.0.0
+      y-prosemirror: ^1.2.1
+    dependencies:
+      '@tiptap-pro/extension-node-range': 2.7.6(@tiptap/core@2.1.12)(@tiptap/pm@2.1.12)
+      '@tiptap/core': 2.1.12(@tiptap/pm@2.1.12)
+      '@tiptap/extension-collaboration': 2.2.4(@tiptap/core@2.1.12)(@tiptap/pm@2.1.12)(y-prosemirror@1.2.3)
+      '@tiptap/pm': 2.1.12
+      tippy.js: 6.3.7
+      y-prosemirror: 1.2.3(prosemirror-model@1.19.3)(prosemirror-state@1.4.3)(prosemirror-view@1.32.1)(y-protocols@1.0.6)(yjs@13.6.14)
+    dev: false
+
+  /@tiptap-pro/extension-node-range@2.7.6(@tiptap/core@2.1.12)(@tiptap/pm@2.1.12):
+    resolution: {integrity: sha512-aZAFDyldthQ5wsiXv+aEiSHHpGY1btBPe+5ixI5YjUme/1ug2ibt4mG7f/BGZysTt7GbofT/Q+Q9MZxXrGRgFQ==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+      '@tiptap/pm': ^2.0.0
+    dependencies:
+      '@tiptap/core': 2.1.12(@tiptap/pm@2.1.12)
+      '@tiptap/pm': 2.1.12
+    dev: false
+
   /@tiptap-pro/extension-table-of-content@2.3.3(@tiptap/core@2.1.12)(@tiptap/pm@2.1.12):
     resolution: {integrity: sha512-RwiyP4dfH4wDaHvdZISMulbJhMxeVoxyAaQFcke7BBInwk/rv3aGxrwpAmjBUelCh/kzIlaj7Sm4TTUj5RWIRw==}
     peerDependencies:
@@ -4760,6 +4806,18 @@ packages:
       '@tiptap/core': ^2.0.0
     dependencies:
       '@tiptap/core': 2.1.12(@tiptap/pm@2.1.12)
+    dev: false
+
+  /@tiptap/extension-collaboration@2.2.4(@tiptap/core@2.1.12)(@tiptap/pm@2.1.12)(y-prosemirror@1.2.3):
+    resolution: {integrity: sha512-Q9DnGeTYhB8TDud9B2zbRZqbNdBi0C/zzTYora2bFRRXnUzQUJgvV7HeIcHajj2wdKe8HXGwXjrCzORUtwUFgA==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+      '@tiptap/pm': ^2.0.0
+      y-prosemirror: ^1.2.1
+    dependencies:
+      '@tiptap/core': 2.1.12(@tiptap/pm@2.1.12)
+      '@tiptap/pm': 2.1.12
+      y-prosemirror: 1.2.3(prosemirror-model@1.19.3)(prosemirror-state@1.4.3)(prosemirror-view@1.32.1)(y-protocols@1.0.6)(yjs@13.6.14)
     dev: false
 
   /@tiptap/extension-document@2.1.12(@tiptap/core@2.1.12):
@@ -9373,6 +9431,10 @@ packages:
       - encoding
     dev: false
 
+  /isomorphic.js@0.2.5:
+    resolution: {integrity: sha512-PIeMbHqMt4DnUP3MA/Flc0HElYjMXArsw1qwJZcm9sqR8mq3l8NYizFMty0pWwE/tzIGH3EKK5+jes5mAr85yw==}
+    dev: false
+
   /isstream@0.1.2:
     resolution: {integrity: sha512-Yljz7ffyPbrLpLngrMtZ7NduUgVvi6wG9RJ9IUcyCd59YQ911PBJphODUcbOVbqYfxe1wuYf/LJ8PauMRwsM/g==}
     dev: false
@@ -9711,6 +9773,14 @@ packages:
       prelude-ls: 1.2.1
       type-check: 0.4.0
     dev: true
+
+  /lib0@0.2.93:
+    resolution: {integrity: sha512-M5IKsiFJYulS+8Eal8f+zAqf5ckm1vffW0fFDxfgxJ+uiVopvDdd3PxJmz0GsVi3YNO7QCFSq0nAsiDmNhLj9Q==}
+    engines: {node: '>=16'}
+    hasBin: true
+    dependencies:
+      isomorphic.js: 0.2.5
+    dev: false
 
   /lie@3.3.0:
     resolution: {integrity: sha512-UaiMJzeWRlEujzAuw5LokY1L5ecNQYZKfmyZ9L7wDHb/p5etKaxXhohBcrw0EYby+G/NA52vRSN4N39dxHAIwQ==}
@@ -14348,6 +14418,34 @@ packages:
       sax: 1.3.0
     dev: false
 
+  /y-prosemirror@1.2.3(prosemirror-model@1.19.3)(prosemirror-state@1.4.3)(prosemirror-view@1.32.1)(y-protocols@1.0.6)(yjs@13.6.14):
+    resolution: {integrity: sha512-0e9QB78hcAT3l+ml26x+f7K9xmP1tqHGzbKTfe+JuPpKFBLpr2NUwH7D+J7uKhtMAmOhHUMFtd7Zd2mNKyP2+A==}
+    engines: {node: '>=16.0.0', npm: '>=8.0.0'}
+    peerDependencies:
+      prosemirror-model: ^1.7.1
+      prosemirror-state: ^1.2.3
+      prosemirror-view: ^1.9.10
+      y-protocols: ^1.0.1
+      yjs: ^13.5.38
+    dependencies:
+      lib0: 0.2.93
+      prosemirror-model: 1.19.3
+      prosemirror-state: 1.4.3
+      prosemirror-view: 1.32.1
+      y-protocols: 1.0.6(yjs@13.6.14)
+      yjs: 13.6.14
+    dev: false
+
+  /y-protocols@1.0.6(yjs@13.6.14):
+    resolution: {integrity: sha512-vHRF2L6iT3rwj1jub/K5tYcTT/mEYDUppgNPXwp8fmLpui9f7Yeq3OEtTLVF012j39QnV+KEQpNqoN7CWU7Y9Q==}
+    engines: {node: '>=16.0.0', npm: '>=8.0.0'}
+    peerDependencies:
+      yjs: ^13.0.0
+    dependencies:
+      lib0: 0.2.93
+      yjs: 13.6.14
+    dev: false
+
   /yaeti@0.0.6:
     resolution: {integrity: sha512-MvQa//+KcZCUkBTIC9blM+CU9J2GzuTytsOUwf2lidtvkx/6gnEp1QvJv34t9vdjhFmha/mUiNDbN0D0mJWdug==}
     engines: {node: '>=0.10.32'}
@@ -14368,6 +14466,13 @@ packages:
   /yaml@2.3.4:
     resolution: {integrity: sha512-8aAvwVUSHpfEqTQ4w/KMlf3HcRdt50E5ODIQJBw1fQ5RL34xabzxtUlzTXVqc4rkZsPbvrXKWnABCD7kWSmocA==}
     engines: {node: '>= 14'}
+
+  /yjs@13.6.14:
+    resolution: {integrity: sha512-D+7KcUr0j+vBCUSKXXEWfA+bG4UQBviAwP3gYBhkstkgwy5+8diOPMx0iqLIOxNo/HxaREUimZRxqHGAHCL2BQ==}
+    engines: {node: '>=16.0.0', npm: '>=8.0.0'}
+    dependencies:
+      lib0: 0.2.93
+    dev: false
 
   /yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}

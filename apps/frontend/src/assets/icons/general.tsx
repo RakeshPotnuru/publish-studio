@@ -34,6 +34,7 @@ import {
   MdSettings,
   MdSpaceDashboard,
 } from "react-icons/md";
+import { MdBugReport } from "react-icons/md";
 import { PiDotsThreeBold } from "react-icons/pi";
 import { RiFoldersFill } from "react-icons/ri";
 import { RxMixerHorizontal } from "react-icons/rx";
@@ -75,4 +76,5 @@ export const GeneralIcons = {
   MobileOff: MdOutlineMobileOff,
   Security: MdSecurity,
   Docs: SiReadthedocs,
+  Bug: MdBugReport,
 };

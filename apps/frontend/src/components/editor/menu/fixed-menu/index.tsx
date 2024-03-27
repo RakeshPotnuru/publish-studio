@@ -1,5 +1,8 @@
 import { useState } from "react";
 
+import { type Editor as CoreEditor } from "@tiptap/core";
+import { type EditorState } from "@tiptap/pm/state";
+import { type EditorView } from "@tiptap/pm/view";
 import { type Editor } from "@tiptap/react";
 
 import { Icons } from "@/assets/icons";
@@ -18,6 +21,17 @@ import { MenuSeparator } from "../menu-separator";
 export interface MenuProps {
   editor: Editor;
   isBubbleMenu?: boolean;
+  appendTo?: React.RefObject<HTMLElement>;
+  shouldHide?: boolean;
+}
+
+export interface ShouldShowProps {
+  editor?: CoreEditor;
+  view: EditorView;
+  state?: EditorState;
+  oldState?: EditorState;
+  from?: number;
+  to?: number;
 }
 
 type FixedMenuProps = MenuProps;
@@ -30,7 +44,7 @@ export function FixedMenu({
 
   return (
     <div
-      className="sticky top-0 z-10 flex justify-between rounded-full bg-background p-2 shadow-sm"
+      className="sticky top-0 z-50 flex justify-between rounded-full bg-background p-2 shadow-sm"
       {...props}
     >
       <div className="flex flex-row items-center space-x-2">

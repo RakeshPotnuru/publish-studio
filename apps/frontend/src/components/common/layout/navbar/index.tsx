@@ -96,7 +96,7 @@ export function Navbar({ className, ...props }: Readonly<NavbarProps>) {
     <nav
       className={cn(
         "mx-12 mt-4 flex items-center justify-between rounded-2xl bg-background px-8 py-4 shadow-lg",
-        className
+        className,
       )}
       {...props}
     >
@@ -125,6 +125,19 @@ export function Navbar({ className, ...props }: Readonly<NavbarProps>) {
               Upgrade
             </ProButton>
           ))} */}
+        <Tooltip content="Report a bug">
+          <Button
+            size="icon"
+            variant="ghost"
+            className="rounded-full"
+            aria-label="Report a bug"
+            asChild
+          >
+            <Link href={siteConfig.links.bugReport} target="_blank">
+              <Icons.Bug className="size-5" />
+            </Link>
+          </Button>
+        </Tooltip>
         <NavItem icon={<Icons.Question className="size-5" />} tooltip="Help">
           <DropdownMenuItem asChild>
             <Link href={siteConfig.links.support}>

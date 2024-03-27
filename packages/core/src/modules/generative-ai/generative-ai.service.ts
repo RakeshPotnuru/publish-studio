@@ -226,4 +226,39 @@ export default class GenerativeAIService extends ProjectService {
       });
     }
   }
+
+  // async changeTextTone(text: string, tone: TextTone, user_id: Types.ObjectId) {
+  //   const parts = [
+  //     {
+  //       text: `Change the tone of the text "${text}" to "${tone}".`,
+  //     },
+  //   ];
+
+  //   try {
+  //     const result = await ai.generateContentStream({
+  //       contents: [{ role: "user", parts }],
+  //       generationConfig: this.default_generation_config,
+  //       safetySettings: this.SAFETY_SETTINGS,
+  //     });
+
+  //     let text = "";
+  //     for await (const chunk of result.stream) {
+  //       const chunkText = chunk.text();
+  //       console.log(chunkText);
+  //       text += chunkText;
+  //     }
+
+  //     return text;
+  //   } catch (error) {
+  //     await logtail.error(JSON.stringify(error), {
+  //       user_id,
+  //     });
+
+  //     throw new TRPCError({
+  //       code: "INTERNAL_SERVER_ERROR",
+  //       message:
+  //         "Something went wrong while changing the text tone. Please try again later.",
+  //     });
+  //   }
+  // }
 }

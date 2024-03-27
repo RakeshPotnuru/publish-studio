@@ -1,6 +1,6 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useRef } from "react";
 
 import { cn } from "@itsrakesh/utils";
 import type { IProject } from "@publish-studio/core";
@@ -12,8 +12,10 @@ import { Heading } from "../ui/heading";
 import { Shell } from "../ui/shell";
 import { EditorBody } from "./editor-body";
 import { EditorFooter } from "./editor-footer";
-import { BubbleMenu } from "./menu/bubble-menu";
+import { TableColumnMenu, TableRowMenu } from "./extensions/table/menus";
+import { ContentItemMenu } from "./menu/content-item-menu";
 import { FixedMenu } from "./menu/fixed-menu";
+import { TextMenu } from "./menu/text-menu";
 import { ProjectToolbar } from "./project-toolbar";
 import { ToC } from "./toc";
 
@@ -31,6 +33,7 @@ export function Editor({
   const { editor, isSaving, items } = useEditor(project);
 
   const isFullscreen = useFullscreenStatus();
+  const menuContainerRef = useRef(null);
 
   if (!editor) return null;
 
@@ -41,16 +44,22 @@ export function Editor({
         className={cn("w-3/4 space-y-4", {
           "overflow-auto": isFullscreen,
         })}
+        ref={menuContainerRef}
       >
+        <ContentItemMenu editor={editor} />
         <FixedMenu editor={editor} />
-        <BubbleMenu editor={editor} />
+        <TextMenu editor={editor} />
+        <TableRowMenu editor={editor} appendTo={menuContainerRef} />
+        <TableColumnMenu editor={editor} appendTo={menuContainerRef} />
         <EditorBody editor={editor} />
         <EditorFooter editor={editor} isLoading={isSaving} />
       </div>
       <div className="flex w-1/4 flex-col space-y-4">
         <ProjectToolbar editor={editor} project={project} />
-        <Shell className="sticky top-16 h-max max-h-[98vh] space-y-2 overflow-auto">
-          <Heading level={2}>Table of Contents</Heading>
+        <Shell className="sticky top-16 h-max max-h-[98vh] space-y-2 overflow-auto pb-16">
+          <Heading level={4} className="text-muted-foreground">
+            TABLE OF CONTENTS
+          </Heading>
           <MemorizedToC items={items} editor={editor} />
         </Shell>
       </div>

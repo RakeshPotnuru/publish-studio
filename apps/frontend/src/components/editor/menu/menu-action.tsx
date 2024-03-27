@@ -51,12 +51,12 @@ export function MenuAction({
               "rounded-none": isBubbleMenu,
             })}
             disabled={disabled}
-            aria-label="tooltip"
+            aria-label={tooltip}
           >
             {icon}
           </Button>
         </TooltipTrigger>
-        <TooltipContent side="bottom" className="text-center">
+        <TooltipContent side="bottom" className="flex items-center gap-2">
           <p>{tooltip}</p>
           {shortcut && (
             <ActionShortcut

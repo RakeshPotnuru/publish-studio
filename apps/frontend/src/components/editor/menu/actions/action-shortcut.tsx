@@ -20,8 +20,8 @@ export function ActionShortcut({
   return (
     <div className="space-x-1">
       {keys.map((key) => (
-        <Badge key={key} variant="secondary">
-          {key}
+        <Badge key={key} variant="secondary" className="px-1.5 py-0.5">
+          <kbd>{key}</kbd>
         </Badge>
       ))}
     </div>

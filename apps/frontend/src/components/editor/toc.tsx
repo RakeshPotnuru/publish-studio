@@ -24,16 +24,15 @@ const ToCItem = ({
   onItemClick: (event: React.MouseEvent<HTMLAnchorElement>, id: string) => void;
 }) => (
   <div
-    className={cn("hover:text-primary", {
-      "ml-4": item.level === 2,
-      "ml-8": item.level === 3,
-      "ml-12": item.level === 4,
-      "ml-16": item.level === 5,
-      "ml-20": item.level === 6,
+    className={cn("hover:text-primary text-sm", {
       "font-semibold text-primary": item.isActive,
     })}
   >
-    <Link href={`#${item.id}`} onClick={(event) => onItemClick(event, item.id)}>
+    <Link
+      href={`#${item.id}`}
+      onClick={(event) => onItemClick(event, item.id)}
+      style={{ marginLeft: `${1 * item.level - 1}rem` }}
+    >
       {item.itemIndex}. {item.textContent}
     </Link>
   </div>

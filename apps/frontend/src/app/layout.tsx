@@ -120,7 +120,7 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#EB5757" />
         <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
       </head>
-      <body className="min-h-dvh bg-slate-200 dark:bg-slate-700">
+      <body className="min-h-dvh bg-slate-200 dark:bg-stone-900">
         {(process.env.NODE_ENV === "test" ||
           process.env.NEXT_PUBLIC_VERCEL_ENV === "preview") && (
           <div className="flex justify-center bg-destructive py-[1px]">

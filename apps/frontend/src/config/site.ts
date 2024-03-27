@@ -30,6 +30,8 @@ export const siteConfig = {
     pricing: "https://publishstudio.one/pricing",
     privacyPolicy: "https://publishstudio.one/privacy-policy",
     termsOfService: "https://publishstudio.one/terms-of-service",
+    bugReport:
+      "https://publishstudio.sg.larksuite.com/share/base/form/shrlgfAEQaMwqPeZ9Mbb5kXSNAe",
   },
   twitter: {
     site: "@publishstudio",
