@@ -1,5 +1,6 @@
 import { mergeAttributes, Node } from "@tiptap/core";
 import { Plugin } from "@tiptap/pm/state";
+import type { CellSelection } from "@tiptap/pm/tables";
 import { Decoration, DecorationSet } from "@tiptap/pm/view";
 
 import { getCellsInColumn, isRowSelected, selectRow } from "./utils";
@@ -85,7 +86,9 @@ export const TableCell = Node.create<TableCellOptions>({
                 decorations.push(
                   Decoration.widget(pos + 1, () => {
                     const index = cells.findIndex((cell) => cell.pos === pos);
-                    const rowSelected = isRowSelected(index)(selection);
+                    const rowSelected = isRowSelected(index)(
+                      selection as CellSelection,
+                    );
                     let className = "grip-row";
 
                     if (rowSelected) {

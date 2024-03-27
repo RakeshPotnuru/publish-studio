@@ -1,4 +1,5 @@
 import type { EditorState } from "@tiptap/pm/state";
+import type { CellSelection } from "@tiptap/pm/tables";
 import type { EditorView } from "@tiptap/pm/view";
 import type { Editor } from "@tiptap/react";
 
@@ -23,7 +24,7 @@ export const isColumnGripSelected = ({
   if (
     !editor.isActive(Table.name) ||
     !node ||
-    isTableSelected(state.selection)
+    isTableSelected(state.selection as CellSelection)
   ) {
     return false;
   }

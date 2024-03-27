@@ -38,9 +38,9 @@ export const isCellSelection = (selection: Selection) =>
   selection instanceof CellSelection;
 
 export const isColumnSelected =
-  (columnIndex: number) => (selection: Selection) => {
+  (columnIndex: number) => (selection: CellSelection) => {
     if (isCellSelection(selection)) {
-      const map = TableMap.get(selection.$anchorCell.node(-1) as Node);
+      const map = TableMap.get(selection.$anchorCell.node(-1));
 
       return isRectSelected({
         left: columnIndex,
@@ -53,24 +53,25 @@ export const isColumnSelected =
     return false;
   };
 
-export const isRowSelected = (rowIndex: number) => (selection: Selection) => {
+export const isRowSelected =
+  (rowIndex: number) => (selection: CellSelection) => {
+    if (isCellSelection(selection)) {
+      const map = TableMap.get(selection.$anchorCell.node(-1));
+
+      return isRectSelected({
+        left: 0,
+        right: map.width,
+        top: rowIndex,
+        bottom: rowIndex + 1,
+      })(selection);
+    }
+
+    return false;
+  };
+
+export const isTableSelected = (selection: CellSelection) => {
   if (isCellSelection(selection)) {
-    const map = TableMap.get(selection.$anchorCell.node(-1) as Node);
-
-    return isRectSelected({
-      left: 0,
-      right: map.width,
-      top: rowIndex,
-      bottom: rowIndex + 1,
-    })(selection);
-  }
-
-  return false;
-};
-
-export const isTableSelected = (selection: Selection) => {
-  if (isCellSelection(selection)) {
-    const map = TableMap.get(selection.$anchorCell.node(-1) as Node);
+    const map = TableMap.get(selection.$anchorCell.node(-1));
 
     return isRectSelected({
       left: 0,

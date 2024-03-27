@@ -1,5 +1,6 @@
 import TiptapTableHeader from "@tiptap/extension-table-header";
 import { Plugin } from "@tiptap/pm/state";
+import type { CellSelection } from "@tiptap/pm/tables";
 import { Decoration, DecorationSet } from "@tiptap/pm/view";
 
 import { getCellsInRow, isColumnSelected, selectColumn } from "./utils";
@@ -48,7 +49,9 @@ export const TableHeader = TiptapTableHeader.extend({
               for (const [index, { pos }] of cells.entries()) {
                 decorations.push(
                   Decoration.widget(pos + 1, () => {
-                    const colSelected = isColumnSelected(index)(selection);
+                    const colSelected = isColumnSelected(index)(
+                      selection as CellSelection,
+                    );
                     let className = "grip-column";
 
                     if (colSelected) {
