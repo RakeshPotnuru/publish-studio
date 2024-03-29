@@ -80,7 +80,7 @@ export function TextMenu({ editor }: Readonly<MenuProps>) {
   return (
     <TiptapBubbleMenu
       editor={editor}
-      pluginKey={"bubbleMenu"}
+      pluginKey={"textMenu"}
       updateDelay={100}
       shouldShow={shouldShow}
       tippyOptions={{ popperOptions: { placement: "top-start" }, zIndex: 40 }}

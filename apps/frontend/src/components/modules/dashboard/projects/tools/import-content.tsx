@@ -33,6 +33,7 @@ import { deserialize } from "@/components/editor/transform-markdown";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
+import { trpc } from "@/utils/trpc";
 
 const mdFormSchema = z.object({
   markdown: z.string().min(1, "Markdown is required."),
@@ -45,7 +46,6 @@ const urlFormSchema = z.object({
 export function ImportMarkdown({ editor }: MenuProps) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
 
   const mdForm = useForm<z.infer<typeof mdFormSchema>>({
     mode: "onBlur",
@@ -70,27 +70,31 @@ export function ImportMarkdown({ editor }: MenuProps) {
     setOpen(false);
   };
 
+  const errorMessage =
+    "Content import unsuccessful. This may be due to various reasons, including content being restricted behind a paywall, requiring authentication, or containing sensitive information.";
+
+  const { mutateAsync: getArticleContent, isLoading } =
+    trpc.tools.scraper.getArticleContent.useMutation({
+      onSuccess: ({ data }) => {
+        if (!data.article) {
+          setError(errorMessage);
+          return;
+        }
+        editor.commands.setContent(data?.article ?? "");
+        urlForm.reset();
+        setOpen(false);
+      },
+      onError: () => {
+        setError(errorMessage);
+      },
+    });
+
   const onUrlSubmit = async (data: z.infer<typeof urlFormSchema>) => {
     try {
       setError(null);
-      setIsLoading(true);
-
-      const response = await fetch(data.url, {
-        headers: {
-          Accept: "text/html",
-        },
-      });
-      const htmlContent = await response.text();
-      editor.commands.setContent(htmlContent);
-      urlForm.reset();
-
-      setIsLoading(false);
-      setOpen(false);
+      await getArticleContent(data.url);
     } catch {
-      setError(
-        "Content import unsuccessful. This may be due to various reasons, including content being restricted behind a paywall, requiring authentication, or containing sensitive information.",
-      );
-      setIsLoading(false);
+      // Ignore
     }
   };
 
@@ -119,7 +123,6 @@ export function ImportMarkdown({ editor }: MenuProps) {
               editor.
             </DialogDescription>
           </DialogHeader>
-
           <Tabs defaultValue="markdown">
             <TabsList className="grid grid-cols-2">
               <TabsTrigger value="markdown">Markdown</TabsTrigger>

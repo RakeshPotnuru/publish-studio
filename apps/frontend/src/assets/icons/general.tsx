@@ -40,6 +40,7 @@ import { RiFoldersFill } from "react-icons/ri";
 import { RxMixerHorizontal } from "react-icons/rx";
 import { SiReadthedocs } from "react-icons/si";
 import { TbLoader } from "react-icons/tb";
+import { FaGlobe } from "react-icons/fa";
 
 export const GeneralIcons = {
   Link: AiOutlineLink,
@@ -77,4 +78,5 @@ export const GeneralIcons = {
   Security: MdSecurity,
   Docs: SiReadthedocs,
   Bug: MdBugReport,
+  Globe: FaGlobe,
 };

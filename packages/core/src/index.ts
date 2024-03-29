@@ -8,7 +8,6 @@ import cors from "cors";
 import type { Application } from "express";
 import express from "express";
 import helmet from "helmet";
-import { v4 as uuidv4 } from "uuid";
 
 import "./config/env";
 import "./utils/db";
@@ -20,11 +19,6 @@ import { createContext } from "./trpc";
 import { logtail } from "./utils/logtail";
 
 const app: Application = express();
-
-app.use((_, res, next) => {
-  res.locals.nonce = uuidv4();
-  next();
-});
 
 app.set("trust proxy", 1);
 

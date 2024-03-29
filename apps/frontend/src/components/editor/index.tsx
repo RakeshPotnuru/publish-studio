@@ -15,6 +15,7 @@ import { EditorFooter } from "./editor-footer";
 import { TableColumnMenu, TableRowMenu } from "./extensions/table/menus";
 import { ContentItemMenu } from "./menu/content-item-menu";
 import { FixedMenu } from "./menu/fixed-menu";
+import LinkMenu from "./menu/link-menu";
 import { TextMenu } from "./menu/text-menu";
 import { ProjectToolbar } from "./project-toolbar";
 import { ToC } from "./toc";
@@ -47,6 +48,7 @@ export function Editor({
         ref={menuContainerRef}
       >
         <ContentItemMenu editor={editor} />
+        <LinkMenu editor={editor} appendTo={menuContainerRef} />
         <FixedMenu editor={editor} />
         <TextMenu editor={editor} />
         <TableRowMenu editor={editor} appendTo={menuContainerRef} />

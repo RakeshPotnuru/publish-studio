@@ -164,16 +164,16 @@ export function Navbar({ className, ...props }: Readonly<NavbarProps>) {
                       user?.last_name ?? "Studio"
                     }`}
                   />
-                  {isFetching ? (
-                    <AvatarFallback>
+                  <AvatarFallback>
+                    {isFetching ? (
                       <Skeleton className="size-4 animate-ping rounded-full" />
-                    </AvatarFallback>
-                  ) : (
-                    <AvatarFallback>
-                      {user?.first_name.charAt(0)}
-                      {user?.last_name.charAt(0)}
-                    </AvatarFallback>
-                  )}
+                    ) : (
+                      <>
+                        {user?.first_name.charAt(0)}
+                        {user?.last_name.charAt(0)}
+                      </>
+                    )}
+                  </AvatarFallback>
                 </Avatar>
               </ProBorder>
             </Button>
