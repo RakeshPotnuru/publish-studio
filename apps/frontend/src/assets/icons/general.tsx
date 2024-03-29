@@ -21,6 +21,7 @@ import {
   FaPuzzlePiece,
   FaTools,
 } from "react-icons/fa";
+import { FaGlobe } from "react-icons/fa";
 import { FaWandMagicSparkles } from "react-icons/fa6";
 import { GoDotFill } from "react-icons/go";
 import { HiExternalLink } from "react-icons/hi";
@@ -40,7 +41,6 @@ import { RiFoldersFill } from "react-icons/ri";
 import { RxMixerHorizontal } from "react-icons/rx";
 import { SiReadthedocs } from "react-icons/si";
 import { TbLoader } from "react-icons/tb";
-import { FaGlobe } from "react-icons/fa";
 
 export const GeneralIcons = {
   Link: AiOutlineLink,

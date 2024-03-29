@@ -1,14 +1,18 @@
-import { BubbleMenu as BaseBubbleMenu } from "@tiptap/react";
 import { useCallback, useState } from "react";
-import { EditLink, LinkPreview } from "../actions/link-action";
-import { MenuProps } from "../fixed-menu";
 
-export const LinkMenu = ({ editor, appendTo }: MenuProps): JSX.Element => {
+import { BubbleMenu as BaseBubbleMenu } from "@tiptap/react";
+
+import { EditLink, LinkPreview } from "../actions/link-action";
+import type { MenuProps } from "../fixed-menu";
+
+export const LinkMenu = ({
+  editor,
+  appendTo,
+}: MenuProps): React.JSX.Element => {
   const [showEdit, setShowEdit] = useState(false);
 
   const shouldShow = useCallback(() => {
-    const isActive = editor.isActive("link");
-    return isActive;
+    return editor.isActive("link");
   }, [editor]);
 
   const { href: link } = editor.getAttributes("link");
@@ -38,7 +42,7 @@ export const LinkMenu = ({ editor, appendTo }: MenuProps): JSX.Element => {
 
   const handleCopy = async (): Promise<boolean> => {
     try {
-      await navigator.clipboard.writeText(link);
+      await navigator.clipboard.writeText(link as string);
       return true;
     } catch {
       return false;

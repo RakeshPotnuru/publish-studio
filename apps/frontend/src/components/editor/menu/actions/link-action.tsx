@@ -1,3 +1,6 @@
+import { useCallback, useState } from "react";
+import Image from "next/image";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Avatar,
@@ -25,13 +28,11 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Icons } from "@/assets/icons";
-import { Tooltip } from "@/components/ui/tooltip";
-
 import { LinkButton } from "@/components/ui/link-button";
+import { Tooltip } from "@/components/ui/tooltip";
 import { shortenText } from "@/utils/text-shortener";
 import { trpc } from "@/utils/trpc";
-import Image from "next/image";
-import { useCallback, useState } from "react";
+
 import type { MenuProps } from "../fixed-menu";
 
 interface LinkActionProps extends React.HTMLAttributes<HTMLDialogElement> {
@@ -117,11 +118,11 @@ export function EditLink({ editor, link, onSetLink }: Readonly<EditLinkProps>) {
 
       form.reset();
     },
-    [editor],
+    [editor, form, onSetLink],
   );
 
   return (
-    <div className="bg-popover text-popover-foreground rounded-md p-4">
+    <div className="rounded-md bg-popover p-4 text-popover-foreground">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="grid grid-cols-3 gap-4">
@@ -211,8 +212,8 @@ export function LinkPreview({
 
   return (
     <Card className="w-80 max-w-80">
-      <CardHeader className="flex *:flex flex-row items-center space-x-2 justify-between">
-        <div className="space-x-2 items-center">
+      <CardHeader className="flex flex-row items-center justify-between space-x-2 *:flex">
+        <div className="items-center space-x-2">
           <Avatar className="h-6 w-6 rounded-md">
             <AvatarImage src={metadata?.favicon} alt={metadata?.title} />
             <AvatarFallback>
