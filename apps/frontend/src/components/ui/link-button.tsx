@@ -15,7 +15,7 @@ interface LinkButtonProps extends React.ComponentProps<typeof Button> {
  * @param children - The content of the button.
  * @param className - Additional CSS class names for the button.
  * @param href - The URL to navigate to when the button is clicked.
- * @param target - The target attribute for the link.
+ * @param target - The target attribute for the link. Defaults to "_blank".
  * @param props - Additional props to pass to the button component.
  * @returns The rendered link button component.
  */

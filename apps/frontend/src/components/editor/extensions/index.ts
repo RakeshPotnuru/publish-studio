@@ -14,7 +14,6 @@ import History from "@tiptap/extension-history";
 import HorizontalRule from "@tiptap/extension-horizontal-rule";
 import Image from "@tiptap/extension-image";
 import Italic from "@tiptap/extension-italic";
-import Link from "@tiptap/extension-link";
 import ListItem from "@tiptap/extension-list-item";
 import OrderedList from "@tiptap/extension-ordered-list";
 import Paragraph from "@tiptap/extension-paragraph";
@@ -26,6 +25,7 @@ import Underline from "@tiptap/extension-underline";
 import { all, createLowlight } from "lowlight";
 
 import SpeechRecognition from "../custom-extensions/speech-recognition";
+import Link from "./link";
 import { Table, TableCell, TableHeader, TableRow } from "./table";
 
 const lowlight = createLowlight(all);
@@ -83,8 +83,6 @@ export const extensions = [
     limit: constants.project.body.MAX_LENGTH,
   }),
   Link.configure({
-    HTMLAttributes: {
-      class: "text-blue-500 underline hover:text-blue-600",
-    },
+    openOnClick: false,
   }),
 ];

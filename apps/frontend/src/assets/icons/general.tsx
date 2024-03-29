@@ -17,6 +17,7 @@ import {
 import { CgProfile } from "react-icons/cg";
 import {
   FaFolder,
+  FaGlobe,
   FaPaintRoller,
   FaPuzzlePiece,
   FaTools,
@@ -26,6 +27,7 @@ import { GoDotFill } from "react-icons/go";
 import { HiExternalLink } from "react-icons/hi";
 import { IoCalendar, IoCheckmarkDoneCircleSharp } from "react-icons/io5";
 import {
+  MdBugReport,
   MdEditDocument,
   MdOutlineMobileOff,
   MdOutlineSupport,
@@ -34,7 +36,6 @@ import {
   MdSettings,
   MdSpaceDashboard,
 } from "react-icons/md";
-import { MdBugReport } from "react-icons/md";
 import { PiDotsThreeBold } from "react-icons/pi";
 import { RiFoldersFill } from "react-icons/ri";
 import { RxMixerHorizontal } from "react-icons/rx";
@@ -77,4 +78,5 @@ export const GeneralIcons = {
   Security: MdSecurity,
   Docs: SiReadthedocs,
   Bug: MdBugReport,
+  Globe: FaGlobe,
 };

@@ -14,6 +14,7 @@ import platformRouter from "./modules/platform/platform.routes";
 import postRouter from "./modules/post/post.routes";
 import projectRouter from "./modules/project/project.routes";
 import statsRouter from "./modules/stats/stats.routes";
+import toolsRouter from "./modules/tools/tools.routes";
 import userRouter from "./modules/user/user.routes";
 import { router, t } from "./trpc";
 
@@ -39,6 +40,7 @@ const appRouter = router({
   cloudinary: cloudinaryRouter,
   notifications: notificationRouter,
   post: postRouter,
+  tools: toolsRouter,
 });
 
 export type AppRouter = typeof appRouter;
