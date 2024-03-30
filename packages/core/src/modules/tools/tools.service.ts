@@ -20,7 +20,7 @@ export default class ToolsService {
 
       let favicon =
         $('link[rel="icon"]').attr("href") ??
-        $('link[rel="shortcut icon"]').attr("href") ??
+        $('link[type="image/x-icon"]').attr("href") ??
         $('meta[itemprop="image"]').attr("content") ??
         "";
       if (favicon && !favicon.startsWith("http")) {
