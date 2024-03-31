@@ -62,7 +62,7 @@ const NavItem = ({
   </DropdownMenu>
 );
 
-type NavbarProps = React.HTMLAttributes<HTMLElement>;
+interface NavbarProps extends React.HTMLAttributes<HTMLElement> {}
 
 export function Navbar({ className, ...props }: Readonly<NavbarProps>) {
   const { user, setUser, setIsLoading } = useUserStore();
