@@ -11,7 +11,6 @@ import helmet from "helmet";
 
 import "./config/env";
 import "./utils/db";
-import "./wss";
 
 import defaultConfig from "./config/app";
 import appRouter from "./routes";

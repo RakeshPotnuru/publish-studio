@@ -10,7 +10,6 @@ declare global {
 const ZodEnvironmentVariables = z.object({
   NODE_ENV: z.string(),
   PORT: z.string(),
-  WEBSOCKET_PORT: z.string(),
   MONGO_URI: z.string(),
   BASE_URL: z.string().url(),
   REDIS_URL: z.string().url(),
@@ -49,6 +48,10 @@ const ZodEnvironmentVariables = z.object({
   CONFIGCAT_SDK_KEY: z.string(),
   SENDGRID_API_KEY: z.string(),
   SITE_ENV: z.string(),
+  PUSHER_APP_ID: z.string(),
+  PUSHER_KEY: z.string(),
+  PUSHER_SECRET: z.string(),
+  PUSHER_CLUSTER: z.string(),
 });
 
 ZodEnvironmentVariables.parse(process.env);

@@ -11,10 +11,12 @@ import {
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import type { INotification } from "@publish-studio/core";
+import { constants } from "@publish-studio/core/src/config/constants";
 import { intlFormatDistance } from "date-fns";
 
 import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
+import { pusher } from "@/lib/providers/trpc";
 import { trpc } from "@/utils/trpc";
 
 import { Center } from "../../../ui/center";
@@ -33,17 +35,27 @@ export function Notifications() {
     }
   }, [data]);
 
-  trpc.notifications.onCreate.useSubscription(undefined, {
-    onData(data) {
-      setNotifications((prev) => [data, ...prev]);
-      setTimeout(() => {
-        setIsNewNotification(true);
-        setTimeout(() => {
-          setIsNewNotification(false);
-        }, 10_000);
-      }, 100);
-    },
-  });
+  useEffect(() => {
+    const handleNewNotification = (data: { message: INotification }) => {
+      setNotifications([data.message, ...notifications]);
+
+      setTimeout(handleNewNotificationTimeout, 100);
+    };
+
+    const handleNewNotificationTimeout = () => {
+      setIsNewNotification(true);
+      setTimeout(() => setIsNewNotification(false), 10_000);
+    };
+
+    pusher.user.bind(
+      constants.pusher.events.NEW_NOTIFICATION,
+      handleNewNotification,
+    );
+
+    return () => {
+      pusher.user.unbind(constants.pusher.events.NEW_NOTIFICATION);
+    };
+  }, [notifications]);
 
   const { mutateAsync: markAsRead } = trpc.notifications.markRead.useMutation();
 

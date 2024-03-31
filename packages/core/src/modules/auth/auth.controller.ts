@@ -11,6 +11,7 @@ import type { Context } from "../../trpc";
 import { verifyGoogleToken } from "../../utils/google/auth";
 import { signJwt, verifyJwt } from "../../utils/jwt";
 import { logtail } from "../../utils/logtail";
+import { pusher } from "../../utils/pusher";
 import redisClient from "../../utils/redis";
 import type {
   ILoginInput,
@@ -543,5 +544,11 @@ export default class AuthController extends AuthService {
         message: defaultConfig.defaultErrorMessage,
       });
     }
+  }
+
+  pusherAuthHandler(input: { socket_id: string }, ctx: Context) {
+    return pusher.authenticateUser(input.socket_id, {
+      id: ctx.user._id.toString(),
+    });
   }
 }

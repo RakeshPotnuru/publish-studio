@@ -96,6 +96,12 @@ const AUTOSAVE_INTERVAL = 3000;
 
 const GLOBAL_STALE_TIME = 1000 * 60 * 2;
 
+const pusher = {
+  events: {
+    NEW_NOTIFICATION: "new-notification",
+  },
+};
+
 export const constants = {
   project,
   user,
@@ -105,6 +111,7 @@ export const constants = {
   asset,
   AUTOSAVE_INTERVAL,
   GLOBAL_STALE_TIME,
+  pusher,
 };
 
 /* Platform name must match model name. */
