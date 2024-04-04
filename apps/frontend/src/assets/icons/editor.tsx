@@ -13,8 +13,8 @@ import {
   LuArrowLeftToLine,
   LuArrowRightToLine,
   LuArrowUpToLine,
+  LuGripVertical,
 } from "react-icons/lu";
-import { LuGripVertical } from "react-icons/lu";
 import { MdFormatClear } from "react-icons/md";
 import { PiCodeBlockBold } from "react-icons/pi";
 import { RxDividerHorizontal } from "react-icons/rx";

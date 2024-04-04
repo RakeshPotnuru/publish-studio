@@ -14,35 +14,6 @@ export type ContentItemMenuProps = {
   editor: Editor;
 };
 
-const MenuItem = ({
-  icon,
-  label,
-  onClick,
-  setMenuOpen,
-  className,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  onClick: () => void;
-  setMenuOpen: (value: boolean) => void;
-  className?: string;
-}) => {
-  return (
-    <Button
-      onClick={() => {
-        onClick();
-        setMenuOpen(false);
-      }}
-      variant="ghost"
-      size="sm"
-      className={className}
-    >
-      {icon}
-      {label}
-    </Button>
-  );
-};
-
 export const ContentItemMenu = ({ editor }: ContentItemMenuProps) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const data = useData();
@@ -117,5 +88,34 @@ export const ContentItemMenu = ({ editor }: ContentItemMenuProps) => {
         </Tooltip>
       </div>
     </DragHandle>
+  );
+};
+
+const MenuItem = ({
+  icon,
+  label,
+  onClick,
+  setMenuOpen,
+  className,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  onClick: () => void;
+  setMenuOpen: (value: boolean) => void;
+  className?: string;
+}) => {
+  return (
+    <Button
+      onClick={() => {
+        onClick();
+        setMenuOpen(false);
+      }}
+      variant="ghost"
+      size="sm"
+      className={className}
+    >
+      {icon}
+      {label}
+    </Button>
   );
 };

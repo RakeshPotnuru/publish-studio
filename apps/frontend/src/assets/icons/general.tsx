@@ -23,12 +23,13 @@ import {
   FaTools,
 } from "react-icons/fa";
 import { FaWandMagicSparkles } from "react-icons/fa6";
-import { GoDotFill } from "react-icons/go";
+import { GoDotFill, GoHomeFill } from "react-icons/go";
 import { HiExternalLink } from "react-icons/hi";
 import { IoCalendar, IoCheckmarkDoneCircleSharp } from "react-icons/io5";
 import {
   MdBugReport,
   MdEditDocument,
+  MdMail,
   MdOutlineMobileOff,
   MdOutlineSupport,
   MdPermMedia,
@@ -79,4 +80,6 @@ export const GeneralIcons = {
   Docs: SiReadthedocs,
   Bug: MdBugReport,
   Globe: FaGlobe,
+  Home: GoHomeFill,
+  Mail: MdMail,
 };

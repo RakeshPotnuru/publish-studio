@@ -1,6 +1,7 @@
 import type { IconType } from "react-icons";
 
 import { ActionIcons } from "./action";
+import { AppIcons } from "./app";
 import { EditorIcons } from "./editor";
 import { FileIcons } from "./file";
 import { GeneralIcons } from "./general";
@@ -14,4 +15,5 @@ export const Icons = {
   ...FileIcons,
   ...GeneralIcons,
   ...NavigationIcons,
+  ...AppIcons,
 };

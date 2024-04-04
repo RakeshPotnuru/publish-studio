@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { GoToHome } from "@/components/common/go-to-home";
 import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
@@ -12,5 +13,10 @@ export const metadata: Metadata = {
 export default function SettingsLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  return <>{children}</>;
+  return (
+    <>
+      <GoToHome />
+      {children}
+    </>
+  );
 }

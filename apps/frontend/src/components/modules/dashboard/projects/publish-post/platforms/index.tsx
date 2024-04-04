@@ -27,6 +27,7 @@ import { Center } from "@/components/ui/center";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
+import { Tooltip } from "@/components/ui/tooltip";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
 
@@ -35,6 +36,7 @@ import { Blogger } from "./blogger";
 import { Dev } from "./dev";
 import { Ghost } from "./ghost";
 import { Medium } from "./medium";
+import { Share } from "./share";
 import { WordPress } from "./wordpress";
 
 interface IPlatformConfig {
@@ -103,7 +105,7 @@ interface PlatformsFieldProps {
   onSubmit: (data: z.infer<typeof formSchema>) => void;
   onRefresh: () => void;
   scheduledAt?: Date;
-  projectId: IProject["_id"];
+  project: IProject;
 }
 
 export const PlatformsField = ({
@@ -113,10 +115,11 @@ export const PlatformsField = ({
   onSubmit,
   onRefresh,
   scheduledAt,
-  projectId,
+  project,
 }: PlatformsFieldProps) => {
-  const { data, error, isFetching } =
-    trpc.post.getAllByProjectId.useQuery(projectId);
+  const { data, error, isFetching } = trpc.post.getAllByProjectId.useQuery(
+    project._id,
+  );
 
   const publishedPlatforms = data?.data.posts;
 
@@ -172,15 +175,28 @@ export const PlatformsField = ({
                     getPost(platform.value)?.published_url && (
                       <div className="flex items-center space-x-2">
                         <Badge variant="success">Published</Badge>
-                        <Button variant="link" size="sm" asChild>
-                          <Link
-                            href={getPost(platform.value)?.published_url ?? ""}
-                            target="_blank"
+                        <Tooltip content="View post">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6"
                           >
-                            View
-                            <Icons.ExternalLink className="ml-1" />
-                          </Link>
-                        </Button>
+                            <Link
+                              href={
+                                getPost(platform.value)?.published_url ?? ""
+                              }
+                              target="_blank"
+                            >
+                              <Icons.ExternalLink />
+                            </Link>
+                          </Button>
+                        </Tooltip>
+                        {getPost(platform.value)?.published_url && (
+                          <Share
+                            project={project}
+                            url={getPost(platform.value)?.published_url ?? ""}
+                          />
+                        )}
                       </div>
                     )}
 

@@ -5,10 +5,7 @@ import { BubbleMenu as BaseBubbleMenu } from "@tiptap/react";
 import { EditLink, LinkPreview } from "../actions/link-action";
 import type { MenuProps } from "../fixed-menu";
 
-export const LinkMenu = ({
-  editor,
-  appendTo,
-}: MenuProps): React.JSX.Element => {
+export const LinkMenu = ({ editor, appendTo }: MenuProps) => {
   const [showEdit, setShowEdit] = useState(false);
 
   const shouldShow = useCallback(() => {
@@ -40,15 +37,6 @@ export const LinkMenu = ({
     return null;
   }, [editor]);
 
-  const handleCopy = async (): Promise<boolean> => {
-    try {
-      await navigator.clipboard.writeText(link as string);
-      return true;
-    } catch {
-      return false;
-    }
-  };
-
   return (
     <BaseBubbleMenu
       editor={editor}
@@ -71,12 +59,7 @@ export const LinkMenu = ({
         <EditLink editor={editor} link={link} onSetLink={handleSet} />
       ) : (
         link && (
-          <LinkPreview
-            link={link}
-            onEdit={handleEdit}
-            onUnset={handleUnset}
-            onCopy={handleCopy}
-          />
+          <LinkPreview link={link} onEdit={handleEdit} onUnset={handleUnset} />
         )
       )}
     </BaseBubbleMenu>

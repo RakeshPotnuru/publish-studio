@@ -14,7 +14,7 @@ export function MenuItem({
   onClick,
   tooltip,
   tooltipSide,
-}: MenuItemProps) {
+}: Readonly<MenuItemProps>) {
   return (
     <Tooltip content={tooltip} side={tooltipSide}>
       <Button

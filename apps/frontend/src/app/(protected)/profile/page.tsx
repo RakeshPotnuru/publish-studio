@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { GoToHome } from "@/components/common/go-to-home";
 import { Profile } from "@/components/modules/dashboard/profile";
 import { Shell } from "@/components/ui/shell";
 
@@ -9,8 +10,11 @@ export const metadata: Metadata = {
 
 export default function ProfilePage() {
   return (
-    <Shell>
-      <Profile />
-    </Shell>
+    <>
+      <GoToHome />
+      <Shell>
+        <Profile />
+      </Shell>
+    </>
   );
 }

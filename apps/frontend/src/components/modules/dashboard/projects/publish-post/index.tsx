@@ -210,7 +210,7 @@ export function PublishPost({
             onSubmit={form.handleSubmit(onSubmit)}
             className="my-4 space-y-8"
           >
-            <ScrollArea className="h-[80vh]">
+            <ScrollArea className="h-[80vh] pr-4">
               <div className="flex flex-col items-center space-y-4">
                 <Button
                   onClick={() => setOpenImageWidget(true)}
@@ -249,7 +249,7 @@ export function PublishPost({
                   onSubmit={onSubmit}
                   onRefresh={handleRefresh}
                   scheduledAt={project.scheduled_at}
-                  projectId={project._id}
+                  project={project}
                 />
                 <CanonicalUrl form={form} isLoading={isLoading} />
               </div>

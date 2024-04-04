@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import Image from "next/image";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -30,6 +30,7 @@ import { z } from "zod";
 import { Icons } from "@/assets/icons";
 import { LinkButton } from "@/components/ui/link-button";
 import { Tooltip } from "@/components/ui/tooltip";
+import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { shortenText } from "@/utils/text-shortener";
 import { trpc } from "@/utils/trpc";
 
@@ -157,40 +158,14 @@ interface LinkPreviewProps {
   link: string;
   onEdit: () => void;
   onUnset: () => void;
-  onCopy: () => Promise<boolean>;
 }
-
-const LinkPreviewActionItem = ({
-  icon,
-  tooltip,
-  onClick,
-  className,
-}: Readonly<{
-  icon: React.ReactNode;
-  tooltip: string;
-  onClick: () => void;
-  className?: string;
-}>) => (
-  <Tooltip content={tooltip}>
-    <Button
-      onClick={onClick}
-      variant="ghost"
-      size="icon"
-      className={cn("h-6 w-6", className)}
-      aria-label={tooltip}
-    >
-      {icon}
-    </Button>
-  </Tooltip>
-);
 
 export function LinkPreview({
   link,
   onEdit,
   onUnset,
-  onCopy,
 }: Readonly<LinkPreviewProps>) {
-  const [isCopied, setIsCopied] = useState(false);
+  const { isCopied, copyToClipboard } = useCopyToClipboard();
 
   const { data, isFetching, error } = trpc.tools.scraper.getMetadata.useQuery(
     link,
@@ -200,15 +175,6 @@ export function LinkPreview({
   );
 
   const metadata = data?.data;
-
-  const handleCopy = async () => {
-    const copied = await onCopy();
-    setIsCopied(copied);
-
-    setTimeout(() => {
-      setIsCopied(false);
-    }, 2000);
-  };
 
   return (
     <Card className="w-80 max-w-80">
@@ -241,7 +207,7 @@ export function LinkPreview({
           <LinkPreviewActionItem
             icon={isCopied ? <Icons.Check /> : <Icons.Copy />}
             tooltip="Copy link"
-            onClick={handleCopy}
+            onClick={async () => copyToClipboard(link)}
             className={cn({
               "text-success": isCopied,
             })}
@@ -279,3 +245,27 @@ export function LinkPreview({
     </Card>
   );
 }
+
+const LinkPreviewActionItem = ({
+  icon,
+  tooltip,
+  onClick,
+  className,
+}: Readonly<{
+  icon: React.ReactNode;
+  tooltip: string;
+  onClick: () => void;
+  className?: string;
+}>) => (
+  <Tooltip content={tooltip}>
+    <Button
+      onClick={onClick}
+      variant="ghost"
+      size="icon"
+      className={cn("h-6 w-6", className)}
+      aria-label={tooltip}
+    >
+      {icon}
+    </Button>
+  </Tooltip>
+);

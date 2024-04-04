@@ -63,7 +63,12 @@ export function ProjectSettings({
       <Tooltip content="Settings">
         <SheetTrigger asChild>{children}</SheetTrigger>
       </Tooltip>
-      <SheetContent onCloseAutoFocus={(e) => e.preventDefault()}>
+      <SheetContent
+        onCloseAutoFocus={(e) => e.preventDefault()}
+        onOpenAutoFocus={(event) => {
+          event.preventDefault();
+        }}
+      >
         <SheetHeader>
           <SheetTitle>SETTINGS</SheetTitle>
           <SheetDescription>Your project settings.</SheetDescription>

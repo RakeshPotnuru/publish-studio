@@ -12,6 +12,8 @@ import ListItem from "@tiptap/extension-list-item";
 import OrderedList from "@tiptap/extension-ordered-list";
 import Paragraph from "@tiptap/extension-paragraph";
 import Strike from "@tiptap/extension-strike";
+import Table from "@tiptap/extension-table";
+import TableRow from "@tiptap/extension-table-row";
 import type { MarkdownSerializerState } from "@tiptap/pm/markdown";
 import {
   defaultMarkdownSerializer,
@@ -25,6 +27,8 @@ import type {
 import { DOMParser as ProseMirrorDOMParser } from "@tiptap/pm/model";
 import DOMPurify from "dompurify";
 import { marked } from "marked";
+
+import { TableCell, TableHeader } from "./extensions/table";
 
 const tableMap = new WeakMap<ProseMirrorNode, boolean>();
 
@@ -155,6 +159,24 @@ const serializerNodes = {
     } else {
       state.wrapBlock("> ", null, node, () => state.renderContent(node));
     }
+  },
+  [Table.name]: (state: MarkdownSerializerState, node: ProseMirrorNode) => {
+    tableMap.set(node, true);
+    state.renderContent(node);
+    tableMap.delete(node);
+  },
+  [TableRow.name]: (state: MarkdownSerializerState, node: ProseMirrorNode) => {
+    state.renderContent(node);
+    state.closeBlock(node);
+  },
+  [TableCell.name]: (state: MarkdownSerializerState, node: ProseMirrorNode) => {
+    state.renderInline(node);
+  },
+  [TableHeader.name]: (
+    state: MarkdownSerializerState,
+    node: ProseMirrorNode,
+  ) => {
+    state.renderInline(node);
   },
 };
 

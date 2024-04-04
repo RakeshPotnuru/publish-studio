@@ -38,6 +38,10 @@ export const sendEmail = async (
         dynamicTemplateData: { ...variables, email },
       })),
       sendAt: send_at,
+      replyTo:
+        from_address === process.env.FROM_EMAIL_AUTO
+          ? process.env.FROM_EMAIL_SUPPORT
+          : from_address,
     };
 
     await sgMail.send(input);

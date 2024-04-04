@@ -29,6 +29,7 @@ const ZodEnvironmentVariables = z.object({
   R2_REGION: z.string(),
   FROM_EMAIL_AUTO: z.string(),
   FROM_EMAIL_PERSONAL: z.string(),
+  FROM_EMAIL_SUPPORT: z.string(),
   WHITELIST_ORIGINS: z.string(),
   CLIENT_URL: z.string().url(),
   GOOGLE_OAUTH_CLIENT_ID: z.string(),

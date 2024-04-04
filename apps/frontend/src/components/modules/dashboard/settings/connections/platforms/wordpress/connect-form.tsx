@@ -10,12 +10,10 @@ export function WordPressConnectForm() {
   const scopes = ["users", "sites", "posts", "read", "sharing", "media"];
 
   const clientID = process.env.NEXT_PUBLIC_WORDPRESS_CLIENT_ID;
-  const clientURL = process.env.NEXT_PUBLIC_CLIENT_URL;
+  const clientURL = siteConfig.url;
 
-  if (!clientID || !clientURL) {
-    throw new Error(
-      "One of NEXT_PUBLIC_WORDPRESS_CLIENT_ID or NEXT_PUBLIC_CLIENT_URL is not set",
-    );
+  if (!clientID) {
+    throw new Error("NEXT_PUBLIC_WORDPRESS_CLIENT_ID is not set");
   }
 
   return (

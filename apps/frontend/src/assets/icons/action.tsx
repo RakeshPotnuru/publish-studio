@@ -9,6 +9,7 @@ import {
 import { BsArrowDownShort, BsArrowUpShort } from "react-icons/bs";
 import { HiDocumentDuplicate, HiOutlineClipboardCopy } from "react-icons/hi";
 import { IoMdLogOut, IoMdRefresh } from "react-icons/io";
+import { IoShareSocial } from "react-icons/io5";
 import {
   MdDriveFileMoveRtl,
   MdManageAccounts,
@@ -47,4 +48,5 @@ export const ActionIcons = {
   Import: TiDownload,
   Refresh: IoMdRefresh,
   Copy: HiOutlineClipboardCopy,
+  Share: IoShareSocial,
 };
