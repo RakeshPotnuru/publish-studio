@@ -1,6 +1,9 @@
+import { Router } from "express";
 import type { Types } from "mongoose";
 import { z } from "zod";
 
+import { constants, TextTone } from "../../config/constants";
+import { validate } from "../../middlewares/validation";
 import { proProtectedProcedure, router } from "../../trpc";
 import GenerativeAIController from "./generative-ai.controller";
 
@@ -29,17 +32,25 @@ const generativeAIRouter = router({
       .mutation(({ input, ctx }) =>
         new GenerativeAIController().generateCategoriesHandler(input, ctx),
       ),
-
-    // changeTone: proProtectedProcedure
-    //   .input(z.object({ text: z.string(), tone: z.nativeEnum(TextTone) }))
-    //   .mutation(({ input, ctx }) =>
-    //     new GenerativeAIController().changeTextTone(
-    //       input.text,
-    //       input.tone,
-    //       ctx.user._id,
-    //     ),
-    //   ),
   }),
 });
 
 export default generativeAIRouter;
+
+const generativeAIRouterExp = Router();
+
+generativeAIRouterExp.post(
+  "/change-tone",
+  validate(
+    z.object({
+      text: z
+        .string()
+        .min(constants.genAI.changeTone.MIN_LENGTH)
+        .max(constants.genAI.changeTone.MAX_LENGTH),
+      tone: z.nativeEnum(TextTone),
+    }),
+  ),
+  (req, res) => new GenerativeAIController().changeToneHandler(req, res),
+);
+
+export { generativeAIRouterExp };

@@ -1,39 +1,14 @@
-import { HarmBlockThreshold, HarmCategory } from "@google/generative-ai";
 import { TRPCError } from "@trpc/server";
+import type { Request, Response } from "express";
 import type { Types } from "mongoose";
 
+import defaultConfig from "../../config/app";
 import { constants } from "../../config/constants";
 import { ai } from "../../utils/google/gemini";
 import { logtail } from "../../utils/logtail";
 import ProjectService from "../project/project.service";
 
 export default class GenerativeAIService extends ProjectService {
-  private readonly SAFETY_SETTINGS = [
-    {
-      category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-      threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-    },
-    {
-      category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-      threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-    },
-    {
-      category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-      threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-    },
-    {
-      category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-      threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-    },
-  ];
-
-  private default_generation_config = {
-    temperature: 0.9,
-    topK: 1,
-    topP: 1,
-    maxOutputTokens: 2048,
-  };
-
   async generateTitle(topic: string, user_id: Types.ObjectId) {
     const parts = [
       { text: "Topic: What is backend testing?" },
@@ -61,10 +36,8 @@ export default class GenerativeAIService extends ProjectService {
       const result = await ai.generateContent({
         contents: [{ role: "user", parts }],
         generationConfig: {
-          ...this.default_generation_config,
           maxOutputTokens: constants.project.title.RECOMMENDED_MAX_LENGTH,
         },
-        safetySettings: this.SAFETY_SETTINGS,
       });
 
       const response = result.response;
@@ -120,10 +93,8 @@ export default class GenerativeAIService extends ProjectService {
       const result = await ai.generateContent({
         contents: [{ role: "user", parts }],
         generationConfig: {
-          ...this.default_generation_config,
           maxOutputTokens: constants.project.description.RECOMMENDED_MAX_LENGTH,
         },
-        safetySettings: this.SAFETY_SETTINGS,
       });
 
       const response = result.response;
@@ -152,8 +123,6 @@ export default class GenerativeAIService extends ProjectService {
     try {
       const result = await ai.generateContent({
         contents: [{ role: "user", parts }],
-        generationConfig: this.default_generation_config,
-        safetySettings: this.SAFETY_SETTINGS,
       });
 
       const response = result.response;
@@ -207,8 +176,6 @@ export default class GenerativeAIService extends ProjectService {
     try {
       const result = await ai.generateContent({
         contents: [{ role: "user", parts }],
-        generationConfig: this.default_generation_config,
-        safetySettings: this.SAFETY_SETTINGS,
       });
 
       const response = result.response;
@@ -227,38 +194,38 @@ export default class GenerativeAIService extends ProjectService {
     }
   }
 
-  // async changeTextTone(text: string, tone: TextTone, user_id: Types.ObjectId) {
-  //   const parts = [
-  //     {
-  //       text: `Change the tone of the text "${text}" to "${tone}".`,
-  //     },
-  //   ];
+  async changeTone(req: Request, res: Response) {
+    const { text, tone } = req.body;
 
-  //   try {
-  //     const result = await ai.generateContentStream({
-  //       contents: [{ role: "user", parts }],
-  //       generationConfig: this.default_generation_config,
-  //       safetySettings: this.SAFETY_SETTINGS,
-  //     });
+    try {
+      const parts = [
+        {
+          text: `Change the tone of the text "${text}" to "${tone}".`,
+        },
+      ];
 
-  //     let text = "";
-  //     for await (const chunk of result.stream) {
-  //       const chunkText = chunk.text();
-  //       console.log(chunkText);
-  //       text += chunkText;
-  //     }
+      const result = await ai.generateContentStream({
+        contents: [{ role: "user", parts }],
+      });
 
-  //     return text;
-  //   } catch (error) {
-  //     await logtail.error(JSON.stringify(error), {
-  //       user_id,
-  //     });
+      res.writeHead(200, {
+        "Content-Type": "text/plain",
+        "transfer-encoding": "chunked",
+      });
 
-  //     throw new TRPCError({
-  //       code: "INTERNAL_SERVER_ERROR",
-  //       message:
-  //         "Something went wrong while changing the text tone. Please try again later.",
-  //     });
-  //   }
-  // }
+      for await (const chunk of result.stream) {
+        res.write(chunk.text());
+      }
+
+      return res.end();
+    } catch (error) {
+      await logtail.error(JSON.stringify(error), {
+        user_id: req.user._id,
+      });
+
+      return res
+        .status(500)
+        .json({ status: "error", message: defaultConfig.defaultErrorMessage });
+    }
+  }
 }

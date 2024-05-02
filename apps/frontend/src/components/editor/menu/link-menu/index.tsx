@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 
 import { BubbleMenu as BaseBubbleMenu } from "@tiptap/react";
 
-import { EditLink, LinkPreview } from "../actions/link-action";
+import { EditLink, LinkPreview } from "../action/link";
 import type { MenuProps } from "../fixed-menu";
 
 export const LinkMenu = ({ editor, appendTo }: MenuProps) => {
@@ -40,7 +40,7 @@ export const LinkMenu = ({ editor, appendTo }: MenuProps) => {
   return (
     <BaseBubbleMenu
       editor={editor}
-      pluginKey="textMenu"
+      pluginKey="linkMenu"
       shouldShow={shouldShow}
       updateDelay={0}
       tippyOptions={{
@@ -53,6 +53,7 @@ export const LinkMenu = ({ editor, appendTo }: MenuProps) => {
         onHidden: () => {
           setShowEdit(false);
         },
+        zIndex: 40,
       }}
     >
       {showEdit ? (

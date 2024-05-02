@@ -102,6 +102,13 @@ const pusher = {
   },
 };
 
+const genAI = {
+  changeTone: {
+    MIN_LENGTH: 10,
+    MAX_LENGTH: 10_000,
+  },
+};
+
 export const constants = {
   project,
   user,
@@ -112,6 +119,7 @@ export const constants = {
   AUTOSAVE_INTERVAL,
   GLOBAL_STALE_TIME,
   pusher,
+  genAI,
 };
 
 /* Platform name must match model name. */
@@ -187,4 +195,11 @@ export enum WordPressStatus {
   PRIVATE = "private",
   DRAFT = "draft",
   PENDING = "pending",
+}
+
+export enum TextTone {
+  FORMAL = "formal",
+  INFORMAL = "informal",
+  FRIENDLY = "friendly",
+  PROFESSIONAL = "professional",
 }

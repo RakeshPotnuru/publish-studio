@@ -66,7 +66,7 @@ const formSchema = z
   })
   .refine((data) => data.password === data.confirm_password, {
     message: "Passwords do not match",
-    path: ["confirmPassword"],
+    path: ["confirm_password"],
   });
 
 export function RegisterForm() {

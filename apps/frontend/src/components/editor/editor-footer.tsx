@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { Separator } from "@itsrakesh/ui";
+import type { Editor } from "@tiptap/react";
 
 import type { IReadabilityScore } from "@/utils/flesch-reading-ease-score";
 import fleschReadingEaseScore from "@/utils/flesch-reading-ease-score";
@@ -12,7 +13,30 @@ import type { MenuProps } from "./menu/fixed-menu";
 interface EditorFooterProps extends React.HTMLAttributes<HTMLDivElement> {
   isLoading: boolean;
 }
+export const getSelection = (editor: Editor) => {
+  const { view, state, storage } = editor;
+  const { from, to } = view.state.selection;
+  const text = state.doc.textBetween(from, to, "");
+  const words = text.split(" ").filter((word) => word !== "");
 
+  if (state.selection.empty) {
+    return {
+      text: "",
+      characterCount: storage.characterCount.characters(),
+      wordCount: storage.characterCount.words(),
+      from,
+      to,
+    };
+  }
+
+  return {
+    text: text,
+    characterCount: text.length,
+    wordCount: words.length,
+    from,
+    to,
+  };
+};
 export function EditorFooter({
   editor,
   isLoading,
@@ -24,27 +48,6 @@ export function EditorFooter({
   const handleEditable = () => {
     editor.setEditable(!editable);
     setEditable(!editable);
-  };
-
-  const getSelection = () => {
-    const { view, state, storage } = editor;
-    const { from, to } = view.state.selection;
-    const text = state.doc.textBetween(from, to, "");
-    const words = text.split(" ").filter((word) => word !== "");
-
-    if (state.selection.empty) {
-      return {
-        text: "",
-        characterCount: storage.characterCount.characters(),
-        wordCount: storage.characterCount.words(),
-      };
-    }
-
-    return {
-      text: text,
-      characterCount: text.length,
-      wordCount: words.length,
-    };
   };
 
   const getReadabilityScore = (): IReadabilityScore | null => {
@@ -59,13 +62,14 @@ export function EditorFooter({
     <div className="sticky bottom-0 z-50 flex flex-row items-center justify-between rounded-xl bg-background p-2 py-1 text-sm text-muted-foreground">
       <div className="flex flex-row items-center space-x-2">
         <p>
-          {getSelection().characterCount ||
+          {getSelection(editor).characterCount ||
             editor.storage.characterCount.characters()}{" "}
           characters
         </p>
         <Separator orientation="vertical" className="h-3 bg-gray-500" />
         <p>
-          {getSelection().wordCount || editor.storage.characterCount.words()}{" "}
+          {getSelection(editor).wordCount ||
+            editor.storage.characterCount.words()}{" "}
           words
         </p>
         {readabilityScore && (

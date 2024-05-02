@@ -17,6 +17,7 @@ import {
 } from "react-icons/lu";
 import { MdFormatClear } from "react-icons/md";
 import { PiCodeBlockBold } from "react-icons/pi";
+import { RiRobot2Fill } from "react-icons/ri";
 import { RxDividerHorizontal } from "react-icons/rx";
 import { TbBlockquote } from "react-icons/tb";
 import { VscNewline } from "react-icons/vsc";
@@ -42,4 +43,5 @@ export const EditorIcons = {
   AddColumnBefore: LuArrowLeftToLine,
   AddColumnAfter: LuArrowRightToLine,
   DragHandle: LuGripVertical,
+  Robot: RiRobot2Fill,
 };

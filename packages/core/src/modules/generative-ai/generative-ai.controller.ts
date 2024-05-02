@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import type { Request, Response } from "express";
 import type { Types } from "mongoose";
 
 import type { Context } from "../../trpc";
@@ -107,5 +108,9 @@ export default class GenerativeAIController extends GenerativeAIService {
     const categories = match[1].trim().split(",");
 
     return { status: "success", data: { categories } };
+  }
+
+  async changeToneHandler(req: Request, res: Response) {
+    return await super.changeTone(req, res);
   }
 }

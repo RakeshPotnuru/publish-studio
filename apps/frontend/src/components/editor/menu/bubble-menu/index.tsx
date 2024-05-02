@@ -9,8 +9,9 @@ import { BubbleMenu as TiptapBubbleMenu, isTextSelection } from "@tiptap/react";
 
 import { MenuShell } from "@/components/ui/shell";
 
-import { LinkAction } from "../actions/link-action";
-import { MarkActions } from "../actions/mark-actions";
+import { AIActions } from "../action/ai";
+import { LinkAction } from "../action/link";
+import { MarkActions } from "../action/marks";
 import type { MenuProps, ShouldShowProps } from "../fixed-menu";
 import { MenuSeparator } from "../menu-separator";
 
@@ -57,7 +58,7 @@ const isTextSelected = ({ editor }: { editor: Editor }) => {
   return !empty && !isEmptyTextBlock && isEditable;
 };
 
-export function TextMenu({ editor }: Readonly<MenuProps>) {
+export function BubbleMenu({ editor, appendTo }: Readonly<MenuProps>) {
   const shouldShow = useCallback(
     ({ view, from }: ShouldShowProps) => {
       if (!view) {
@@ -80,19 +81,27 @@ export function TextMenu({ editor }: Readonly<MenuProps>) {
   return (
     <TiptapBubbleMenu
       editor={editor}
-      pluginKey={"textMenu"}
+      pluginKey="bubbleMenu"
       updateDelay={100}
       shouldShow={shouldShow}
-      tippyOptions={{ popperOptions: { placement: "top-start" }, zIndex: 40 }}
+      tippyOptions={{
+        popperOptions: {
+          placement: "top-start",
+        },
+        appendTo: () => {
+          return appendTo?.current as HTMLElement;
+        },
+        zIndex: 40,
+      }}
     >
       <div className="flex flex-row items-center rounded-md border bg-popover text-popover-foreground shadow-md">
+        <AIActions editor={editor} />
+        <MenuSeparator isBubbleMenu />
         <MenuShell>
           <MarkActions editor={editor} isBubbleMenu />
         </MenuShell>
         <MenuSeparator isBubbleMenu />
-        <MenuShell>
-          <LinkAction editor={editor} isBubbleMenu />
-        </MenuShell>
+        <LinkAction editor={editor} isBubbleMenu />
       </div>
     </TiptapBubbleMenu>
   );
