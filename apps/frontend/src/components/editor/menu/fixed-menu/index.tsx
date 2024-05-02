@@ -8,13 +8,13 @@ import { type Editor } from "@tiptap/react";
 import { Icons } from "@/assets/icons";
 import { MenuShell } from "@/components/ui/shell";
 
-import { FullscreenAction } from "../actions/fullscreen-action";
-import { HistoryActions } from "../actions/history-actions";
-import { ImageAction } from "../actions/image-action";
-import { LinkAction } from "../actions/link-action";
-import { MarkActions } from "../actions/mark-actions";
-import { NodeActions } from "../actions/node-actions";
-import { TextStyleActions } from "../actions/text-style-actions";
+import { FullscreenAction } from "../action/fullscreen";
+import { HistoryActions } from "../action/history";
+import { ImageAction } from "../action/image";
+import { LinkAction } from "../action/link";
+import { MarkActions } from "../action/marks";
+import { NodeActions } from "../action/nodes";
+import { TextStyleActions } from "../action/text-style";
 import { MenuAction } from "../menu-action";
 import { MenuSeparator } from "../menu-separator";
 
@@ -94,31 +94,6 @@ export function FixedMenu({
             tooltip="Start Dictation"
           />
         )}
-        {/* {isMarkdown ? (
-                    <MenuAction
-                        editor={editor}
-                        name="showRichText"
-                        icon={<Icons.Markdown />}
-                        command={() => {
-                            const content = deserialize(editor.schema, editor.getText());
-                            editor.commands.setContent(content);
-                            setIsMarkdown(false);
-                        }}
-                        tooltip="Show Rich Text"
-                    />
-                ) : (
-                    <MenuAction
-                        editor={editor}
-                        name="showMarkdown"
-                        icon={<Icons.Markdown />}
-                        command={() => {
-                            const content = nhm.translate(editor.getHTML());
-                            editor.commands.setContent(content);
-                            setIsMarkdown(true);
-                        }}
-                        tooltip="Show Markdown"
-                    />
-                )} */}
         <FullscreenAction editor={editor} />
       </MenuShell>
     </div>

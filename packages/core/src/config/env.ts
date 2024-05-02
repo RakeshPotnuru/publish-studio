@@ -11,7 +11,6 @@ const ZodEnvironmentVariables = z.object({
   NODE_ENV: z.string(),
   PORT: z.string(),
   MONGO_URI: z.string(),
-  BASE_URL: z.string().url(),
   REDIS_URL: z.string().url(),
   REDIS_PORT: z.string(),
   REDIS_HOST: z.string(),

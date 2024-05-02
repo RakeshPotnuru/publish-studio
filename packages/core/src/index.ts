@@ -13,7 +13,8 @@ import "./config/env";
 import "./utils/db";
 
 import defaultConfig from "./config/app";
-import appRouter from "./routes";
+import { authMiddleware } from "./middlewares/deserialize-user";
+import appRouter, { expRouter } from "./routes";
 import { createContext } from "./trpc";
 import { logtail } from "./utils/logtail";
 
@@ -64,12 +65,14 @@ app.use("/health", (_, res) => {
 });
 
 app.use(
-  "/api",
+  "/trpc",
   createExpressMiddleware({
     router: appRouter,
     createContext,
   }),
 );
+
+app.use("/api", authMiddleware, expRouter);
 
 app.listen(process.env.PORT, () => {
   console.log(`✅ Server running on port ${process.env.PORT}`);

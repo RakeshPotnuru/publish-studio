@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import axios from "axios";
-import bycrypt from "bcryptjs";
+import bcrypt from "bcryptjs";
 import type { SetOption } from "cookies";
 import Cookies from "cookies";
 import type { Types } from "mongoose";
@@ -163,8 +163,8 @@ export default class AuthController extends AuthService {
 
     await super.sendVerificationEmail(input.email, verification_token);
 
-    const salt = await bycrypt.genSalt(12);
-    const hashedPassword = await bycrypt.hash(input.password, salt);
+    const salt = await bcrypt.genSalt(12);
+    const hashedPassword = await bcrypt.hash(input.password, salt);
     const newUser = await super.createUser({
       first_name: input.first_name,
       last_name: input.last_name,
@@ -276,7 +276,7 @@ export default class AuthController extends AuthService {
 
     if (
       !user ||
-      (user.password && !(await bycrypt.compare(input.password, user.password)))
+      (user.password && !(await bcrypt.compare(input.password, user.password)))
     ) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
@@ -397,8 +397,8 @@ export default class AuthController extends AuthService {
       });
     }
 
-    const salt = await bycrypt.genSalt(12);
-    const hashedPassword = await bycrypt.hash(input.password, salt);
+    const salt = await bcrypt.genSalt(12);
+    const hashedPassword = await bcrypt.hash(input.password, salt);
     await super.updateUser(user._id, { password: hashedPassword });
 
     return {

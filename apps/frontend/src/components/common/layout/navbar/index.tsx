@@ -107,8 +107,8 @@ export function Navbar({ className, ...props }: Readonly<NavbarProps>) {
             alt="Publish Studio"
             width={35}
             height={35}
-            priority={true}
             className="rounded-md drop-shadow-md"
+            priority
           />
         </Link>
 

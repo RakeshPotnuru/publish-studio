@@ -1,9 +1,13 @@
+import { Router } from "express";
+
 import adminAuthRouter from "./modules/admin/auth.routes";
 import inviteRouter from "./modules/admin/invite/invite.routes";
 import assetRouter from "./modules/asset/asset.routes";
 import authRouter from "./modules/auth/auth.routes";
 import folderRouter from "./modules/folder/folder.routes";
-import generativeAIRouter from "./modules/generative-ai/generate-ai.routes";
+import generativeAIRouter, {
+  generativeAIRouterExp,
+} from "./modules/generative-ai/generate-ai.routes";
 import cloudinaryRouter from "./modules/integration/cloudinary/cloudinary.routes";
 import pexelsRouter from "./modules/integration/pexels/pexels.routes";
 import unsplashRouter from "./modules/integration/unsplash/unsplash.routes";
@@ -46,3 +50,9 @@ const appRouter = router({
 export type AppRouter = typeof appRouter;
 export default appRouter;
 export const createCaller = t.createCallerFactory(appRouter);
+
+const expRouter = Router();
+
+expRouter.use("/", generativeAIRouterExp);
+
+export { expRouter };

@@ -33,7 +33,7 @@ export const ContentItemMenu = ({ editor }: ContentItemMenuProps) => {
 
   return (
     <DragHandle
-      pluginKey="ContentItemMenu"
+      pluginKey="contentItemMenu"
       editor={editor}
       onNodeChange={data.handleNodeChange}
       tippyOptions={{
