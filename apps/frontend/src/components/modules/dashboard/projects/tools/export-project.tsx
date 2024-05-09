@@ -2,7 +2,6 @@ import { useState } from "react";
 
 import { Button, toast } from "@itsrakesh/ui";
 import type { IProject } from "@publish-studio/core";
-import type { JSONContent } from "@tiptap/core";
 import { format } from "date-fns";
 import docx from "remark-docx";
 import md from "remark-parse";
@@ -11,7 +10,6 @@ import { unified } from "unified";
 
 import { Icons } from "@/assets/icons";
 import type { MenuProps } from "@/components/editor/menu/fixed-menu";
-import { serialize } from "@/components/editor/transform-markdown";
 import { Heading } from "@/components/ui/heading";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 
@@ -77,10 +75,7 @@ export function ExportProject({
   const handlePDF = async () => {
     try {
       setIsPDFExporting(true);
-      const markdown = serialize(
-        editor.schema,
-        editor.state.doc.toJSON() as JSONContent,
-      );
+      const markdown = editor.storage.markdown.getMarkdown();
 
       const pdfContent = `
       ---
@@ -115,10 +110,7 @@ export function ExportProject({
   const handleDocx = async () => {
     try {
       setIsDocxExporting(true);
-      const markdown = serialize(
-        editor.schema,
-        editor.state.doc.toJSON() as JSONContent,
-      );
+      const markdown = editor.storage.markdown.getMarkdown();
 
       const docxContent = `
       ---
@@ -151,10 +143,7 @@ export function ExportProject({
   };
 
   const handleCSV = () => {
-    const markdown = serialize(
-      editor.schema,
-      editor.state.doc.toJSON() as JSONContent,
-    );
+    const markdown = editor.storage.markdown.getMarkdown();
 
     const csvContent = [
       "title, created_at, content",
@@ -176,10 +165,7 @@ export function ExportProject({
   };
 
   const handleTXT = () => {
-    const markdown = serialize(
-      editor.schema,
-      editor.state.doc.toJSON() as JSONContent,
-    );
+    const markdown = editor.storage.markdown.getMarkdown();
 
     const txtContent = [
       `${project.name}`,
@@ -202,10 +188,7 @@ export function ExportProject({
   };
 
   const handleMD = () => {
-    const markdown = serialize(
-      editor.schema,
-      editor.state.doc.toJSON() as JSONContent,
-    );
+    const markdown = editor.storage.markdown.getMarkdown();
 
     const mdContent = [
       `# ${project.name}`,

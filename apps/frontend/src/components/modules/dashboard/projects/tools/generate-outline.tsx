@@ -8,7 +8,6 @@ import { ProButton } from "@/components/ui/pro-button";
 import { trpc } from "@/utils/trpc";
 
 import type { MenuProps } from "../../../../editor/menu/fixed-menu";
-import { deserialize } from "../../../../editor/transform-markdown";
 
 interface GenerateOutlineProps extends MenuProps {
   project_id: Types.ObjectId;
@@ -22,8 +21,7 @@ export function GenerateOutline({
     trpc.genAI.generate.outline.useMutation({
       onSuccess: ({ data }) => {
         toast.success("Outline generated successfully.");
-        const deserialized = deserialize(editor.schema, data.outline);
-        editor.commands.insertContentAt(0, deserialized);
+        editor.commands.insertContentAt(0, data.outline);
       },
       onError: (error) => {
         toast.error(error.message);

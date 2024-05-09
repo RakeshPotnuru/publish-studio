@@ -4,27 +4,47 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@itsrakesh/ui";
-import { constants, TextTone } from "@publish-studio/core/src/config/constants";
+import { constants } from "@publish-studio/core/src/config/constants";
 
 import { Icons } from "@/assets/icons";
 
 import type { MenuProps } from "../../fixed-menu";
 import { Action } from "./action";
 
-interface ChangeToneProps extends MenuProps {
+interface GenerateListProps extends MenuProps {
   setText: React.Dispatch<React.SetStateAction<string>>;
   setIsTextWindowOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setIsTextLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setIsStreaming: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export function ChangeTone({
+const lists: {
+  label: "Numbered list" | "Bulleted list";
+  path: string;
+  maxLength: number;
+  minLength: number;
+}[] = [
+  {
+    label: "Numbered list",
+    path: constants.genAI.numberedList.path,
+    maxLength: constants.genAI.numberedList.MAX_LENGTH,
+    minLength: constants.genAI.numberedList.MIN_LENGTH,
+  },
+  {
+    label: "Bulleted list",
+    path: constants.genAI.bulletList.path,
+    maxLength: constants.genAI.bulletList.MAX_LENGTH,
+    minLength: constants.genAI.bulletList.MIN_LENGTH,
+  },
+];
+
+export function GenerateList({
   setText,
   editor,
   setIsTextWindowOpen,
   setIsTextLoading,
   setIsStreaming,
-}: Readonly<ChangeToneProps>) {
+}: Readonly<GenerateListProps>) {
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
@@ -32,23 +52,22 @@ export function ChangeTone({
           variant={"ghost"}
           className="w-full justify-start whitespace-nowrap"
         >
-          <Icons.Tone className="mr-2" /> Change tone
+          <Icons.Bulletlist className="mr-2" /> Convert into list
         </Button>
       </HoverCardTrigger>
       <HoverCardContent className="w-min p-1">
-        {Object.keys(TextTone).map((tone) => (
+        {lists.map((list) => (
           <Action
-            key={tone}
+            key={list.path}
             editor={editor}
             setText={setText}
             setIsTextWindowOpen={setIsTextWindowOpen}
             setIsTextLoading={setIsTextLoading}
             setIsStreaming={setIsStreaming}
-            label={tone}
-            maxLength={constants.genAI.changeTone.MAX_LENGTH}
-            minLength={constants.genAI.changeTone.MIN_LENGTH}
-            path="change-tone"
-            body={{ tone: TextTone[tone as keyof typeof TextTone] }}
+            label={list.label}
+            maxLength={list.maxLength}
+            minLength={list.minLength}
+            path={list.path}
             size={"sm"}
           />
         ))}

@@ -4,7 +4,6 @@ import { Icons } from "@/assets/icons";
 import type { TInsertImageOptions } from "@/components/modules/dashboard/assets/image-widget";
 import { ImageWidget } from "@/components/modules/dashboard/assets/image-widget";
 
-import { deserialize } from "../../transform-markdown";
 import type { MenuProps } from "../fixed-menu";
 import { MenuAction } from "../menu-action";
 
@@ -21,12 +20,10 @@ export function ImageAction({ editor }: Readonly<MenuProps>) {
     setOpen(false);
     editor.chain().focus().setImage({ src, alt, title }).run();
     if (hasCaption) {
-      const deserialized = deserialize(editor.schema, captionMarkdown);
-
       editor
         .chain()
         .focus()
-        .insertContentAt(editor.state.selection.anchor + 1, deserialized)
+        .insertContentAt(editor.state.selection.anchor + 1, captionMarkdown)
         .run();
     }
   };

@@ -124,6 +124,7 @@ const ShareItem = ({
   return (
     <Tooltip content={tooltip}>
       <Button
+        type="button"
         onClick={onClick}
         variant="ghost"
         size="icon"

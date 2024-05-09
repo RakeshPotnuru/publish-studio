@@ -5,20 +5,48 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-  ScrollArea,
-  Skeleton,
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@itsrakesh/ui";
+import { constants } from "@publish-studio/core/src/config/constants";
 
 import { Icons } from "@/assets/icons";
-import { getSelection } from "@/components/editor/editor-footer";
-import { deserialize } from "@/components/editor/transform-markdown";
 
 import type { MenuProps } from "../../fixed-menu";
+import { Action } from "./action";
 import { ChangeTone } from "./change-tone";
+import { GenerateList } from "./generate-list";
+import { TextWindow } from "./text-window";
+
+export interface IAction {
+  path: string;
+  label: string;
+  minLength: number;
+  maxLength: number;
+  body?: {
+    [key: string]: string;
+  };
+  icon?: React.ReactNode;
+}
+
+const singleActions: IAction[] = [
+  {
+    path: constants.genAI.expandText.path,
+    label: "Expand text",
+    minLength: constants.genAI.expandText.MIN_LENGTH,
+    maxLength: constants.genAI.expandText.MAX_LENGTH,
+    icon: <Icons.Expand />,
+  },
+  {
+    path: constants.genAI.shortenText.path,
+    label: "Shorten text",
+    minLength: constants.genAI.shortenText.MIN_LENGTH,
+    maxLength: constants.genAI.shortenText.MAX_LENGTH,
+    icon: <Icons.Shorten />,
+  },
+];
 
 export function AIActions({ editor }: Readonly<MenuProps>) {
   const [isTextWindowOpen, setIsTextWindowOpen] = useState(false);
@@ -59,8 +87,29 @@ export function AIActions({ editor }: Readonly<MenuProps>) {
           isStreaming={isStreaming}
         />
       ) : (
-        <PopoverContent className="p-1">
+        <PopoverContent
+          className="max-w-min p-1"
+          onOpenAutoFocus={(e) => e.preventDefault()}
+        >
           <ChangeTone
+            editor={editor}
+            setText={setText}
+            setIsTextWindowOpen={setIsTextWindowOpen}
+            setIsTextLoading={setIsTextLoading}
+            setIsStreaming={setIsStreaming}
+          />
+          {singleActions.map((action) => (
+            <Action
+              key={action.path}
+              editor={editor}
+              setText={setText}
+              setIsTextWindowOpen={setIsTextWindowOpen}
+              setIsTextLoading={setIsTextLoading}
+              setIsStreaming={setIsStreaming}
+              {...action}
+            />
+          ))}
+          <GenerateList
             editor={editor}
             setText={setText}
             setIsTextWindowOpen={setIsTextWindowOpen}
@@ -70,74 +119,5 @@ export function AIActions({ editor }: Readonly<MenuProps>) {
         </PopoverContent>
       )}
     </Popover>
-  );
-}
-
-interface TextWindowProps extends MenuProps {
-  text: string;
-  isLoading: boolean;
-  onDiscard: () => void;
-  isStreaming: boolean;
-}
-
-function TextWindow({
-  text,
-  isLoading,
-  onDiscard,
-  editor,
-  isStreaming,
-}: TextWindowProps) {
-  const handleReplace = () => {
-    const { from, to } = getSelection(editor);
-    const deserialized = deserialize(editor.schema, text);
-
-    editor
-      .chain()
-      .focus()
-      .insertContentAt(
-        {
-          from,
-          to,
-        },
-        deserialized,
-      )
-      .run();
-    onDiscard();
-  };
-
-  return (
-    <PopoverContent className="w-96">
-      {isLoading ? (
-        <div className="space-y-2">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <Skeleton key={`skeleton-${index + 1}`} className="h-4 w-full" />
-          ))}
-        </div>
-      ) : (
-        <div className="space-y-2">
-          <ScrollArea className="h-36">
-            <p className="text-sm">{text}</p>
-          </ScrollArea>
-          <div className="flex justify-end gap-1">
-            <Button
-              onClick={handleReplace}
-              variant={"outline"}
-              size={"sm"}
-              disabled={isStreaming}
-            >
-              <Icons.Redo className="mr-1" /> Replace
-            </Button>
-            <Button
-              onClick={onDiscard}
-              variant={"outline"}
-              size={"sm"}
-              disabled={isStreaming}
-            >
-              <Icons.Delete className="mr-1" /> Discard
-            </Button>
-          </div>
-        </div>
-      )}
-    </PopoverContent>
   );
 }

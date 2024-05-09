@@ -113,4 +113,20 @@ export default class GenerativeAIController extends GenerativeAIService {
   async changeToneHandler(req: Request, res: Response) {
     return await super.changeTone(req, res);
   }
+
+  async shortenTextHandler(req: Request, res: Response) {
+    return await super.shortenText(req, res);
+  }
+
+  async expandTextHandler(req: Request, res: Response) {
+    return await super.expandText(req, res);
+  }
+
+  async generateNumberedListHandler(req: Request, res: Response) {
+    return await super.generateNumberedList(req, res);
+  }
+
+  async generateBulletListHandler(req: Request, res: Response) {
+    return await super.generateBulletList(req, res);
+  }
 }

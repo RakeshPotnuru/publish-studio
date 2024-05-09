@@ -9,17 +9,16 @@ import { Tooltip } from "../ui/tooltip";
 
 export function GoToHome() {
   return (
-    <Tooltip content="Back to home" side="right">
-      <Button
-        variant="secondary"
-        size="icon"
-        className="absolute -left-2 top-8 z-50 rounded-none rounded-r-lg hover:left-0 hover:animate-slide-right"
-        asChild
-      >
+    <Button
+      variant="secondary"
+      size="icon"
+      className="absolute -left-2 top-8 z-50 rounded-none rounded-r-lg hover:left-0 hover:animate-slide-right"
+    >
+      <Tooltip content="Back to home" side="right">
         <Link href={siteConfig.pages.dashboard.link}>
           <Icons.Home />
         </Link>
-      </Button>
-    </Tooltip>
+      </Tooltip>
+    </Button>
   );
 }

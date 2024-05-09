@@ -106,6 +106,27 @@ const genAI = {
   changeTone: {
     MIN_LENGTH: 10,
     MAX_LENGTH: 10_000,
+    path: "change-tone",
+  },
+  shortenText: {
+    MIN_LENGTH: 10,
+    MAX_LENGTH: 10_000,
+    path: "shorten-text",
+  },
+  expandText: {
+    MIN_LENGTH: 10,
+    MAX_LENGTH: 10_000,
+    path: "expand-text",
+  },
+  numberedList: {
+    MIN_LENGTH: 10,
+    MAX_LENGTH: 10_000,
+    path: "numbered-list",
+  },
+  bulletList: {
+    MIN_LENGTH: 10,
+    MAX_LENGTH: 10_000,
+    path: "bullet-list",
   },
 };
 

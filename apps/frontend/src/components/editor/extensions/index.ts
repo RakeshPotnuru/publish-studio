@@ -23,6 +23,7 @@ import Text from "@tiptap/extension-text";
 import Typography from "@tiptap/extension-typography";
 import Underline from "@tiptap/extension-underline";
 import { all, createLowlight } from "lowlight";
+import { Markdown } from "tiptap-markdown";
 
 import SpeechRecognition from "../custom-extensions/speech-recognition";
 import Link from "./link";
@@ -50,6 +51,11 @@ export const extensions = [
   TableHeader,
   TableCell,
   Table,
+  Markdown.configure({
+    transformCopiedText: true,
+    transformPastedText: true,
+    linkify: true,
+  }),
   Code.configure({
     HTMLAttributes: {
       spellcheck: false,

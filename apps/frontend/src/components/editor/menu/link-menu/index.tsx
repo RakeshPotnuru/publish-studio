@@ -42,7 +42,7 @@ export const LinkMenu = ({ editor, appendTo }: MenuProps) => {
       editor={editor}
       pluginKey="linkMenu"
       shouldShow={shouldShow}
-      updateDelay={0}
+      updateDelay={100}
       tippyOptions={{
         popperOptions: {
           modifiers: [{ enabled: false }],

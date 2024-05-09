@@ -200,7 +200,147 @@ export default class GenerativeAIService extends ProjectService {
     try {
       const parts = [
         {
-          text: `Change the tone of the text "${text}" to "${tone}".`,
+          text: `Rewrite the following text in ${tone} tone while maintaining its original length: ${text}`,
+        },
+      ];
+
+      const result = await ai.generateContentStream({
+        contents: [{ role: "user", parts }],
+      });
+
+      res.writeHead(200, {
+        "Content-Type": "text/plain",
+        "transfer-encoding": "chunked",
+      });
+
+      for await (const chunk of result.stream) {
+        res.write(chunk.text());
+      }
+
+      return res.end();
+    } catch (error) {
+      await logtail.error(JSON.stringify(error), {
+        user_id: req.user._id,
+      });
+
+      return res
+        .status(500)
+        .json({ status: "error", message: defaultConfig.defaultErrorMessage });
+    }
+  }
+
+  async shortenText(req: Request, res: Response) {
+    const { text } = req.body;
+
+    try {
+      const parts = [
+        {
+          text: `Condense the following passage into a brief, succinct version without losing its essence: ${text}`,
+        },
+      ];
+
+      const result = await ai.generateContentStream({
+        contents: [{ role: "user", parts }],
+      });
+
+      res.writeHead(200, {
+        "Content-Type": "text/plain",
+        "transfer-encoding": "chunked",
+      });
+
+      for await (const chunk of result.stream) {
+        res.write(chunk.text());
+      }
+
+      return res.end();
+    } catch (error) {
+      await logtail.error(JSON.stringify(error), {
+        user_id: req.user._id,
+      });
+
+      return res
+        .status(500)
+        .json({ status: "error", message: defaultConfig.defaultErrorMessage });
+    }
+  }
+
+  async expandText(req: Request, res: Response) {
+    const { text } = req.body;
+
+    try {
+      const parts = [
+        {
+          text: `Expand the following passage without losing its essence, don't make it more than 3 times longer, and don't mention you are expanding it: ${text}`,
+        },
+      ];
+
+      const result = await ai.generateContentStream({
+        contents: [{ role: "user", parts }],
+      });
+
+      res.writeHead(200, {
+        "Content-Type": "text/plain",
+        "transfer-encoding": "chunked",
+      });
+
+      for await (const chunk of result.stream) {
+        res.write(chunk.text());
+      }
+
+      return res.end();
+    } catch (error) {
+      await logtail.error(JSON.stringify(error), {
+        user_id: req.user._id,
+      });
+
+      return res
+        .status(500)
+        .json({ status: "error", message: defaultConfig.defaultErrorMessage });
+    }
+  }
+
+  async generateNumberedList(req: Request, res: Response) {
+    const { text } = req.body;
+
+    try {
+      const parts = [
+        {
+          text: `Generate a numbered list from the provided text, organizing the information into concise points. Don't create headings: ${text}`,
+        },
+      ];
+
+      const result = await ai.generateContentStream({
+        contents: [{ role: "user", parts }],
+      });
+
+      res.writeHead(200, {
+        "Content-Type": "text/plain",
+        "transfer-encoding": "chunked",
+      });
+
+      for await (const chunk of result.stream) {
+        res.write(chunk.text());
+      }
+
+      return res.end();
+    } catch (error) {
+      await logtail.error(JSON.stringify(error), {
+        user_id: req.user._id,
+      });
+
+      return res
+        .status(500)
+        .json({ status: "error", message: defaultConfig.defaultErrorMessage });
+    }
+  }
+
+  async generateBulletList(req: Request, res: Response) {
+    const { text } = req.body;
+
+    try {
+      const parts = [
+        {
+          text: `Generate a bullet list from the provided text, organizing the information into concise points. Don't create headings: ${text}`,
         },
       ];
 

@@ -40,7 +40,7 @@ export default generativeAIRouter;
 const generativeAIRouterExp = Router();
 
 generativeAIRouterExp.post(
-  "/change-tone",
+  `/${constants.genAI.changeTone.path}`,
   validate(
     z.object({
       text: z
@@ -51,6 +51,60 @@ generativeAIRouterExp.post(
     }),
   ),
   (req, res) => new GenerativeAIController().changeToneHandler(req, res),
+);
+
+generativeAIRouterExp.post(
+  `/${constants.genAI.shortenText.path}`,
+  validate(
+    z.object({
+      text: z
+        .string()
+        .min(constants.genAI.shortenText.MIN_LENGTH)
+        .max(constants.genAI.shortenText.MAX_LENGTH),
+    }),
+  ),
+  (req, res) => new GenerativeAIController().shortenTextHandler(req, res),
+);
+
+generativeAIRouterExp.post(
+  `/${constants.genAI.expandText.path}`,
+  validate(
+    z.object({
+      text: z
+        .string()
+        .min(constants.genAI.expandText.MIN_LENGTH)
+        .max(constants.genAI.expandText.MAX_LENGTH),
+    }),
+  ),
+  (req, res) => new GenerativeAIController().expandTextHandler(req, res),
+);
+
+generativeAIRouterExp.post(
+  `/${constants.genAI.numberedList.path}`,
+  validate(
+    z.object({
+      text: z
+        .string()
+        .min(constants.genAI.numberedList.MIN_LENGTH)
+        .max(constants.genAI.numberedList.MAX_LENGTH),
+    }),
+  ),
+  (req, res) =>
+    new GenerativeAIController().generateNumberedListHandler(req, res),
+);
+
+generativeAIRouterExp.post(
+  `/${constants.genAI.bulletList.path}`,
+  validate(
+    z.object({
+      text: z
+        .string()
+        .min(constants.genAI.bulletList.MIN_LENGTH)
+        .max(constants.genAI.bulletList.MAX_LENGTH),
+    }),
+  ),
+  (req, res) =>
+    new GenerativeAIController().generateBulletListHandler(req, res),
 );
 
 export { generativeAIRouterExp };

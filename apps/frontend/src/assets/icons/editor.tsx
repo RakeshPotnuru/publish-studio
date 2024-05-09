@@ -7,6 +7,7 @@ import { BiCode } from "react-icons/bi";
 import { FiItalic, FiUnderline } from "react-icons/fi";
 import { GoBold } from "react-icons/go";
 import { GrRedo, GrUndo } from "react-icons/gr";
+import { GrTextAlignFull } from "react-icons/gr";
 import { HiTableCells } from "react-icons/hi2";
 import {
   LuArrowDownToLine,
@@ -16,8 +17,10 @@ import {
   LuGripVertical,
 } from "react-icons/lu";
 import { MdFormatClear } from "react-icons/md";
+import { MdShortText } from "react-icons/md";
 import { PiCodeBlockBold } from "react-icons/pi";
 import { RiRobot2Fill } from "react-icons/ri";
+import { RiVoiceprintLine } from "react-icons/ri";
 import { RxDividerHorizontal } from "react-icons/rx";
 import { TbBlockquote } from "react-icons/tb";
 import { VscNewline } from "react-icons/vsc";
@@ -44,4 +47,7 @@ export const EditorIcons = {
   AddColumnAfter: LuArrowRightToLine,
   DragHandle: LuGripVertical,
   Robot: RiRobot2Fill,
+  Tone: RiVoiceprintLine,
+  Shorten: MdShortText,
+  Expand: GrTextAlignFull,
 };

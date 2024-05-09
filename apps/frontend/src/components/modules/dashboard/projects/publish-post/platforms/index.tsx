@@ -177,6 +177,7 @@ export const PlatformsField = ({
                         <Badge variant="success">Published</Badge>
                         <Tooltip content="View post">
                           <Button
+                            type="button"
                             variant="ghost"
                             size="icon"
                             className="h-6 w-6"

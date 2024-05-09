@@ -12,7 +12,6 @@ import { Images } from "@/assets/images";
 import { useEditor } from "@/hooks/use-editor";
 import { trpc } from "@/utils/trpc";
 
-import { deserialize } from "../../../../../../editor/transform-markdown";
 import { ConnectionCard } from "../../connection-card";
 import { ImportPostsBodyWithoutPrevious } from "../import-dialog";
 import { useResetUser } from "../use-reset-user";
@@ -141,13 +140,11 @@ export function ImportPosts() {
 
       setImportingPost(id);
 
-      const json = deserialize(editor.schema, post.content.markdown);
-
       const { data } = await createProject({
         name: post.title,
         title: post.seo.title ?? post.title,
         body: {
-          json: json ?? undefined,
+          markdown: post.content.markdown,
         },
         platforms: [Platform.HASHNODE],
         published_at: new Date(post.publishedAt),

@@ -93,6 +93,7 @@
     "sharp": "^0.33.2",
     "superjson": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
+    "tiptap-markdown": "^0.8.10",
     "unified": "^11.0.4",
     "use-debounce": "^10.0.0",
     "ws": "^8.16.0",

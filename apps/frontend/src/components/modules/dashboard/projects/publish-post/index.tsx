@@ -16,12 +16,10 @@ import {
   toast,
 } from "@itsrakesh/ui";
 import type { IProject } from "@publish-studio/core";
-import type { JSONContent } from "@tiptap/core";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 
 import { Icons } from "@/assets/icons";
-import { serialize } from "@/components/editor/transform-markdown";
 import { ImageWidget } from "@/components/modules/dashboard/assets/image-widget";
 import { DotsLoader } from "@/components/ui/loaders/dots-loader";
 import useUserStore from "@/lib/store/user";
@@ -74,10 +72,7 @@ export function PublishPost({
   });
 
   const getBody = () => {
-    const markdown = serialize(
-      editor.schema,
-      editor.state.doc.toJSON() as JSONContent,
-    );
+    const markdown = editor.storage.markdown.getMarkdown();
 
     return {
       html: editor.getHTML(),

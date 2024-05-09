@@ -21,7 +21,6 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-  Textarea,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import { useForm } from "react-hook-form";
@@ -29,15 +28,10 @@ import { z } from "zod";
 
 import { Icons } from "@/assets/icons";
 import type { MenuProps } from "@/components/editor/menu/fixed-menu";
-import { deserialize } from "@/components/editor/transform-markdown";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { trpc } from "@/utils/trpc";
-
-const mdFormSchema = z.object({
-  markdown: z.string().min(1, "Markdown is required."),
-});
 
 const urlFormSchema = z.object({
   url: z.string().url("Please enter a valid URL."),
@@ -47,14 +41,6 @@ export function ImportMarkdown({ editor }: MenuProps) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const mdForm = useForm<z.infer<typeof mdFormSchema>>({
-    mode: "onBlur",
-    resolver: zodResolver(mdFormSchema),
-    defaultValues: {
-      markdown: "",
-    },
-  });
-
   const urlForm = useForm<z.infer<typeof urlFormSchema>>({
     mode: "onBlur",
     resolver: zodResolver(urlFormSchema),
@@ -62,13 +48,6 @@ export function ImportMarkdown({ editor }: MenuProps) {
       url: "",
     },
   });
-
-  const onMdSubmit = (data: z.infer<typeof mdFormSchema>) => {
-    const deserialized = deserialize(editor.schema, data.markdown);
-    editor.commands.setContent(deserialized);
-    mdForm.reset();
-    setOpen(false);
-  };
 
   const errorMessage =
     "Content import unsuccessful. This may be due to various reasons, including content being restricted behind a paywall, requiring authentication, or containing sensitive information.";
@@ -103,7 +82,7 @@ export function ImportMarkdown({ editor }: MenuProps) {
       <div>
         <Heading level={5}>Import content</Heading>
         <p className="text-sm text-muted-foreground">
-          Import content from URL or Markdown into the editor.
+          Import content from URL into the editor.
         </p>
       </div>
       <Dialog open={open} onOpenChange={setOpen}>
@@ -125,42 +104,8 @@ export function ImportMarkdown({ editor }: MenuProps) {
           </DialogHeader>
           <Tabs defaultValue="markdown">
             <TabsList className="grid grid-cols-2">
-              <TabsTrigger value="markdown">Markdown</TabsTrigger>
               <TabsTrigger value="url">URL</TabsTrigger>
             </TabsList>
-            <TabsContent value="markdown">
-              <Form {...mdForm}>
-                <form
-                  onSubmit={mdForm.handleSubmit(onMdSubmit)}
-                  className="space-y-4"
-                >
-                  <FormField
-                    control={mdForm.control}
-                    name="markdown"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Textarea
-                            rows={10}
-                            className="w-full"
-                            placeholder="Paste markdown here..."
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <Button
-                    type="submit"
-                    className="w-full"
-                    disabled={!mdForm.formState.isDirty}
-                  >
-                    Submit
-                  </Button>
-                </form>
-              </Form>
-            </TabsContent>
             <TabsContent value="url">
               <div
                 className={cn("space-y-2", {
