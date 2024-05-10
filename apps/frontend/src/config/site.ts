@@ -1,4 +1,3 @@
-const docsUrl = "https://docs.publishstudio.one";
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
   : "http://localhost:3000";
@@ -12,29 +11,26 @@ export const siteConfig = {
     color: "#EB5757",
   },
   links: {
-    devAPIKeyGuide: `${docsUrl}/connections/platforms/dev#how-to-get-api-key`,
-    mediumAPIKeyGuide: `${docsUrl}/connections/platforms/medium#how-to-get-api-key`,
-    hashnodeAPIKeyGuide: `${docsUrl}/connections/platforms/hashnode#how-to-get-api-key`,
-    ghostAPIKeyGuide: `${docsUrl}/connections/platforms/ghost#how-to-get-api-key-and-api-url`,
-    cloudinaryAPIKeyGuide: `${docsUrl}/connections/integrations/cloudinary#how-to-get-api-key-and-cloud-name`,
-    apiKeysSecureStorage: `${docsUrl}/connections#will-my-credentials-be-safe`,
-    devTags: "https://dev.to/tags",
-    mediumTags: "https://medium.com/topics",
-    ghostTags: "https://ghost.org/help/tags/",
-    wordpressTags: "https://wordpress.com/support/posts/tags/",
-    bloggerLabels:
-      "https://support.google.com/blogger/answer/154172?visit_id=638407487949946224-3277732177&rd=1#:~:text=Add%20labels%20to,find%20your%20labels.",
+    devAPIKeyGuide: `https://pbst.link/dev-api-key`,
+    mediumAPIKeyGuide: `https://pbst.link/medium-api-key`,
+    hashnodeAPIKeyGuide: `https://pbst.link/hsnode-api-key`,
+    ghostAPIKeyGuide: `https://pbst.link/ghost-api-key`,
+    cloudinaryAPIKeyGuide: `https://pbst.link/cldnry-api-key`,
+    apiKeysSecureStorage: `https://pbst.link/creds-secure`,
+    devTags: "https://pbst.link/dev-tags",
+    mediumTags: "https://pbst.link/medium-tags",
+    ghostTags: "https://pbst.link/ghost-tags",
+    wordpressTags: "https://pbst.link/wp-tags",
+    bloggerLabels: `https://pbst.link/blogger-labels`,
     support: "mailto:support@publishstudio.one",
-    docs: docsUrl,
-    wordpressAuthorize: "https://public-api.wordpress.com/oauth2/authorize",
-    wordpressConnectedApps:
-      "https://wordpress.com/me/security/connected-applications",
-    googleConnectedApps: "https://myaccount.google.com/connections",
+    docs: "https://pbst.link/docs",
+    wordpressAuthorize: "https://public-api.wordpress.com/oauth2/authorize", // TODO: Test with short link
+    wordpressConnectedApps: "https://pbst.link/wp-cntd-apps",
+    googleConnectedApps: "https://pbst.link/google-3rd-apps",
     pricing: "https://publishstudio.one/pricing",
-    privacyPolicy: "https://publishstudio.one/privacy-policy",
-    termsOfService: "https://publishstudio.one/terms-of-service",
-    bugReport:
-      "https://publishstudio.sg.larksuite.com/share/base/form/shrlgfAEQaMwqPeZ9Mbb5kXSNAe",
+    privacyPolicy: "https://pbst.link/privacy",
+    termsOfService: "https://pbst.link/tos",
+    bugReport: "https://pbst.link/bug-report",
   },
   twitter: {
     site: "@publishstudio",
