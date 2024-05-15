@@ -10,6 +10,7 @@ import Dropcursor from "@tiptap/extension-dropcursor";
 import Gapcursor from "@tiptap/extension-gapcursor";
 import HardBreak from "@tiptap/extension-hard-break";
 import TiptapHeading from "@tiptap/extension-heading";
+import Highlight from "@tiptap/extension-highlight";
 import History from "@tiptap/extension-history";
 import HorizontalRule from "@tiptap/extension-horizontal-rule";
 import Image from "@tiptap/extension-image";
@@ -51,11 +52,6 @@ export const extensions = [
   TableHeader,
   TableCell,
   Table,
-  Markdown.configure({
-    transformCopiedText: true,
-    transformPastedText: true,
-    linkify: true,
-  }),
   Code.configure({
     HTMLAttributes: {
       spellcheck: false,
@@ -90,5 +86,13 @@ export const extensions = [
   }),
   Link.configure({
     openOnClick: false,
+  }),
+  Markdown.configure({
+    transformCopiedText: true,
+    transformPastedText: true,
+    linkify: true,
+  }),
+  Highlight.configure({
+    multicolor: true,
   }),
 ];

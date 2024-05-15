@@ -18,7 +18,7 @@ export function TextWindow({
   onDiscard,
   editor,
   isStreaming,
-}: TextWindowProps) {
+}: Readonly<TextWindowProps>) {
   const handleReplaceSelection = () => {
     const { from, to } = getSelection(editor);
 
@@ -66,6 +66,7 @@ export function TextWindow({
               variant={"outline"}
               size={"sm"}
               disabled={isStreaming}
+              className="border-destructive text-destructive"
             >
               <Icons.Delete className="mr-1" /> Discard
             </Button>

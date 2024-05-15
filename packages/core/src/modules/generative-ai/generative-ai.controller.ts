@@ -19,19 +19,7 @@ export default class GenerativeAIController extends GenerativeAIService {
       });
     }
 
-    const output = await super.generateTitle(project.name, ctx.user._id);
-
-    const regex = /Title: (.*?)(?:Topic:|$)/;
-    const match = new RegExp(regex).exec(output);
-
-    if (!match) {
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "Unable to generate title. Try changing the project name.",
-      });
-    }
-
-    const title = match[1].trim();
+    const title = await super.generateTitle(project.name, ctx.user._id);
 
     return { status: "success", data: { title } };
   }
@@ -49,22 +37,10 @@ export default class GenerativeAIController extends GenerativeAIService {
       });
     }
 
-    const output = await super.generateDescription(
-      project.title ?? project.name,
+    const description = await super.generateDescription(
+      project.name,
       ctx.user._id,
     );
-
-    const regex = /Description: (.*?)(?:Title:|$)/;
-    const match = new RegExp(regex).exec(output);
-
-    if (!match) {
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "Unable to generate description. Please try again.",
-      });
-    }
-
-    const description = match[1].trim();
 
     return { status: "success", data: { description } };
   }

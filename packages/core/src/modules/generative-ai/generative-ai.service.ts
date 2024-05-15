@@ -11,25 +11,9 @@ import ProjectService from "../project/project.service";
 export default class GenerativeAIService extends ProjectService {
   async generateTitle(topic: string, user_id: Types.ObjectId) {
     const parts = [
-      { text: "Topic: What is backend testing?" },
       {
-        text: "Title: What is Backend Testing? - Essential Techniques Unveiled",
+        text: `input: Create an SEO-optimized creative title for the blog topic "${topic}". Keep the characters' length from 50 to 60. The output should contain only a single title in plain text.`,
       },
-      { text: "Topic: Data science vs web development" },
-      {
-        text: "Title: Data Science vs Web Dev: Comparing Two Booming Tech Fields",
-      },
-      { text: "Topic: HTTP Status Codes" },
-      { text: "Title: A Guide to HTTP Status Codes: What Each Code Means" },
-      { text: "Topic: Is Webassembly the future?" },
-      {
-        text: "Title: Is WebAssembly the Future? The Next Frontier in Web Dev",
-      },
-      { text: "Topic: What is load balancing and how does it work?" },
-      {
-        text: "Title: How Load Balancing Works to Optimize Traffic Distribution",
-      },
-      { text: `Topic: ${topic}` },
     ];
 
     try {
@@ -56,37 +40,11 @@ export default class GenerativeAIService extends ProjectService {
     }
   }
 
-  async generateDescription(title: string, user_id: Types.ObjectId) {
+  async generateDescription(topic: string, user_id: Types.ObjectId) {
     const parts = [
       {
-        text: "Title: Data Science vs Web Dev: Comparing Two Booming Tech Fields",
+        text: `Create an SEO-optimized creative description for the blog topic "${topic}". Keep the characters' length from a minimum of 120 to a maximum of 160. The output should contain only a single description in plain text.`,
       },
-      {
-        text: "Description: Compares data science and web development. Analyzes core components, career pathways, and required skills. Discusses intersection to determine the right career path.",
-      },
-      { text: "Title: A Guide to HTTP Status Codes: What Each Code Means" },
-      {
-        text: "Description: Unlock the mystery of HTTP status codes with our comprehensive guide. Learn about different codes, their meanings, and how to troubleshoot issues.",
-      },
-      {
-        text: "Title: Is WebAssembly the Future? The Next Frontier in Web Dev",
-      },
-      {
-        text: "Description: Explore the potential of WebAssembly and dive into the question: Is WebAssembly the future? Uncover its impact on web dev and the evolving digital landscape.",
-      },
-      {
-        text: "Title: Javascript vs Typescript: Key differences, the best choice",
-      },
-      {
-        text: "Description: Practical comparison of TypeScript and JavaScript, including key differences, pros/cons, suitability for future development, and TS-to-JS conversion examples.",
-      },
-      {
-        text: "Title: How Load Balancing Works to Optimize Traffic Distribution",
-      },
-      {
-        text: "Description: Discover the power of load balancing! Learn how it optimizes traffic distribution for seamless user experiences. Dive into the world of efficient network management.",
-      },
-      { text: `Title: ${title}` },
     ];
 
     try {
@@ -185,6 +143,7 @@ export default class GenerativeAIService extends ProjectService {
       await logtail.error(JSON.stringify(error), {
         user_id,
       });
+      console.log(error);
 
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",

@@ -61,6 +61,18 @@ export function MarkActions({ editor, isBubbleMenu }: Readonly<MenuProps>) {
         command={() => editor.chain().focus().toggleCode().run()}
         tooltip="Code"
         shortcut={{
+          mac: "⌘ + Shift + H",
+          pc: "Ctrl + Shift + H",
+        }}
+        isBubbleMenu={isBubbleMenu}
+      />
+      <MenuAction
+        editor={editor}
+        name="highlight"
+        icon={<Icons.Highlight />}
+        command={() => editor.chain().focus().toggleHighlight().run()}
+        tooltip="Highlight"
+        shortcut={{
           mac: "⌘ + E",
           pc: "Ctrl + E",
         }}

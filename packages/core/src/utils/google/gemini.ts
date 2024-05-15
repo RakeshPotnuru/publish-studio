@@ -1,10 +1,8 @@
-import type {
-  GenerationConfig,
-  SafetySetting} from "@google/generative-ai";
+import type { GenerationConfig, SafetySetting } from "@google/generative-ai";
 import {
   GoogleGenerativeAI,
   HarmBlockThreshold,
-  HarmCategory
+  HarmCategory,
 } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY);
@@ -29,14 +27,14 @@ const SAFETY_SETTINGS: SafetySetting[] = [
 ];
 
 const DEFAULT_GENERATION_CONFIG: GenerationConfig = {
-  temperature: 0.9,
-  topK: 1,
-  topP: 1,
-  maxOutputTokens: 2048,
+  temperature: 1,
+  topP: 0.95,
+  topK: 64,
+  maxOutputTokens: 8192,
 };
 
 export const ai = genAI.getGenerativeModel({
-  model: "gemini-pro",
+  model: "gemini-1.5-flash-latest",
   generationConfig: DEFAULT_GENERATION_CONFIG,
   safetySettings: SAFETY_SETTINGS,
 });
