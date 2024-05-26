@@ -11,4 +11,7 @@ export const Images = {
   pexelsLogo: "/images/integrations/pexels-logo.webp",
   cloudinaryLogo: "/images/integrations/cloudinary-logo.webp",
   cloudinaryLogoIcon: "/images/integrations/cloudinary-logo-icon.webp",
+  giphyLogo: "/images/integrations/giphy-logo.webp",
+  poweredByGiphyDark: "/images/integrations/powered-by-giphy-dark.webp",
+  poweredByGiphyLight: "/images/integrations/powered-by-giphy-light.webp",
 };

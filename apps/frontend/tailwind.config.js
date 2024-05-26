@@ -84,6 +84,10 @@ module.exports = {
           DEFAULT: "#3348C5",
           foreground: "#FFFFFF",
         },
+        giphy: {
+          DEFAULT: "#111018",
+          foreground: "#FFFFFF",
+        },
         pdf: {
           DEFAULT: "#FF0000",
           foreground: "#FFFFFF",

@@ -16,6 +16,7 @@ import { Images } from "@/assets/images";
 import { Assets } from "@/components/modules/dashboard/assets";
 
 import { Cloudinary } from "./cloudinary";
+import { Giphy } from "./giphy";
 import { ImageKit } from "./imagekit";
 import { Pexels } from "./pexels";
 import { Unsplash } from "./unsplash";
@@ -48,7 +49,8 @@ export type TProvider =
   | "Pexels"
   | "Assets"
   | "ImageKit"
-  | "Cloudinary";
+  | "Cloudinary"
+  | "Giphy";
 
 export function ImageWidget({
   isWidget,
@@ -106,6 +108,23 @@ export function ImageWidget({
             </Button>
             <Button
               onClick={() => {
+                setProvider("Giphy");
+              }}
+              className={cn("h-24 bg-giphy hover:opacity-80", {
+                "h-9": provider,
+                "opacity-50": provider === "Giphy",
+              })}
+            >
+              <Image
+                src={Images.giphyLogo}
+                alt="Giphy"
+                width={100}
+                height={50}
+                className="h-6 w-auto"
+              />
+            </Button>
+            <Button
+              onClick={() => {
                 setProvider("ImageKit");
               }}
               className={cn("h-24 bg-imagekit-foreground hover:opacity-80", {
@@ -138,6 +157,7 @@ export function ImageWidget({
                 className="h-6 w-auto"
               />
             </Button>
+
             <Button
               onClick={() => {
                 setProvider("Assets");
@@ -167,6 +187,9 @@ export function ImageWidget({
               )}
               {provider === "Cloudinary" && onImageInsert && (
                 <Cloudinary onImageInsert={onImageInsert} />
+              )}
+              {provider === "Giphy" && onImageInsert && (
+                <Giphy onImageInsert={onImageInsert} />
               )}
             </div>
           )}
