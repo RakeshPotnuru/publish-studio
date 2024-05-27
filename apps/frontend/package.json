@@ -25,6 +25,8 @@
     "start": "next start"
   },
   "dependencies": {
+    "@giphy/js-fetch-api": "^5.5.0",
+    "@giphy/react-components": "^9.5.0",
     "@hookform/resolvers": "^3.3.2",
     "@itsrakesh/ui": "^0.11.1",
     "@itsrakesh/utils": "^1.2.1",
@@ -102,6 +104,7 @@
     "zustand": "^4.4.6"
   },
   "devDependencies": {
+    "@giphy/js-types": "^5.1.0",
     "@types/dompurify": "^3.0.5",
     "@types/node": "20.9.4",
     "@types/react": "18.2.38",
