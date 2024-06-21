@@ -95,6 +95,7 @@ const asset = {
 const AUTOSAVE_INTERVAL = 3000;
 
 const GLOBAL_STALE_TIME = 1000 * 60 * 2;
+const GLOBAL_CACHE_TIME = 1000 * 60 * 5;
 
 const pusher = {
   events: {
@@ -130,6 +131,25 @@ const genAI = {
   },
 };
 
+const planner = {
+  section: {
+    name: {
+      MIN_LENGTH: 1,
+      MAX_LENGTH: 160,
+      RESERVED: "Unassigned",
+    },
+    task: {
+      name: {
+        MIN_LENGTH: 1,
+        MAX_LENGTH: 160,
+      },
+      description: {
+        MAX_LENGTH: 5000,
+      },
+    },
+  },
+};
+
 export const constants = {
   project,
   user,
@@ -139,8 +159,10 @@ export const constants = {
   asset,
   AUTOSAVE_INTERVAL,
   GLOBAL_STALE_TIME,
+  GLOBAL_CACHE_TIME,
   pusher,
   genAI,
+  planner,
 };
 
 /* Platform name must match model name. */

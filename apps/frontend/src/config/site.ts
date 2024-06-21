@@ -5,7 +5,7 @@ const defaultUrl = process.env.VERCEL_URL
 export const siteConfig = {
   title: "Publish Studio",
   description:
-    "Publish Studio is an all-in-one platform to curate content and publish to different platforms.",
+    "The Ultimate Platform for Seamless Content Curation and Distribution. All in One Place.",
   url: defaultUrl,
   theme: {
     color: "#EB5757",
@@ -64,17 +64,17 @@ export const siteConfig = {
     },
     assets: {
       title: "Assets",
-      description: "Assets",
+      description: "Find your Assets",
       link: "/assets",
     },
     folders: {
       title: "Folders",
-      description: "Folders",
+      description: "Find your Folders",
       link: "/folders",
     },
     projects: {
       title: "Projects",
-      description: "Projects",
+      description: "Find your Projects",
       link: "/projects",
     },
     profile: {
@@ -96,6 +96,22 @@ export const siteConfig = {
         description: "Configure your connections",
         link: "/settings/connections",
       },
+      security: {
+        title: "Security",
+        description: "Manage your account security settings",
+        link: "/settings/security",
+      },
+    },
+    planner: {
+      title: "Content Planner",
+      description:
+        "Quickly jot down your content ideas, track your work and plan your content calendar.",
+      link: "/planner",
+    },
+    paymentSuccess: {
+      title: "Payment Success",
+      description: "Your payment was successfully processed.",
+      link: "/payment-success",
     },
   },
 };

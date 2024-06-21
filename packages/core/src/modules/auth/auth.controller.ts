@@ -18,6 +18,7 @@ import type {
   IRegisterInput,
   IResetPasswordInput,
 } from "../auth/auth.types";
+import PlannerController from "../planner/planner.controller";
 import AuthService from "./auth.service";
 
 const cookieOptions: SetOption = {
@@ -107,6 +108,8 @@ export default class AuthController extends AuthService {
     }
 
     await super.updateUser(user._id, { is_verified: true });
+
+    await new PlannerController().initPlanner(user._id);
 
     await super.sendWelcomeEmail(user, {
       ...ctx,

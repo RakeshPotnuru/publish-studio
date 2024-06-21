@@ -6,6 +6,7 @@ import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
   title: { template: `%s | ${siteConfig.title}`, default: "Dashboard" },
+  description: siteConfig.pages.dashboard.description,
 };
 
 export default function DashboardLayout({

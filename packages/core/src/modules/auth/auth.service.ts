@@ -11,7 +11,6 @@ import { signJwt } from "../../utils/jwt";
 import { logtail } from "../../utils/logtail";
 import redisClient from "../../utils/redis";
 import { sendEmail } from "../../utils/sendgrid";
-import InviteController from "../admin/invite/invite.controller";
 import UserService from "../user/user.service";
 import type { IUser } from "../user/user.types";
 
@@ -27,12 +26,6 @@ export default class AuthService extends UserService {
 
       return false;
     }
-  }
-
-  async isEmailWhitelisted(email: string): Promise<boolean> {
-    const invite = await new InviteController().getInviteByEmail(email);
-
-    return invite?.is_invited ?? false;
   }
 
   async isAdmin(email: string): Promise<boolean> {

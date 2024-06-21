@@ -6,10 +6,10 @@ import { Button } from "@itsrakesh/ui";
 import type { PaginationState } from "@tanstack/react-table";
 
 import { Icons } from "@/assets/icons";
-import { ErrorBox } from "@/components/ui/error-box";
-import { Heading } from "@/components/ui/heading";
 import { trpc } from "@/utils/trpc";
 
+import { DashboardBody } from "../common/dashboard-body";
+import { DashboardHeader } from "../common/dashboard-header";
 import { columns } from "./columns";
 import type { TInsertImageOptions } from "./image-widget";
 import { NewAssetDialog } from "./new-asset";
@@ -39,19 +39,17 @@ export function Assets({
 
   return (
     <div className="space-y-8" {...props}>
-      <div className="flex items-center justify-between">
-        <Heading>My Assets</Heading>
-        <NewAssetDialog>
-          <Button>
-            <Icons.Add className="mr-2 size-4" /> Upload
-          </Button>
-        </NewAssetDialog>
-      </div>
-      {error ? (
-        <div className="flex h-[70vh] items-center justify-center">
-          <ErrorBox title="Error" description={error.message} />
-        </div>
-      ) : (
+      <DashboardHeader
+        title="My Assets"
+        action={
+          <NewAssetDialog>
+            <Button>
+              <Icons.Add className="mr-2 size-4" /> Upload
+            </Button>
+          </NewAssetDialog>
+        }
+      />
+      <DashboardBody error={error?.message}>
         <AssetsTable
           isWidget={isWidget}
           onImageInsert={onImageInsert}
@@ -66,7 +64,7 @@ export function Assets({
           setPagination={setPagination}
           isLoading={isFetching}
         />
-      )}
+      </DashboardBody>
     </div>
   );
 }

@@ -2,7 +2,6 @@
 
 import { forwardRef } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
 
 import { Button, Skeleton } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
@@ -14,8 +13,6 @@ import { ErrorBox } from "@/components/ui/error-box";
 import { siteConfig } from "@/config/site";
 import { useDocumentTitle } from "@/hooks/use-document-title";
 import { trpc } from "@/utils/trpc";
-
-type ProjectProps = React.HTMLAttributes<HTMLDivElement>;
 
 export const SideButton = forwardRef<
   HTMLButtonElement,
@@ -36,9 +33,7 @@ export const SideButton = forwardRef<
 });
 SideButton.displayName = "SideButton";
 
-export function Project({ ...props }: Readonly<ProjectProps>) {
-  const { projectId } = useParams();
-
+export function Project({ projectId }: { projectId: string }) {
   const { data, isFetching, error } = trpc.projects.getById.useQuery(
     new mongoose.Types.ObjectId(projectId.toString()),
   );
@@ -68,22 +63,18 @@ export function Project({ ...props }: Readonly<ProjectProps>) {
     project && <Editor project={project} />
   );
 
-  return (
-    <div {...props}>
-      {error ? (
-        <div className="flex h-[80vh] items-center justify-center">
-          <div className="flex w-max flex-col items-center space-y-4 rounded-lg bg-background p-10">
-            <ErrorBox title="Error" description={error.message} />
-            <Button variant="link" asChild>
-              <Link href={siteConfig.pages.dashboard.link}>
-                <Icons.Left className="mr-2 size-4" /> Back to Home
-              </Link>
-            </Button>
-          </div>
-        </div>
-      ) : (
-        projectView
-      )}
+  return error ? (
+    <div className="flex h-[80vh] items-center justify-center">
+      <div className="flex w-max flex-col items-center space-y-4 rounded-lg bg-background p-10">
+        <ErrorBox title="Error" description={error.message} />
+        <Button variant="link" asChild>
+          <Link href={siteConfig.pages.dashboard.link}>
+            <Icons.Left className="mr-2 size-4" /> Back to Home
+          </Link>
+        </Button>
+      </div>
     </div>
+  ) : (
+    projectView
   );
 }

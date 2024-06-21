@@ -8,7 +8,6 @@ import {
 } from "react-icons/ai";
 import { BiSolidErrorAlt } from "react-icons/bi";
 import {
-  BsCheck,
   BsFillCloudCheckFill,
   BsFillCloudSlashFill,
   BsFillPatchCheckFill,
@@ -22,7 +21,7 @@ import {
   FaPuzzlePiece,
   FaTools,
 } from "react-icons/fa";
-import { FaWandMagicSparkles } from "react-icons/fa6";
+import { FaCheck, FaWandMagicSparkles } from "react-icons/fa6";
 import { GoDotFill, GoHomeFill } from "react-icons/go";
 import { HiExternalLink } from "react-icons/hi";
 import { IoCalendar, IoCheckmarkDoneCircleSharp } from "react-icons/io5";
@@ -37,7 +36,7 @@ import {
   MdSettings,
   MdSpaceDashboard,
 } from "react-icons/md";
-import { PiDotsThreeBold } from "react-icons/pi";
+import { PiDotsThreeBold, PiNoteFill } from "react-icons/pi";
 import { RiFoldersFill } from "react-icons/ri";
 import { RxMixerHorizontal } from "react-icons/rx";
 import { SiReadthedocs } from "react-icons/si";
@@ -58,12 +57,13 @@ export const GeneralIcons = {
   Notification: AiFillBell,
   Settings: MdSettings,
   HorizontalMixer: RxMixerHorizontal,
-  Check: BsCheck,
+  Check: FaCheck,
   Folder: FaFolder,
   Dashboard: MdSpaceDashboard,
-  Projects: AiFillProject,
+  Projects: PiNoteFill,
   Folders: RiFoldersFill,
   Assets: MdPermMedia,
+  Planner: AiFillProject,
   Error: BiSolidErrorAlt,
   Synced: BsFillCloudCheckFill,
   Syncing: AiOutlineCloudSync,
