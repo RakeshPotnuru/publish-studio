@@ -69,18 +69,7 @@ export function NewTask({ section_id, setSections }: Readonly<NewTaskProps>) {
   });
 
   const { mutateAsync: create } = trpc.task.create.useMutation({
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-
-  const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    try {
-      const task = await create({
-        ...data,
-        section_id,
-      });
-
+    onSuccess: (data) => {
       setSections((prev) => {
         const section = prev.find((s) => s._id === section_id);
         if (!section) return prev;
@@ -89,7 +78,7 @@ export function NewTask({ section_id, setSections }: Readonly<NewTaskProps>) {
           s._id === section_id
             ? {
                 ...s,
-                tasks: [task, ...(s.tasks ?? [])],
+                tasks: [data, ...(s.tasks ?? [])],
               }
             : s,
         );
@@ -97,6 +86,18 @@ export function NewTask({ section_id, setSections }: Readonly<NewTaskProps>) {
 
       setIsOpen(false);
       form.reset();
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    try {
+      await create({
+        ...data,
+        section_id,
+      });
     } catch {
       // Ignore
     }

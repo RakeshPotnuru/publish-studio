@@ -61,4 +61,11 @@ export default class SectionController extends SectionService {
 
     return super.deleteSections(ids, ctx.user._id);
   }
+
+  async reorderSectionsHandler(
+    sections: { _id: Types.ObjectId; order: number }[],
+    ctx: Context,
+  ) {
+    return super.reorderSections(sections, ctx.user._id);
+  }
 }

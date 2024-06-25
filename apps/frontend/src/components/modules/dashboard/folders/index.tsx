@@ -31,7 +31,7 @@ export function Folders() {
   return (
     <DashboardShell>
       <DashboardHeader
-        title="My Folders"
+        title="Folders"
         action={
           <NewFolderDialog>
             <Button>

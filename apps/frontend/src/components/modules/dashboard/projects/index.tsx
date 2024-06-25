@@ -31,7 +31,7 @@ export function Projects() {
   return (
     <DashboardShell>
       <DashboardHeader
-        title="My Projects"
+        title="Projects"
         action={
           <NewProject>
             <Button>

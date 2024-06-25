@@ -143,7 +143,6 @@ export default class GenerativeAIService extends ProjectService {
       await logtail.error(JSON.stringify(error), {
         user_id,
       });
-      console.log(error);
 
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",

@@ -7,14 +7,14 @@ import { trpc } from "@/utils/trpc";
 
 import { DashboardBody } from "../common/dashboard-body";
 import { DashboardHeader } from "../common/dashboard-header";
-import { Sections } from "./section";
+import { Sections } from "./sections";
 
 export function Planner() {
   const { data, error, isFetching } = trpc.section.getAll.useQuery();
 
   return (
     <DashboardShell>
-      <DashboardHeader title="My Planner" />
+      <DashboardHeader title="Planner" />
       <DashboardBody error={error?.message}>
         {isFetching ? (
           <div className="flex flex-row gap-4">

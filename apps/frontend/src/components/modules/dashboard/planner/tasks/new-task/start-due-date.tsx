@@ -18,23 +18,18 @@ import type { formSchema } from ".";
 
 interface StartDueDateProps {
   form: UseFormReturn<z.infer<typeof formSchema>>;
-  submitOnChange?: boolean;
   onSubmit?: (data: z.infer<typeof formSchema>) => Promise<void>;
 }
 
 type DateRange = { from: Date | undefined; to?: Date };
 
-export function StartDueDate({
-  form,
-  submitOnChange,
-  onSubmit,
-}: Readonly<StartDueDateProps>) {
+export function StartDueDate({ form, onSubmit }: Readonly<StartDueDateProps>) {
   const [date, setDate] = useState<DateRange | undefined>({
     from: form.watch("start_date"),
     to: form.watch("due_date"),
   });
 
-  const handleDateChange = (date: DateRange | undefined) => {
+  const handleDateChange = async (date: DateRange | undefined) => {
     setDate(date);
 
     form.setValue("start_date", date?.to && date?.from, {
@@ -44,18 +39,18 @@ export function StartDueDate({
       shouldDirty: true,
     });
 
-    if (submitOnChange && onSubmit) {
-      form.handleSubmit(onSubmit);
-    }
+    if (onSubmit) await form.handleSubmit(onSubmit)();
   };
 
   const formatDateRange = (date: DateRange | undefined) => {
     if (date?.from) {
       return date.to ? (
-          <>
-            {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
-          </>
-        ) : format(date.from, "LLL dd, y");
+        <>
+          {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
+        </>
+      ) : (
+        format(date.from, "LLL dd, y")
+      );
     } else {
       return <span>Dates</span>;
     }

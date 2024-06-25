@@ -13,6 +13,7 @@ const TaskSchema = new Schema<ITask>(
       minlength: constants.planner.section.task.name.MIN_LENGTH,
       maxlength: constants.planner.section.task.name.MAX_LENGTH,
     },
+    order: { type: Number, required: true },
     description: {
       type: String,
       maxlength: constants.planner.section.task.description.MAX_LENGTH,

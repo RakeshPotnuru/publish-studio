@@ -150,4 +150,30 @@ export default class SectionService {
       });
     }
   }
+
+  async reorderSections(
+    sections: { _id: Types.ObjectId; order: number }[],
+    user_id: Types.ObjectId,
+  ): Promise<void> {
+    try {
+      await Promise.all(
+        sections.map((section) =>
+          Section.updateOne(
+            { user_id, _id: section._id },
+            { order: section.order },
+          ).exec(),
+        ),
+      );
+    } catch (error) {
+      await logtail.error(JSON.stringify(error), {
+        user_id,
+      });
+
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message:
+          "An error occurred while reordering the sections. Please try again later.",
+      });
+    }
+  }
 }

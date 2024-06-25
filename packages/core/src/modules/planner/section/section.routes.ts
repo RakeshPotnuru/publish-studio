@@ -44,6 +44,14 @@ const sectionRouter = router({
     .mutation(({ input, ctx }) =>
       new SectionController().deleteSectionsHandler(input, ctx),
     ),
+
+  reorder: protectedProcedure
+    .input(
+      z.array(z.object({ _id: z.custom<Types.ObjectId>(), order: z.number() })),
+    )
+    .mutation(({ input, ctx }) =>
+      new SectionController().reorderSectionsHandler(input, ctx),
+    ),
 });
 
 export default sectionRouter;

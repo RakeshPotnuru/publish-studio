@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { constants } from "../../../config/constants";
 import { protectedProcedure, router } from "../../../trpc";
+import type { TSectionResponse } from "../section/section.types";
 import TaskController from "./task.controller";
 
 const taskRouter = router({
@@ -53,6 +54,12 @@ const taskRouter = router({
     .input(z.array(z.custom<Types.ObjectId>()))
     .mutation(({ input, ctx }) =>
       new TaskController().deleteTasksHandler(input, ctx),
+    ),
+
+  reorder: protectedProcedure
+    .input(z.custom<TSectionResponse[]>())
+    .mutation(({ input, ctx }) =>
+      new TaskController().reorderTasksHandler(input, ctx),
     ),
 });
 

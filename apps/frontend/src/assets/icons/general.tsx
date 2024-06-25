@@ -36,6 +36,7 @@ import {
   MdSettings,
   MdSpaceDashboard,
 } from "react-icons/md";
+import { MdOutlineDragIndicator } from "react-icons/md";
 import { PiDotsThreeBold, PiNoteFill } from "react-icons/pi";
 import { RiFoldersFill } from "react-icons/ri";
 import { RxMixerHorizontal } from "react-icons/rx";
@@ -82,4 +83,5 @@ export const GeneralIcons = {
   Globe: FaGlobe,
   Home: GoHomeFill,
   Mail: MdMail,
+  DragHandle: MdOutlineDragIndicator,
 };

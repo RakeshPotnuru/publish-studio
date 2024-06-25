@@ -7,6 +7,7 @@ import { Center } from "@/components/ui/center";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
 import { FoldersLoader } from "@/components/ui/loaders/folders-loader";
+import { siteConfig } from "@/config/site";
 import { shortenText } from "@/utils/text-shortener";
 import { trpc } from "@/utils/trpc";
 
@@ -33,14 +34,16 @@ export function RecentProjects() {
             className="flex w-64 justify-start"
             asChild
           >
-            <Link href={`/projects/${project._id.toString()}`}>
+            <Link
+              href={`${siteConfig.pages.projects.link}/${project._id.toString()}`}
+            >
               <Icons.Projects className="mr-2 size-4" />
               {shortenText(project.name, 30)}
             </Link>
           </Button>
         ))}
         <Button variant="outline" asChild>
-          <Link href="/projects">
+          <Link href={siteConfig.pages.projects.link}>
             All projects <Icons.Right className="ml-2 size-4" />
           </Link>
         </Button>

@@ -5,6 +5,7 @@ export interface ITask {
   user_id: Types.ObjectId;
   section_id: Types.ObjectId;
   name: string;
+  order: number;
   description?: string;
   due_date?: Date;
   start_date?: Date;

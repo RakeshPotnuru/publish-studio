@@ -40,7 +40,7 @@ export function Assets({
   return (
     <div className="space-y-8" {...props}>
       <DashboardHeader
-        title="My Assets"
+        title="Assets"
         action={
           <NewAssetDialog>
             <Button>
