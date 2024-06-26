@@ -40,6 +40,7 @@ export function Sections({ data }: Readonly<SectionsProps>) {
                     <Section
                       key={section._id.toString()}
                       section={section}
+                      sections={sections}
                       setSections={setSections}
                       editingSectionId={editingSectionId}
                       setEditingSectionId={setEditingSectionId}

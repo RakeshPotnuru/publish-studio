@@ -14,6 +14,7 @@ import { Title } from "./title";
 
 interface SectionProps {
   section: ISection;
+  sections: ISection[];
   setSections: React.Dispatch<React.SetStateAction<ISection[]>>;
   editingSectionId: ISection["_id"] | null;
   setEditingSectionId: React.Dispatch<
@@ -23,16 +24,13 @@ interface SectionProps {
 
 export function Section({
   section,
+  sections,
   setSections,
   editingSectionId,
   setEditingSectionId,
 }: Readonly<SectionProps>) {
   return (
-    <Draggable
-      key={section._id.toString()}
-      draggableId={section._id.toString()}
-      index={section.order}
-    >
+    <Draggable draggableId={section._id.toString()} index={section.order}>
       {(provided, snapshot) => (
         <Card
           key={section._id.toString()}
@@ -59,11 +57,16 @@ export function Section({
             {section.name !== constants.planner.section.name.RESERVED && (
               <SectionActions
                 section={section}
+                sections={sections}
                 setEditingSectionId={setEditingSectionId}
               />
             )}
           </CardHeader>
-          <Tasks section={section} setSections={setSections} />
+          <Tasks
+            section={section}
+            setSections={setSections}
+            sections={sections}
+          />
           <CardFooter className="justify-center py-2">
             <NewTask section_id={section._id} setSections={setSections} />
           </CardFooter>

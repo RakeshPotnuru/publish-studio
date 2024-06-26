@@ -7,10 +7,15 @@ import { Task } from "./task";
 
 interface TasksProps {
   section: ISection;
+  sections: ISection[];
   setSections: React.Dispatch<React.SetStateAction<ISection[]>>;
 }
 
-export function Tasks({ section, setSections }: Readonly<TasksProps>) {
+export function Tasks({
+  section,
+  setSections,
+  sections,
+}: Readonly<TasksProps>) {
   return (
     <CardContent className="pb-0">
       <ScrollArea className="h-[58vh]">
@@ -31,6 +36,7 @@ export function Tasks({ section, setSections }: Readonly<TasksProps>) {
                   <Task
                     key={task._id.toString()}
                     task={task}
+                    sections={sections}
                     setSections={setSections}
                   />
                 ))

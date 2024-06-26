@@ -3,11 +3,12 @@ import type { Types } from "mongoose";
 
 import { logtail } from "../../../utils/logtail";
 import Section from "../section/section.model";
+import SectionService from "../section/section.service";
 import type { TSectionResponse } from "../section/section.types";
 import Task from "./task.model";
 import type { ITask, TTaskCreateInput, TTaskUpdateInput } from "./task.types";
 
-export default class TaskService {
+export default class TaskService extends SectionService {
   async createTask(task: TTaskCreateInput): Promise<ITask> {
     try {
       const newTask = await Task.create(task);
@@ -151,19 +152,25 @@ export default class TaskService {
         const { _id, tasks } = section;
 
         // Update the section
-        await Section.findByIdAndUpdate(_id, {
-          $set: { tasks: tasks?.map((task) => task._id) },
-        });
+        await Section.findOneAndUpdate(
+          { _id, user_id },
+          {
+            $set: { tasks: tasks?.map((task) => task._id) },
+          },
+        );
 
         // Update tasks
         if (tasks && tasks.length > 0) {
           const updatePromises = tasks.map((task: ITask) =>
-            Task.findByIdAndUpdate(task._id, {
-              $set: {
-                order: task.order,
-                section_id: _id,
+            Task.findOneAndUpdate(
+              { _id: task._id, user_id },
+              {
+                $set: {
+                  order: task.order,
+                  section_id: _id,
+                },
               },
-            }),
+            ),
           );
 
           await Promise.all(updatePromises);

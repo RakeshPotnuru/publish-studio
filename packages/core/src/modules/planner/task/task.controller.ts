@@ -31,7 +31,7 @@ export default class TaskController extends TaskService {
   }
 
   async deleteTasksHandler(ids: Types.ObjectId[], ctx: Context) {
-    return super.deleteTasks(ids, ctx.user._id);
+    return await super.deleteTasks(ids, ctx.user._id);
   }
 
   async reorderTasksHandler(sections: TSectionResponse[], ctx: Context) {

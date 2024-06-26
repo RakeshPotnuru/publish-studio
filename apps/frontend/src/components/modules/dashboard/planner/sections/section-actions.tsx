@@ -14,16 +14,20 @@ import { Icons } from "@/assets/icons";
 import { AskForConfirmation } from "@/components/ui/ask-for-confirmation";
 import { trpc } from "@/utils/trpc";
 
+import { updateOrder } from "../common/strict-mode-droppable";
+
 interface SectionActionsProps {
   setEditingSectionId: React.Dispatch<
     React.SetStateAction<ISection["_id"] | null>
   >;
   section: ISection;
+  sections: ISection[];
 }
 
 export function SectionActions({
   setEditingSectionId,
   section,
+  sections,
 }: Readonly<SectionActionsProps>) {
   return (
     <DropdownMenu>
@@ -46,7 +50,7 @@ export function SectionActions({
           Rename
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DeleteSection section={section} />
+        <DeleteSection section={section} sections={sections} />
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -54,18 +58,25 @@ export function SectionActions({
 
 interface DeleteSectionProps {
   section: ISection;
+  sections: ISection[];
 }
 
-function DeleteSection({ section }: Readonly<DeleteSectionProps>) {
+function DeleteSection({ section, sections }: Readonly<DeleteSectionProps>) {
   const [askingForConfirmation, setAskingForConfirmation] = useState(false);
 
   const { mutateAsync: deleteSection, isLoading } =
     trpc.section.delete.useMutation();
+  const { mutateAsync: reorder } = trpc.section.reorder.useMutation();
   const utils = trpc.useUtils();
 
   const handleDelete = async () => {
     try {
+      const newSections = sections.filter((s) => s._id !== section._id);
+
+      const updatedSections = updateOrder(newSections);
+
       await deleteSection([section._id]);
+      await reorder(updatedSections);
       await utils.section.getAll.invalidate();
     } catch {
       // Ignore

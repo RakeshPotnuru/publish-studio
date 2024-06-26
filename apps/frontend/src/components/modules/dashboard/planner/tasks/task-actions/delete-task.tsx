@@ -7,41 +7,71 @@ import { Icons } from "@/assets/icons";
 import { AskForConfirmation } from "@/components/ui/ask-for-confirmation";
 import { trpc } from "@/utils/trpc";
 
+import { updateOrder } from "../../common/strict-mode-droppable";
+
 interface DeleteTaskProps {
   task: ITask;
+  sections: ISection[];
   setSections: React.Dispatch<React.SetStateAction<ISection[]>>;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function DeleteTask({
   task,
+  sections,
   setSections,
   setIsOpen,
 }: Readonly<DeleteTaskProps>) {
   const [askingForConfirmation, setAskingForConfirmation] = useState(false);
 
-  const { mutateAsync: deleteTask, isLoading } = trpc.task.delete.useMutation({
-    onSuccess: () => {
-      setSections((sections) =>
-        sections.map((section) => ({
-          ...section,
-          tasks: section.tasks?.filter((t) => t._id !== task._id),
-        })),
-      );
-      setIsOpen(false);
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
+  const { mutateAsync: deleteTask, isLoading: isDeleting } =
+    trpc.task.delete.useMutation({
+      onSuccess: () => {
+        setIsOpen(false);
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
+    });
+  const { mutateAsync: reorder, isLoading: isReordering } =
+    trpc.task.reorder.useMutation();
 
   const handleDelete = async () => {
     try {
+      // Find the section containing the task
+      const sectionIndex = sections.findIndex(
+        (section) => section._id === task.section_id,
+      );
+      if (sectionIndex === -1) return;
+
+      // Create a new array of sections
+      const newSections = [...sections];
+
+      // Remove the task from the section
+      newSections[sectionIndex] = {
+        ...newSections[sectionIndex],
+        tasks: newSections[sectionIndex].tasks?.filter(
+          (t) => t._id !== task._id,
+        ),
+      };
+
+      // Update the order of remaining tasks in the section
+      if (newSections[sectionIndex].tasks) {
+        newSections[sectionIndex].tasks = updateOrder(
+          newSections[sectionIndex].tasks,
+        );
+      }
+
+      setSections(newSections);
+
       await deleteTask([task._id]);
+      await reorder([newSections[sectionIndex]]);
     } catch {
       // Ignore
     }
   };
+
+  const isLoading = isDeleting || isReordering;
 
   return askingForConfirmation ? (
     <AskForConfirmation

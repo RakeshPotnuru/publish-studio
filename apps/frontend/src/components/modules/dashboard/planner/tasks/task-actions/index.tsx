@@ -15,12 +15,14 @@ import { DuplicateTask } from "./duplicate-task";
 
 interface TaskActionsProps {
   task: ITask;
+  sections: ISection[];
   setSections: React.Dispatch<React.SetStateAction<ISection[]>>;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function TaskActions({
   task,
+  sections,
   setSections,
   setIsOpen,
 }: Readonly<TaskActionsProps>) {
@@ -41,6 +43,7 @@ export function TaskActions({
         <DropdownMenuSeparator />
         <DeleteTask
           task={task}
+          sections={sections}
           setSections={setSections}
           setIsOpen={setIsOpen}
         />

@@ -78,7 +78,7 @@ export function NewTask({ section_id, setSections }: Readonly<NewTaskProps>) {
           s._id === section_id
             ? {
                 ...s,
-                tasks: [data, ...(s.tasks ?? [])],
+                tasks: [...(s.tasks ?? []), data],
               }
             : s,
         );

@@ -21,21 +21,17 @@ import { TaskDialog } from "./task-dialog";
 
 interface TaskProps {
   task: ITask;
+  sections: ISection[];
   setSections: React.Dispatch<React.SetStateAction<ISection[]>>;
 }
 
-export function Task({ task: _task, setSections }: Readonly<TaskProps>) {
-  const [task, setTask] = useState(_task);
+export function Task({ task, setSections, sections }: Readonly<TaskProps>) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger>
-        <Draggable
-          key={task._id.toString()}
-          draggableId={task._id.toString()}
-          index={task.order}
-        >
+        <Draggable draggableId={task._id.toString()} index={task.order}>
           {(provided, snapshot) => (
             <Card
               className={cn("bg-background *:p-4 hover:border-primary", {
@@ -70,9 +66,9 @@ export function Task({ task: _task, setSections }: Readonly<TaskProps>) {
       </DialogTrigger>
       <TaskDialog
         task={task}
+        sections={sections}
         setSections={setSections}
         setIsOpen={setIsOpen}
-        setTask={setTask}
       />
     </Dialog>
   );

@@ -30,16 +30,16 @@ import { TaskActions } from "./task-actions";
 
 interface TaskDialogProps {
   task: ITask;
+  sections: ISection[];
   setSections: React.Dispatch<React.SetStateAction<ISection[]>>;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setTask: React.Dispatch<React.SetStateAction<ITask>>;
 }
 
 export function TaskDialog({
   task,
+  sections,
   setSections,
   setIsOpen,
-  setTask,
 }: Readonly<TaskDialogProps>) {
   const dueDate = useMemo(
     () => (task.due_date ? new Date(task.due_date) : undefined),
@@ -70,7 +70,14 @@ export function TaskDialog({
 
   const { mutateAsync: update } = trpc.task.update.useMutation({
     onSuccess: (data) => {
-      setTask(data || task);
+      setSections((sections) =>
+        sections.map((section) => ({
+          ...section,
+          tasks: section.tasks?.map((t) =>
+            t._id === (data ?? task)._id ? data ?? task : t,
+          ),
+        })),
+      );
     },
     onError: (error) => {
       toast.error(error.message);
@@ -78,15 +85,11 @@ export function TaskDialog({
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    console.log(data.due_date, task.due_date);
-
     if (
       data.name === task.name &&
       data.description === task.description &&
-      task.start_date &&
-      data.start_date === new Date(task.start_date) &&
-      task.due_date &&
-      data.due_date === new Date(task.due_date)
+      data.start_date?.toISOString() === (task.start_date || undefined) &&
+      data.due_date?.toISOString() === (task.due_date || undefined)
     ) {
       return;
     }
@@ -129,6 +132,7 @@ export function TaskDialog({
               </Button>
               <TaskActions
                 task={task}
+                sections={sections}
                 setSections={setSections}
                 setIsOpen={setIsOpen}
               />
