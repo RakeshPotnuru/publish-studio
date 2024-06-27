@@ -20,6 +20,7 @@ export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: constants.GLOBAL_STALE_TIME,
+      cacheTime: constants.GLOBAL_CACHE_TIME,
       refetchOnWindowFocus: false,
       retry: false,
     },

@@ -7,6 +7,7 @@ import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
   title: { template: `%s | ${siteConfig.title}`, default: "Authentication" },
+  description: siteConfig.description,
 };
 
 export default function AuthLayout({

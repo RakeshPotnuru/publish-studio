@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useParams } from "next/navigation";
 
 import { Button, Skeleton } from "@itsrakesh/ui";
 import type { PaginationState } from "@tanstack/react-table";
@@ -17,30 +16,26 @@ import { columns } from "../projects/columns";
 import { NewProject } from "../projects/new-project";
 import { ProjectsTable } from "../projects/table";
 
-type FolderProps = React.HTMLAttributes<HTMLElement>;
-
-export function Folder({ ...props }: Readonly<FolderProps>) {
+export function Folder({ folderId }: Readonly<{ folderId: string }>) {
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   });
 
-  const params = useParams();
-  const folderId = new mongoose.Types.ObjectId(params.folderId.toString());
-
+  const _folderId = new mongoose.Types.ObjectId(folderId);
   const { data, isFetching, error, refetch } =
     trpc.projects.getByFolderId.useQuery({
       pagination: {
         page: pageIndex + 1,
         limit: pageSize,
       },
-      folder_id: folderId,
+      folder_id: _folderId,
     });
 
   useDocumentTitle(`Folders | ${data?.data.folder_name ?? "Not Found"}`);
 
   return (
-    <div className="space-y-8" {...props}>
+    <div className="space-y-8">
       <div className="flex items-center justify-between">
         <Heading className="flex flex-row items-center">
           Folders <Icons.RightChevron />{" "}
@@ -50,7 +45,7 @@ export function Folder({ ...props }: Readonly<FolderProps>) {
             data?.data.folder_name
           )}
         </Heading>
-        <NewProject folderId={folderId}>
+        <NewProject folderId={_folderId}>
           <Button>
             <Icons.Add className="mr-2 size-4" /> New Project Here
           </Button>

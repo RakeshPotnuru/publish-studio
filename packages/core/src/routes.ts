@@ -1,7 +1,6 @@
 import { Router } from "express";
 
 import adminAuthRouter from "./modules/admin/auth.routes";
-import inviteRouter from "./modules/admin/invite/invite.routes";
 import assetRouter from "./modules/asset/asset.routes";
 import authRouter from "./modules/auth/auth.routes";
 import folderRouter from "./modules/folder/folder.routes";
@@ -14,6 +13,9 @@ import unsplashRouter from "./modules/integration/unsplash/unsplash.routes";
 import nluRouter from "./modules/nlu/nlu.routes";
 import notificationRouter from "./modules/notification/notification.routes";
 import paymentRouter from "./modules/payment/payment.routes";
+import { adminPlannerRouter } from "./modules/planner/planner.routes";
+import sectionRouter from "./modules/planner/section/section.routes";
+import taskRouter from "./modules/planner/task/task.routes";
 import platformRouter from "./modules/platform/platform.routes";
 import postRouter from "./modules/post/post.routes";
 import projectRouter from "./modules/project/project.routes";
@@ -23,8 +25,8 @@ import userRouter from "./modules/user/user.routes";
 import { router, t } from "./trpc";
 
 const adminRouter = router({
-  invites: inviteRouter,
   auth: adminAuthRouter,
+  planner: adminPlannerRouter,
 });
 
 const appRouter = router({
@@ -45,6 +47,8 @@ const appRouter = router({
   notifications: notificationRouter,
   post: postRouter,
   tools: toolsRouter,
+  section: sectionRouter,
+  task: taskRouter,
 });
 
 export type AppRouter = typeof appRouter;

@@ -8,8 +8,7 @@ export async function toggleFullscreen(html_id: string) {
   } else {
     try {
       await element?.requestFullscreen();
-    } catch (error) {
-      console.log(error);
+    } catch {
       toast.error("Error attempting to enable full-screen mode.");
     }
   }

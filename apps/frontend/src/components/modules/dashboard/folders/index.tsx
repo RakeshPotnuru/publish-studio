@@ -6,17 +6,16 @@ import { Button } from "@itsrakesh/ui";
 import type { PaginationState } from "@tanstack/react-table";
 
 import { Icons } from "@/assets/icons";
-import { ErrorBox } from "@/components/ui/error-box";
-import { Heading } from "@/components/ui/heading";
+import { DashboardShell } from "@/components/ui/shell";
 import { trpc } from "@/utils/trpc";
 
+import { DashboardBody } from "../common/dashboard-body";
+import { DashboardHeader } from "../common/dashboard-header";
 import { columns } from "./columns";
 import { NewFolderDialog } from "./new-folder";
 import { FoldersTable } from "./table";
 
-type ProjectsProps = React.HTMLAttributes<HTMLDivElement>;
-
-export function Folders({ ...props }: Readonly<ProjectsProps>) {
+export function Folders() {
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -30,20 +29,18 @@ export function Folders({ ...props }: Readonly<ProjectsProps>) {
   });
 
   return (
-    <div className="space-y-8" {...props}>
-      <div className="flex items-center justify-between">
-        <Heading>My Folders</Heading>
-        <NewFolderDialog>
-          <Button>
-            <Icons.Add className="mr-2 size-4" /> New Folder
-          </Button>
-        </NewFolderDialog>
-      </div>
-      {error ? (
-        <div className="flex h-[70vh] items-center justify-center">
-          <ErrorBox title="Error" description={error.message} />
-        </div>
-      ) : (
+    <DashboardShell>
+      <DashboardHeader
+        title="Folders"
+        action={
+          <NewFolderDialog>
+            <Button>
+              <Icons.Add className="mr-2 size-4" /> New Folder
+            </Button>
+          </NewFolderDialog>
+        }
+      />
+      <DashboardBody error={error?.message}>
         <FoldersTable
           columns={columns}
           data={data?.data.folders ?? []}
@@ -56,7 +53,7 @@ export function Folders({ ...props }: Readonly<ProjectsProps>) {
           setPagination={setPagination}
           isLoading={isFetching}
         />
-      )}
-    </div>
+      </DashboardBody>
+    </DashboardShell>
   );
 }

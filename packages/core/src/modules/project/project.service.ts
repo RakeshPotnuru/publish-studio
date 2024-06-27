@@ -200,4 +200,26 @@ export default class ProjectService extends FolderService {
       });
     }
   }
+
+  // get unique categories from categories array from all projects
+  async getCategories(user_id: Types.ObjectId) {
+    try {
+      return (await Project.aggregate([
+        { $match: { user_id } },
+        { $unwind: "$categories" },
+        { $group: { _id: "$categories" } },
+        { $sort: { _id: 1 } },
+      ]).exec()) as { _id: string }[];
+    } catch (error) {
+      await logtail.error(JSON.stringify(error), {
+        user_id,
+      });
+
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message:
+          "An error occurred while fetching the categories. Please try again later.",
+      });
+    }
+  }
 }

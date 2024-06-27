@@ -48,8 +48,8 @@ export default class ProjectController extends ProjectService {
         },
         ctx.user._id,
       );
-    } catch (error) {
-      console.log(error);
+    } catch {
+      // Ignore
     }
 
     return {
@@ -187,6 +187,39 @@ export default class ProjectController extends ProjectService {
       status: "success",
       data: {
         projects: deletedProjects,
+      },
+    };
+  }
+
+  async getCategoriesHandler(ctx: Context) {
+    const categories = await super.getCategories(ctx.user._id);
+
+    const uniqueCategories = new Map<string, string>();
+
+    for (const cat of categories) {
+      const categoryName: string = cat._id.trim();
+      if (categoryName !== "") {
+        const lowerCaseName: string = categoryName.toLowerCase();
+        if (
+          !uniqueCategories.has(lowerCaseName) ||
+          categoryName.length >
+            (uniqueCategories.get(lowerCaseName) ?? "").length
+        ) {
+          uniqueCategories.set(lowerCaseName, categoryName);
+        }
+      }
+    }
+
+    // Convert the Map values to an array and sort
+    const filteredCategories: string[] = [...uniqueCategories.values()].sort(
+      (a: string, b: string) =>
+        a.localeCompare(b, undefined, { sensitivity: "base" }),
+    );
+
+    return {
+      status: "success",
+      data: {
+        categories: filteredCategories,
       },
     };
   }
