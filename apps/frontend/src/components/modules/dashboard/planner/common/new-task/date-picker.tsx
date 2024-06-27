@@ -57,6 +57,7 @@ export function DatePicker({
                     "justify-start text-left font-normal",
                     !field.value && "text-muted-foreground",
                   )}
+                  disabled={name === "start_date" && !form.watch("due_date")}
                 >
                   <Icons.Calendar className="mr-2 h-4 w-4" />
                   {field.value ? format(field.value, "LLL dd, y") : placeholder}
