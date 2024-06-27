@@ -29,7 +29,7 @@ import { Icons } from "@/assets/icons";
 import usePlannerStore from "@/lib/store/planner";
 import { trpc } from "@/utils/trpc";
 
-import { StartDueDate } from "./start-due-date";
+import { DatePicker } from "./date-picker";
 
 export const formSchema = z.object({
   name: z
@@ -160,7 +160,7 @@ export function NewTask({
                 />
               </CardHeader>
               <CardContent>
-                <StartDueDate form={form} />
+                <DatePicker form={form} label="Due date" name="due_date" />
                 <Button
                   type="submit"
                   className="mt-4 w-full"

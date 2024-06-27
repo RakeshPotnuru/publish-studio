@@ -81,8 +81,8 @@ export default class TaskService extends SectionService {
         {
           $set: {
             ...task,
-            start_date: task.start_date || null,
-            due_date: task.due_date || null,
+            start_date: task.start_date,
+            due_date: task.due_date,
           },
         },
         { new: true },

@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -16,7 +16,7 @@ import {
   Textarea,
   toast,
 } from "@itsrakesh/ui";
-import type { ITask } from "@publish-studio/core";
+import type { ISection, ITask } from "@publish-studio/core";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 
@@ -25,7 +25,7 @@ import usePlannerStore from "@/lib/store/planner";
 import { trpc } from "@/utils/trpc";
 
 import { formSchema } from "../common/new-task";
-import { StartDueDate } from "../common/new-task/start-due-date";
+import { DatePicker } from "../common/new-task/date-picker";
 import { TaskActions } from "./task-actions";
 
 interface TaskDialogProps {
@@ -33,17 +33,8 @@ interface TaskDialogProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export function TaskDialog({
-  task,
-
-  setIsOpen,
-}: Readonly<TaskDialogProps>) {
+export function TaskDialog({ task, setIsOpen }: Readonly<TaskDialogProps>) {
   const { setSections } = usePlannerStore();
-
-  const dueDate = useMemo(
-    () => (task.due_date ? new Date(task.due_date) : undefined),
-    [task.due_date],
-  );
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -51,9 +42,8 @@ export function TaskDialog({
     defaultValues: {
       name: task.name,
       description: task.description,
-      start_date: task.start_date ? new Date(task.start_date) : dueDate,
-      due_date:
-        task.due_date && task.start_date ? new Date(task.due_date) : undefined,
+      start_date: task.start_date && new Date(task.start_date),
+      due_date: task.due_date && new Date(task.due_date),
     },
   });
 
@@ -61,22 +51,22 @@ export function TaskDialog({
     form.reset({
       name: task.name,
       description: task.description,
-      start_date: task.start_date ? new Date(task.start_date) : dueDate,
-      due_date:
-        task.due_date && task.start_date ? new Date(task.due_date) : undefined,
+      start_date: task.start_date && new Date(task.start_date),
+      due_date: task.due_date && new Date(task.due_date),
     });
-  }, [task, dueDate, form]);
+  }, [task, form]);
+
+  const updateSections = (sections: ISection[], data: ITask | null) =>
+    sections.map((section) => ({
+      ...section,
+      tasks: section.tasks?.map((t) =>
+        t._id === (data ?? task)._id ? data ?? task : t,
+      ),
+    }));
 
   const { mutateAsync: update } = trpc.task.update.useMutation({
     onSuccess: (data) => {
-      setSections((sections) =>
-        sections.map((section) => ({
-          ...section,
-          tasks: section.tasks?.map((t) =>
-            t._id === (data ?? task)._id ? data ?? task : t,
-          ),
-        })),
-      );
+      setSections((sections) => updateSections(sections, data));
     },
     onError: (error) => {
       toast.error(error.message);
@@ -151,9 +141,19 @@ export function TaskDialog({
               )}
             />
           </DialogHeader>
-          <div className="space-y-2 px-6">
-            <FormLabel>Due date</FormLabel>
-            <StartDueDate form={form} onSubmit={onSubmit} />
+          <div className="grid grid-cols-2 gap-2 px-6">
+            <DatePicker
+              form={form}
+              onSubmit={onSubmit}
+              name="due_date"
+              label="Due date"
+            />
+            <DatePicker
+              form={form}
+              onSubmit={onSubmit}
+              name="start_date"
+              label="Start date"
+            />
           </div>
           <FormField
             control={form.control}
