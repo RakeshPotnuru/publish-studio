@@ -11,7 +11,7 @@ import {
   DialogTrigger,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
-import type { ISection, ITask } from "@publish-studio/core";
+import type { ITask } from "@publish-studio/core";
 import { Draggable } from "react-beautiful-dnd";
 
 import { Icons } from "@/assets/icons";
@@ -21,11 +21,9 @@ import { TaskDialog } from "./task-dialog";
 
 interface TaskProps {
   task: ITask;
-  sections: ISection[];
-  setSections: React.Dispatch<React.SetStateAction<ISection[]>>;
 }
 
-export function Task({ task, setSections, sections }: Readonly<TaskProps>) {
+export function Task({ task }: Readonly<TaskProps>) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -43,7 +41,9 @@ export function Task({ task, setSections, sections }: Readonly<TaskProps>) {
             >
               <CardHeader className="text-start">
                 <div className="flex items-center justify-between">
-                  <CardTitle>{task.name}</CardTitle>
+                  <CardTitle className="text-base font-medium leading-5">
+                    {task.name}
+                  </CardTitle>
                   <Badge
                     variant={task.completed ? "success" : "outline"}
                     className="h-5 w-5 rounded-full px-1"
@@ -64,12 +64,7 @@ export function Task({ task, setSections, sections }: Readonly<TaskProps>) {
           )}
         </Draggable>
       </DialogTrigger>
-      <TaskDialog
-        task={task}
-        sections={sections}
-        setSections={setSections}
-        setIsOpen={setIsOpen}
-      />
+      <TaskDialog task={task} setIsOpen={setIsOpen} />
     </Dialog>
   );
 }

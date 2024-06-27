@@ -1,57 +1,19 @@
-import { useState } from "react";
-
 import type { ISection } from "@publish-studio/core";
-import type { DropResult } from "react-beautiful-dnd";
+import type { DraggableLocation, DropResult } from "react-beautiful-dnd";
 
+import usePlannerStore from "@/lib/store/planner";
 import { trpc } from "@/utils/trpc";
 
-interface UseHandleDragEndProps {
-  data?: ISection[];
-}
+export function useHandleDragEnd() {
+  const { sections, setSections, reorderSections } = usePlannerStore();
 
-export function useHandleDragEnd({ data }: Readonly<UseHandleDragEndProps>) {
-  const [sections, setSections] = useState<ISection[]>(data ?? []);
-
-  const { mutateAsync: reorderSections } = trpc.section.reorder.useMutation();
+  const { mutateAsync: reorder } = trpc.section.reorder.useMutation();
   const { mutateAsync: reorderTasks } = trpc.task.reorder.useMutation();
 
-  const handleDragEnd = async (result: DropResult) => {
-    const { source, destination, type } = result;
-
-    if (!destination) return;
-
-    if (
-      destination.droppableId === source.droppableId &&
-      destination.index === source.index
-    ) {
-      return;
-    }
-
-    // Handling section reorder
-    if (type === "section") {
-      const newSections = [...sections];
-      const [reorderedSection] = newSections.splice(source.index, 1);
-      newSections.splice(destination.index, 0, reorderedSection);
-
-      const updatedSections = newSections.map((section, index) => ({
-        ...section,
-        order: index,
-      }));
-
-      setSections(updatedSections);
-
-      try {
-        await reorderSections(
-          updatedSections.map(({ _id, order }) => ({ _id, order })),
-        );
-      } catch {
-        // Ignore
-      }
-
-      return;
-    }
-
-    // Handling task reorder
+  const handleTasksReorder = async (
+    source: DraggableLocation,
+    destination: DraggableLocation,
+  ) => {
     const newSections = [...sections];
     const sourceSection = newSections.find(
       (section) => section._id.toString() === source.droppableId,
@@ -128,13 +90,53 @@ export function useHandleDragEnd({ data }: Readonly<UseHandleDragEndProps>) {
     }
 
     // Update the state with the new sections
-    setSections(newSections);
+    reorderSections(newSections);
 
     try {
       await reorderTasks(changedSections);
     } catch {
       // Ignore
     }
+  };
+
+  const handleDragEnd = async (result: DropResult) => {
+    const { source, destination, type } = result;
+
+    if (!destination) return;
+
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
+
+    // Handling section reorder
+    if (type === "section") {
+      const newSections = [...sections];
+      const [reorderedSection] = newSections.splice(source.index, 1);
+      newSections.splice(destination.index, 0, reorderedSection);
+
+      const updatedSections = newSections.map((section, index) => ({
+        ...section,
+        order: index,
+      }));
+
+      reorderSections(updatedSections);
+
+      try {
+        await reorder(
+          updatedSections.map(({ _id, order }) => ({ _id, order })),
+        );
+      } catch {
+        // Ignore
+      }
+
+      return;
+    }
+
+    // Handling task reorder
+    await handleTasksReorder(source, destination);
   };
 
   return { sections, handleDragEnd, setSections };

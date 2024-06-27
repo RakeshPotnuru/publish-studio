@@ -69,10 +69,7 @@ export function Upgrade({
           <DialogTitle>Upgrade to Pro</DialogTitle>
           <DialogDescription>
             Upgrade to Pro to{" "}
-            {featureText ??
-              `unlock all the
-                        features of ${siteConfig.title}`}
-            .
+            {featureText ?? `unlock all the features of ${siteConfig.title}`}.
           </DialogDescription>
         </DialogHeader>
         <div

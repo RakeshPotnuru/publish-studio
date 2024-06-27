@@ -1,7 +1,6 @@
 import { forwardRef, useState } from "react";
 
 import { Button } from "@itsrakesh/ui";
-import { cn } from "@itsrakesh/utils";
 
 import useUserStore from "@/lib/store/user";
 
@@ -44,10 +43,7 @@ const ProButton = forwardRef<HTMLButtonElement, ProButtonProps>(
         <Button
           onClick={handleClick}
           ref={ref}
-          className={cn(
-            className,
-            "bg-gradient-to-tr from-primary via-purple-500 to-blue-500 text-white"
-          )}
+          className={className}
           disabled={isLoading}
           {...props}
         >
@@ -56,7 +52,7 @@ const ProButton = forwardRef<HTMLButtonElement, ProButtonProps>(
         <Upgrade open={open} onOpenChange={setOpen} featureText={featureText} />
       </>
     );
-  }
+  },
 );
 ProButton.displayName = "ProButton";
 

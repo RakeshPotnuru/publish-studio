@@ -5,27 +5,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@itsrakesh/ui";
-import type { ISection, ITask } from "@publish-studio/core";
+import type { ITask } from "@publish-studio/core";
 
 import { Icons } from "@/assets/icons";
 
-import { CreateProject } from "./create-project";
+import { CreateProject } from "../../common/create-project";
 import { DeleteTask } from "./delete-task";
 import { DuplicateTask } from "./duplicate-task";
 
 interface TaskActionsProps {
   task: ITask;
-  sections: ISection[];
-  setSections: React.Dispatch<React.SetStateAction<ISection[]>>;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export function TaskActions({
-  task,
-  sections,
-  setSections,
-  setIsOpen,
-}: Readonly<TaskActionsProps>) {
+export function TaskActions({ task, setIsOpen }: Readonly<TaskActionsProps>) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -38,15 +31,10 @@ export function TaskActions({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DuplicateTask task={task} setSections={setSections} />
-        <CreateProject task={task} />
+        <DuplicateTask task={task} />
+        <CreateProject name={task.name} description={task.description} />
         <DropdownMenuSeparator />
-        <DeleteTask
-          task={task}
-          sections={sections}
-          setSections={setSections}
-          setIsOpen={setIsOpen}
-        />
+        <DeleteTask task={task} setIsOpen={setIsOpen} />
       </DropdownMenuContent>
     </DropdownMenu>
   );

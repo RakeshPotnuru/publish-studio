@@ -7,15 +7,13 @@ import { Draggable } from "react-beautiful-dnd";
 import { Icons } from "@/assets/icons";
 import { Center } from "@/components/ui/center";
 
+import { NewTask } from "../common/new-task";
 import { Tasks } from "../tasks";
-import { NewTask } from "../tasks/new-task";
 import { SectionActions } from "./section-actions";
 import { Title } from "./title";
 
 interface SectionProps {
   section: ISection;
-  sections: ISection[];
-  setSections: React.Dispatch<React.SetStateAction<ISection[]>>;
   editingSectionId: ISection["_id"] | null;
   setEditingSectionId: React.Dispatch<
     React.SetStateAction<ISection["_id"] | null>
@@ -24,8 +22,6 @@ interface SectionProps {
 
 export function Section({
   section,
-  sections,
-  setSections,
   editingSectionId,
   setEditingSectionId,
 }: Readonly<SectionProps>) {
@@ -34,7 +30,7 @@ export function Section({
       {(provided, snapshot) => (
         <Card
           key={section._id.toString()}
-          className={cn("min-w-72", {
+          className={cn("w-72", {
             "border-primary": snapshot.isDragging,
           })}
           ref={provided.innerRef}
@@ -57,18 +53,13 @@ export function Section({
             {section.name !== constants.planner.section.name.RESERVED && (
               <SectionActions
                 section={section}
-                sections={sections}
                 setEditingSectionId={setEditingSectionId}
               />
             )}
           </CardHeader>
-          <Tasks
-            section={section}
-            setSections={setSections}
-            sections={sections}
-          />
+          <Tasks section={section} />
           <CardFooter className="justify-center py-2">
-            <NewTask section_id={section._id} setSections={setSections} />
+            <NewTask sectionId={section._id} />
           </CardFooter>
         </Card>
       )}

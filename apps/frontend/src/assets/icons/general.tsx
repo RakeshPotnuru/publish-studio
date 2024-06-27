@@ -21,7 +21,9 @@ import {
   FaPuzzlePiece,
   FaTools,
 } from "react-icons/fa";
+import { FaRandom } from "react-icons/fa";
 import { FaCheck, FaWandMagicSparkles } from "react-icons/fa6";
+import { FaBrain } from "react-icons/fa6";
 import { GoDotFill, GoHomeFill } from "react-icons/go";
 import { HiExternalLink } from "react-icons/hi";
 import { IoCalendar, IoCheckmarkDoneCircleSharp } from "react-icons/io5";
@@ -84,4 +86,6 @@ export const GeneralIcons = {
   Home: GoHomeFill,
   Mail: MdMail,
   DragHandle: MdOutlineDragIndicator,
+  Brain: FaBrain,
+  Random: FaRandom,
 };

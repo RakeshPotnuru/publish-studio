@@ -7,15 +7,9 @@ import { Task } from "./task";
 
 interface TasksProps {
   section: ISection;
-  sections: ISection[];
-  setSections: React.Dispatch<React.SetStateAction<ISection[]>>;
 }
 
-export function Tasks({
-  section,
-  setSections,
-  sections,
-}: Readonly<TasksProps>) {
+export function Tasks({ section }: Readonly<TasksProps>) {
   return (
     <CardContent className="pb-0">
       <ScrollArea className="h-[58vh]">
@@ -32,14 +26,7 @@ export function Tasks({
               {...provided.droppableProps}
             >
               {section.tasks
-                ?.map((task) => (
-                  <Task
-                    key={task._id.toString()}
-                    task={task}
-                    sections={sections}
-                    setSections={setSections}
-                  />
-                ))
+                ?.map((task) => <Task key={task._id.toString()} task={task} />)
                 .sort((a, b) => a.props.task.order - b.props.task.order)}
               {provided.placeholder}
             </div>

@@ -1,28 +1,24 @@
 import { useState } from "react";
 
 import { toast } from "@itsrakesh/ui";
-import type { ISection, ITask } from "@publish-studio/core";
+import type { ITask } from "@publish-studio/core";
 
 import { Icons } from "@/assets/icons";
 import { AskForConfirmation } from "@/components/ui/ask-for-confirmation";
+import usePlannerStore from "@/lib/store/planner";
 import { trpc } from "@/utils/trpc";
 
 import { updateOrder } from "../../common/strict-mode-droppable";
 
 interface DeleteTaskProps {
   task: ITask;
-  sections: ISection[];
-  setSections: React.Dispatch<React.SetStateAction<ISection[]>>;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export function DeleteTask({
-  task,
-  sections,
-  setSections,
-  setIsOpen,
-}: Readonly<DeleteTaskProps>) {
+export function DeleteTask({ task, setIsOpen }: Readonly<DeleteTaskProps>) {
   const [askingForConfirmation, setAskingForConfirmation] = useState(false);
+
+  const { sections, reorderSections } = usePlannerStore();
 
   const { mutateAsync: deleteTask, isLoading: isDeleting } =
     trpc.task.delete.useMutation({
@@ -62,7 +58,7 @@ export function DeleteTask({
         );
       }
 
-      setSections(newSections);
+      reorderSections(newSections);
 
       await deleteTask([task._id]);
       await reorder([newSections[sectionIndex]]);

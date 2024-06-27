@@ -19,13 +19,14 @@ import {
   PopoverTrigger,
   toast,
 } from "@itsrakesh/ui";
-import type { ISection } from "@publish-studio/core";
+import { cn } from "@itsrakesh/utils";
 import { constants } from "@publish-studio/core/src/config/constants";
 import type { ITask } from "@publish-studio/core/src/modules/planner/task/task.types";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Icons } from "@/assets/icons";
+import usePlannerStore from "@/lib/store/planner";
 import { trpc } from "@/utils/trpc";
 
 import { StartDueDate } from "./start-due-date";
@@ -49,19 +50,25 @@ export const formSchema = z.object({
   start_date: z.date().optional(),
 });
 
-interface NewTaskProps {
-  section_id: ITask["section_id"];
-  setSections: React.Dispatch<React.SetStateAction<ISection[]>>;
+interface NewTaskProps extends React.HTMLAttributes<HTMLButtonElement> {
+  sectionId: ITask["section_id"];
+  name?: string;
 }
 
-export function NewTask({ section_id, setSections }: Readonly<NewTaskProps>) {
+export function NewTask({
+  sectionId,
+  name,
+  className,
+}: Readonly<NewTaskProps>) {
   const [isOpen, setIsOpen] = useState(false);
+
+  const { setSections } = usePlannerStore();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     mode: "onBlur",
     defaultValues: {
-      name: "",
+      name,
       description: "",
       due_date: undefined,
       start_date: undefined,
@@ -71,11 +78,11 @@ export function NewTask({ section_id, setSections }: Readonly<NewTaskProps>) {
   const { mutateAsync: create } = trpc.task.create.useMutation({
     onSuccess: (data) => {
       setSections((prev) => {
-        const section = prev.find((s) => s._id === section_id);
+        const section = prev.find((s) => s._id === sectionId);
         if (!section) return prev;
 
         return prev.map((s) =>
-          s._id === section_id
+          s._id === sectionId
             ? {
                 ...s,
                 tasks: [...(s.tasks ?? []), data],
@@ -96,7 +103,7 @@ export function NewTask({ section_id, setSections }: Readonly<NewTaskProps>) {
     try {
       await create({
         ...data,
-        section_id,
+        section_id: sectionId,
       });
     } catch {
       // Ignore
@@ -106,7 +113,7 @@ export function NewTask({ section_id, setSections }: Readonly<NewTaskProps>) {
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <Button variant={"ghost"}>
+        <Button variant={"ghost"} className={cn(className, "w-full")}>
           <Icons.Add className="mr-2 size-4" /> New Task
         </Button>
       </PopoverTrigger>
@@ -158,9 +165,7 @@ export function NewTask({ section_id, setSections }: Readonly<NewTaskProps>) {
                   type="submit"
                   className="mt-4 w-full"
                   size={"sm"}
-                  disabled={
-                    !form.formState.isDirty || form.formState.isSubmitting
-                  }
+                  disabled={form.formState.isSubmitting}
                 >
                   Create Task
                 </Button>

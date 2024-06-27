@@ -12,35 +12,34 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  Input,
   Separator,
   Textarea,
   toast,
 } from "@itsrakesh/ui";
-import type { ISection, ITask } from "@publish-studio/core";
+import type { ITask } from "@publish-studio/core";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 
 import { Icons } from "@/assets/icons";
+import usePlannerStore from "@/lib/store/planner";
 import { trpc } from "@/utils/trpc";
 
-import { formSchema } from "./new-task";
-import { StartDueDate } from "./new-task/start-due-date";
+import { formSchema } from "../common/new-task";
+import { StartDueDate } from "../common/new-task/start-due-date";
 import { TaskActions } from "./task-actions";
 
 interface TaskDialogProps {
   task: ITask;
-  sections: ISection[];
-  setSections: React.Dispatch<React.SetStateAction<ISection[]>>;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function TaskDialog({
   task,
-  sections,
-  setSections,
+
   setIsOpen,
 }: Readonly<TaskDialogProps>) {
+  const { setSections } = usePlannerStore();
+
   const dueDate = useMemo(
     () => (task.due_date ? new Date(task.due_date) : undefined),
     [task.due_date],
@@ -130,12 +129,7 @@ export function TaskDialog({
                 <Icons.Check className="mr-2" />
                 {task.completed ? "Completed" : "Mark complete"}
               </Button>
-              <TaskActions
-                task={task}
-                sections={sections}
-                setSections={setSections}
-                setIsOpen={setIsOpen}
-              />
+              <TaskActions task={task} setIsOpen={setIsOpen} />
             </div>
             <Separator />
             <FormField
@@ -145,9 +139,9 @@ export function TaskDialog({
                 <FormItem className="px-6">
                   <DialogTitle>
                     <FormControl onBlur={form.handleSubmit(onSubmit)}>
-                      <Input
+                      <Textarea
                         placeholder="Task name"
-                        className="border-none text-2xl shadow-none"
+                        className="border-none text-xl shadow-none"
                         {...field}
                       />
                     </FormControl>

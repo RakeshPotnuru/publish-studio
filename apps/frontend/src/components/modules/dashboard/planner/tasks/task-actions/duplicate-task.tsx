@@ -1,18 +1,17 @@
 import { DropdownMenuItem, toast } from "@itsrakesh/ui";
-import type { ISection, ITask } from "@publish-studio/core";
+import type { ITask } from "@publish-studio/core";
 
 import { Icons } from "@/assets/icons";
+import usePlannerStore from "@/lib/store/planner";
 import { trpc } from "@/utils/trpc";
 
 interface DuplicateTaskProps {
   task: ITask;
-  setSections: React.Dispatch<React.SetStateAction<ISection[]>>;
 }
 
-export function DuplicateTask({
-  task,
-  setSections,
-}: Readonly<DuplicateTaskProps>) {
+export function DuplicateTask({ task }: Readonly<DuplicateTaskProps>) {
+  const { setSections } = usePlannerStore();
+
   const { mutateAsync: duplicateTask } = trpc.task.create.useMutation({
     onSuccess: (data) => {
       setSections((sections) =>

@@ -14,12 +14,12 @@ import {
   PopoverTrigger,
   toast,
 } from "@itsrakesh/ui";
-import type { ISection } from "@publish-studio/core";
 import { constants } from "@publish-studio/core/src/config/constants";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Icons } from "@/assets/icons";
+import usePlannerStore from "@/lib/store/planner";
 import { trpc } from "@/utils/trpc";
 
 export const formSchema = z.object({
@@ -29,12 +29,10 @@ export const formSchema = z.object({
     .max(constants.planner.section.name.MAX_LENGTH, "Name is too long"),
 });
 
-interface NewSectionProps {
-  setSections: React.Dispatch<React.SetStateAction<ISection[]>>;
-}
-
-export function NewSection({ setSections }: Readonly<NewSectionProps>) {
+export function NewSection() {
   const [isOpen, setIsOpen] = useState(false);
+
+  const { setSections } = usePlannerStore();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

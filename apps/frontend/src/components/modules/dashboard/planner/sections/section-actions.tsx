@@ -12,6 +12,7 @@ import type { ISection } from "@publish-studio/core";
 
 import { Icons } from "@/assets/icons";
 import { AskForConfirmation } from "@/components/ui/ask-for-confirmation";
+import usePlannerStore from "@/lib/store/planner";
 import { trpc } from "@/utils/trpc";
 
 import { updateOrder } from "../common/strict-mode-droppable";
@@ -21,13 +22,11 @@ interface SectionActionsProps {
     React.SetStateAction<ISection["_id"] | null>
   >;
   section: ISection;
-  sections: ISection[];
 }
 
 export function SectionActions({
   setEditingSectionId,
   section,
-  sections,
 }: Readonly<SectionActionsProps>) {
   return (
     <DropdownMenu>
@@ -50,7 +49,7 @@ export function SectionActions({
           Rename
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DeleteSection section={section} sections={sections} />
+        <DeleteSection section={section} />
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -58,11 +57,12 @@ export function SectionActions({
 
 interface DeleteSectionProps {
   section: ISection;
-  sections: ISection[];
 }
 
-function DeleteSection({ section, sections }: Readonly<DeleteSectionProps>) {
+function DeleteSection({ section }: Readonly<DeleteSectionProps>) {
   const [askingForConfirmation, setAskingForConfirmation] = useState(false);
+
+  const { sections } = usePlannerStore();
 
   const { mutateAsync: deleteSection, isLoading } =
     trpc.section.delete.useMutation();

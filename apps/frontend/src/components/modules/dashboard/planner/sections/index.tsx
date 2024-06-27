@@ -4,21 +4,20 @@ import { ScrollArea, ScrollBar } from "@itsrakesh/ui";
 import type { ISection } from "@publish-studio/core";
 import { DragDropContext } from "react-beautiful-dnd";
 
+import usePlannerStore from "@/lib/store/planner";
+
 import { StrictModeDroppable } from "../common/strict-mode-droppable";
 import { NewSection } from "./new-section";
 import { Section } from "./section";
 import { useHandleDragEnd } from "./use-handle-drag-end";
 
-interface SectionsProps {
-  data?: ISection[];
-}
-
-export function Sections({ data }: Readonly<SectionsProps>) {
+export function Sections() {
   const [editingSectionId, setEditingSectionId] = useState<
     ISection["_id"] | null
   >(null);
 
-  const { handleDragEnd, sections, setSections } = useHandleDragEnd({ data });
+  const { handleDragEnd } = useHandleDragEnd();
+  const { sections } = usePlannerStore();
 
   return (
     <ScrollArea className="max-w-[74vw]">
@@ -40,8 +39,6 @@ export function Sections({ data }: Readonly<SectionsProps>) {
                     <Section
                       key={section._id.toString()}
                       section={section}
-                      sections={sections}
-                      setSections={setSections}
                       editingSectionId={editingSectionId}
                       setEditingSectionId={setEditingSectionId}
                     />
@@ -54,7 +51,7 @@ export function Sections({ data }: Readonly<SectionsProps>) {
             )}
           </StrictModeDroppable>
         </DragDropContext>
-        <NewSection setSections={setSections} />
+        <NewSection />
         <ScrollBar orientation="horizontal" />
       </div>
     </ScrollArea>
