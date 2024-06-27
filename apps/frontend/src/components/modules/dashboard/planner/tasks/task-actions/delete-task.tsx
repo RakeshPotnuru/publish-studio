@@ -54,7 +54,7 @@ export function DeleteTask({ task, setIsOpen }: Readonly<DeleteTaskProps>) {
       // Update the order of remaining tasks in the section
       if (newSections[sectionIndex].tasks) {
         newSections[sectionIndex].tasks = updateOrder(
-          newSections[sectionIndex].tasks,
+          newSections[sectionIndex].tasks as ITask[],
         );
       }
 
