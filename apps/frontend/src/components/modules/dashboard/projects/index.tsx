@@ -6,10 +6,11 @@ import { Button } from "@itsrakesh/ui";
 import type { PaginationState } from "@tanstack/react-table";
 
 import { Icons } from "@/assets/icons";
-import { ErrorBox } from "@/components/ui/error-box";
-import { Heading } from "@/components/ui/heading";
+import { DashboardShell } from "@/components/ui/shell";
 import { trpc } from "@/utils/trpc";
 
+import { DashboardBody } from "../common/dashboard-body";
+import { DashboardHeader } from "../common/dashboard-header";
 import { columns } from "./columns";
 import { NewProject } from "./new-project";
 import { ProjectsTable } from "./table";
@@ -28,20 +29,18 @@ export function Projects() {
   });
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <Heading>My Projects</Heading>
-        <NewProject>
-          <Button>
-            <Icons.Add className="mr-2 size-4" /> New Project
-          </Button>
-        </NewProject>
-      </div>
-      {error ? (
-        <div className="flex h-[70vh] items-center justify-center">
-          <ErrorBox title="Error" description={error.message} />
-        </div>
-      ) : (
+    <DashboardShell>
+      <DashboardHeader
+        title="Projects"
+        action={
+          <NewProject>
+            <Button>
+              <Icons.Add className="mr-2 size-4" /> New Project
+            </Button>
+          </NewProject>
+        }
+      />
+      <DashboardBody error={error?.message}>
         <ProjectsTable
           columns={columns}
           data={data?.data.projects ?? []}
@@ -54,7 +53,7 @@ export function Projects() {
           setPagination={setPagination}
           isLoading={isFetching}
         />
-      )}
-    </div>
+      </DashboardBody>
+    </DashboardShell>
   );
 }

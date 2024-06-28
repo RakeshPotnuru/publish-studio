@@ -105,4 +105,55 @@ export default class GenerativeAIController extends GenerativeAIService {
   async generateBulletListHandler(req: Request, res: Response) {
     return await super.generateBulletList(req, res);
   }
+
+  async genIdeasBasedOnPastContentHandler(ctx: Context) {
+    const output = await super.genIdeasBasedOnPastContent(ctx.user._id);
+
+    const ideas = JSON.parse(output).map(
+      (idea: string[]) => idea[0],
+    ) as string[];
+
+    if (ideas.length === 0) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Unable to generate ideas. Please try again.",
+      });
+    }
+
+    return { status: "success", data: { ideas } };
+  }
+
+  async genIdeasBasedOnCategoryHandler(category: string, ctx: Context) {
+    const output = await super.genIdeasBasedOnCategory(category, ctx.user._id);
+
+    const ideas = JSON.parse(output).map(
+      (idea: string[]) => idea[0],
+    ) as string[];
+
+    if (ideas.length === 0) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Unable to generate ideas. Please try again.",
+      });
+    }
+
+    return { status: "success", data: { ideas } };
+  }
+
+  async genIdeasBasedOnTextHandler(text: string, ctx: Context) {
+    const output = await super.genIdeasBasedOnText(text, ctx.user._id);
+
+    const ideas = JSON.parse(output).map(
+      (idea: string[]) => idea[0],
+    ) as string[];
+
+    if (ideas.length === 0) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Unable to generate ideas. Please try again.",
+      });
+    }
+
+    return { status: "success", data: { ideas } };
+  }
 }

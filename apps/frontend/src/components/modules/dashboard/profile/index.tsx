@@ -27,11 +27,12 @@ import { z } from "zod";
 import { Icons } from "@/assets/icons";
 import { ImageWidget } from "@/components/modules/dashboard/assets/image-widget";
 import { ErrorBox } from "@/components/ui/error-box";
-import { Heading } from "@/components/ui/heading";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { Tooltip } from "@/components/ui/tooltip";
 import useUserStore from "@/lib/store/user";
 import { trpc } from "@/utils/trpc";
+
+import { DashboardHeader } from "../common/dashboard-header";
 
 type ProfileProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -125,41 +126,43 @@ export function Profile({ ...props }: Readonly<ProfileProps>) {
     >
       <Form {...form}>
         <form className="space-y-4">
-          <div className="flex flex-row justify-between">
-            <Heading>Profile</Heading>
-            {isEditing ? (
-              <div className="flex flex-row space-x-4">
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setIsEditing(false);
-                    form.reset();
-                  }}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="button"
-                  onClick={form.handleSubmit(onSubmit)}
-                  disabled={isLoading || !form.formState.isDirty}
-                >
-                  <ButtonLoader isLoading={isUpdating}>Save</ButtonLoader>
-                </Button>
-              </div>
-            ) : (
-              <Tooltip content="Edit Profile">
-                <Button
-                  onClick={() => setIsEditing(true)}
-                  variant="ghost"
-                  size="icon"
-                  disabled={isLoading}
-                  aria-label="Edit Profile"
-                >
-                  <Icons.EditProfile size={25} />
-                </Button>
-              </Tooltip>
-            )}
-          </div>
+          <DashboardHeader
+            title="Profile"
+            action={
+              isEditing ? (
+                <div className="flex flex-row space-x-4">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setIsEditing(false);
+                      form.reset();
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={form.handleSubmit(onSubmit)}
+                    disabled={isLoading || !form.formState.isDirty}
+                  >
+                    <ButtonLoader isLoading={isUpdating}>Save</ButtonLoader>
+                  </Button>
+                </div>
+              ) : (
+                <Tooltip content="Edit Profile">
+                  <Button
+                    onClick={() => setIsEditing(true)}
+                    variant="ghost"
+                    size="icon"
+                    disabled={isLoading}
+                    aria-label="Edit Profile"
+                  >
+                    <Icons.EditProfile size={25} />
+                  </Button>
+                </Tooltip>
+              )
+            }
+          />
           <Separator />
           {error && <ErrorBox title="Update failed" description={error} />}
           <div className="space-y-8">

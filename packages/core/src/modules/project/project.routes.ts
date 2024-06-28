@@ -161,6 +161,10 @@ const projectRouter = router({
     .mutation(({ input, ctx }) =>
       new ProjectController().deleteProjectsHandler(input, ctx),
     ),
+
+  categories: protectedProcedure.query(({ ctx }) =>
+    new ProjectController().getCategoriesHandler(ctx),
+  ),
 });
 
 export default projectRouter;

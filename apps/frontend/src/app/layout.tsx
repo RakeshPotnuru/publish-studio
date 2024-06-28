@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 
 import "@/styles/globals.css";
+import { BreakpointViewer } from "@/components/dev-tools/breakpoint-viewer";
 import { ThemeToggleButton } from "@/components/dev-tools/theme-toggle";
 import { Toaster } from "@/components/ui/toaster";
 import { siteConfig } from "@/config/site";
@@ -132,7 +133,12 @@ export default function RootLayout({
         <Providers>
           {children}
           <Toaster />
-          {process.env.NODE_ENV === "development" && <ThemeToggleButton />}
+          {process.env.NODE_ENV === "development" && (
+            <>
+              <BreakpointViewer />
+              <ThemeToggleButton />
+            </>
+          )}
         </Providers>
       </body>
     </html>

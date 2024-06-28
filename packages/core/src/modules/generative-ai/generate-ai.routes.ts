@@ -32,6 +32,27 @@ const generativeAIRouter = router({
       .mutation(({ input, ctx }) =>
         new GenerativeAIController().generateCategoriesHandler(input, ctx),
       ),
+
+    ideasWith: router({
+      pastContent: proProtectedProcedure.query(({ ctx }) =>
+        new GenerativeAIController().genIdeasBasedOnPastContentHandler(ctx),
+      ),
+
+      category: proProtectedProcedure
+        .input(z.string())
+        .query(({ input, ctx }) =>
+          new GenerativeAIController().genIdeasBasedOnCategoryHandler(
+            input,
+            ctx,
+          ),
+        ),
+
+      text: proProtectedProcedure
+        .input(z.string())
+        .query(({ input, ctx }) =>
+          new GenerativeAIController().genIdeasBasedOnTextHandler(input, ctx),
+        ),
+    }),
   }),
 });
 

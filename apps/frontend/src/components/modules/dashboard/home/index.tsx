@@ -7,11 +7,9 @@ import { RecentFolders } from "./recent-folders";
 import { RecentProjects } from "./recent-projects";
 import { Stats } from "./stats";
 
-type HomeProps = React.HTMLAttributes<HTMLDivElement>;
-
-export function Home({ ...props }: Readonly<HomeProps>) {
+export function Home() {
   return (
-    <div className="space-y-8" {...props}>
+    <div className="space-y-8">
       <Heading className="text-center font-extrabold">
         <ProText>What would you like to write today?</ProText>
       </Heading>

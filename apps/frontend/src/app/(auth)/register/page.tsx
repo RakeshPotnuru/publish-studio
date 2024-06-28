@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 
 import { RegisterForm } from "@/components/modules/auth/register-form";
+import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
-  title: "Register",
+  title: siteConfig.pages.register.title,
+  description: siteConfig.pages.register.description,
 };
 
 export default function RegisterPage() {
