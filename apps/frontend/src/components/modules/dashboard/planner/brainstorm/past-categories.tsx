@@ -95,7 +95,7 @@ function ChooseCategory({
   };
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={setOpen} modal={true}>
       <div className="flex gap-1">
         <PopoverTrigger asChild>
           <Button
@@ -133,11 +133,7 @@ function ChooseCategory({
           </div>
         ) : (
           <Command>
-            <CommandInput
-              placeholder="Search categories..."
-              className="h-9"
-              disabled={error !== undefined}
-            />
+            <CommandInput placeholder="Search categories..." className="h-9" />
             <CommandList>
               <CommandEmpty>No categories found.</CommandEmpty>
               <CommandGroup>

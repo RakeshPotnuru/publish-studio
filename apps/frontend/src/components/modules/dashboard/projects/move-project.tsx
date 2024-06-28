@@ -118,7 +118,7 @@ export function MoveProject({
                 name="_id"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <Popover open={open} onOpenChange={setOpen}>
+                    <Popover open={open} onOpenChange={setOpen} modal={true}>
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button variant="outline" className="justify-between">
@@ -148,7 +148,6 @@ export function MoveProject({
                             <CommandInput
                               placeholder="Search folders..."
                               className="h-9"
-                              disabled={error !== undefined}
                             />
                             <CommandEmpty>No folder found.</CommandEmpty>
                             <CommandGroup>
@@ -168,7 +167,7 @@ export function MoveProject({
                                         "ml-auto size-4",
                                         item.value === field.value
                                           ? "opacity-100"
-                                          : "opacity-0"
+                                          : "opacity-0",
                                       )}
                                     />
                                   </CommandItem>
