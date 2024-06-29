@@ -1,3 +1,5 @@
+import dynamic from "next/dynamic";
+
 import type { Metadata, Viewport } from "next";
 
 import "@/styles/globals.css";
@@ -6,6 +8,10 @@ import { ThemeToggleButton } from "@/components/dev-tools/theme-toggle";
 import { Toaster } from "@/components/ui/toaster";
 import { siteConfig } from "@/config/site";
 import { Providers } from "@/lib/providers";
+
+const PostHogPageView = dynamic(() => import("@/lib/posthog-page-view"), {
+  ssr: false,
+});
 
 export const metadata: Metadata = {
   title: {
@@ -131,6 +137,7 @@ export default function RootLayout({
           </div>
         )}
         <Providers>
+          <PostHogPageView />
           {children}
           <Toaster />
           {process.env.NODE_ENV === "development" && (

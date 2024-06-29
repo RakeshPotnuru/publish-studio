@@ -13,7 +13,6 @@ import unsplashRouter from "./modules/integration/unsplash/unsplash.routes";
 import nluRouter from "./modules/nlu/nlu.routes";
 import notificationRouter from "./modules/notification/notification.routes";
 import paymentRouter from "./modules/payment/payment.routes";
-import { adminPlannerRouter } from "./modules/planner/planner.routes";
 import sectionRouter from "./modules/planner/section/section.routes";
 import taskRouter from "./modules/planner/task/task.routes";
 import platformRouter from "./modules/platform/platform.routes";
@@ -26,7 +25,6 @@ import { router, t } from "./trpc";
 
 const adminRouter = router({
   auth: adminAuthRouter,
-  planner: adminPlannerRouter,
 });
 
 const appRouter = router({

@@ -1,7 +1,6 @@
 import type { Types } from "mongoose";
 
 import { constants } from "../../config/constants";
-import User from "../user/user.model";
 import SectionService from "./section/section.service";
 
 export default class PlannerController extends SectionService {
@@ -26,19 +25,6 @@ export default class PlannerController extends SectionService {
         name: section,
         order: sections.indexOf(section),
       });
-    }
-  }
-
-  // TODO: one time thing, remove after all users have planner
-  async initPlannerForExistingUsers(): Promise<void> {
-    const users = await User.find();
-
-    for (const user of users) {
-      const sections = await super.getSections(user._id);
-
-      if (sections.length === 0) {
-        await this.initPlanner(user._id);
-      }
     }
   }
 }
