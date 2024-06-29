@@ -1,7 +1,7 @@
 const cspHeader = `
 default-src 'self';
-connect-src 'self' ${process.env.NEXT_PUBLIC_CORE_URL} ${process.env.NEXT_PUBLIC_R2_BUCKET_URL} https://sockjs-ap2.pusher.com wss://ws-ap2.pusher.com https://accounts.google.com https://images.unsplash.com https://images.pexels.com https://ik.imagekit.io https://api.giphy.com https://us.i.posthog.com;
-script-src 'self' 'unsafe-eval' 'unsafe-inline' https://challenges.cloudflare.com https://accounts.google.com https://media-library.cloudinary.com;
+connect-src 'self' ${process.env.NEXT_PUBLIC_CORE_URL} ${process.env.NEXT_PUBLIC_R2_BUCKET_URL} ${process.env.NEXT_PUBLIC_POSTHOG_HOST} https://sockjs-ap2.pusher.com wss://ws-ap2.pusher.com https://accounts.google.com https://images.unsplash.com https://images.pexels.com https://ik.imagekit.io https://api.giphy.com;
+script-src 'self' 'unsafe-eval' 'unsafe-inline' https://challenges.cloudflare.com https://accounts.google.com https://media-library.cloudinary.com https://us-assets.i.posthog.com;
 frame-src 'self' https://challenges.cloudflare.com https://accounts.google.com https://eml.imagekit.io https://media-library.cloudinary.com https://console.cloudinary.com;
 style-src 'self' 'unsafe-inline' https://accounts.google.com;
 img-src * blob: data:;
