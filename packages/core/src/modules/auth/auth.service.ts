@@ -20,7 +20,8 @@ export default class AuthService extends UserService {
       const response = await axios.get(
         `${defaultConfig.disposableEmailChecker}${email}`,
       );
-      return response.data.disposable as boolean;
+
+      return response.data.disposable === "true";
     } catch (error) {
       await logtail.error(JSON.stringify(error));
 
