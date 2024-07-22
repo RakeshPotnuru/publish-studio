@@ -59,21 +59,17 @@
     "typescript": "5.3.2",
     "unsplash-js": "^7.0.19",
     "uuid": "^9.0.1",
-    "ws": "^8.16.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
     "@logtail/types": "^0.4.19",
-    "@types/amqplib": "^0.10.4",
     "@types/bcryptjs": "^2.4.6",
     "@types/cookies": "^0.9.0",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
-    "@types/jest": "^29.5.10",
     "@types/jsonwebtoken": "^9.0.5",
     "@types/node": "20.9.4",
     "@types/uuid": "^9.0.7",
-    "@types/ws": "^8.5.10",
     "eslint": "8.54.0",
     "nodemon": "^3.0.1"
   }

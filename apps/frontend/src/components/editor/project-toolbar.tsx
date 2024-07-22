@@ -19,7 +19,7 @@ export function ProjectToolbar({
   editor,
 }: Readonly<ProjectToolbarProps>) {
   return (
-    <div className="sticky top-0 z-10 flex justify-between rounded-full bg-background p-2 shadow-sm">
+    <div className="flex justify-between bg-background p-2 py-[7px]">
       <div className="flex flex-row items-center rounded-full border px-2 py-0">
         <p title={project.name} className="text-sm">
           {shortenText(project.name, 20)}

@@ -8,9 +8,7 @@ import { getCookie } from "cookies-next";
 import Pusher from "pusher-js";
 import superjson from "superjson";
 
-import { createTRPCServerClient } from "@/utils/trpc";
-
-import { trpc } from "../../utils/trpc";
+import { createTRPCServerClient, trpc } from "@/utils/trpc";
 
 if (!process.env.NEXT_PUBLIC_TRPC_API_URL) {
   throw new Error("NEXT_PUBLIC_TRPC_API_URL is not set");

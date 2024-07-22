@@ -49,14 +49,14 @@ export function Project({ projectId }: { projectId: string }) {
   useDocumentTitle(`Projects | ${title}`);
 
   const projectView = isFetching ? (
-    <div className="flex flex-row space-x-4">
-      <div className="w-3/4 space-y-4 *:bg-background">
-        <Skeleton className="h-14 rounded-full" />
-        <Skeleton className="h-screen rounded-3xl" />
+    <div className="flex flex-row">
+      <div className="w-3/4 *:rounded-none *:bg-background">
+        <Skeleton className="h-14 border-b border-r" />
+        <Skeleton className="h-screen border-r" />
       </div>
-      <div className="flex w-1/4 flex-col space-y-4 *:bg-background">
-        <Skeleton className="h-14 rounded-full" />
-        <Skeleton className="h-screen rounded-3xl" />
+      <div className="flex w-1/4 flex-col *:rounded-none *:bg-background">
+        <Skeleton className="h-14 border-b" />
+        <Skeleton className="h-screen" />
       </div>
     </div>
   ) : (

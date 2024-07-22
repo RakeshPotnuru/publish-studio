@@ -49,7 +49,6 @@ const appRouter = router({
   task: taskRouter,
 });
 
-export type AppRouter = typeof appRouter;
 export default appRouter;
 export const createCaller = t.createCallerFactory(appRouter);
 

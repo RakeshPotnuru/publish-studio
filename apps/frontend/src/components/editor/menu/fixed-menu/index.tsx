@@ -44,10 +44,10 @@ export function FixedMenu({
 
   return (
     <div
-      className="sticky top-0 z-50 flex justify-between rounded-full bg-background p-2 shadow-sm"
+      className="sticky top-0 z-50 flex justify-between border-b border-r bg-background p-2"
       {...props}
     >
-      <div className="flex flex-row items-center space-x-2">
+      <div className="flex flex-row items-center space-x-2 overflow-auto">
         <MenuShell>
           <HistoryActions editor={editor} />
         </MenuShell>

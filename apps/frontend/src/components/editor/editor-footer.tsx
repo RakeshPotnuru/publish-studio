@@ -59,7 +59,7 @@ export function EditorFooter({
   const readabilityScore = getReadabilityScore();
 
   return (
-    <div className="sticky bottom-0 z-50 flex flex-row items-center justify-between rounded-xl bg-background p-2 py-1 text-sm text-muted-foreground">
+    <div className="sticky bottom-0 z-50 flex flex-row items-center justify-between border-r border-t bg-background p-2 py-1 text-sm text-muted-foreground">
       <div className="flex flex-row items-center space-x-2">
         <p>
           {getSelection(editor).characterCount ||

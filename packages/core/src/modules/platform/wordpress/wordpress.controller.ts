@@ -84,7 +84,7 @@ export default class WordPressController extends WordPressService {
 
     if (!platform) {
       return {
-        platform: Platform.DEVTO,
+        platform: Platform.WORDPRESS,
         status: PostStatus.ERROR,
       };
     }
@@ -106,7 +106,7 @@ export default class WordPressController extends WordPressService {
 
     if (newPost.isError || !newPost.URL || !newPost.ID) {
       return {
-        platform: Platform.DEVTO,
+        platform: Platform.WORDPRESS,
         status: PostStatus.ERROR,
       };
     }

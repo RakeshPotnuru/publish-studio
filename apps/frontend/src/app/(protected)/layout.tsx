@@ -16,7 +16,7 @@ export default function DashboardLayout({
   return (
     <MobileNotice>
       <Navbar />
-      <main className="m-8">{children}</main>
+      <main>{children}</main>
       <NetworkStatusToast />
     </MobileNotice>
   );

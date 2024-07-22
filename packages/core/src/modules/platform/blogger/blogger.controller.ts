@@ -108,7 +108,7 @@ export default class BloggerController extends BloggerService {
 
     if (!platform) {
       return {
-        platform: Platform.DEVTO,
+        platform: Platform.BLOGGER,
         status: PostStatus.ERROR,
       };
     }
@@ -130,7 +130,7 @@ export default class BloggerController extends BloggerService {
 
     if (newPost.statusText !== "OK") {
       return {
-        platform: Platform.DEVTO,
+        platform: Platform.BLOGGER,
         status: PostStatus.ERROR,
       };
     }

@@ -4,7 +4,7 @@ type ShellProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function Shell({ children, className, ...props }: Readonly<ShellProps>) {
   return (
-    <div className={cn("rounded-3xl bg-background p-8", className)} {...props}>
+    <div className={cn("bg-background p-8", className)} {...props}>
       {children}
     </div>
   );

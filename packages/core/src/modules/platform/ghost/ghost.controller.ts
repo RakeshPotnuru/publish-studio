@@ -132,7 +132,7 @@ export default class GhostController extends GhostService {
 
     if (!platform) {
       return {
-        platform: Platform.DEVTO,
+        platform: Platform.GHOST,
         status: PostStatus.ERROR,
       };
     }
@@ -158,7 +158,7 @@ export default class GhostController extends GhostService {
 
     if (!newPost.success) {
       return {
-        platform: Platform.DEVTO,
+        platform: Platform.GHOST,
         status: PostStatus.ERROR,
       };
     }

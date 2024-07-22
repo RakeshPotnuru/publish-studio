@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -217,11 +216,12 @@ export function PublishPost({
                 </Button>
                 {coverImage && (
                   <div className="min-h-[10rem] overflow-auto border p-2 shadow-inner">
-                    <Image
+                    <img
                       src={coverImage}
                       alt={project.title ?? project.name}
                       width={1000}
                       height={500}
+                      loading="lazy"
                     />
                   </div>
                 )}

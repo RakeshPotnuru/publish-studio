@@ -71,7 +71,6 @@
     "@tiptap/react": "^2.1.12",
     "@trpc/client": "^10.45.0",
     "@trpc/react-query": "^10.45.0",
-    "@types/ws": "^8.5.10",
     "axios": "^1.6.2",
     "chart.js": "^4.4.1",
     "cookies-next": "^4.1.1",
@@ -101,7 +100,6 @@
     "tiptap-markdown": "^0.8.10",
     "unified": "^11.0.4",
     "use-debounce": "^10.0.0",
-    "ws": "^8.16.0",
     "zod": "^3.22.4",
     "zustand": "^4.4.6"
   },

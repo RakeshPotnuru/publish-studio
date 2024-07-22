@@ -63,8 +63,7 @@ export function useEditor(project?: IProject) {
     ],
     editorProps: {
       attributes: {
-        class:
-          "bg-background min-h-screen rounded-3xl shadow-sm p-8 outline-none space-y-4",
+        class: "bg-background min-h-screen p-8 outline-none space-y-4 border-r",
       },
     },
     autofocus: true,

@@ -181,7 +181,7 @@ export default class HashnodeController extends HashnodeService {
 
     if (!platform) {
       return {
-        platform: Platform.DEVTO,
+        platform: Platform.HASHNODE,
         status: PostStatus.ERROR,
       };
     }
@@ -195,10 +195,22 @@ export default class HashnodeController extends HashnodeService {
       });
     }
 
+    const _postTitle = post.title ?? post.name;
+    let postTitle = _postTitle;
+    if (postTitle.length < 6) {
+      postTitle = `${postTitle} - Published from ${defaultConfig.appName}`;
+    }
+
+    const _postContent = post.body.markdown;
+    let postContent = _postContent;
+    if (postContent.length < 5) {
+      postContent = `${postContent} - Published from ${defaultConfig.appName}`;
+    }
+
     const newPost = await super.publishPost(
       {
-        title: post.title ?? post.name,
-        contentMarkdown: post.body.markdown,
+        title: postTitle,
+        contentMarkdown: postContent,
         // tags: post.tags?.hashnode_tags ?? [],
         tags: [],
         publicationId: platform.publication.publication_id,
@@ -217,7 +229,7 @@ export default class HashnodeController extends HashnodeService {
 
     if (newPost.isError || !newPost.data) {
       return {
-        platform: Platform.DEVTO,
+        platform: Platform.HASHNODE,
         status: PostStatus.ERROR,
       };
     }
@@ -254,10 +266,22 @@ export default class HashnodeController extends HashnodeService {
 
     const { post, post_id } = input;
 
+    const _postTitle = post.title ?? post.name;
+    let postTitle = _postTitle;
+    if (postTitle.length < 6) {
+      postTitle = `${postTitle} - Published from ${defaultConfig.appName}`;
+    }
+
+    const _postContent = post.body?.markdown;
+    let postContent = _postContent ?? "";
+    if (postContent.length < 5) {
+      postContent = `${postContent} - Published from ${defaultConfig.appName}`;
+    }
+
     const updatedPost = await super.updatePost(
       {
-        title: post.title,
-        contentMarkdown: post.body?.markdown,
+        title: postTitle,
+        contentMarkdown: postContent,
         // tags: post.tags?.hashnode_tags ?? [],
         tags: [],
         coverImageOptions: {

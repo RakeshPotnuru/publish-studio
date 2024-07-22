@@ -144,7 +144,7 @@ export default class MediumController extends MediumService {
 
     if (!platform) {
       return {
-        platform: Platform.DEVTO,
+        platform: Platform.MEDIUM,
         status: PostStatus.ERROR,
       };
     }
@@ -166,7 +166,7 @@ export default class MediumController extends MediumService {
 
     if (newPost.isError || !newPost.data) {
       return {
-        platform: Platform.DEVTO,
+        platform: Platform.MEDIUM,
         status: PostStatus.ERROR,
       };
     }

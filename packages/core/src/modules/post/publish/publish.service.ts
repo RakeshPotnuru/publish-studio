@@ -144,7 +144,7 @@ export default class PublishService extends PostController {
           ctx,
         );
 
-        const isSuccess = response.data.post.isError;
+        const isSuccess = !response.data.post.isError;
         const caller = createCaller(ctx);
 
         if (!isSuccess) {

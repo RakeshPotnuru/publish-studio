@@ -153,7 +153,7 @@ export function Notifications() {
             aria-label="Notifications"
           >
             <Icons.Notification
-              className={cn("size-5", {
+              className={cn("size-4", {
                 "origin-center animate-ring": isNewNotification,
               })}
             />
