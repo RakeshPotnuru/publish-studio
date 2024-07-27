@@ -29,6 +29,11 @@ export function Footer({ className, ...props }: Readonly<FooterProps>) {
           Terms of Service
         </Link>
       </Button>
+      <Button variant="link" className="h-max p-0 text-xs" asChild>
+        <Link href={siteConfig.links.bugReport} target="_blank">
+          Having trouble?
+        </Link>
+      </Button>
     </footer>
   );
 }
