@@ -595,7 +595,11 @@
   }
 
   & img {
-    @apply h-auto w-full max-w-[500px];
+    @apply h-auto w-full max-w-[500px] block float-none mx-auto;
+
+    &.ProseMirror-selectednode {
+      @apply outline outline-primary;
+    }
   }
 
   [data-type="horizontalRule"] {
