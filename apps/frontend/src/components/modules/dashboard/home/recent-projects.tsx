@@ -38,7 +38,7 @@ export function RecentProjects() {
               href={`${siteConfig.pages.projects.link}/${project._id.toString()}`}
             >
               <Icons.Projects className="mr-2 size-4" />
-              {shortenText(project.name, 30)}
+              {shortenText(project.name, 27)}
             </Link>
           </Button>
         ))}
@@ -49,14 +49,14 @@ export function RecentProjects() {
         </Button>
       </>
     ) : (
-      <div className="col-span-4 space-y-4 p-4 text-center text-gray-500">
+      <Center className="col-span-4 w-full flex-col space-y-4 p-4 text-gray-500">
         <p>No projects yet. Ready to begin?</p>
         <NewProject>
           <Button variant="secondary">
             <Icons.Add className="mr-2 size-4" /> New Project
           </Button>
         </NewProject>
-      </div>
+      </Center>
     );
 
   const projectsView = error ? (

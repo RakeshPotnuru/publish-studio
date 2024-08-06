@@ -58,6 +58,12 @@ const projectRouter = router({
           .optional(),
         canonical_url: z.string().optional(),
         published_at: z.date().optional(),
+        stats: z
+          .object({
+            readingTime: z.number().int().optional(),
+            wordCount: z.number().int().optional(),
+          })
+          .optional(),
       }),
     )
     .mutation(({ input, ctx }) =>
@@ -149,6 +155,12 @@ const projectRouter = router({
           canonical_url: z.string().optional(),
           categories: z.array(z.string()).optional(),
           scheduled_at: z.string().pipe(z.coerce.date()).optional(),
+          stats: z
+            .object({
+              readingTime: z.number().int().optional(),
+              wordCount: z.number().int().optional(),
+            })
+            .optional(),
         }),
       }),
     )

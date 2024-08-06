@@ -14,7 +14,7 @@ import {
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import type { IAsset } from "@publish-studio/core";
-import { constants,MimeType } from "@publish-studio/core/src/config/constants";
+import { constants, MimeType } from "@publish-studio/core/src/config/constants";
 import axios from "axios";
 import mongoose from "mongoose";
 
@@ -198,7 +198,7 @@ export function NewAssetDialog({
               "border-primary": isDragActive,
               "border-destructive": error,
               "border-success": file && !error,
-            }
+            },
           )}
         >
           {file ? (
@@ -245,7 +245,10 @@ export function NewAssetDialog({
           )}
         </slot>
         <DialogFooter>
-          <Button onClick={handleUpload} disabled={!file || isLoading}>
+          <Button
+            onClick={handleUpload}
+            disabled={!file || isLoading || error !== null}
+          >
             <ButtonLoader isLoading={isLoading}>Upload</ButtonLoader>
           </Button>
         </DialogFooter>

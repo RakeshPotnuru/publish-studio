@@ -58,27 +58,22 @@ export function Navbar({ className, ...props }: Readonly<NavbarProps>) {
   return (
     <nav
       className={cn(
-        "flex items-center justify-between bg-background px-8 py-2 shadow-lg border-b",
+        "flex items-center justify-between bg-background px-8 py-1 shadow-lg border-b",
         className,
       )}
       {...props}
     >
-      <div className="flex flex-row items-start space-x-1">
-        <Link href="/">
-          <Image
-            src={Images.logo}
-            alt="Publish Studio"
-            width={25}
-            height={25}
-            className="rounded-md drop-shadow-md"
-            priority
-          />
-        </Link>
+      <Link href="/">
+        <Image
+          src={Images.logo}
+          alt="Publish Studio"
+          width={25}
+          height={25}
+          className="rounded-md drop-shadow-md"
+          priority
+        />
+      </Link>
 
-        <div className="-mt-2 select-none rounded-md bg-secondary p-1 py-[0.5px] text-xs font-bold">
-          Beta
-        </div>
-      </div>
       <div className="flex flex-row items-center space-x-1">
         {/* NOSONAR */}
         {/* {isFetching ||

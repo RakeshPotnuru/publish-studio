@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { ScrollArea, ScrollBar } from "@itsrakesh/ui";
 import { type Editor as CoreEditor } from "@tiptap/core";
 import { type EditorState } from "@tiptap/pm/state";
 import { type EditorView } from "@tiptap/pm/view";
@@ -47,28 +48,31 @@ export function FixedMenu({
       className="sticky top-0 z-50 flex justify-between border-b border-r bg-background p-2"
       {...props}
     >
-      <div className="flex flex-row items-center space-x-2 overflow-auto">
-        <MenuShell>
-          <HistoryActions editor={editor} />
-        </MenuShell>
-        <MenuSeparator />
-        <MenuShell>
-          <TextStyleActions editor={editor} />
-        </MenuShell>
-        <MenuSeparator />
-        <MenuShell>
-          <MarkActions editor={editor} />
-        </MenuShell>
-        <MenuSeparator />
-        <MenuShell>
-          <NodeActions editor={editor} />
-        </MenuShell>
-        <MenuSeparator />
-        <MenuShell>
-          <ImageAction editor={editor} />
-          <LinkAction editor={editor} />
-        </MenuShell>
-      </div>
+      <ScrollArea>
+        <div className="flex flex-row items-center space-x-2">
+          <MenuShell>
+            <HistoryActions editor={editor} />
+          </MenuShell>
+          <MenuSeparator />
+          <MenuShell>
+            <TextStyleActions editor={editor} />
+          </MenuShell>
+          <MenuSeparator />
+          <MenuShell>
+            <MarkActions editor={editor} />
+          </MenuShell>
+          <MenuSeparator />
+          <MenuShell>
+            <NodeActions editor={editor} />
+          </MenuShell>
+          <MenuSeparator />
+          <MenuShell>
+            <ImageAction editor={editor} />
+            <LinkAction editor={editor} />
+          </MenuShell>
+        </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
 
       <MenuShell>
         {isDictating ? (

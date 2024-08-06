@@ -8,6 +8,7 @@ import {
   ProjectStatus,
 } from "@publish-studio/core/src/config/constants";
 import type { PaginationState } from "@tanstack/react-table";
+import readingTime from "reading-time";
 
 import { Images } from "@/assets/images";
 import { useEditor } from "@/hooks/use-editor";
@@ -122,12 +123,14 @@ export function ImportPosts() {
 
       setImportingPost(id);
 
+      editor.commands.setContent(post.body_markdown);
+
       const { data } = await createProject({
         name: post.title,
         title: post.title,
         description: post.description,
         body: {
-          markdown: post.body_markdown,
+          json: editor.getJSON() as JSON,
         },
         tags: {
           devto_tags: post.tag_list,
@@ -137,6 +140,10 @@ export function ImportPosts() {
         platforms: [Platform.DEVTO],
         published_at: new Date(post.published_at),
         status: ProjectStatus.PUBLISHED,
+        stats: {
+          readingTime: readingTime(editor.getText()).time,
+          wordCount: editor.storage.characterCount.words(),
+        },
       });
 
       await createPost({

@@ -34,9 +34,11 @@ export function RecentFolders() {
             className="flex w-64 justify-start"
             asChild
           >
-            <Link href={`${siteConfig.pages.folders.link}/${folder._id.toString()}`}>
+            <Link
+              href={`${siteConfig.pages.folders.link}/${folder._id.toString()}`}
+            >
               <Icons.Folder className="mr-2 size-4" />
-              {shortenText(folder.name, 30)}
+              {shortenText(folder.name, 27)}
             </Link>
           </Button>
         ))}
@@ -47,14 +49,14 @@ export function RecentFolders() {
         </Button>
       </>
     ) : (
-      <div className="col-span-4 space-y-4 p-4 text-center text-gray-500">
+      <Center className="col-span-4 w-full flex-col space-y-4 p-4 text-gray-500">
         <p>No folders in sight. Create one to keep things neat and tidy!</p>
         <NewFolderDialog>
           <Button variant="secondary">
             <Icons.Add className="mr-2 size-4" /> New Folder
           </Button>
         </NewFolderDialog>
-      </div>
+      </Center>
     );
 
   const foldersView = error ? (

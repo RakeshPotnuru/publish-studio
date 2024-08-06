@@ -53,6 +53,35 @@ export function TextStyleActions({ editor }: Readonly<MenuProps>) {
     return () => document.removeEventListener("keydown", down);
   }, []);
 
+  useEffect(() => {
+    const updateActiveTextStyle = () => {
+      const isActive = editor.isActive("heading", { level: 1 });
+      if (isActive) {
+        setActiveTextStyle("Heading 1");
+        return;
+      }
+
+      const isActive2 = editor.isActive("heading", { level: 2 });
+      if (isActive2) {
+        setActiveTextStyle("Heading 2");
+        return;
+      }
+
+      const isActive3 = editor.isActive("heading", { level: 3 });
+      if (isActive3) {
+        setActiveTextStyle("Heading 3");
+        return;
+      }
+
+      setActiveTextStyle("Normal Text");
+    };
+
+    editor.on("transaction", updateActiveTextStyle);
+    return () => {
+      editor.off("transaction", updateActiveTextStyle);
+    };
+  }, [editor]);
+
   return (
     <Menubar>
       <MenubarMenu>

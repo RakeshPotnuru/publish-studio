@@ -162,6 +162,8 @@ export default class ProjectService extends FolderService {
             "body.json": project.body?.json,
             "body.html": project.body?.html,
             "body.markdown": project.body?.markdown,
+            "stats.readingTime": project.stats?.readingTime,
+            "stats.wordCount": project.stats?.wordCount,
           },
         },
         {

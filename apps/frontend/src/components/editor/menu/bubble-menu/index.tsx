@@ -91,7 +91,7 @@ export function BubbleMenu({ editor, appendTo }: Readonly<MenuProps>) {
         appendTo: () => {
           return appendTo?.current as HTMLElement;
         },
-        zIndex: 40,
+        zIndex: 60,
       }}
     >
       <div className="flex flex-row items-center rounded-md border bg-popover text-popover-foreground shadow-md">

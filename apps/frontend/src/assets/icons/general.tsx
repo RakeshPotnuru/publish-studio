@@ -19,11 +19,10 @@ import {
   FaGlobe,
   FaPaintRoller,
   FaPuzzlePiece,
+  FaRandom,
   FaTools,
 } from "react-icons/fa";
-import { FaRandom } from "react-icons/fa";
-import { FaCheck, FaWandMagicSparkles } from "react-icons/fa6";
-import { FaBrain } from "react-icons/fa6";
+import { FaBrain, FaCheck, FaWandMagicSparkles } from "react-icons/fa6";
 import { GoDotFill, GoHomeFill } from "react-icons/go";
 import { HiExternalLink } from "react-icons/hi";
 import { IoCalendar, IoCheckmarkDoneCircleSharp } from "react-icons/io5";
@@ -31,6 +30,7 @@ import {
   MdBugReport,
   MdEditDocument,
   MdMail,
+  MdOutlineDragIndicator,
   MdOutlineMobileOff,
   MdOutlineSupport,
   MdPermMedia,
@@ -38,7 +38,6 @@ import {
   MdSettings,
   MdSpaceDashboard,
 } from "react-icons/md";
-import { MdOutlineDragIndicator } from "react-icons/md";
 import { PiDotsThreeBold, PiNoteFill } from "react-icons/pi";
 import { RiFoldersFill } from "react-icons/ri";
 import { RxMixerHorizontal } from "react-icons/rx";

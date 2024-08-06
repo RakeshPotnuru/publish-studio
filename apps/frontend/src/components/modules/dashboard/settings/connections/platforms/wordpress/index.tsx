@@ -9,6 +9,7 @@ import {
   WordPressStatus,
 } from "@publish-studio/core/src/config/constants";
 import type { PaginationState } from "@tanstack/react-table";
+import readingTime from "reading-time";
 
 import { Images } from "@/assets/images";
 import { siteConfig } from "@/config/site";
@@ -138,12 +139,14 @@ export function ImportPosts() {
 
       setImportingPost(id);
 
+      editor.commands.setContent(post.content);
+
       const { data } = await createProject({
         name: post.title,
         title: post.title,
         description: post.excerpt.replaceAll(/<[^>]*>/g, ""),
         body: {
-          html: post.content,
+          json: editor.getJSON() as JSON,
         },
         tags: {
           wordpress_tags: post.tags
@@ -154,6 +157,10 @@ export function ImportPosts() {
         platforms: [Platform.WORDPRESS],
         published_at: new Date(post.date),
         status: ProjectStatus.PUBLISHED,
+        stats: {
+          readingTime: readingTime(editor.getText()).time,
+          wordCount: editor.storage.characterCount.words(),
+        },
       });
 
       await createPost({

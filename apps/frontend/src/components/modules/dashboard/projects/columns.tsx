@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { Checkbox } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import type { IProject } from "@publish-studio/core";
@@ -7,6 +9,7 @@ import { differenceInDays, format, formatDistanceToNow } from "date-fns";
 
 import { Icons } from "@/assets/icons";
 import { DataTableColumnHeader } from "@/components/ui/data-table";
+import { siteConfig } from "@/config/site";
 import { shortenText } from "@/utils/text-shortener";
 
 import { RowActions } from "./row-actions";
@@ -66,9 +69,12 @@ export const columns: ColumnDef<IProject>[] = [
       <DataTableColumnHeader column={column} title="Name" />
     ),
     cell: ({ row }) => (
-      <span title={row.original.name}>
+      <Link
+        href={`${siteConfig.pages.projects.link}/${row.original._id.toString()}`}
+        title={row.original.name}
+      >
         {shortenText(row.original.name, 50)}
-      </span>
+      </Link>
     ),
   },
   {
@@ -76,7 +82,7 @@ export const columns: ColumnDef<IProject>[] = [
     header: "Status",
     cell: ({ row }) => {
       const status = statuses.find(
-        (status) => status.value === row.original.status
+        (status) => status.value === row.original.status,
       );
 
       if (!status) {

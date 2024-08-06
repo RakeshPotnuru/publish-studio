@@ -7,6 +7,7 @@ import {
   PostStatus,
   ProjectStatus,
 } from "@publish-studio/core/src/config/constants";
+import readingTime from "reading-time";
 
 import { Images } from "@/assets/images";
 import { siteConfig } from "@/config/site";
@@ -145,11 +146,13 @@ export function ImportPosts() {
 
       setImportingPost(id);
 
+      editor.commands.setContent(post.content);
+
       const { data } = await createProject({
         name: post.title,
         title: post.title,
         body: {
-          html: post.content,
+          json: editor.getJSON() as JSON,
         },
         tags: {
           blogger_tags: post.labels,
@@ -157,6 +160,10 @@ export function ImportPosts() {
         platforms: [Platform.BLOGGER],
         published_at: new Date(post.published),
         status: ProjectStatus.PUBLISHED,
+        stats: {
+          readingTime: readingTime(editor.getText()).time,
+          wordCount: editor.storage.characterCount.words(),
+        },
       });
 
       await createPost({

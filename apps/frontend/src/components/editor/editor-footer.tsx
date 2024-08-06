@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import { Separator } from "@itsrakesh/ui";
 import type { Editor } from "@tiptap/react";
+import readTime from "reading-time";
 
 import type { IReadabilityScore } from "@/utils/flesch-reading-ease-score";
 import fleschReadingEaseScore from "@/utils/flesch-reading-ease-score";
@@ -13,6 +14,7 @@ import type { MenuProps } from "./menu/fixed-menu";
 interface EditorFooterProps extends React.HTMLAttributes<HTMLDivElement> {
   isLoading: boolean;
 }
+
 export const getSelection = (editor: Editor) => {
   const { view, state, storage } = editor;
   const { from, to } = view.state.selection;
@@ -35,8 +37,10 @@ export const getSelection = (editor: Editor) => {
     wordCount: words.length,
     from,
     to,
+    readTime: readTime(text),
   };
 };
+
 export function EditorFooter({
   editor,
   isLoading,
@@ -71,6 +75,11 @@ export function EditorFooter({
           {getSelection(editor).wordCount ||
             editor.storage.characterCount.words()}{" "}
           words
+        </p>
+        <Separator orientation="vertical" className="h-3 bg-gray-500" />
+        <p title="Estimated reading time">
+          {getSelection(editor).readTime?.text ??
+            readTime(editor.getText()).text}
         </p>
         {readabilityScore && (
           <>

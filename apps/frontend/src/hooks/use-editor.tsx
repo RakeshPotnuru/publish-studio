@@ -3,10 +3,12 @@ import { useEffect, useState } from "react";
 import { toast } from "@itsrakesh/ui";
 import type { IProject } from "@publish-studio/core";
 import { constants } from "@publish-studio/core/src/config/constants";
+import type { Editor } from "@tiptap/core";
 import { useEditor as useTiptapEditor } from "@tiptap/react";
 import TableOfContent, {
   type TableOfContentDataItem,
 } from "@tiptap-pro/extension-table-of-content";
+import readTime from "reading-time";
 import { useDebouncedCallback } from "use-debounce";
 
 import { extensions } from "@/components/editor/extensions";
@@ -22,7 +24,7 @@ export function useEditor(project?: IProject) {
       },
     });
 
-  const handleAutosave = useDebouncedCallback(async (content: JSON) => {
+  const handleAutosave = useDebouncedCallback(async (editor: Editor) => {
     try {
       if (!project) return;
 
@@ -30,7 +32,11 @@ export function useEditor(project?: IProject) {
         id: project._id,
         project: {
           body: {
-            json: content,
+            json: editor.state.doc.toJSON() as JSON,
+          },
+          stats: {
+            readingTime: readTime(editor.getText()).time, // ms
+            wordCount: editor.storage.characterCount.words(),
           },
         },
       });
@@ -68,7 +74,7 @@ export function useEditor(project?: IProject) {
     },
     autofocus: true,
     onUpdate: ({ editor }) => {
-      handleAutosave(editor.state.doc.toJSON() as JSON)?.catch(() => {
+      handleAutosave(editor)?.catch(() => {
         // Ignore
       });
     },

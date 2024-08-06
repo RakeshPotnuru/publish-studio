@@ -2,6 +2,7 @@ import type { inferAsyncReturnType } from "@trpc/server";
 import { initTRPC, TRPCError } from "@trpc/server";
 import type { CreateExpressContextOptions } from "@trpc/server/adapters/express";
 import superjson from "superjson";
+import type { OpenApiMeta } from "trpc-openapi";
 
 import { deserializeUser } from "./middlewares/deserialize-user";
 import AuthService from "./modules/auth/auth.service";
@@ -14,7 +15,7 @@ export const createContext = async ({
 };
 
 export type Context = inferAsyncReturnType<typeof createContext>;
-export const t = initTRPC.context<Context>().create({
+export const t = initTRPC.context<Context>().meta<OpenApiMeta>().create({
   transformer: superjson,
 });
 

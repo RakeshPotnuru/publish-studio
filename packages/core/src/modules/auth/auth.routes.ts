@@ -3,6 +3,7 @@ import { z } from "zod";
 import { constants, UserType } from "../../config/constants";
 import { protectedProcedure, router, t } from "../../trpc";
 import UserController from "../user/user.controller";
+import type { IUser } from "../user/user.types";
 import AuthController from "./auth.controller";
 
 const authRouter = router({
@@ -48,10 +49,26 @@ const authRouter = router({
     ),
 
   login: t.procedure
+    .meta({
+      openapi: {
+        method: "POST",
+        path: "/auth/login",
+      },
+    })
     .input(
       z.object({
         email: z.string().email(),
         password: z.string().min(1),
+      }),
+    )
+    .output(
+      z.object({
+        status: z.string(),
+        data: z.object({
+          user: z.custom<Omit<IUser, "google_sub">>(),
+          access_token: z.string().nullable(),
+          refresh_token: z.string().nullable(),
+        }),
       }),
     )
     .mutation(({ input, ctx }) =>

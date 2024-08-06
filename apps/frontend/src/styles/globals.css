@@ -595,7 +595,7 @@
   }
 
   & img {
-    @apply h-auto w-full max-w-full;
+    @apply h-auto w-full max-w-[500px];
   }
 
   [data-type="horizontalRule"] {

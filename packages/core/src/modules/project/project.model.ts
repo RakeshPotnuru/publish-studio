@@ -81,6 +81,10 @@ const ProjectSchema = new Schema<IProject>(
     published_at: {
       type: Date,
     },
+    stats: {
+      readingTime: { type: Number, default: 0 },
+      wordCount: { type: Number, default: 0 },
+    },
   },
   {
     timestamps: {

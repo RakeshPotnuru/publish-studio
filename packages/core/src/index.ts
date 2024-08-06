@@ -8,6 +8,7 @@ import cors from "cors";
 import type { Application } from "express";
 import express from "express";
 import helmet from "helmet";
+import { createOpenApiExpressMiddleware } from "trpc-openapi";
 
 import "./config/env";
 import "./utils/db";
@@ -28,7 +29,7 @@ app.use((req, res, next) => {
   if (req.originalUrl === defaultConfig.stripeWebhookPath) {
     express.raw({ type: "application/json" })(req, res, next);
   } else {
-    express.json()(req, res, next);
+    express.json({ limit: "1000kb" })(req, res, next);
   }
 });
 
@@ -70,6 +71,11 @@ app.use(
     router: appRouter,
     createContext,
   }),
+);
+
+app.use(
+  "/rest",
+  createOpenApiExpressMiddleware({ router: appRouter, createContext }),
 );
 
 app.use("/api", authMiddleware, expRouter);

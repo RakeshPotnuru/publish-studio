@@ -56,7 +56,7 @@ export default function AccountMenu() {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative size-8 rounded-full">
           <ProBorder className="rounded-full">
-            <Avatar>
+            <Avatar className="h-7 w-7">
               <AvatarImage
                 src={user?.profile_pic}
                 alt={`${user?.first_name ?? "Publish"} ${

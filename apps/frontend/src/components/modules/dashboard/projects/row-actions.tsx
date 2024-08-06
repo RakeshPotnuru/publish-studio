@@ -18,6 +18,7 @@ import mongoose from "mongoose";
 
 import { Icons } from "@/assets/icons";
 import { AskForConfirmation } from "@/components/ui/ask-for-confirmation";
+import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
 
 import { MoveProject } from "./move-project";
@@ -110,7 +111,9 @@ export function RowActions<TData>({ row }: Readonly<RowActionsProps<TData>>) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
           <DropdownMenuItem asChild>
-            <Link href={`/projects/${row.original._id.toString()}`}>
+            <Link
+              href={`${siteConfig.pages.projects.link}/${row.original._id.toString()}`}
+            >
               <Icons.Edit className="mr-2 size-4" />
               Edit
             </Link>

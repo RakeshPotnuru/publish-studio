@@ -32,6 +32,10 @@ export interface IProject {
   categories?: string[];
   scheduled_at?: Date;
   published_at?: Date;
+  stats?: {
+    readingTime?: number;
+    wordCount?: number;
+  };
   created_at: Date;
   updated_at: Date;
 }

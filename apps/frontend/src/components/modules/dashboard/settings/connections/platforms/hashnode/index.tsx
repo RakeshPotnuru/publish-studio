@@ -7,6 +7,7 @@ import {
   PostStatus,
   ProjectStatus,
 } from "@publish-studio/core/src/config/constants";
+import readingTime from "reading-time";
 
 import { Images } from "@/assets/images";
 import { useEditor } from "@/hooks/use-editor";
@@ -140,15 +141,21 @@ export function ImportPosts() {
 
       setImportingPost(id);
 
+      editor.commands.setContent(post.content.markdown);
+
       const { data } = await createProject({
         name: post.title,
         title: post.seo.title ?? post.title,
         body: {
-          markdown: post.content.markdown,
+          json: editor.getJSON() as JSON,
         },
         platforms: [Platform.HASHNODE],
         published_at: new Date(post.publishedAt),
         status: ProjectStatus.PUBLISHED,
+        stats: {
+          readingTime: readingTime(editor.getText()).time,
+          wordCount: editor.storage.characterCount.words(),
+        },
       });
 
       await createPost({
