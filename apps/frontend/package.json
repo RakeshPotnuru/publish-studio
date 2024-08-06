@@ -49,7 +49,7 @@
     "@tiptap/extension-gapcursor": "^2.1.12",
     "@tiptap/extension-hard-break": "^2.1.12",
     "@tiptap/extension-heading": "^2.1.12",
-    "@tiptap/extension-highlight": "^2.4.0",
+    "@tiptap/extension-highlight": "^2.5.8",
     "@tiptap/extension-history": "^2.1.12",
     "@tiptap/extension-horizontal-rule": "^2.1.12",
     "@tiptap/extension-image": "^2.1.12",
