@@ -28,10 +28,10 @@ export function Topic({ setIdeas }: Readonly<TopicProps>) {
   const handleGenerate = async () => {
     try {
       const { data } = await generate();
-      setIdeas(
-        (prev) =>
-          [...(data?.data.ideas ?? []).map((idea) => idea), ...prev] ?? [],
-      );
+      setIdeas((prev) => [
+        ...(data?.data.ideas ?? []).map((idea) => idea),
+        ...prev,
+      ]);
       setTopic("");
     } catch {
       // Ignore

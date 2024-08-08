@@ -31,4 +31,61 @@ export default class StatsController extends StatsService {
       },
     };
   }
+
+  async getReadingTimeStatsHandler(
+    ctx: Context,
+    input?: { days?: number; from?: Date; to?: Date },
+  ) {
+    const stats = await super.getReadingTimeStats(
+      ctx.user._id,
+      input?.days,
+      input?.from,
+      input?.to,
+    );
+
+    return {
+      status: "success",
+      data: {
+        stats,
+      },
+    };
+  }
+
+  async getWordStatsHandler(
+    ctx: Context,
+    input?: { days?: number; from?: Date; to?: Date },
+  ) {
+    const stats = await super.getWordStats(
+      ctx.user._id,
+      input?.days,
+      input?.from,
+      input?.to,
+    );
+
+    return {
+      status: "success",
+      data: {
+        stats,
+      },
+    };
+  }
+
+  async getEmotionStatsHandler(
+    ctx: Context,
+    input?: { days?: number; from?: Date; to?: Date },
+  ) {
+    const stats = await super.getEmotionStats(
+      ctx.user._id,
+      input?.days,
+      input?.from,
+      input?.to,
+    );
+
+    return {
+      status: "success",
+      data: {
+        stats,
+      },
+    };
+  }
 }

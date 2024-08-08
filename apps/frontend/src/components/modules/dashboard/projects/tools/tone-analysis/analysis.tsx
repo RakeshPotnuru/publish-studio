@@ -1,4 +1,9 @@
+import type {
+  ChartConfig} from "@itsrakesh/ui";
 import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
   Dialog,
   DialogContent,
   DialogHeader,
@@ -7,10 +12,7 @@ import {
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import { Sentiment } from "@publish-studio/core/src/config/constants";
-import type { ChartData, ChartOptions } from "chart.js/auto";
-import Chart, { CategoryScale } from "chart.js/auto";
-import { useTheme } from "next-themes";
-import { Bar } from "react-chartjs-2";
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
 export type TEmotionScores = {
   [key in "joy" | "anger" | "disgust" | "fear" | "sadness"]?: number;
@@ -24,8 +26,6 @@ export interface IToneAnalysis {
 interface AnalysisProps extends React.HTMLAttributes<HTMLDialogElement> {
   toneAnalysis: IToneAnalysis;
 }
-
-Chart.register(CategoryScale);
 
 const sentiments: {
   label: string;
@@ -53,31 +53,31 @@ const emotions = [
     label: "😊 Joy",
     value: "joy",
     className: "text-[#FFD700]",
-    color: "#FFD700",
+    color: "hsl(var(--chart-1))",
   },
   {
     label: "😢 Sadness",
     value: "sadness",
     className: "text-[#4682B4]",
-    color: "#4682B4",
+    color: "hsl(var(--chart-2))",
   },
   {
     label: "😨 Fear",
     value: "fear",
     className: "text-[#8B4513]",
-    color: "#8B4513",
+    color: "hsl(var(--chart-3))",
   },
   {
     label: "😖 Disgust",
     value: "disgust",
     className: "text-[#228B22]",
-    color: "#228B22",
+    color: "hsl(var(--chart-4))",
   },
   {
     label: "😡 Anger",
     value: "anger",
     className: "text-[#FF4500]",
-    color: "#FF4500",
+    color: "hsl(var(--chart-5))",
   },
 ];
 
@@ -85,64 +85,50 @@ const sortEmotions = (emotion: TEmotionScores) => {
   return Object.entries(emotion).sort(([, a], [, b]) => b - a);
 };
 
-const generateChartData = (emotion: TEmotionScores): ChartData<"bar"> => {
+const generateChart = (emotion: TEmotionScores) => {
   const labels = Object.keys(emotion).map((key) => {
     const emotion = emotions.find(({ value }) => value === key);
-    return emotion?.label;
+
+    if (!emotion) return key;
+
+    return emotion.label;
   });
 
+  const data = labels.map((label, index) => ({
+    label,
+    score: Object.values(emotion)[index],
+    fill: emotions[index].color,
+  }));
+
+  const config: ChartConfig = {
+    score: {
+      label: "Score",
+    },
+  };
+
+  for (const [index, label] of labels.entries()) {
+    config[label] = {
+      label,
+      color: emotions[index].color,
+    };
+  }
+
   return {
-    labels,
-    datasets: [
-      {
-        label: "Emotions",
-        data: Object.values(emotion),
-        backgroundColor: emotions.map(({ color }) => color),
-      },
-    ],
+    data,
+    config,
   };
 };
 
 export function Analysis({ toneAnalysis, children }: Readonly<AnalysisProps>) {
-  const { theme } = useTheme();
-
   const { sentiment, emotion } = toneAnalysis;
 
   const sortedValues = sortEmotions(emotion);
-  const data = generateChartData(emotion);
-
-  const config: ChartOptions<"bar"> = {
-    responsive: true,
-    plugins: {
-      title: {
-        display: true,
-        text: "Emotions",
-        color:
-          theme === "dark" ? "hsl(234, 4%, 44%)" : "hsl(215.4 16.3% 46.9%)",
-      },
-      legend: {
-        display: false,
-      },
-    },
-    scales: {
-      x: {
-        grid: {
-          color: theme === "dark" ? "hsl(217, 7%, 22%)" : "hsl(210 40% 96.1%)",
-        },
-      },
-      y: {
-        grid: {
-          color: theme === "dark" ? "hsl(217, 7%, 22%)" : "hsl(210 40% 96.1%)",
-        },
-        max: 1,
-      },
-    },
-  };
+  const chart = generateChart(emotion);
 
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent>
+      <DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
         <DialogHeader>
           <DialogTitle>Tone Analysis</DialogTitle>
         </DialogHeader>
@@ -158,9 +144,29 @@ export function Analysis({ toneAnalysis, children }: Readonly<AnalysisProps>) {
               {sentiments.find(({ value }) => sentiment === value)?.label}
             </span>
           </p>
-          <div>
-            <Bar data={data} options={config} />
-          </div>
+
+          <ChartContainer config={chart.config}>
+            <BarChart accessibilityLayer data={chart.data}>
+              <CartesianGrid stroke="hsl(var(--border))" vertical={false} />
+              <XAxis
+                dataKey="label"
+                tickLine={false}
+                tickMargin={10}
+                axisLine={false}
+                tickFormatter={(value) =>
+                  String(
+                    chart.config[value as keyof typeof chart.config]?.label,
+                  )
+                }
+              />
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent hideLabel />}
+              />
+              <Bar dataKey="score" strokeWidth={2} radius={8} />
+            </BarChart>
+          </ChartContainer>
+
           <p className="text-sm">
             The text analysis reveals a predominantly{" "}
             <span

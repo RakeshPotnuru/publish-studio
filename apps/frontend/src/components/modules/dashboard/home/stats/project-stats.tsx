@@ -1,88 +1,88 @@
-import { Skeleton } from "@itsrakesh/ui";
-import type { IProjectStats } from "@publish-studio/core";
-import type { ChartData, ChartOptions } from "chart.js/auto";
-import { format } from "date-fns";
-import { useTheme } from "next-themes";
-import { Line } from "react-chartjs-2";
+import { useState } from "react";
 
-import { Center } from "@/components/ui/center";
-import { ErrorBox } from "@/components/ui/error-box";
-import { Heading } from "@/components/ui/heading";
+import type { ChartConfig } from "@itsrakesh/ui";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  Skeleton,
+} from "@itsrakesh/ui";
+import type { IProjectStats } from "@publish-studio/core";
+import { format } from "date-fns";
+import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+
 import { trpc } from "@/utils/trpc";
 
-const generateChartData = (projects: IProjectStats[]): ChartData<"line"> => {
-  const labels = projects.map((project) => format(project.date, "dd MMM"));
-  const data = projects.map((project) => project.count);
+import RangeFilter from "./common/range-filter";
+import StatsShell from "./common/stats-shell";
+
+const generateChart = (projects: IProjectStats[], isWeek: boolean) => {
+  const labels = projects.map((project) =>
+    format(project.date, isWeek ? "EEE" : "LLL d"),
+  );
+  const counts = projects.map((project) => project.count);
+
+  const data = labels.map((label, index) => ({
+    label,
+    count: counts[index],
+  }));
+
+  const config: ChartConfig = {
+    count: {
+      label: "Projects",
+      color: "hsl(var(--chart-1))",
+    },
+  };
 
   return {
-    labels,
-    datasets: [
-      {
-        label: "No of Projects",
-        data,
-        borderColor: "#EB5757",
-        tension: 0.1,
-      },
-    ],
+    data,
+    config,
   };
 };
 
 export function ProjectStats() {
-  const { theme } = useTheme();
+  const [range, setRange] = useState<7 | 30 | 365 | undefined>(7);
 
-  const { data, isFetching, error } = trpc.stats.getProjects.useQuery({});
+  const { data, isFetching, error } = trpc.stats.getProjects.useQuery({
+    days: range,
+  });
 
-  const chartData = generateChartData(data?.data.stats || []);
+  const isWeek = range === 7;
+  const chart = generateChart(data?.data.stats || [], isWeek);
 
-  const config: ChartOptions<"line"> = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: "bottom",
-      },
-    },
-    scales: {
-      x: {
-        grid: {
-          color: theme === "dark" ? "hsl(217, 7%, 22%)" : "hsl(210 40% 96.1%)",
-        },
-      },
-      y: {
-        grid: {
-          color: theme === "dark" ? "hsl(217, 7%, 22%)" : "hsl(210 40% 96.1%)",
-        },
-        ticks: {
-          precision: 0,
-        },
-        max:
-          data?.data.stats[0]?.count && data.data.stats[0].count < 10
-            ? 10
-            : undefined,
-      },
-    },
-  };
-
-  const chartView = chartData.labels?.length ? (
-    <Line data={chartData} options={config} />
-  ) : (
-    <div className="flex h-full w-80 items-center justify-center bg-secondary text-muted-foreground">
-      No enough data
-    </div>
+  const chartView = (
+    <ChartContainer config={chart.config} className="min-h-[200px]">
+      <AreaChart
+        accessibilityLayer
+        data={chart.data}
+        margin={{
+          left: 12,
+          right: 12,
+        }}
+      >
+        <CartesianGrid stroke="hsl(var(--border))" strokeDasharray={"3 3"} />
+        <XAxis dataKey="label" tickMargin={8} />
+        <ChartTooltip
+          cursor={false}
+          content={<ChartTooltipContent indicator="dot" />}
+        />
+        <Area
+          dataKey="count"
+          type="linear"
+          fill="var(--color-count)"
+          fillOpacity={0.4}
+          stroke="var(--color-count)"
+        />
+      </AreaChart>
+    </ChartContainer>
   );
 
-  return error ? (
-    <Center>
-      <ErrorBox title="Error fetching stats" description={error.message} />
-    </Center>
-  ) : (
-    <div className="flex flex-col items-center space-y-4">
-      <Heading level={2} className="text-xl">
-        Activity
-      </Heading>
+  return (
+    <StatsShell error={error?.message} heading="Activity" className="relative">
+      <RangeFilter onRangeChange={setRange} />
       <div className="h-full">
         {isFetching ? <Skeleton className="h-full w-80" /> : chartView}
       </div>
-    </div>
+    </StatsShell>
   );
 }

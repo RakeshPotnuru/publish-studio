@@ -25,6 +25,42 @@ const statsRouter = router({
     .query(({ input, ctx }) =>
       new StatsController().getProjectStatsHandler(ctx, input),
     ),
+
+  getReadingTime: protectedProcedure
+    .input(
+      z.object({
+        days: z.number().optional(),
+        from: z.date().optional(),
+        to: z.date().optional(),
+      }),
+    )
+    .query(({ input, ctx }) =>
+      new StatsController().getReadingTimeStatsHandler(ctx, input),
+    ),
+
+  getWords: protectedProcedure
+    .input(
+      z.object({
+        days: z.number().optional(),
+        from: z.date().optional(),
+        to: z.date().optional(),
+      }),
+    )
+    .query(({ input, ctx }) =>
+      new StatsController().getWordStatsHandler(ctx, input),
+    ),
+
+  getEmotions: protectedProcedure
+    .input(
+      z.object({
+        days: z.number().optional(),
+        from: z.date().optional(),
+        to: z.date().optional(),
+      }),
+    )
+    .query(({ input, ctx }) =>
+      new StatsController().getEmotionStatsHandler(ctx, input),
+    ),
 });
 
 export default statsRouter;

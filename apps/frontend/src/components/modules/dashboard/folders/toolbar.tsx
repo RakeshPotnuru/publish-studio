@@ -55,7 +55,7 @@ export function Toolbar<TData>({ table }: Readonly<ToolbarProps<TData>>) {
           placeholder="Search folders..."
           name="search-folders"
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
+          onRangeChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="h-8 w-[150px] lg:w-[250px]"

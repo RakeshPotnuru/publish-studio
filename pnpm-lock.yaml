@@ -145,8 +145,8 @@ importers:
         specifier: ^3.3.2
         version: 3.3.2(react-hook-form@7.48.2)
       '@itsrakesh/ui':
-        specifier: ^0.12.2
-        version: 0.12.2(@types/react-dom@18.3.0)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.4.0)
+        specifier: ^0.12.4
+        version: 0.12.4(@types/react-dom@18.3.0)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.4.0)
       '@itsrakesh/utils':
         specifier: ^1.2.1
         version: 1.2.1(react@18.2.0)
@@ -276,9 +276,6 @@ importers:
       axios:
         specifier: ^1.6.2
         version: 1.6.2
-      chart.js:
-        specifier: ^4.4.1
-        version: 4.4.1
       cookies-next:
         specifier: ^4.1.1
         version: 4.1.1
@@ -321,9 +318,6 @@ importers:
       react-beautiful-dnd:
         specifier: ^13.1.1
         version: 13.1.1(react-dom@18.2.0)(react@18.2.0)
-      react-chartjs-2:
-        specifier: ^5.2.0
-        version: 5.2.0(chart.js@4.4.1)(react@18.2.0)
       react-dom:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
@@ -339,6 +333,9 @@ importers:
       reading-time:
         specifier: ^1.5.0
         version: 1.5.0
+      recharts:
+        specifier: ^2.12.7
+        version: 2.12.7(react-dom@18.2.0)(react@18.2.0)
       remark-docx:
         specifier: ^0.1.6
         version: 0.1.6
@@ -1974,8 +1971,8 @@ packages:
       - tailwindcss
     dev: false
 
-  /@itsrakesh/ui@0.12.2(@types/react-dom@18.3.0)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.4.0):
-    resolution: {integrity: sha512-coilPDqovMuz0Q+gbLoZmdRUvcKn88tTgaAEjaRJi3rmLgo+qQwuf9zS1NIvsRESVrTlTD8LzMQKOx3kSBMrQw==}
+  /@itsrakesh/ui@0.12.4(@types/react-dom@18.3.0)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.4.0):
+    resolution: {integrity: sha512-2SK1j9i7on456UnsyVRTjD9EUz2xEiZTm2sPUiXOY7az5nrdujX+WZ2CxQnC3syLGuzFIXw9d5EOB6h/ZcYdwQ==}
     peerDependencies:
       react: ^18.3.1
     dependencies:
@@ -2102,10 +2099,6 @@ packages:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
     dev: true
-
-  /@kurkle/color@0.3.2:
-    resolution: {integrity: sha512-fuscdXJ9G1qb7W8VdHi+IwRqij3lBkosAm4ydQtEmbY58OzHXqQhvlxqEkoz0yssNVn38bcpRWgA9PP+OGoisw==}
-    dev: false
 
   /@logtail/core@0.4.19:
     resolution: {integrity: sha512-IjvMwSyv2LucVoS+2PXzAVG5cTd/50W3dENpC+ePMlAfbKAR5h4eTIOT9GC7zcEBtog6RBJChHApyj4rOvgbYA==}
@@ -7114,13 +7107,6 @@ packages:
     resolution: {integrity: sha512-shx7oQ0Awen/BRIdkjkvz54PnEEI/EjwXDSIZp86/KKdbafHh1Df/RYGBhn4hbe2+uKC9FnT5UCEdyPz3ai9hQ==}
     dev: false
 
-  /chart.js@4.4.1:
-    resolution: {integrity: sha512-C74QN1bxwV1v2PEujhmKjOZ7iUM4w6BWs23Md/6aOZZSlwMzeCIDGuZay++rBgChYru7/+QFeoQW0fQoP534Dg==}
-    engines: {pnpm: '>=7'}
-    dependencies:
-      '@kurkle/color': 0.3.2
-    dev: false
-
   /cheerio-select@2.1.0:
     resolution: {integrity: sha512-9v9kG0LvzrlcungtnJtpGNxY+fzECQKhK4EGJX2vByejiMX84MFNQw4UxPJl3bFbTMw+Dfs37XaIkCwTZfLh4g==}
     dependencies:
@@ -11651,16 +11637,6 @@ packages:
       use-memo-one: 1.1.3(react@18.2.0)
     transitivePeerDependencies:
       - react-native
-    dev: false
-
-  /react-chartjs-2@5.2.0(chart.js@4.4.1)(react@18.2.0):
-    resolution: {integrity: sha512-98iN5aguJyVSxp5U3CblRLH67J8gkfyGNbiK3c+l1QI/G4irHMPQw44aEPmjVag+YKTyQ260NcF82GTQ3bdscA==}
-    peerDependencies:
-      chart.js: ^4.1.1
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-    dependencies:
-      chart.js: 4.4.1
-      react: 18.2.0
     dev: false
 
   /react-day-picker@8.9.1(date-fns@2.30.0)(react@18.2.0):
