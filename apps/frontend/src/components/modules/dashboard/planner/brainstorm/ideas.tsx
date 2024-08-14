@@ -7,7 +7,7 @@ import {
 } from "@itsrakesh/ui";
 import { constants } from "@publish-studio/core/src/config/constants";
 
-import usePlannerStore from "@/lib/store/planner";
+import usePlannerStore from "@/lib/stores/planner";
 
 import { CreateProject } from "../common/create-project";
 import { NewTask } from "../common/new-task";

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useSelectedLayoutSegment } from "next/navigation";
 
-import { Button, ScrollArea } from "@itsrakesh/ui";
+import { Button } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 
 import { Icons } from "@/assets/icons";
@@ -38,94 +38,92 @@ export function Sidebar({ className, ...props }: Readonly<SidebarProps>) {
   return (
     <aside
       className={cn(
-        "sticky top-8 flex h-screen flex-row bg-background border-r",
+        "sticky top-0 flex h-screen flex-row bg-background border-r",
         className,
       )}
       {...props}
     >
-      <ScrollArea className="h-max w-full">
-        <div className="space-y-2 p-4">
-          {segment === "settings" ? (
-            <>
-              {settings.map((setting) => (
+      <div className="space-y-2 p-4">
+        {segment === "settings" ? (
+          <>
+            {settings.map((setting) => (
+              <SidebarItem
+                key={setting.link}
+                label={setting.label}
+                link={setting.link}
+                icon={setting.icon}
+              />
+            ))}
+          </>
+        ) : (
+          <>
+            <SidebarItem
+              label="Dashboard"
+              link="/"
+              icon={<Icons.Dashboard />}
+            />
+            <SidebarWithCreateShell>
+              <div className="w-3/4">
                 <SidebarItem
-                  key={setting.link}
-                  label={setting.label}
-                  link={setting.link}
-                  icon={setting.icon}
+                  label="Projects"
+                  link="/projects"
+                  icon={<Icons.Projects />}
                 />
-              ))}
-            </>
-          ) : (
-            <>
-              <SidebarItem
-                label="Dashboard"
-                link="/"
-                icon={<Icons.Dashboard />}
-              />
-              <SidebarWithCreateShell>
-                <div className="w-3/4">
-                  <SidebarItem
-                    label="Projects"
-                    link="/projects"
-                    icon={<Icons.Projects />}
-                  />
-                </div>
-                <NewProject enableTooltip>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    aria-label="create new project"
-                  >
-                    <Icons.Add />
-                  </Button>
-                </NewProject>
-              </SidebarWithCreateShell>
-              <SidebarWithCreateShell>
-                <div className="w-3/4">
-                  <SidebarItem
-                    label="Folders"
-                    link="/folders"
-                    icon={<Icons.Folders />}
-                  />
-                </div>
-                <NewFolderDialog enableTooltip>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    aria-label="create new folder"
-                  >
-                    <Icons.Add />
-                  </Button>
-                </NewFolderDialog>
-              </SidebarWithCreateShell>
-              <SidebarWithCreateShell>
-                <div className="w-3/4">
-                  <SidebarItem
-                    label="Assets"
-                    link="/assets"
-                    icon={<Icons.Assets />}
-                  />
-                </div>
-                <NewAssetDialog enableTooltip>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    aria-label="upload new asset"
-                  >
-                    <Icons.Add />
-                  </Button>
-                </NewAssetDialog>
-              </SidebarWithCreateShell>
-              <SidebarItem
-                label="Content Planner"
-                link={siteConfig.pages.planner.link}
-                icon={<Icons.Planner />}
-              />
-            </>
-          )}
-        </div>
-      </ScrollArea>
+              </div>
+              <NewProject enableTooltip>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  aria-label="create new project"
+                >
+                  <Icons.Add />
+                </Button>
+              </NewProject>
+            </SidebarWithCreateShell>
+            <SidebarWithCreateShell>
+              <div className="w-3/4">
+                <SidebarItem
+                  label="Folders"
+                  link="/folders"
+                  icon={<Icons.Folders />}
+                />
+              </div>
+              <NewFolderDialog enableTooltip>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  aria-label="create new folder"
+                >
+                  <Icons.Add />
+                </Button>
+              </NewFolderDialog>
+            </SidebarWithCreateShell>
+            <SidebarWithCreateShell>
+              <div className="w-3/4">
+                <SidebarItem
+                  label="Assets"
+                  link="/assets"
+                  icon={<Icons.Assets />}
+                />
+              </div>
+              <NewAssetDialog enableTooltip>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  aria-label="upload new asset"
+                >
+                  <Icons.Add />
+                </Button>
+              </NewAssetDialog>
+            </SidebarWithCreateShell>
+            <SidebarItem
+              label="Content Planner"
+              link={siteConfig.pages.planner.link}
+              icon={<Icons.Planner />}
+            />
+          </>
+        )}
+      </div>
     </aside>
   );
 }
@@ -168,6 +166,6 @@ const SidebarItem = ({
 
 function SidebarWithCreateShell({
   children,
-}: React.HTMLAttributes<HTMLDivElement>) {
+}: Readonly<React.HTMLAttributes<HTMLDivElement>>) {
   return <div className="flex flex-row items-center space-x-2">{children}</div>;
 }

@@ -29,7 +29,7 @@ import { ImageWidget } from "@/components/modules/dashboard/assets/image-widget"
 import { ErrorBox } from "@/components/ui/error-box";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { Tooltip } from "@/components/ui/tooltip";
-import useUserStore from "@/lib/store/user";
+import useUserStore from "@/lib/stores/user";
 import { trpc } from "@/utils/trpc";
 
 import { DashboardHeader } from "../common/dashboard-header";

@@ -16,6 +16,7 @@
     "hcaptcha",
     "hookform",
     "imagekit",
+    "immer",
     "kickbox",
     "LOGTAIL",
     "lowlight",

@@ -14,13 +14,15 @@ if (!process.env.NEXT_PUBLIC_TRPC_API_URL) {
   throw new Error("NEXT_PUBLIC_TRPC_API_URL is not set");
 }
 
-export const queryClient = new QueryClient({
+const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: constants.GLOBAL_STALE_TIME,
       cacheTime: constants.GLOBAL_CACHE_TIME,
       refetchOnWindowFocus: false,
+      refetchOnMount: false,
       retry: false,
+      keepPreviousData: true,
     },
   },
 });

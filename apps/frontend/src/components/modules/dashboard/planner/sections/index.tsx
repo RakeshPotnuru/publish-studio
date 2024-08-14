@@ -4,7 +4,7 @@ import { ScrollArea, ScrollBar } from "@itsrakesh/ui";
 import type { ISection } from "@publish-studio/core";
 import { DragDropContext } from "react-beautiful-dnd";
 
-import usePlannerStore from "@/lib/store/planner";
+import usePlannerStore from "@/lib/stores/planner";
 
 import { StrictModeDroppable } from "../common/strict-mode-droppable";
 import { NewSection } from "./new-section";

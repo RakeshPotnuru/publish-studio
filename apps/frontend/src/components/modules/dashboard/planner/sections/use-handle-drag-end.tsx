@@ -1,7 +1,7 @@
 import type { ISection } from "@publish-studio/core";
 import type { DraggableLocation, DropResult } from "react-beautiful-dnd";
 
-import usePlannerStore from "@/lib/store/planner";
+import usePlannerStore from "@/lib/stores/planner";
 import { trpc } from "@/utils/trpc";
 
 export function useHandleDragEnd() {

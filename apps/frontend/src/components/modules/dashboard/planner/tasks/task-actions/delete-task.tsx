@@ -5,7 +5,7 @@ import type { ITask } from "@publish-studio/core";
 
 import { Icons } from "@/assets/icons";
 import { AskForConfirmation } from "@/components/ui/ask-for-confirmation";
-import usePlannerStore from "@/lib/store/planner";
+import usePlannerStore from "@/lib/stores/planner";
 import { trpc } from "@/utils/trpc";
 
 import { updateOrder } from "../../common/strict-mode-droppable";

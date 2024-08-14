@@ -2,7 +2,7 @@ import { forwardRef, useState } from "react";
 
 import { Button } from "@itsrakesh/ui";
 
-import useUserStore from "@/lib/store/user";
+import useUserStore from "@/lib/stores/user";
 
 import { Upgrade } from "../common/upgrade";
 import { ButtonLoader } from "./loaders/button-loader";

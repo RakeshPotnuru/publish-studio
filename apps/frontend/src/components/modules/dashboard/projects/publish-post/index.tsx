@@ -21,7 +21,7 @@ import type { z } from "zod";
 import { Icons } from "@/assets/icons";
 import { ImageWidget } from "@/components/modules/dashboard/assets/image-widget";
 import { DotsLoader } from "@/components/ui/loaders/dots-loader";
-import useUserStore from "@/lib/store/user";
+import useUserStore from "@/lib/stores/user";
 import { trpc } from "@/utils/trpc";
 
 import type { MenuProps } from "../../../../editor/menu/fixed-menu";

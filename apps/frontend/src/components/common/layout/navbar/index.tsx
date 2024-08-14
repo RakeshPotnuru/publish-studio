@@ -10,7 +10,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@itsrakesh/ui";
-import { cn } from "@itsrakesh/utils";
 
 import { Icons } from "@/assets/icons";
 import { Images } from "@/assets/images";
@@ -52,17 +51,9 @@ const NavItem = ({
   </DropdownMenu>
 );
 
-interface NavbarProps extends React.HTMLAttributes<HTMLElement> {}
-
-export function Navbar({ className, ...props }: Readonly<NavbarProps>) {
+export function Navbar() {
   return (
-    <nav
-      className={cn(
-        "flex items-center justify-between bg-background px-8 py-1 shadow-lg border-b",
-        className,
-      )}
-      {...props}
-    >
+    <nav className="flex items-center justify-between border-b bg-background px-8 py-1 shadow-lg">
       <Link href="/">
         <Image
           src={Images.logo}

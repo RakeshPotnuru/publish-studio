@@ -21,7 +21,7 @@ import { useForm } from "react-hook-form";
 import type { z } from "zod";
 
 import { Icons } from "@/assets/icons";
-import usePlannerStore from "@/lib/store/planner";
+import usePlannerStore from "@/lib/stores/planner";
 import { trpc } from "@/utils/trpc";
 
 import { formSchema } from "../common/new-task";

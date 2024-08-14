@@ -145,8 +145,8 @@ importers:
         specifier: ^3.3.2
         version: 3.3.2(react-hook-form@7.48.2)
       '@itsrakesh/ui':
-        specifier: ^0.12.4
-        version: 0.12.4(@types/react-dom@18.3.0)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.4.0)
+        specifier: ^0.12.5
+        version: 0.12.5(@types/react-dom@18.3.0)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.4.0)
       '@itsrakesh/utils':
         specifier: ^1.2.1
         version: 1.2.1(react@18.2.0)
@@ -288,6 +288,9 @@ importers:
       imagekit-media-library-widget:
         specifier: ^1.0.4
         version: 1.0.4
+      immer:
+        specifier: ^10.1.1
+        version: 10.1.1
       jwt-decode:
         specifier: ^4.0.0
         version: 4.0.0
@@ -368,7 +371,7 @@ importers:
         version: 3.22.4
       zustand:
         specifier: ^4.4.6
-        version: 4.4.6(@types/react@18.2.38)(react@18.2.0)
+        version: 4.4.6(@types/react@18.2.38)(immer@10.1.1)(react@18.2.0)
     devDependencies:
       '@giphy/js-types':
         specifier: ^5.1.0
@@ -1971,8 +1974,8 @@ packages:
       - tailwindcss
     dev: false
 
-  /@itsrakesh/ui@0.12.4(@types/react-dom@18.3.0)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.4.0):
-    resolution: {integrity: sha512-2SK1j9i7on456UnsyVRTjD9EUz2xEiZTm2sPUiXOY7az5nrdujX+WZ2CxQnC3syLGuzFIXw9d5EOB6h/ZcYdwQ==}
+  /@itsrakesh/ui@0.12.5(@types/react-dom@18.3.0)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.4.0):
+    resolution: {integrity: sha512-Q7O1SnoQumlisgyTwJ8EGdVXQlKZTgaw2+iWuHj6HrHYoRURe/7qfO1Dyt+t1ugg7BmRId4UCQP/EjccL3Kk+A==}
     peerDependencies:
       react: ^18.3.1
     dependencies:
@@ -9289,6 +9292,10 @@ packages:
     resolution: {integrity: sha512-XXOFtyqDjNDAQxVfYxuF7g9Il/IbWmmlQg2MYKOH8ExIT1qg6xc4zyS3HaEEATgs1btfzxq15ciUiY7gjSXRGQ==}
     dev: false
 
+  /immer@10.1.1:
+    resolution: {integrity: sha512-s2MPrmjovJcoMaHtx6K11Ra7oD05NT97w1IC5zpMkT6Atjr7H8LjaDd81iIxUYpMKSRRNMJE703M1Fhr/TctHw==}
+    dev: false
+
   /import-fresh@3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}
     engines: {node: '>=6'}
@@ -13760,7 +13767,7 @@ packages:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
     dev: false
 
-  /zustand@4.4.6(@types/react@18.2.38)(react@18.2.0):
+  /zustand@4.4.6(@types/react@18.2.38)(immer@10.1.1)(react@18.2.0):
     resolution: {integrity: sha512-Rb16eW55gqL4W2XZpJh0fnrATxYEG3Apl2gfHTyDSE965x/zxslTikpNch0JgNjJA9zK6gEFW8Fl6d1rTZaqgg==}
     engines: {node: '>=12.7.0'}
     peerDependencies:
@@ -13776,6 +13783,7 @@ packages:
         optional: true
     dependencies:
       '@types/react': 18.2.38
+      immer: 10.1.1
       react: 18.2.0
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false

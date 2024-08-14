@@ -2,7 +2,7 @@ import { DropdownMenuItem, toast } from "@itsrakesh/ui";
 import type { ITask } from "@publish-studio/core";
 
 import { Icons } from "@/assets/icons";
-import usePlannerStore from "@/lib/store/planner";
+import usePlannerStore from "@/lib/stores/planner";
 import { trpc } from "@/utils/trpc";
 
 interface DuplicateTaskProps {

@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { Skeleton } from "@itsrakesh/ui";
 
 import { DashboardShell } from "@/components/ui/shell";
-import usePlannerStore from "@/lib/store/planner";
+import usePlannerStore from "@/lib/stores/planner";
 import { trpc } from "@/utils/trpc";
 
 import { DashboardBody } from "../common/dashboard-body";

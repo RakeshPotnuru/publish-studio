@@ -2,7 +2,7 @@ import { cn } from "@itsrakesh/utils";
 import type { IUser } from "@publish-studio/core";
 import { UserType } from "@publish-studio/core/src/config/constants";
 
-import useUserStore from "@/lib/store/user";
+import useUserStore from "@/lib/stores/user";
 
 type ProBorderProps = React.HTMLAttributes<HTMLDivElement>;
 

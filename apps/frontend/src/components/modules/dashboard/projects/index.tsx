@@ -21,12 +21,15 @@ export function Projects() {
     pageSize: 10,
   });
 
-  const { data, isFetching, refetch, error } = trpc.projects.getAll.useQuery({
-    pagination: {
-      page: pageIndex + 1,
-      limit: pageSize,
+  const { data, isFetching, refetch, error } = trpc.projects.getAll.useQuery(
+    {
+      pagination: {
+        limit: pageSize,
+        page: pageIndex + 1,
+      },
     },
-  });
+    { enabled: false },
+  );
 
   return (
     <DashboardShell>

@@ -1,4 +1,4 @@
-import useUserStore from "@/lib/store/user";
+import useUserStore from "@/lib/stores/user";
 import { trpc } from "@/utils/trpc";
 
 export function useResetUser() {

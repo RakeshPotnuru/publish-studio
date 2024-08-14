@@ -20,7 +20,7 @@ import { Icons } from "@/assets/icons";
 import { ProBorder } from "@/components/ui/pro-border";
 import { Tooltip } from "@/components/ui/tooltip";
 import { siteConfig } from "@/config/site";
-import useUserStore from "@/lib/store/user";
+import useUserStore from "@/lib/stores/user";
 import { trpc } from "@/utils/trpc";
 
 const handleLogout = () => {
