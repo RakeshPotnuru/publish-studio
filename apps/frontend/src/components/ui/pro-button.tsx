@@ -1,10 +1,9 @@
-import { forwardRef, useState } from "react";
+import { forwardRef } from "react";
 
 import { Button } from "@itsrakesh/ui";
 
 import useUserStore from "@/lib/stores/user";
 
-import { Upgrade } from "../modules/dashboard/pay/upgrade";
 import { ButtonLoader } from "./loaders/button-loader";
 
 interface ProButtonProps extends React.ComponentProps<typeof Button> {
@@ -23,9 +22,7 @@ interface ProButtonProps extends React.ComponentProps<typeof Button> {
  * @returns The rendered ProButton component.
  */
 const ProButton = forwardRef<HTMLButtonElement, ProButtonProps>(
-  ({ className, children, onClick, featureText, ...props }, ref) => {
-    const [open, setOpen] = useState(false);
-
+  ({ className, children, onClick, ...props }, ref) => {
     const { isLoading } = useUserStore();
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -39,18 +36,15 @@ const ProButton = forwardRef<HTMLButtonElement, ProButtonProps>(
     };
 
     return (
-      <>
-        <Button
-          onClick={handleClick}
-          ref={ref}
-          className={className}
-          disabled={isLoading}
-          {...props}
-        >
-          <ButtonLoader isLoading={isLoading}>{children}</ButtonLoader>
-        </Button>
-        <Upgrade open={open} onOpenChange={setOpen} featureText={featureText} />
-      </>
+      <Button
+        onClick={handleClick}
+        ref={ref}
+        className={className}
+        disabled={isLoading}
+        {...props}
+      >
+        <ButtonLoader isLoading={isLoading}>{children}</ButtonLoader>
+      </Button>
     );
   },
 );
