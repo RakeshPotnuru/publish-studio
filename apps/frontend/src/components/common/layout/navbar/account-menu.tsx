@@ -17,7 +17,6 @@ import { UserType } from "@publish-studio/core/src/config/constants";
 import { deleteCookie } from "cookies-next";
 
 import { Icons } from "@/assets/icons";
-import { ProBorder } from "@/components/ui/pro-border";
 import { Tooltip } from "@/components/ui/tooltip";
 import { siteConfig } from "@/config/site";
 import useUserStore from "@/lib/stores/user";
@@ -52,10 +51,10 @@ export default function AccountMenu() {
   });
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative size-8 rounded-full">
-          <ProBorder className="rounded-full">
+    user?.user_type !== UserType.FREE && (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="relative size-8 rounded-full">
             <Avatar className="h-7 w-7">
               <AvatarImage
                 src={user?.profile_pic}
@@ -74,39 +73,39 @@ export default function AccountMenu() {
                 )}
               </AvatarFallback>
             </Avatar>
-          </ProBorder>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-48" align="end" forceMount>
-        <DropdownMenuLabel className="grid grid-cols-2 items-center">
-          My Account{" "}
-          {user?.user_type === UserType.PRO && (
-            <Tooltip content="Pro">
-              <span>
-                <Icons.Pro className="mr-2 size-4 text-primary" />
-              </span>
-            </Tooltip>
-          )}
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link href="/profile">
-            <Icons.Profile className="mr-2 size-4" />
-            Profile
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="/settings">
-            <Icons.Settings className="mr-2 size-4" />
-            Settings
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleLogout}>
-          <Icons.Logout className="mr-2 size-4" />
-          <span>Logout</span>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-48" align="end" forceMount>
+          <DropdownMenuLabel className="grid grid-cols-2 items-center">
+            My Account{" "}
+            {user?.user_type === UserType.PRO && (
+              <Tooltip content="Pro">
+                <span>
+                  <Icons.Pro className="mr-2 size-4 text-primary" />
+                </span>
+              </Tooltip>
+            )}
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem asChild>
+            <Link href="/profile">
+              <Icons.Profile className="mr-2 size-4" />
+              Profile
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/settings">
+              <Icons.Settings className="mr-2 size-4" />
+              Settings
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={handleLogout}>
+            <Icons.Logout className="mr-2 size-4" />
+            <span>Logout</span>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    )
   );
 }

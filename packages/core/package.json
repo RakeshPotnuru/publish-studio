@@ -30,6 +30,7 @@
     "@google/generative-ai": "^0.11.1",
     "@googleapis/blogger": "^1.1.5",
     "@logtail/node": "^0.4.19",
+    "@paddle/paddle-node-sdk": "^1.5.0",
     "@sendgrid/mail": "^8.1.1",
     "@trpc/server": "^10.45.0",
     "@ts-ghost/admin-api": "^4.0.1",
@@ -53,7 +54,6 @@
     "pexels": "^1.4.0",
     "pusher": "^5.2.0",
     "redis": "^4.6.11",
-    "stripe": "^14.5.0",
     "superjson": "^2.2.1",
     "trpc-openapi": "^1.2.0",
     "tsx": "^4.7.1",
@@ -64,6 +64,7 @@
   },
   "devDependencies": {
     "@logtail/types": "^0.4.19",
+    "@paddle/paddle-js": "^1.2.1",
     "@types/bcryptjs": "^2.4.6",
     "@types/cookies": "^0.9.0",
     "@types/cors": "^2.8.17",

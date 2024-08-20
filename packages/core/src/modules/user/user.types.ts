@@ -15,7 +15,7 @@ export interface IUser {
   last_login: Date;
   auth_modes: AuthMode[];
   google_sub?: string;
-  stripe_customer_id?: string;
+  customer_id?: string;
 }
 
 export type IUserUpdate = Partial<IUser>;

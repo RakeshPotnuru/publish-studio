@@ -16,19 +16,24 @@ type SidebarProps = React.HTMLAttributes<HTMLElement>;
 
 const settings = [
   {
-    label: "Appearance",
+    label: siteConfig.pages.settings.appearance.title,
     icon: <Icons.Appearance />,
-    link: "/settings/appearance",
+    link: siteConfig.pages.settings.appearance.link,
   },
   {
-    label: "Connections",
+    label: siteConfig.pages.settings.connections.title,
     icon: <Icons.Connections />,
-    link: "/settings/connections",
+    link: siteConfig.pages.settings.connections.link,
   },
   {
-    label: "Security",
+    label: siteConfig.pages.settings.security.title,
     icon: <Icons.Security />,
-    link: "/settings/security",
+    link: siteConfig.pages.settings.security.link,
+  },
+  {
+    label: siteConfig.pages.settings.billing.title,
+    icon: <Icons.Billing />,
+    link: siteConfig.pages.settings.billing.link,
   },
 ];
 
@@ -58,15 +63,15 @@ export function Sidebar({ className, ...props }: Readonly<SidebarProps>) {
         ) : (
           <>
             <SidebarItem
-              label="Dashboard"
-              link="/"
+              label={siteConfig.pages.dashboard.title}
+              link={siteConfig.pages.dashboard.link}
               icon={<Icons.Dashboard />}
             />
             <SidebarWithCreateShell>
               <div className="w-3/4">
                 <SidebarItem
-                  label="Projects"
-                  link="/projects"
+                  label={siteConfig.pages.projects.title}
+                  link={siteConfig.pages.projects.link}
                   icon={<Icons.Projects />}
                 />
               </div>
@@ -83,8 +88,8 @@ export function Sidebar({ className, ...props }: Readonly<SidebarProps>) {
             <SidebarWithCreateShell>
               <div className="w-3/4">
                 <SidebarItem
-                  label="Folders"
-                  link="/folders"
+                  label={siteConfig.pages.folders.title}
+                  link={siteConfig.pages.folders.link}
                   icon={<Icons.Folders />}
                 />
               </div>
@@ -101,8 +106,8 @@ export function Sidebar({ className, ...props }: Readonly<SidebarProps>) {
             <SidebarWithCreateShell>
               <div className="w-3/4">
                 <SidebarItem
-                  label="Assets"
-                  link="/assets"
+                  label={siteConfig.pages.assets.title}
+                  link={siteConfig.pages.assets.link}
                   icon={<Icons.Assets />}
                 />
               </div>
@@ -117,7 +122,7 @@ export function Sidebar({ className, ...props }: Readonly<SidebarProps>) {
               </NewAssetDialog>
             </SidebarWithCreateShell>
             <SidebarItem
-              label="Content Planner"
+              label={siteConfig.pages.planner.title}
               link={siteConfig.pages.planner.link}
               icon={<Icons.Planner />}
             />

@@ -25,9 +25,10 @@ interface ICustomConfig {
   resetPasswordTokenPrivateKey: string;
   resetPasswordTokenPublicKey: string;
   turnstileVerifyEndpoint: string;
-  stripeWebhookPath: string;
+  paddleWebhookPath: string;
   r2Endpoint: string;
   assetsUrl: string;
+  paddleIpAddresses: string[];
 }
 
 const defaultConfig: ICustomConfig = {
@@ -55,13 +56,31 @@ const defaultConfig: ICustomConfig = {
   appName: "Publish Studio",
   turnstileVerifyEndpoint:
     "https://challenges.cloudflare.com/turnstile/v0/siteverify",
-  stripeWebhookPath: "/api/payment.stripeWebhook",
+  paddleWebhookPath: "/trpc/sub.paddleWebhook",
   r2Endpoint:
     "https://7f5708cb8ffd7ebc4099df644b1f66c7.r2.cloudflarestorage.com",
   assetsUrl:
     process.env.SITE_ENV === "production"
       ? "https://assets.publishstudio.one"
       : "https://stg.assets.publishstudio.one",
+  paddleIpAddresses:
+    process.env.SITE_ENV === "production"
+      ? [
+          "34.232.58.13",
+          "34.195.105.136",
+          "34.237.3.244",
+          "35.155.119.135",
+          "52.11.166.252",
+          "34.212.5.7",
+        ]
+      : [
+          "34.194.127.46",
+          "54.234.237.108",
+          "3.208.120.145",
+          "44.226.236.210",
+          "44.241.183.62",
+          "100.20.172.113",
+        ],
 };
 
 export const bullMQConnectionOptions: ConnectionOptions = new Redis(

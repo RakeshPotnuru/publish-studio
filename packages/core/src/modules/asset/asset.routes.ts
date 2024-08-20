@@ -2,11 +2,11 @@ import type { Types } from "mongoose";
 import { z } from "zod";
 
 import { MimeType } from "../../config/constants";
-import { protectedProcedure, router } from "../../trpc";
+import { proProtectedProcedure, router } from "../../trpc";
 import AssetController from "./asset.controller";
 
 const assetRouter = router({
-  upload: protectedProcedure
+  upload: proProtectedProcedure
     .input(
       z.object({
         file: z.object({
@@ -21,7 +21,7 @@ const assetRouter = router({
       new AssetController().uploadImageHandler(input, ctx),
     ),
 
-  getAll: protectedProcedure
+  getAll: proProtectedProcedure
     .input(
       z.object({
         pagination: z.object({
@@ -34,7 +34,7 @@ const assetRouter = router({
       new AssetController().getAllAssetsHandler(input, ctx),
     ),
 
-  delete: protectedProcedure
+  delete: proProtectedProcedure
     .input(z.array(z.custom<Types.ObjectId>()))
     .mutation(({ input, ctx }) =>
       new AssetController().deleteAssetsHandler(input, ctx),

@@ -31,6 +31,7 @@
     "@itsrakesh/ui": "^0.12.5",
     "@itsrakesh/utils": "^1.2.1",
     "@marsidev/react-turnstile": "^0.5.1",
+    "@paddle/paddle-js": "^1.2.1",
     "@publish-studio/core": "*",
     "@tanstack/react-query": "^4.36.1",
     "@tanstack/react-query-devtools": "^4.36.1",
@@ -102,7 +103,7 @@
     "tiptap-markdown": "^0.8.10",
     "unified": "^11.0.4",
     "use-debounce": "^10.0.0",
-    "zod": "^3.22.4",
+    "zod": "^3.23.8",
     "zustand": "^4.4.6"
   },
   "devDependencies": {

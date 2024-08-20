@@ -1,10 +1,10 @@
 import { z } from "zod";
 
-import { protectedProcedure, router } from "../../../trpc";
+import { proProtectedProcedure, router } from "../../../trpc";
 import PexelsController from "./pexels.controller";
 
 const pexelsRouter = router({
-  search: protectedProcedure
+  search: proProtectedProcedure
     .input(
       z.object({
         query: z.string(),

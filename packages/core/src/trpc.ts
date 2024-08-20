@@ -4,6 +4,7 @@ import type { CreateExpressContextOptions } from "@trpc/server/adapters/express"
 import superjson from "superjson";
 import type { OpenApiMeta } from "trpc-openapi";
 
+import { UserType } from "./config/constants";
 import { deserializeUser } from "./middlewares/deserialize-user";
 import AuthService from "./modules/auth/auth.service";
 
@@ -30,14 +31,15 @@ const isAuthenticated = t.middleware(({ next, ctx }) => {
   return next();
 });
 
-const isPro = t.middleware(({ next }) => {
-  // NOSONAR
-  // if (ctx.user.user_type !== UserType.PRO) {
-  //   throw new TRPCError({
-  //     code: "UNAUTHORIZED",
-  //     message: "You must be a pro user to access this resource",
-  //   });
-  // }
+const isPro = t.middleware(async ({ next, ctx }) => {
+  const isAdmin = await new AuthService().isAdmin(ctx.user.email);
+
+  if (ctx.user.user_type !== UserType.PRO && !isAdmin) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "You must be a pro user to access this resource",
+    });
+  }
   return next();
 });
 

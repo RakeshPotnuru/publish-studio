@@ -47,6 +47,11 @@ export const siteConfig = {
       description: "Register on Publish Studio",
       link: "/register",
     },
+    pay: {
+      title: "Pay",
+      description: "Pay for Publish Studio",
+      link: "/pay",
+    },
     resetPassword: {
       title: "Reset Password",
       description: "Reset your password",
@@ -88,18 +93,23 @@ export const siteConfig = {
       link: "/settings",
       appearance: {
         title: "Appearance",
-        description: "Configure your appearance settings",
+        description: "Select your preferred theme",
         link: "/settings/appearance",
       },
       connections: {
         title: "Connections",
-        description: "Configure your connections",
+        description: "Configure your platforms and other integrations",
         link: "/settings/connections",
       },
       security: {
         title: "Security",
         description: "Manage your account security settings",
         link: "/settings/security",
+      },
+      billing: {
+        title: "Billing",
+        description: "Manage your subscription and billing details",
+        link: "/settings/billing",
       },
     },
     planner: {

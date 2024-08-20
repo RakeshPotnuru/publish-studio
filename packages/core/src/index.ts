@@ -26,8 +26,12 @@ app.set("trust proxy", 1);
 app.use(helmet());
 
 app.use((req, res, next) => {
-  if (req.originalUrl === defaultConfig.stripeWebhookPath) {
-    express.raw({ type: "application/json" })(req, res, next);
+  if (req.originalUrl === defaultConfig.paddleWebhookPath) {
+    if (defaultConfig.paddleIpAddresses.includes(req.ip || "")) {
+      express.raw({ type: "application/json" })(req, res, next);
+    } else {
+      res.status(403).send("Forbidden");
+    }
   } else {
     express.json({ limit: "1000kb" })(req, res, next);
   }

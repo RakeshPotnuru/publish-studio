@@ -2,15 +2,15 @@ import type { Types } from "mongoose";
 import { z } from "zod";
 
 import { constants } from "../../../config/constants";
-import { protectedProcedure, router } from "../../../trpc";
+import { proProtectedProcedure, router } from "../../../trpc";
 import SectionController from "./section.controller";
 
 const sectionRouter = router({
-  getAll: protectedProcedure.query(({ ctx }) =>
+  getAll: proProtectedProcedure.query(({ ctx }) =>
     new SectionController().getSections(ctx.user._id),
   ),
 
-  create: protectedProcedure
+  create: proProtectedProcedure
     .input(
       z.object({
         name: z
@@ -23,7 +23,7 @@ const sectionRouter = router({
       new SectionController().createSectionHandler(input, ctx),
     ),
 
-  update: protectedProcedure
+  update: proProtectedProcedure
     .input(
       z.object({
         _id: z.custom<Types.ObjectId>(),
@@ -39,13 +39,13 @@ const sectionRouter = router({
       new SectionController().updateSectionHandler(input, ctx),
     ),
 
-  delete: protectedProcedure
+  delete: proProtectedProcedure
     .input(z.array(z.custom<Types.ObjectId>()))
     .mutation(({ input, ctx }) =>
       new SectionController().deleteSectionsHandler(input, ctx),
     ),
 
-  reorder: protectedProcedure
+  reorder: proProtectedProcedure
     .input(
       z.array(z.object({ _id: z.custom<Types.ObjectId>(), order: z.number() })),
     )

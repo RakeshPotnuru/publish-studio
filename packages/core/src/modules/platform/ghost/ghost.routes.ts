@@ -1,11 +1,11 @@
 import { z } from "zod";
 
 import { GhostStatus } from "../../../config/constants";
-import { protectedProcedure, router } from "../../../trpc";
+import { proProtectedProcedure, router } from "../../../trpc";
 import GhostController from "./ghost.controller";
 
 const ghostRouter = router({
-  connect: protectedProcedure
+  connect: proProtectedProcedure
     .input(
       z.object({
         api_url: z.string(),
@@ -17,7 +17,7 @@ const ghostRouter = router({
       new GhostController().createPlatformHandler(input, ctx),
     ),
 
-  update: protectedProcedure
+  update: proProtectedProcedure
     .input(
       z.object({
         api_url: z.string().optional(),
@@ -29,11 +29,11 @@ const ghostRouter = router({
       new GhostController().updatePlatformHandler(input, ctx),
     ),
 
-  disconnect: protectedProcedure.query(({ ctx }) =>
+  disconnect: proProtectedProcedure.query(({ ctx }) =>
     new GhostController().deletePlatformHandler(ctx),
   ),
 
-  getAllPosts: protectedProcedure
+  getAllPosts: proProtectedProcedure
     .input(
       z.object({
         pagination: z.object({

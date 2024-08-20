@@ -2,11 +2,11 @@ import type { Types } from "mongoose";
 import { z } from "zod";
 
 import { constants } from "../../config/constants";
-import { protectedProcedure, router } from "../../trpc";
+import { proProtectedProcedure, router } from "../../trpc";
 import FolderController from "./folder.controller";
 
 const folderRouter = router({
-  create: protectedProcedure
+  create: proProtectedProcedure
     .input(
       z.object({
         name: z
@@ -19,7 +19,7 @@ const folderRouter = router({
       new FolderController().createFolderHandler(input, ctx),
     ),
 
-  getAll: protectedProcedure
+  getAll: proProtectedProcedure
     .input(
       z.object({
         pagination: z.object({
@@ -32,7 +32,7 @@ const folderRouter = router({
       new FolderController().getAllFoldersHandler(input, ctx),
     ),
 
-  update: protectedProcedure
+  update: proProtectedProcedure
     .input(
       z.object({
         id: z.custom<Types.ObjectId>(),
@@ -48,7 +48,7 @@ const folderRouter = router({
       new FolderController().updateFolderHandler(input, ctx),
     ),
 
-  delete: protectedProcedure
+  delete: proProtectedProcedure
     .input(z.array(z.custom<Types.ObjectId>()))
     .mutation(({ input, ctx }) =>
       new FolderController().deleteFoldersHandler(input, ctx),

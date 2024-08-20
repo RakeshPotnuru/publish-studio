@@ -2,11 +2,11 @@ import type { Types } from "mongoose";
 import { z } from "zod";
 
 import { constants, Platform, ProjectStatus } from "../../config/constants";
-import { protectedProcedure, router } from "../../trpc";
+import { proProtectedProcedure, router } from "../../trpc";
 import ProjectController from "./project.controller";
 
 const projectRouter = router({
-  create: protectedProcedure
+  create: proProtectedProcedure
     .input(
       z.object({
         folder_id: z.custom<Types.ObjectId>().optional(),
@@ -70,13 +70,13 @@ const projectRouter = router({
       new ProjectController().createProjectHandler(input, ctx),
     ),
 
-  getById: protectedProcedure
+  getById: proProtectedProcedure
     .input(z.custom<Types.ObjectId>())
     .query(({ input, ctx }) =>
       new ProjectController().getProjectByIdHandler(input, ctx),
     ),
 
-  getAll: protectedProcedure
+  getAll: proProtectedProcedure
     .input(
       z.object({
         pagination: z.object({
@@ -89,7 +89,7 @@ const projectRouter = router({
       new ProjectController().getAllProjectsHandler(input, ctx),
     ),
 
-  getByFolderId: protectedProcedure
+  getByFolderId: proProtectedProcedure
     .input(
       z.object({
         folder_id: z.custom<Types.ObjectId>(),
@@ -103,7 +103,7 @@ const projectRouter = router({
       new ProjectController().getProjectsByFolderIdHandler(input, ctx),
     ),
 
-  update: protectedProcedure
+  update: proProtectedProcedure
     .input(
       z.object({
         id: z.custom<Types.ObjectId>(),
@@ -168,13 +168,13 @@ const projectRouter = router({
       new ProjectController().updateProjectHandler(input, ctx),
     ),
 
-  delete: protectedProcedure
+  delete: proProtectedProcedure
     .input(z.array(z.custom<Types.ObjectId>()))
     .mutation(({ input, ctx }) =>
       new ProjectController().deleteProjectsHandler(input, ctx),
     ),
 
-  categories: protectedProcedure.query(({ ctx }) =>
+  categories: proProtectedProcedure.query(({ ctx }) =>
     new ProjectController().getCategoriesHandler(ctx),
   ),
 });

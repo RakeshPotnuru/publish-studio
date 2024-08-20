@@ -4,7 +4,7 @@ import { Button } from "@itsrakesh/ui";
 
 import useUserStore from "@/lib/stores/user";
 
-import { Upgrade } from "../common/upgrade";
+import { Upgrade } from "../modules/dashboard/pay/upgrade";
 import { ButtonLoader } from "./loaders/button-loader";
 
 interface ProButtonProps extends React.ComponentProps<typeof Button> {

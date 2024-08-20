@@ -66,14 +66,6 @@ export function Navbar() {
       </Link>
 
       <div className="flex flex-row items-center space-x-1">
-        {/* NOSONAR */}
-        {/* {isFetching ||
-          (user?.user_type !== UserType.PRO && (
-            <ProButton size="sm">
-              <Icons.Pro className="mr-2 size-4" />
-              Upgrade
-            </ProButton>
-          ))} */}
         <Tooltip content="Report a bug">
           <Button
             size="icon"

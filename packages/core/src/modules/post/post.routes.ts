@@ -2,11 +2,11 @@ import type { Types } from "mongoose";
 import { z } from "zod";
 
 import { Platform, PostStatus } from "../../config/constants";
-import { proProtectedProcedure, protectedProcedure, router } from "../../trpc";
+import { proProtectedProcedure, router } from "../../trpc";
 import PublishController from "./publish/publish.controller";
 
 const postRouter = router({
-  create: protectedProcedure
+  create: proProtectedProcedure
     .input(
       z.object({
         project_id: z.custom<Types.ObjectId>(),
@@ -21,7 +21,7 @@ const postRouter = router({
       new PublishController().createPostHandler(input, ctx),
     ),
 
-  publish: protectedProcedure
+  publish: proProtectedProcedure
     .input(
       z.object({
         project_id: z.custom<Types.ObjectId>(),
@@ -44,7 +44,7 @@ const postRouter = router({
       new PublishController().editPostHandler(input, ctx),
     ),
 
-  getAllByProjectId: protectedProcedure
+  getAllByProjectId: proProtectedProcedure
     .input(z.custom<Types.ObjectId>())
     .query(({ input, ctx }) =>
       new PublishController().getPostsByProjectIdHandler(input, ctx),

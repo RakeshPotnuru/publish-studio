@@ -1,10 +1,10 @@
 import { z } from "zod";
 
-import { protectedProcedure, router } from "../../../trpc";
+import { proProtectedProcedure, router } from "../../../trpc";
 import HashnodeController from "./hashnode.controller";
 
 const hashnodeRouter = router({
-  connect: protectedProcedure
+  connect: proProtectedProcedure
     .input(
       z.object({
         api_key: z.string(),
@@ -19,7 +19,7 @@ const hashnodeRouter = router({
       new HashnodeController().createPlatformHandler(input, ctx),
     ),
 
-  update: protectedProcedure
+  update: proProtectedProcedure
     .input(
       z.object({
         api_key: z.string().optional(),
@@ -34,11 +34,11 @@ const hashnodeRouter = router({
       new HashnodeController().updatePlatformHandler(input, ctx),
     ),
 
-  disconnect: protectedProcedure.query(({ ctx }) =>
+  disconnect: proProtectedProcedure.query(({ ctx }) =>
     new HashnodeController().deletePlatformHandler(ctx),
   ),
 
-  getAllPosts: protectedProcedure
+  getAllPosts: proProtectedProcedure
     .input(
       z.object({
         pagination: z.object({

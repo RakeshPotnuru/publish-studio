@@ -12,13 +12,13 @@ import pexelsRouter from "./modules/integration/pexels/pexels.routes";
 import unsplashRouter from "./modules/integration/unsplash/unsplash.routes";
 import nluRouter from "./modules/nlu/nlu.routes";
 import notificationRouter from "./modules/notification/notification.routes";
-import paymentRouter from "./modules/payment/payment.routes";
 import sectionRouter from "./modules/planner/section/section.routes";
 import taskRouter from "./modules/planner/task/task.routes";
 import platformRouter from "./modules/platform/platform.routes";
 import postRouter from "./modules/post/post.routes";
 import projectRouter from "./modules/project/project.routes";
 import statsRouter from "./modules/stats/stats.routes";
+import subscriptionRouter from "./modules/subscription/subscription.routes";
 import toolsRouter from "./modules/tools/tools.routes";
 import userRouter from "./modules/user/user.routes";
 import { router, t } from "./trpc";
@@ -36,7 +36,7 @@ const appRouter = router({
   assets: assetRouter,
   platforms: platformRouter,
   stats: statsRouter,
-  payment: paymentRouter,
+  sub: subscriptionRouter,
   genAI: generativeAIRouter,
   nlu: nluRouter,
   pexels: pexelsRouter,

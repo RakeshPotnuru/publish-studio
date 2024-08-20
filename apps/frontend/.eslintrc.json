@@ -8,6 +8,7 @@
     "project": "./tsconfig.json"
   },
   "rules": {
-    "security/detect-object-injection": "off"
+    "security/detect-object-injection": "off",
+    "@next/next/no-img-element": "off"
   }
 }

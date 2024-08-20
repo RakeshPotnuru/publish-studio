@@ -1,10 +1,10 @@
 import { z } from "zod";
 
-import { protectedProcedure, router } from "../../../trpc";
+import { proProtectedProcedure, router } from "../../../trpc";
 import CloudinaryController from "./cloudinary.controller";
 
 const cloudinaryRouter = router({
-  connect: protectedProcedure
+  connect: proProtectedProcedure
     .input(
       z.object({
         cloud_name: z.string(),
@@ -15,7 +15,7 @@ const cloudinaryRouter = router({
       new CloudinaryController().createIntegrationHandler(input, ctx),
     ),
 
-  update: protectedProcedure
+  update: proProtectedProcedure
     .input(
       z.object({
         cloud_name: z.string(),
@@ -26,11 +26,11 @@ const cloudinaryRouter = router({
       new CloudinaryController().updateIntegrationHandler(input, ctx),
     ),
 
-  disconnect: protectedProcedure.query(({ ctx }) =>
+  disconnect: proProtectedProcedure.query(({ ctx }) =>
     new CloudinaryController().deleteIntegrationHandler(ctx),
   ),
 
-  get: protectedProcedure.query(({ ctx }) =>
+  get: proProtectedProcedure.query(({ ctx }) =>
     new CloudinaryController().getIntegrationHandler(ctx),
   ),
 });
