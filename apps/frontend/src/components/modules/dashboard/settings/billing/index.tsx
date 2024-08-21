@@ -25,7 +25,7 @@ export default function Billing() {
 
     initializePaddle({
       environment:
-        process.env.NODE_ENV === "production" ? "production" : "sandbox",
+        process.env.SITE_ENV === "production" ? "production" : "sandbox",
       token: process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN,
     })
       .then((paddleInstance: Paddle | undefined) => {
@@ -95,7 +95,7 @@ export default function Billing() {
             )}
           </div>
         </div>
-        <div className="items-center flex justify-between">
+        <div className="flex items-center justify-between">
           {isFetching ? (
             <Skeleton className="h-6 w-32" />
           ) : (

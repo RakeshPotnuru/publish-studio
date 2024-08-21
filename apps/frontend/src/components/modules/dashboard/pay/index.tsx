@@ -33,7 +33,7 @@ export default function Pay() {
 
     initializePaddle({
       environment:
-        process.env.NODE_ENV === "production" ? "production" : "sandbox",
+        process.env.SITE_ENV === "production" ? "production" : "sandbox",
       token: process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN,
       eventCallback: function (data) {
         if (data.name == CheckoutEventNames.CHECKOUT_COMPLETED) {
