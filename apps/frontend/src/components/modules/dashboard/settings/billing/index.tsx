@@ -95,12 +95,24 @@ export default function Billing() {
             )}
           </div>
         </div>
-        <div className="float-right space-x-4">
-          <UpdatePaymentMethod paddle={paddle} isLoading={isLoading} />
-          <CancelSubscription
-            isLoading={isLoading}
-            scheduledChange={data?.data.subscription?.scheduled_change}
-          />
+        <div className="items-center flex justify-between">
+          {isFetching ? (
+            <Skeleton className="h-6 w-32" />
+          ) : (
+            data?.data.subscription?.started_at && (
+              <p className="text-sm text-muted-foreground">
+                Subscribed since{" "}
+                {format(data.data.subscription.started_at, "PP")}
+              </p>
+            )
+          )}
+          <div className="float-right space-x-4">
+            <UpdatePaymentMethod paddle={paddle} isLoading={isLoading} />
+            <CancelSubscription
+              isLoading={isLoading}
+              scheduledChange={data?.data.subscription?.scheduled_change}
+            />
+          </div>
         </div>
       </div>
     </Header>

@@ -196,6 +196,7 @@ export default class SubscriptionController extends SubscriptionService {
           : undefined,
       },
       collection_mode: data.collectionMode,
+      started_at: data.startedAt ? new Date(data.startedAt) : undefined,
     });
 
     return {
