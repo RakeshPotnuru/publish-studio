@@ -25,7 +25,9 @@ export default function Billing() {
 
     initializePaddle({
       environment:
-        process.env.SITE_ENV === "production" ? "production" : "sandbox",
+        process.env.NEXT_PUBLIC_SITE_ENV === "production"
+          ? "production"
+          : "sandbox",
       token: process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN,
     })
       .then((paddleInstance: Paddle | undefined) => {

@@ -1,7 +1,7 @@
 let defaultUrl;
-if (process.env.SITE_ENV === "production") {
+if (process.env.NEXT_PUBLIC_SITE_ENV === "production") {
   defaultUrl = "https://app.publishstudio.one";
-} else if (process.env.SITE_ENV === "staging") {
+} else if (process.env.NEXT_PUBLIC_SITE_ENV === "staging") {
   defaultUrl = "https://stg.app.publishstudio.one";
 } else {
   defaultUrl = "http://localhost:3000";

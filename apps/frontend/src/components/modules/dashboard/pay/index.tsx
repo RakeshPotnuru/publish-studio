@@ -16,15 +16,6 @@ import { siteConfig } from "@/config/site";
 import useUserStore from "@/lib/stores/user";
 import { trpc } from "@/utils/trpc";
 
-let defaultUrl: string;
-if (process.env.SITE_ENV === "production") {
-  defaultUrl = "https://app.publishstudio.one";
-} else if (process.env.SITE_ENV === "staging") {
-  defaultUrl = "https://stg.app.publishstudio.one";
-} else {
-  defaultUrl = "http://localhost:3000";
-}
-
 export default function Pay() {
   const [paddle, setPaddle] = useState<Paddle>();
 
@@ -42,7 +33,9 @@ export default function Pay() {
 
     initializePaddle({
       environment:
-        process.env.SITE_ENV === "production" ? "production" : "sandbox",
+        process.env.NEXT_PUBLIC_SITE_ENV === "production"
+          ? "production"
+          : "sandbox",
       token: process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN,
       eventCallback: function (data) {
         if (data.name == CheckoutEventNames.CHECKOUT_COMPLETED) {
@@ -73,7 +66,7 @@ export default function Pay() {
       settings: {
         displayMode: "overlay",
         theme: theme === "dark" ? "dark" : "light",
-        successUrl: `${defaultUrl}${siteConfig.pages.dashboard.link}`,
+        successUrl: `${siteConfig.url}${siteConfig.pages.dashboard.link}`,
         allowLogout: false,
       },
       customer: {
@@ -103,7 +96,7 @@ export default function Pay() {
         settings: {
           displayMode: "overlay",
           theme: theme === "dark" ? "dark" : "light",
-          successUrl: `${defaultUrl}${siteConfig.pages.dashboard.link}`,
+          successUrl: `${siteConfig.url}${siteConfig.pages.dashboard.link}`,
           allowLogout: false,
         },
         customer: {

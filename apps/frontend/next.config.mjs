@@ -1,5 +1,7 @@
-const paddleCdn = process.env.SITE_ENV === "production" ? "cdn" : "sandbox-cdn";
-const paddleBuy = process.env.SITE_ENV === "production" ? "buy" : "sandbox-buy";
+const paddleCdn =
+  process.env.NEXT_PUBLIC_SITE_ENV === "production" ? "cdn" : "sandbox-cdn";
+const paddleBuy =
+  process.env.NEXT_PUBLIC_SITE_ENV === "production" ? "buy" : "sandbox-buy";
 
 const cspHeader = `
 default-src 'self';
