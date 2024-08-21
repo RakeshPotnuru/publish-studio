@@ -87,7 +87,7 @@ interface UndoCancellationProps {
   isLoading: boolean;
 }
 
-function UndoCancellation({ isLoading }: UndoCancellationProps) {
+function UndoCancellation({ isLoading }: Readonly<UndoCancellationProps>) {
   const { mutateAsync: undo, isLoading: isUndoing } =
     trpc.sub.undoCancel.useMutation({
       onSuccess: ({ data }) => {

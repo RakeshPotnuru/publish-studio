@@ -12,10 +12,19 @@ interface UpdatePaymentMethodProps {
   isLoading: boolean;
 }
 
+let defaultUrl: string;
+if (process.env.SITE_ENV === "production") {
+  defaultUrl = "https://app.publishstudio.one";
+} else if (process.env.SITE_ENV === "staging") {
+  defaultUrl = "https://stg.app.publishstudio.one";
+} else {
+  defaultUrl = "http://localhost:3000";
+}
+
 export default function UpdatePaymentMethod({
   paddle,
   isLoading,
-}: UpdatePaymentMethodProps) {
+}: Readonly<UpdatePaymentMethodProps>) {
   const { mutateAsync: updatePaymentMethod, isLoading: isTxnLoading } =
     trpc.sub.updatePaymentMethod.useMutation({
       onError: (error) => {
@@ -37,7 +46,7 @@ export default function UpdatePaymentMethod({
         settings: {
           displayMode: "overlay",
           theme: theme === "dark" ? "dark" : "light",
-          successUrl: `${siteConfig.url}${siteConfig.pages.settings.billing.link}`,
+          successUrl: `${defaultUrl}${siteConfig.pages.settings.billing.link}`,
         },
         customer: {
           email: user.email,

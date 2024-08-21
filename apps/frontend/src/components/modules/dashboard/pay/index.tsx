@@ -16,6 +16,15 @@ import { siteConfig } from "@/config/site";
 import useUserStore from "@/lib/stores/user";
 import { trpc } from "@/utils/trpc";
 
+let defaultUrl: string;
+if (process.env.SITE_ENV === "production") {
+  defaultUrl = "https://app.publishstudio.one";
+} else if (process.env.SITE_ENV === "staging") {
+  defaultUrl = "https://stg.app.publishstudio.one";
+} else {
+  defaultUrl = "http://localhost:3000";
+}
+
 export default function Pay() {
   const [paddle, setPaddle] = useState<Paddle>();
 
@@ -64,7 +73,8 @@ export default function Pay() {
       settings: {
         displayMode: "overlay",
         theme: theme === "dark" ? "dark" : "light",
-        successUrl: `${siteConfig.url}${siteConfig.pages.dashboard.link}`,
+        successUrl: `${defaultUrl}${siteConfig.pages.dashboard.link}`,
+        allowLogout: false,
       },
       customer: {
         email: user.email,
@@ -93,7 +103,8 @@ export default function Pay() {
         settings: {
           displayMode: "overlay",
           theme: theme === "dark" ? "dark" : "light",
-          successUrl: `${siteConfig.url}${siteConfig.pages.dashboard.link}`,
+          successUrl: `${defaultUrl}${siteConfig.pages.dashboard.link}`,
+          allowLogout: false,
         },
         customer: {
           email: user.email,
