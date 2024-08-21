@@ -1,5 +1,6 @@
 import type { PaddleEventData } from "@paddle/paddle-js";
 import type {
+  ApiError,
   SubscriptionCreatedEvent,
   SubscriptionUpdatedEvent,
 } from "@paddle/paddle-node-sdk";
@@ -29,12 +30,14 @@ export default class SubscriptionController extends SubscriptionService {
         endpointSecret,
         signature,
       );
-    } catch (error) {
-      await logtail.error(JSON.stringify(error));
+    } catch (error: unknown) {
+      const paddleApiError = error as ApiError;
+
+      await logtail.error(paddleApiError);
 
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
-        message: "Error creating event",
+        message: paddleApiError.message,
       });
     }
 
