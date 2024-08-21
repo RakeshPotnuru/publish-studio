@@ -54,7 +54,7 @@ export default function AccountMenu() {
     user?.user_type !== UserType.FREE && (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="relative size-8 rounded-full">
+          <Button variant="ghost" className="relative h-8 w-8 rounded-full">
             <Avatar className="h-7 w-7">
               <AvatarImage
                 src={user?.profile_pic}

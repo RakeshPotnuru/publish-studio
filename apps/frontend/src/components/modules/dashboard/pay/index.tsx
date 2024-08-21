@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { Button, toast } from "@itsrakesh/ui";
-import type { Paddle } from "@paddle/paddle-js";
+import type { Paddle, PaddleEventData } from "@paddle/paddle-js";
 import { CheckoutEventNames, initializePaddle } from "@paddle/paddle-js";
 import { UserType } from "@publish-studio/core/src/config/constants";
 import { useTheme } from "next-themes";
@@ -18,11 +18,16 @@ import { trpc } from "@/utils/trpc";
 
 export default function Pay() {
   const [paddle, setPaddle] = useState<Paddle>();
+  const [eventData, setEventData] = useState<PaddleEventData>();
 
   const { user, isLoading } = useUserStore();
   const { theme } = useTheme();
   const router = useRouter();
-  const { mutate: upgradePlan } = trpc.sub.upgradePlan.useMutation({
+  const { mutateAsync: upgradePlan } = trpc.sub.upgradePlan.useMutation({
+    onSuccess: ({ data }) => {
+      toast.success(data.message);
+      window.location.href = siteConfig.pages.dashboard.link;
+    },
     onError: (error) => {
       toast.error(error.message);
     },
@@ -39,18 +44,13 @@ export default function Pay() {
       token: process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN,
       eventCallback: function (data) {
         if (data.name == CheckoutEventNames.CHECKOUT_COMPLETED) {
-          try {
-            upgradePlan({ data: data });
-          } catch {
-            // Ignore
-          }
+          setEventData(data);
         }
       },
       checkout: {
         settings: {
           displayMode: "overlay",
           theme: theme === "dark" ? "dark" : "light",
-          successUrl: `${siteConfig.url}${siteConfig.pages.dashboard.link}`,
           allowLogout: false,
         },
       },
@@ -63,7 +63,27 @@ export default function Pay() {
       .catch(() => {
         // Ignore
       });
-  }, [upgradePlan, theme]);
+  }, [theme]);
+
+  const handlePaymentSuccess = useCallback(async () => {
+    if (!eventData?.data?.transaction_id) {
+      return;
+    }
+
+    try {
+      await upgradePlan(eventData.data.transaction_id);
+    } catch {
+      // Ignore
+    }
+  }, [eventData, upgradePlan]);
+
+  useEffect(() => {
+    if (eventData) {
+      handlePaymentSuccess().catch(() => {
+        // Ignore
+      });
+    }
+  }, [eventData, handlePaymentSuccess]);
 
   const openCheckout = () => {
     if (!user || !paddle || !process.env.NEXT_PUBLIC_PADDLE_PRO_PRICE_ID)

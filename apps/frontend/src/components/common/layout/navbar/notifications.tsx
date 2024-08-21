@@ -147,7 +147,7 @@ export function Notifications() {
           <Button
             size="icon"
             variant="ghost"
-            className={cn("rounded-full", {
+            className={cn("rounded-full h-8 w-8", {
               "border border-success": numUnread > 0,
             })}
             aria-label="Notifications"

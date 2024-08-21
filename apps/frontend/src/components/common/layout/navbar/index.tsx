@@ -34,7 +34,7 @@ const NavItem = ({
         <Button
           size="icon"
           variant="ghost"
-          className="rounded-full"
+          className="h-8 w-8 rounded-full"
           aria-label={tooltip}
         >
           {icon}
@@ -70,7 +70,7 @@ export function Navbar() {
           <Button
             size="icon"
             variant="ghost"
-            className="rounded-full"
+            className="h-8 w-8 rounded-full"
             aria-label="Report a bug"
             asChild
           >

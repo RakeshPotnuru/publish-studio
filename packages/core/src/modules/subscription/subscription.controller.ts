@@ -1,4 +1,3 @@
-import type { PaddleEventData } from "@paddle/paddle-js";
 import type {
   ApiError,
   SubscriptionCreatedEvent,
@@ -74,17 +73,19 @@ export default class SubscriptionController extends SubscriptionService {
     };
   }
 
-  async upgradePlanHandler(input: PaddleEventData, ctx: Context) {
-    const { data } = input;
+  async upgradePlanHandler(input: string, ctx: Context) {
+    const data = await paddle.transactions.get(input);
+
+    if (data.status === "canceled") {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Transaction is not completed",
+      });
+    }
 
     await super.updateUser(ctx.user._id, {
       user_type: UserType.PRO,
-      customer_id: data?.customer.id,
-    });
-
-    await createCaller(ctx).notifications.create({
-      message: "Thank you for subscribing.",
-      type: "upgraded to pro",
+      customer_id: data?.customer?.id,
     });
 
     return {
@@ -108,6 +109,24 @@ export default class SubscriptionController extends SubscriptionService {
         code: "BAD_REQUEST",
         message: "Subscription already exists",
       });
+    }
+
+    if (data.status !== "canceled") {
+      await super.updateUser(user_id, {
+        user_type: UserType.PRO,
+        customer_id: data.customerId,
+      });
+
+      /* eslint-disable @typescript-eslint/no-explicit-any */
+      await createCaller({
+        req: {} as any,
+        res: {} as any,
+        user: { _id: user_id } as any,
+      }).notifications.create({
+        message: "Thank you for subscribing.",
+        type: "upgraded to pro",
+      });
+      /* eslint-enable @typescript-eslint/no-explicit-any */
     }
 
     await super.createSubscription({

@@ -533,9 +533,6 @@ importers:
       '@logtail/types':
         specifier: ^0.4.19
         version: 0.4.19
-      '@paddle/paddle-js':
-        specifier: ^1.2.1
-        version: 1.2.1
       '@types/bcryptjs':
         specifier: ^2.4.6
         version: 2.4.6
@@ -2415,6 +2412,7 @@ packages:
 
   /@paddle/paddle-js@1.2.1:
     resolution: {integrity: sha512-yvjNrY/msgei/BmRg019giGvtwD+gDUYZpMi7e/4sQbTFrMsRmod/W2ywOVpPhNnxM5ZxZbtTVLCEkdcqZmxYQ==}
+    dev: false
 
   /@paddle/paddle-node-sdk@1.5.0:
     resolution: {integrity: sha512-yeE1E0jm1SVciFKhprbX/8kklKMqK1umwn6OFkOL7sAqCy7I4Iw2QEGXrCFzAb+bvWzrl8oE4zNH0Hv7bwDeww==}

@@ -1,4 +1,3 @@
-import type { PaddleEventData } from "@paddle/paddle-js";
 import { z } from "zod";
 
 import {
@@ -15,13 +14,9 @@ const subscriptionRouter = router({
   ),
 
   upgradePlan: protectedProcedure
-    .input(
-      z.object({
-        data: z.custom<PaddleEventData>(),
-      }),
-    )
+    .input(z.string())
     .mutation(({ input, ctx }) =>
-      new SubscriptionController().upgradePlanHandler(input.data, ctx),
+      new SubscriptionController().upgradePlanHandler(input, ctx),
     ),
 
   cancel: proProtectedProcedure.mutation(({ ctx }) =>
