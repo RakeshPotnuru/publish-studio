@@ -1,6 +1,11 @@
-const defaultUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "http://localhost:3000";
+let defaultUrl;
+if (process.env.SITE_ENV === "production") {
+  defaultUrl = "https://app.publishstudio.one";
+} else if (process.env.SITE_ENV === "staging") {
+  defaultUrl = "https://stg.app.publishstudio.one";
+} else {
+  defaultUrl = "http://localhost:3000";
+}
 
 export const siteConfig = {
   title: "Publish Studio",

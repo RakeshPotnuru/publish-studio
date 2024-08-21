@@ -37,7 +37,6 @@ export default function Pay() {
       token: process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN,
       eventCallback: function (data) {
         if (data.name == CheckoutEventNames.CHECKOUT_COMPLETED) {
-          console.log(data);
           upgradePlan({ data: data }).catch(() => {
             // Ignore
           });
