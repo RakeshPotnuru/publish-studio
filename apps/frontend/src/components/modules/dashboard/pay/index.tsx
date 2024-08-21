@@ -37,11 +37,9 @@ export default function Pay() {
           ? "production"
           : "sandbox",
       token: process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN,
-      eventCallback: function (data) {
+      eventCallback: async function (data) {
         if (data.name == CheckoutEventNames.CHECKOUT_COMPLETED) {
-          upgradePlan({ data: data }).catch(() => {
-            // Ignore
-          });
+          await upgradePlan({ data: data });
         }
       },
     })

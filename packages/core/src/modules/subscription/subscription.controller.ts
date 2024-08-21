@@ -20,7 +20,6 @@ export default class SubscriptionController extends SubscriptionService {
   async paddleWebhookHandler(ctx: Context) {
     const signature = ctx.req.headers["paddle-signature"] as string;
     const endpointSecret = process.env.PADDLE_WEBHOOK_SECRET;
-    console.log({ signature });
 
     let event;
 
@@ -33,7 +32,6 @@ export default class SubscriptionController extends SubscriptionService {
       );
     } catch (error: unknown) {
       const paddleApiError = error as ApiError;
-      console.log({ paddleApiError });
 
       await logtail.error(paddleApiError);
 
@@ -78,7 +76,6 @@ export default class SubscriptionController extends SubscriptionService {
 
   async upgradePlanHandler(input: PaddleEventData, ctx: Context) {
     const { data } = input;
-    console.log({ data });
 
     await super.updateUser(ctx.user._id, {
       user_type: UserType.PRO,
