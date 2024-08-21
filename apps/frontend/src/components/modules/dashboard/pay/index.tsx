@@ -22,7 +22,7 @@ export default function Pay() {
   const { user, isLoading } = useUserStore();
   const { theme } = useTheme();
   const router = useRouter();
-  const { mutateAsync: upgradePlan } = trpc.sub.upgradePlan.useMutation({
+  const { mutate: upgradePlan } = trpc.sub.upgradePlan.useMutation({
     onError: (error) => {
       toast.error(error.message);
     },
@@ -37,10 +37,22 @@ export default function Pay() {
           ? "production"
           : "sandbox",
       token: process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN,
-      eventCallback: async function (data) {
+      eventCallback: function (data) {
         if (data.name == CheckoutEventNames.CHECKOUT_COMPLETED) {
-          await upgradePlan({ data: data });
+          try {
+            upgradePlan({ data: data });
+          } catch {
+            // Ignore
+          }
         }
+      },
+      checkout: {
+        settings: {
+          displayMode: "overlay",
+          theme: theme === "dark" ? "dark" : "light",
+          successUrl: `${siteConfig.url}${siteConfig.pages.dashboard.link}`,
+          allowLogout: false,
+        },
       },
     })
       .then((paddleInstance: Paddle | undefined) => {
@@ -51,7 +63,7 @@ export default function Pay() {
       .catch(() => {
         // Ignore
       });
-  }, [upgradePlan]);
+  }, [upgradePlan, theme]);
 
   const openCheckout = () => {
     if (!user || !paddle || !process.env.NEXT_PUBLIC_PADDLE_PRO_PRICE_ID)
@@ -61,12 +73,6 @@ export default function Pay() {
       items: [
         { priceId: process.env.NEXT_PUBLIC_PADDLE_PRO_PRICE_ID, quantity: 1 },
       ],
-      settings: {
-        displayMode: "overlay",
-        theme: theme === "dark" ? "dark" : "light",
-        successUrl: `${siteConfig.url}${siteConfig.pages.dashboard.link}`,
-        allowLogout: false,
-      },
       customer: {
         email: user.email,
       },
@@ -91,12 +97,6 @@ export default function Pay() {
 
       paddle.Checkout.open({
         transactionId: data.transaction.id,
-        settings: {
-          displayMode: "overlay",
-          theme: theme === "dark" ? "dark" : "light",
-          successUrl: `${siteConfig.url}${siteConfig.pages.dashboard.link}`,
-          allowLogout: false,
-        },
         customer: {
           email: user.email,
         },

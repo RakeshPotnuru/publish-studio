@@ -6,6 +6,7 @@ import { Alert, AlertDescription, Badge, Skeleton } from "@itsrakesh/ui";
 import type { Paddle } from "@paddle/paddle-js";
 import { initializePaddle } from "@paddle/paddle-js";
 import { format } from "date-fns";
+import { useTheme } from "next-themes";
 
 import { siteConfig } from "@/config/site";
 import useUserStore from "@/lib/stores/user";
@@ -19,6 +20,7 @@ export default function Billing() {
   const [paddle, setPaddle] = useState<Paddle>();
 
   const { user, isLoading: isUserLoading } = useUserStore();
+  const { theme } = useTheme();
 
   useEffect(() => {
     if (!process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN) return;
@@ -29,6 +31,14 @@ export default function Billing() {
           ? "production"
           : "sandbox",
       token: process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN,
+      checkout: {
+        settings: {
+          displayMode: "overlay",
+          theme: theme === "dark" ? "dark" : "light",
+          successUrl: `${siteConfig.url}${siteConfig.pages.settings.billing.link}`,
+          allowLogout: false,
+        },
+      },
     })
       .then((paddleInstance: Paddle | undefined) => {
         if (paddleInstance) {
@@ -38,7 +48,7 @@ export default function Billing() {
       .catch(() => {
         // Ignore
       });
-  }, []);
+  }, [theme]);
 
   const { data, isFetching } = trpc.sub.get.useQuery();
 
