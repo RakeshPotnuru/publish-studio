@@ -7,7 +7,9 @@ import { RadioGroup, RadioGroupItem } from "@itsrakesh/ui";
 import { useTheme } from "next-themes";
 
 import { Images } from "@/assets/images";
-import { Heading } from "@/components/ui/heading";
+import { siteConfig } from "@/config/site";
+
+import Header from "./common/header";
 
 export function Appearance() {
   const [mounted, setMounted] = useState(false);
@@ -18,11 +20,10 @@ export function Appearance() {
   if (!mounted) return null;
 
   return (
-    <div>
-      <div className="space-y-2">
-        <Heading>Appearance</Heading>
-        <p className="text-muted-foreground">Select your preferred theme</p>
-      </div>
+    <Header
+      title={siteConfig.pages.settings.appearance.title}
+      description={siteConfig.pages.settings.appearance.description}
+    >
       <RadioGroup
         defaultValue={theme}
         onValueChange={(value) => setTheme(value)}
@@ -72,6 +73,6 @@ export function Appearance() {
           <p className="text-center">System</p>
         </div>
       </RadioGroup>
-    </div>
+    </Header>
   );
 }

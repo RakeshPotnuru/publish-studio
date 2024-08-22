@@ -1,15 +1,15 @@
 import { z } from "zod";
 
-import { protectedProcedure, router } from "../../trpc";
+import { proProtectedProcedure, router } from "../../trpc";
 import ToolsController from "./tools.controller";
 
 const toolsRouter = router({
   scraper: router({
-    getMetadata: protectedProcedure
+    getMetadata: proProtectedProcedure
       .input(z.string().url())
       .query(({ input }) => new ToolsController().getMetadataHandler(input)),
 
-    getArticleContent: protectedProcedure
+    getArticleContent: proProtectedProcedure
       .input(z.string().url())
       .mutation(({ input }) =>
         new ToolsController().getArticleContentHandler(input),

@@ -1,11 +1,11 @@
 import { z } from "zod";
 
 import { MediumStatus } from "../../../config/constants";
-import { protectedProcedure, router } from "../../../trpc";
+import { proProtectedProcedure, router } from "../../../trpc";
 import MediumController from "./medium.controller";
 
 const mediumRouter = router({
-  connect: protectedProcedure
+  connect: proProtectedProcedure
     .input(
       z.object({
         api_key: z.string(),
@@ -17,7 +17,7 @@ const mediumRouter = router({
       new MediumController().createPlatformHandler(input, ctx),
     ),
 
-  update: protectedProcedure
+  update: proProtectedProcedure
     .input(
       z.object({
         api_key: z.string().optional(),
@@ -29,7 +29,7 @@ const mediumRouter = router({
       new MediumController().updatePlatformHandler(input, ctx),
     ),
 
-  disconnect: protectedProcedure.query(({ ctx }) =>
+  disconnect: proProtectedProcedure.query(({ ctx }) =>
     new MediumController().deletePlatformHandler(ctx),
   ),
 });

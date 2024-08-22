@@ -1,16 +1,16 @@
 import { z } from "zod";
 
-import { protectedProcedure, router } from "../../../trpc";
+import { proProtectedProcedure, router } from "../../../trpc";
 import BloggerController from "./blogger.controller";
 
 const bloggerRouter = router({
-  connect: protectedProcedure
+  connect: proProtectedProcedure
     .input(z.string())
     .mutation(({ input, ctx }) =>
       new BloggerController().createPlatformHandler(input, ctx),
     ),
 
-  update: protectedProcedure
+  update: proProtectedProcedure
     .input(
       z.object({
         blog_id: z.string(),
@@ -22,19 +22,19 @@ const bloggerRouter = router({
       new BloggerController().updatePlatformHandler(input, ctx),
     ),
 
-  disconnect: protectedProcedure.query(({ ctx }) =>
+  disconnect: proProtectedProcedure.query(({ ctx }) =>
     new BloggerController().deletePlatformHandler(ctx),
   ),
 
-  getAuthUrl: protectedProcedure.query(({ ctx }) =>
+  getAuthUrl: proProtectedProcedure.query(({ ctx }) =>
     new BloggerController().getAuthUrlHandler(ctx),
   ),
 
-  getBlogs: protectedProcedure.query(({ ctx }) =>
+  getBlogs: proProtectedProcedure.query(({ ctx }) =>
     new BloggerController().getBloggerBlogsHandler(ctx),
   ),
 
-  getAllPosts: protectedProcedure
+  getAllPosts: proProtectedProcedure
     .input(
       z.object({
         pagination: z.object({

@@ -3,5 +3,10 @@
   "extends": "@bravo68web/eslint-config/typescript-strict",
   "parserOptions": {
     "project": "./tsconfig.json"
+  },
+  "settings": {
+    "react": {
+      "version": "999.999.999"
+    }
   }
 }

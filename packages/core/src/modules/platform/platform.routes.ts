@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { protectedProcedure, router } from "../../trpc";
+import { proProtectedProcedure, router } from "../../trpc";
 import bloggerRouter from "./blogger/blogger.routes";
 import devtoRouter from "./devto/devto.routes";
 import ghostRouter from "./ghost/ghost.routes";
@@ -10,7 +10,7 @@ import PlatformController from "./platform.controller";
 import wordpressRouter from "./wordpress/wordpress.routes";
 
 const platformRouter = router({
-  getAll: protectedProcedure
+  getAll: proProtectedProcedure
     .input(
       z.object({
         pagination: z.object({

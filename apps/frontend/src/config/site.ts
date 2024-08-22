@@ -1,6 +1,11 @@
-const defaultUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "http://localhost:3000";
+let defaultUrl;
+if (process.env.NEXT_PUBLIC_SITE_ENV === "production") {
+  defaultUrl = "https://app.publishstudio.one";
+} else if (process.env.NEXT_PUBLIC_SITE_ENV === "staging") {
+  defaultUrl = "https://stg.app.publishstudio.one";
+} else {
+  defaultUrl = "http://localhost:3000";
+}
 
 export const siteConfig = {
   title: "Publish Studio",
@@ -47,6 +52,11 @@ export const siteConfig = {
       description: "Register on Publish Studio",
       link: "/register",
     },
+    pay: {
+      title: "Pay",
+      description: "Pay for Publish Studio",
+      link: "/pay",
+    },
     resetPassword: {
       title: "Reset Password",
       description: "Reset your password",
@@ -88,18 +98,23 @@ export const siteConfig = {
       link: "/settings",
       appearance: {
         title: "Appearance",
-        description: "Configure your appearance settings",
+        description: "Select your preferred theme",
         link: "/settings/appearance",
       },
       connections: {
         title: "Connections",
-        description: "Configure your connections",
+        description: "Configure your platforms and other integrations",
         link: "/settings/connections",
       },
       security: {
         title: "Security",
         description: "Manage your account security settings",
         link: "/settings/security",
+      },
+      billing: {
+        title: "Billing",
+        description: "Manage your subscription and billing details",
+        link: "/settings/billing",
       },
     },
     planner: {

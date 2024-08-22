@@ -1,10 +1,10 @@
 import { z } from "zod";
 
-import { protectedProcedure, router } from "../../../trpc";
+import { proProtectedProcedure, router } from "../../../trpc";
 import DevToController from "./devto.controller";
 
 const devtoRouter = router({
-  connect: protectedProcedure
+  connect: proProtectedProcedure
     .input(
       z.object({
         api_key: z.string(),
@@ -15,7 +15,7 @@ const devtoRouter = router({
       new DevToController().createPlatformHandler(input, ctx),
     ),
 
-  update: protectedProcedure
+  update: proProtectedProcedure
     .input(
       z.object({
         api_key: z.string().optional(),
@@ -26,11 +26,11 @@ const devtoRouter = router({
       new DevToController().updatePlatformHandler(input, ctx),
     ),
 
-  disconnect: protectedProcedure.query(({ ctx }) =>
+  disconnect: proProtectedProcedure.query(({ ctx }) =>
     new DevToController().deletePlatformHandler(ctx),
   ),
 
-  getAllPosts: protectedProcedure
+  getAllPosts: proProtectedProcedure
     .input(
       z.object({
         pagination: z.object({

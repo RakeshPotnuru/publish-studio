@@ -1,23 +1,23 @@
 import { z } from "zod";
 
-import { protectedProcedure, router } from "../../../trpc";
+import { proProtectedProcedure, router } from "../../../trpc";
 import UnsplashController from "./unsplash.controller";
 
 const unsplashRouter = router({
-  search: protectedProcedure
+  search: proProtectedProcedure
     .input(
       z.object({
         query: z.string(),
         per_page: z.number().int().positive().default(20),
         page: z.number().int().positive().default(1),
-      })
+      }),
     )
     .query(({ input }) => new UnsplashController().searchPhotosHandler(input)),
 
-  triggerDownload: protectedProcedure
+  triggerDownload: proProtectedProcedure
     .input(z.string())
     .mutation(({ input }) =>
-      new UnsplashController().triggerDownloadHandler(input)
+      new UnsplashController().triggerDownloadHandler(input),
     ),
 });
 

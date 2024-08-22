@@ -2,12 +2,12 @@ import type { Types } from "mongoose";
 import { z } from "zod";
 
 import { constants } from "../../../config/constants";
-import { protectedProcedure, router } from "../../../trpc";
+import { proProtectedProcedure, router } from "../../../trpc";
 import type { TSectionResponse } from "../section/section.types";
 import TaskController from "./task.controller";
 
 const taskRouter = router({
-  create: protectedProcedure
+  create: proProtectedProcedure
     .input(
       z.object({
         name: z
@@ -28,7 +28,7 @@ const taskRouter = router({
       new TaskController().createTaskHandler(input, ctx),
     ),
 
-  update: protectedProcedure
+  update: proProtectedProcedure
     .input(
       z.object({
         id: z.custom<Types.ObjectId>(),
@@ -50,13 +50,13 @@ const taskRouter = router({
       new TaskController().updateTaskHandler(input.id, input, ctx),
     ),
 
-  delete: protectedProcedure
+  delete: proProtectedProcedure
     .input(z.array(z.custom<Types.ObjectId>()))
     .mutation(({ input, ctx }) =>
       new TaskController().deleteTasksHandler(input, ctx),
     ),
 
-  reorder: protectedProcedure
+  reorder: proProtectedProcedure
     .input(z.custom<TSectionResponse[]>())
     .mutation(({ input, ctx }) =>
       new TaskController().reorderTasksHandler(input, ctx),

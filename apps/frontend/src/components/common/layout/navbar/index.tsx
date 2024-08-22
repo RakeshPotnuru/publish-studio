@@ -34,7 +34,7 @@ const NavItem = ({
         <Button
           size="icon"
           variant="ghost"
-          className="rounded-full"
+          className="h-8 w-8 rounded-full"
           aria-label={tooltip}
         >
           {icon}
@@ -66,19 +66,11 @@ export function Navbar() {
       </Link>
 
       <div className="flex flex-row items-center space-x-1">
-        {/* NOSONAR */}
-        {/* {isFetching ||
-          (user?.user_type !== UserType.PRO && (
-            <ProButton size="sm">
-              <Icons.Pro className="mr-2 size-4" />
-              Upgrade
-            </ProButton>
-          ))} */}
         <Tooltip content="Report a bug">
           <Button
             size="icon"
             variant="ghost"
-            className="rounded-full"
+            className="h-8 w-8 rounded-full"
             aria-label="Report a bug"
             asChild
           >

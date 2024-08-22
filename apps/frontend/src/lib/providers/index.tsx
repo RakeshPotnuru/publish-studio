@@ -1,3 +1,4 @@
+import PaddleProvider from "./paddle";
 import { PHProvider } from "./posthog";
 import { ThemeProvider } from "./theme";
 import { TRPCProvider } from "./trpc";
@@ -13,7 +14,9 @@ export function Providers({
         enableSystem
         disableTransitionOnChange
       >
-        <TRPCProvider>{children}</TRPCProvider>
+        <TRPCProvider>
+          <PaddleProvider>{children}</PaddleProvider>
+        </TRPCProvider>
       </ThemeProvider>
     </PHProvider>
   );

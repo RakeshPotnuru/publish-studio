@@ -78,7 +78,7 @@ export function VerifyEmail() {
         <Heading level={2}>Account verified!</Heading>
         <p>
           Congratulations! Your account has been verified. You can now login to
-          your account.
+          your account and start your free trial.
         </p>
         <Button asChild>
           <Link href={siteConfig.pages.login.link}>Login</Link>

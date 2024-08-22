@@ -25,6 +25,7 @@ import {
 import { FaBrain, FaCheck, FaWandMagicSparkles } from "react-icons/fa6";
 import { GoDotFill, GoHomeFill } from "react-icons/go";
 import { HiExternalLink } from "react-icons/hi";
+import { IoIosCard } from "react-icons/io";
 import { IoCalendar, IoCheckmarkDoneCircleSharp } from "react-icons/io5";
 import {
   MdBugReport,
@@ -87,4 +88,5 @@ export const GeneralIcons = {
   DragHandle: MdOutlineDragIndicator,
   Brain: FaBrain,
   Random: FaRandom,
+  Billing: IoIosCard,
 };

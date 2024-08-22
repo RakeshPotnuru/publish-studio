@@ -6,8 +6,10 @@ import { Platform } from "@publish-studio/core/src/config/constants";
 import { Center } from "@/components/ui/center";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
+import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
 
+import Header from "../common/header";
 import { Cloudinary } from "./integrations/cloudinary";
 import { Blogger } from "./platforms/blogger";
 import { DevTo } from "./platforms/dev";
@@ -50,13 +52,10 @@ export function Connections() {
   } = trpc.cloudinary.get.useQuery();
 
   return (
-    <div className="space-y-8">
-      <div className="space-y-2">
-        <Heading>Connections</Heading>
-        <p className="text-muted-foreground">
-          Configure your platforms and other integrations
-        </p>
-      </div>
+    <Header
+      title={siteConfig.pages.settings.connections.title}
+      description={siteConfig.pages.settings.connections.description}
+    >
       <div className="space-y-4">
         <Heading level={2}>Platforms</Heading>
         {platformsError && (
@@ -87,6 +86,6 @@ export function Connections() {
           />
         </div>
       </div>
-    </div>
+    </Header>
   );
 }

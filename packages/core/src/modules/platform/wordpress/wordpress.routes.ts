@@ -1,17 +1,17 @@
 import { z } from "zod";
 
 import { WordPressStatus } from "../../../config/constants";
-import { protectedProcedure, router } from "../../../trpc";
+import { proProtectedProcedure, router } from "../../../trpc";
 import WordPressController from "./wordpress.controller";
 
 const wordpressRouter = router({
-  connect: protectedProcedure
+  connect: proProtectedProcedure
     .input(z.string())
     .mutation(({ input, ctx }) =>
       new WordPressController().createPlatformHandler(input, ctx),
     ),
 
-  update: protectedProcedure
+  update: proProtectedProcedure
     .input(
       z.object({
         publicize: z.boolean(),
@@ -22,11 +22,11 @@ const wordpressRouter = router({
       new WordPressController().updatePlatformHandler(input, ctx),
     ),
 
-  disconnect: protectedProcedure.query(({ ctx }) =>
+  disconnect: proProtectedProcedure.query(({ ctx }) =>
     new WordPressController().deletePlatformHandler(ctx),
   ),
 
-  getAllPosts: protectedProcedure
+  getAllPosts: proProtectedProcedure
     .input(
       z.object({
         pagination: z.object({

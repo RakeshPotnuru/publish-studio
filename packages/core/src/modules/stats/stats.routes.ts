@@ -1,10 +1,10 @@
 import { z } from "zod";
 
-import { protectedProcedure, router } from "../../trpc";
+import { proProtectedProcedure, router } from "../../trpc";
 import StatsController from "./stats.controller";
 
 const statsRouter = router({
-  getCategories: protectedProcedure
+  getCategories: proProtectedProcedure
     .input(
       z.object({
         limit: z.number().optional(),
@@ -14,7 +14,7 @@ const statsRouter = router({
       new StatsController().getCategoryStatsHandler(ctx, input),
     ),
 
-  getProjects: protectedProcedure
+  getProjects: proProtectedProcedure
     .input(
       z.object({
         days: z.number().optional(),
@@ -26,7 +26,7 @@ const statsRouter = router({
       new StatsController().getProjectStatsHandler(ctx, input),
     ),
 
-  getReadingTime: protectedProcedure
+  getReadingTime: proProtectedProcedure
     .input(
       z.object({
         days: z.number().optional(),
@@ -38,7 +38,7 @@ const statsRouter = router({
       new StatsController().getReadingTimeStatsHandler(ctx, input),
     ),
 
-  getWords: protectedProcedure
+  getWords: proProtectedProcedure
     .input(
       z.object({
         days: z.number().optional(),
@@ -50,7 +50,7 @@ const statsRouter = router({
       new StatsController().getWordStatsHandler(ctx, input),
     ),
 
-  getEmotions: protectedProcedure
+  getEmotions: proProtectedProcedure
     .input(
       z.object({
         days: z.number().optional(),
