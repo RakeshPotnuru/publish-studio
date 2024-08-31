@@ -1,6 +1,9 @@
 import { Router } from "express";
 
-import adminAuthRouter from "./modules/admin/auth.routes";
+import {
+  adminAuthRouter,
+  adminEmailRouter,
+} from "./modules/admin/admin.routes";
 import assetRouter from "./modules/asset/asset.routes";
 import authRouter from "./modules/auth/auth.routes";
 import folderRouter from "./modules/folder/folder.routes";
@@ -25,6 +28,7 @@ import { router, t } from "./trpc";
 
 const adminRouter = router({
   auth: adminAuthRouter,
+  email: adminEmailRouter,
 });
 
 const appRouter = router({

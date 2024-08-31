@@ -32,9 +32,7 @@ const isAuthenticated = t.middleware(({ next, ctx }) => {
 });
 
 const isPro = t.middleware(async ({ next, ctx }) => {
-  const isAdmin = await new AuthService().isAdmin(ctx.user.email);
-
-  if (ctx.user.user_type !== UserType.PRO && !isAdmin) {
+  if (ctx.user.user_type !== UserType.PRO) {
     throw new TRPCError({
       code: "UNAUTHORIZED",
       message: "You must be a pro user to access this resource",

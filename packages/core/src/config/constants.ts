@@ -74,20 +74,6 @@ const bullmq = {
   },
 } as const;
 
-const payment = {
-  plans: {
-    proMonthly: {
-      PRICE_IN_CENTS: 799,
-      PRICE_IN_DOLLARS: 7.99,
-      PRICE_ID: "price_1NjGYWSEoLcIwk4mKMkjgvoZ",
-    },
-  },
-  currency: {
-    NAME: "usd",
-    SYMBOL: "$",
-  },
-};
-
 const asset = {
   MAX_FILE_SIZE: 5 * 1024 * 1024, // 5MB
 } as const;
@@ -155,7 +141,6 @@ export const constants = {
   user,
   folder,
   bullmq,
-  payment,
   asset,
   AUTOSAVE_INTERVAL,
   GLOBAL_STALE_TIME,
@@ -208,6 +193,7 @@ export enum EmailTemplate {
   RESET_PASSWORD = "d-e90b0f1810764e9295e964acb83c283d",
   WELCOME_EMAIL = "d-b5a3601a35df449ca51440b7c02bbdf2",
   INVITE = "d-a40273604e3449b7ac63530cf5a8c6f9",
+  TOS_NOTICE = "d-c339efbe05bf4498a32562397b174f5d",
 }
 
 export enum MimeType {

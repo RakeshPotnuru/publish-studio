@@ -1,16 +1,17 @@
 import type { MailDataRequired } from "@sendgrid/mail";
 import sgMail from "@sendgrid/mail";
 import { TRPCError } from "@trpc/server";
-import type { Job } from "bullmq";
+import type { Job} from "bullmq";
 import { Queue, Worker } from "bullmq";
 import type { Types } from "mongoose";
 
 import defaultConfig, { bullMQConnectionOptions } from "../config/app";
-import type { EmailTemplate } from "../config/constants";
-import { constants } from "../config/constants";
+import { constants, type EmailTemplate } from "../config/constants";
 import { logtail } from "./logtail";
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+
 
 /**
  * Sends an email to multiple recipients using a specified template.
@@ -126,3 +127,5 @@ export const scheduleEmail = async (data: IEmail) => {
     });
   }
 };
+
+export {default as sgMail} from "@sendgrid/mail";

@@ -192,7 +192,10 @@ export function LinkPreview({
           </Avatar>
           <div>
             {metadata?.title && (
-              <CardTitle className="flex items-center justify-between space-x-4 truncate text-sm">
+              <CardTitle
+                className="flex items-center justify-between space-x-4 truncate text-sm"
+                title={metadata.title}
+              >
                 {shortenText(metadata.title, 20)}
               </CardTitle>
             )}
