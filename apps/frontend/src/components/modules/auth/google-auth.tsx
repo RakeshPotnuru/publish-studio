@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 import { toast } from "@itsrakesh/ui";
 import { setCookie } from "cookies-next";
@@ -9,6 +10,7 @@ import { Center } from "@/components/ui/center";
 import { ErrorBox } from "@/components/ui/error-box";
 import { DotsLoader } from "@/components/ui/loaders/dots-loader";
 import { Shake } from "@/components/ui/shake";
+import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
 
 declare global {
@@ -43,6 +45,8 @@ declare global {
 export function GoogleAuth() {
   const [error, setError] = useState<string | null>(null);
 
+  const redirectTo = useSearchParams().get("redirect_to");
+
   const { theme } = useTheme();
   const authButtonRef = useRef<HTMLDivElement>(null);
   const { mutateAsync: connectGoogle, isLoading } =
@@ -76,7 +80,7 @@ export function GoogleAuth() {
         toast.success(`Authenticated as ${data.user.email}`);
 
         setTimeout(() => {
-          window.location.reload();
+          window.location.href = redirectTo ?? siteConfig.pages.dashboard.link;
         }, 1000);
       },
       onError(error) {

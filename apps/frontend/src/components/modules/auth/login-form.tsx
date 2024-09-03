@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -49,6 +50,7 @@ export function LoginForm() {
     useState(false);
 
   const { coolDown, setCoolDown } = useCoolDown();
+  const redirectTo = useSearchParams().get("redirect_to");
 
   const { mutateAsync: login, isLoading: isLoggingIn } =
     trpc.auth.login.useMutation({
@@ -83,7 +85,7 @@ export function LoginForm() {
         });
 
         setTimeout(() => {
-          window.location.href = siteConfig.pages.dashboard.link;
+          window.location.href = redirectTo ?? siteConfig.pages.dashboard.link;
         }, 1000);
       },
       onError: (error) => {
@@ -154,6 +156,8 @@ export function LoginForm() {
     isLoggingIn ||
     isResendLoading ||
     isCaptchaVerificationLoading;
+
+  const redirectLink = redirectTo ? `?redirect_to=${redirectTo}` : "";
 
   return (
     <Shake isShaking={error}>
@@ -253,7 +257,9 @@ export function LoginForm() {
         <p className="text-center text-sm">
           Don&apos;t have an account?{" "}
           <Button variant="link" className="h-max p-0" asChild>
-            <Link href={siteConfig.pages.register.link}>Register</Link>
+            <Link href={`${siteConfig.pages.register.link}${redirectLink}`}>
+              Register
+            </Link>
           </Button>
         </p>
       </div>

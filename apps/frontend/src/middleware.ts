@@ -26,7 +26,10 @@ export async function middleware(request: NextRequest) {
 
   if (!refreshToken && !authUrls.has(request.nextUrl.pathname)) {
     return NextResponse.redirect(
-      new URL(siteConfig.pages.login.link, request.url),
+      new URL(
+        `${siteConfig.pages.login.link}?redirect_to=${request.url}`,
+        request.url,
+      ),
     );
   }
 
@@ -40,7 +43,10 @@ export async function middleware(request: NextRequest) {
 
       if (!data.access_token) {
         return NextResponse.redirect(
-          new URL(siteConfig.pages.login.link, request.url),
+          new URL(
+            `${siteConfig.pages.login.link}?redirect_to=${request.url}`,
+            request.url,
+          ),
         );
       }
 
@@ -56,7 +62,10 @@ export async function middleware(request: NextRequest) {
       return response;
     } catch {
       return NextResponse.redirect(
-        new URL(siteConfig.pages.login.link, request.url),
+        new URL(
+          `${siteConfig.pages.login.link}?redirect_to=${request.url}`,
+          request.url,
+        ),
       );
     }
   }

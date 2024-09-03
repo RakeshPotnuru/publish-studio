@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -79,6 +80,7 @@ export function RegisterForm() {
   const [email, setEmail] = useState("");
 
   const { coolDown, setCoolDown } = useCoolDown();
+  const redirectTo = useSearchParams().get("redirect_to");
 
   const { mutateAsync: register, isLoading: isRegistering } =
     trpc.auth.register.useMutation({
@@ -148,6 +150,8 @@ export function RegisterForm() {
     form.formState.isSubmitting ||
     isCaptchaVerificationLoading ||
     isResendVerificationEmailLoading;
+
+  const redirectLink = redirectTo ? `?redirect_to=${redirectTo}` : "";
 
   let component;
 
@@ -289,7 +293,9 @@ export function RegisterForm() {
           <p className="text-center text-sm">
             Have an account?{" "}
             <Button variant="link" className="h-max p-0" asChild>
-              <Link href={siteConfig.pages.login.link}>Login</Link>
+              <Link href={`${siteConfig.pages.login.link}${redirectLink}`}>
+                Login
+              </Link>
             </Button>
           </p>
         </div>
