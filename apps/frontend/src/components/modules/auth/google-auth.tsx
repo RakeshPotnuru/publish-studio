@@ -49,6 +49,7 @@ export function GoogleAuth() {
 
   const { theme } = useTheme();
   const authButtonRef = useRef<HTMLDivElement>(null);
+
   const { mutateAsync: connectGoogle, isLoading } =
     trpc.auth.connectGoogle.useMutation({
       onSuccess({ data }) {
@@ -126,8 +127,9 @@ export function GoogleAuth() {
           shape: "rectangular",
         });
         window.google?.accounts.id.prompt();
-      } catch {
+      } catch (error) {
         // Ignore
+        console.log(error);
       }
     }
   }, [theme, handleConnectGoogle]);
