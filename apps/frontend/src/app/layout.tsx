@@ -1,4 +1,5 @@
 import dynamic from "next/dynamic";
+import Script from "next/script";
 
 import type { Metadata, Viewport } from "next";
 
@@ -147,6 +148,10 @@ export default function RootLayout({
             </>
           )}
         </Providers>
+        <Script
+          src="https://accounts.google.com/gsi/client"
+          strategy="beforeInteractive"
+        />
       </body>
     </html>
   );
