@@ -1,4 +1,5 @@
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
+import { FaCaretDown } from "react-icons/fa6";
 import {
   HiOutlineArrowNarrowLeft,
   HiOutlineArrowNarrowRight,
@@ -15,4 +16,5 @@ export const NavigationIcons = {
   RightDoubleArrow: MdKeyboardDoubleArrowRight,
   Right: HiOutlineArrowNarrowRight,
   Left: HiOutlineArrowNarrowLeft,
+  CaretDown: FaCaretDown,
 };

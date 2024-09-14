@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Button, toast } from "@itsrakesh/ui";
 import type { IProject } from "@publish-studio/core";
 import { format } from "date-fns";
+import DOMPurify from "dompurify";
 import docx from "remark-docx";
 import md from "remark-parse";
 import pdf from "remark-pdf";
@@ -16,6 +17,15 @@ import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 interface ExportProjectProps extends MenuProps {
   project: IProject;
 }
+
+const isValidUrl = (url: string) => {
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+};
 
 const fetchImage = async (
   url: string,
@@ -90,9 +100,15 @@ export function ExportProject({
       const blob = (await doc.result) as Blob;
       const url = URL.createObjectURL(blob);
 
+      if (!isValidUrl(url)) {
+        toast.error("Failed to export project to PDF. Please try again.");
+        setIsPDFExporting(false);
+        return;
+      }
+
       const a = document.createElement("a");
-      a.href = url;
-      a.download = `${project.name}.pdf`;
+      a.href = DOMPurify.sanitize(url);
+      a.download = `${encodeURIComponent(project.name).replaceAll("%20", "_")}.pdf`;
 
       document.body.append(a);
       a.click();
@@ -125,9 +141,15 @@ export function ExportProject({
       const blob = (await doc.result) as Blob;
       const url = URL.createObjectURL(blob);
 
+      if (!isValidUrl(url)) {
+        toast.error("Failed to export project to Docx. Please try again.");
+        setIsDocxExporting(false);
+        return;
+      }
+
       const a = document.createElement("a");
-      a.href = url;
-      a.download = `${project.name}.docx`;
+      a.href = DOMPurify.sanitize(url);
+      a.download = `${encodeURIComponent(project.name).replaceAll("%20", "_")}.docx`;
 
       document.body.append(a);
       a.click();

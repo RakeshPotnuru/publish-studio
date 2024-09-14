@@ -2,6 +2,7 @@ import {
   AiFillBell,
   AiFillProject,
   AiFillQuestionCircle,
+  AiFillSnippets,
   AiFillThunderbolt,
   AiOutlineCloudSync,
   AiOutlineLink,
@@ -89,4 +90,5 @@ export const GeneralIcons = {
   Brain: FaBrain,
   Random: FaRandom,
   Billing: IoIosCard,
+  Snippets: AiFillSnippets,
 };

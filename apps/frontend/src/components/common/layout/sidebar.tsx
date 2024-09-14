@@ -122,6 +122,11 @@ export function Sidebar({ className, ...props }: Readonly<SidebarProps>) {
               </NewAssetDialog>
             </SidebarWithCreateShell>
             <SidebarItem
+              label={siteConfig.pages.snippets.title}
+              link={siteConfig.pages.snippets.link}
+              icon={<Icons.Snippets />}
+            />
+            <SidebarItem
               label={siteConfig.pages.planner.title}
               link={siteConfig.pages.planner.link}
               icon={<Icons.Planner />}

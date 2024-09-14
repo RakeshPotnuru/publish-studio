@@ -30,7 +30,7 @@ export function Brainstorm() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <ProButton featureText="use brainstorming tool">
+        <ProButton featuretext="use brainstorming tool">
           <Icons.Brain className="mr-2" /> Brainstorm
         </ProButton>
       </DialogTrigger>
@@ -85,7 +85,7 @@ export function GenerateIdeasButton({
   isLoading,
   onClick,
   disabled,
-}: GenerateIdeasButtonProps) {
+}: Readonly<GenerateIdeasButtonProps>) {
   return (
     <Center>
       <Button

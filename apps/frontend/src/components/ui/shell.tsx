@@ -17,5 +17,5 @@ export function MenuShell({ children, className }: Readonly<ShellProps>) {
 }
 
 export function DashboardShell({ children, className }: Readonly<ShellProps>) {
-  return <div className={cn("space-y-8", className)}>{children}</div>;
+  return <div className={cn("space-y-8 p-8", className)}>{children}</div>;
 }

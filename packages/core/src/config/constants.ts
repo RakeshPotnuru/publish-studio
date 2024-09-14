@@ -46,6 +46,12 @@ const project = {
   },
 } as const;
 
+const snippet = {
+  body: {
+    MAX_LENGTH: 10_000,
+  },
+} as const;
+
 const folder = {
   name: {
     MIN_LENGTH: 3,
@@ -148,6 +154,7 @@ export const constants = {
   pusher,
   genAI,
   planner,
+  snippet,
 };
 
 /* Platform name must match model name. */
@@ -231,4 +238,10 @@ export enum TextTone {
   INFORMAL = "informal",
   FRIENDLY = "friendly",
   PROFESSIONAL = "professional",
+}
+
+export enum SnippetType {
+  TEXT = "text",
+  LINK = "link",
+  IMAGE = "image",
 }

@@ -106,14 +106,14 @@ export const columns: ColumnDef<IProject>[] = [
       <DataTableColumnHeader column={column} title="Created" />
     ),
     cell: ({ row }) => (
-      <span>
+      <time dateTime={row.original.created_at.toString()}>
         {differenceInDays(new Date(), new Date(row.original.created_at)) > 1
           ? format(row.original.created_at, "PPp")
           : formatDistanceToNow(row.original.created_at, {
               addSuffix: true,
               includeSeconds: true,
             })}
-      </span>
+      </time>
     ),
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id)) as boolean;
@@ -128,14 +128,14 @@ export const columns: ColumnDef<IProject>[] = [
       <DataTableColumnHeader column={column} title="Last Edited" />
     ),
     cell: ({ row }) => (
-      <span>
+      <time dateTime={row.original.updated_at.toString()}>
         {differenceInDays(new Date(), new Date(row.original.updated_at)) > 1
           ? format(row.original.updated_at, "PPp")
           : formatDistanceToNow(row.original.updated_at, {
               addSuffix: true,
               includeSeconds: true,
             })}
-      </span>
+      </time>
     ),
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id)) as boolean;

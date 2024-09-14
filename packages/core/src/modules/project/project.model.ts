@@ -85,6 +85,7 @@ const ProjectSchema = new Schema<IProject>(
       readingTime: { type: Number, default: 0 },
       wordCount: { type: Number, default: 0 },
     },
+    snippets: [{ type: Schema.Types.ObjectId, ref: "Snippet" }],
   },
   {
     timestamps: {

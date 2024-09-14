@@ -6,6 +6,7 @@ import { Button } from "@itsrakesh/ui";
 import type { PaginationState } from "@tanstack/react-table";
 
 import { Icons } from "@/assets/icons";
+import { DashboardShell } from "@/components/ui/shell";
 import { trpc } from "@/utils/trpc";
 
 import { DashboardBody } from "../common/dashboard-body";
@@ -15,16 +16,12 @@ import type { TInsertImageOptions } from "./image-widget";
 import { NewAssetDialog } from "./new-asset";
 import { AssetsTable } from "./table";
 
-interface AssetsProps extends React.HTMLAttributes<HTMLElement> {
+interface AssetsProps {
   isWidget?: boolean;
   onImageInsert?: (options: TInsertImageOptions) => void;
 }
 
-export function Assets({
-  isWidget,
-  onImageInsert,
-  ...props
-}: Readonly<AssetsProps>) {
+export function Assets({ isWidget, onImageInsert }: Readonly<AssetsProps>) {
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -38,7 +35,7 @@ export function Assets({
   });
 
   return (
-    <div className="space-y-8" {...props}>
+    <DashboardShell>
       <DashboardHeader
         title="Assets"
         action={
@@ -65,6 +62,6 @@ export function Assets({
           isLoading={isFetching}
         />
       </DashboardBody>
-    </div>
+    </DashboardShell>
   );
 }

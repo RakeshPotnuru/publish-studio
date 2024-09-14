@@ -12,7 +12,7 @@ This project has a monorepo structure, with the following packages:
 
 ### Prerequisites
 
-- Node.js 16+
+- Node.js 20+
 - PNPM
 
 ### Setup

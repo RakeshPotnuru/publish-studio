@@ -109,7 +109,7 @@ export function Actions({
           onClick={form.handleSubmit(handleUpdate)}
           type="button"
           disabled={isLoading || project.updated_at === project.published_at}
-          featureText="update published post in a single click"
+          featuretext="update published post in a single click"
         >
           <ButtonLoader isLoading={isPostUpdating}>Update Post</ButtonLoader>
         </ProButton>

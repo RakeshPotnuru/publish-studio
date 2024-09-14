@@ -20,6 +20,7 @@ import taskRouter from "./modules/planner/task/task.routes";
 import platformRouter from "./modules/platform/platform.routes";
 import postRouter from "./modules/post/post.routes";
 import projectRouter from "./modules/project/project.routes";
+import snippetRouter from "./modules/snippet/snippet.routes";
 import statsRouter from "./modules/stats/stats.routes";
 import subscriptionRouter from "./modules/subscription/subscription.routes";
 import toolsRouter from "./modules/tools/tools.routes";
@@ -51,6 +52,7 @@ const appRouter = router({
   tools: toolsRouter,
   section: sectionRouter,
   task: taskRouter,
+  snippets: snippetRouter,
 });
 
 export default appRouter;

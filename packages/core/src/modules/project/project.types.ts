@@ -36,6 +36,7 @@ export interface IProject {
     readingTime?: number;
     wordCount?: number;
   };
+  snippets?: Types.ObjectId[];
   created_at: Date;
   updated_at: Date;
 }

@@ -12,6 +12,7 @@ export type { IMedium } from "../modules/platform/medium/medium.types";
 export type { IPlatformResponse as IPlatform } from "../modules/platform/platform.types";
 export type { IWordPress } from "../modules/platform/wordpress/wordpress.types";
 export type { IProject } from "../modules/project/project.types";
+export type { ISnippet } from "../modules/snippet/snippet.types";
 export * from "../modules/stats/stats.types";
 export type { ISubscription } from "../modules/subscription/subscription.types";
 export type { IUser } from "../modules/user/user.types";

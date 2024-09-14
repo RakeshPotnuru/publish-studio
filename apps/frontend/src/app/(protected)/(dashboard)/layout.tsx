@@ -15,7 +15,7 @@ export default function DashboardLayout({
   return (
     <div className="flex min-h-[85dvh] flex-row">
       <Sidebar className="w-1/5" />
-      <Shell className="w-full">{children}</Shell>
+      <Shell className="w-full p-0">{children}</Shell>
     </div>
   );
 }

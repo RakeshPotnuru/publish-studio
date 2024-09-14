@@ -12,8 +12,8 @@ import type { PaginationState } from "@tanstack/react-table";
 import readingTime from "reading-time";
 
 import { Images } from "@/assets/images";
+import { useEditor } from "@/components/modules/dashboard/projects/common/use-editor";
 import { siteConfig } from "@/config/site";
-import { useEditor } from "@/hooks/use-editor";
 import { trpc } from "@/utils/trpc";
 
 import { ConnectionCard } from "../../connection-card";

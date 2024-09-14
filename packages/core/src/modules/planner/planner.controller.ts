@@ -5,7 +5,7 @@ import SectionService from "./section/section.service";
 
 export default class PlannerController extends SectionService {
   /**
-   * Initializes a planner for a user with default sections: To Do, In Progress, Done.
+   * Initializes a planner for a user with default sections: Unassigned, To Do, In Progress, Done.
    * This is a one-time operation when a user signs up.
    *
    * @param user_id - The ID of the user for whom the planner is being initialized.

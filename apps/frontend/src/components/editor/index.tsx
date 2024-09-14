@@ -5,7 +5,7 @@ import { memo, useRef } from "react";
 import { cn } from "@itsrakesh/utils";
 import type { IProject } from "@publish-studio/core";
 
-import { useEditor } from "@/hooks/use-editor";
+import { useEditor } from "@/components/modules/dashboard/projects/common/use-editor";
 import { useFullscreenStatus } from "@/hooks/use-fullscreen-status";
 
 import { Heading } from "../ui/heading";

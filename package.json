@@ -8,8 +8,9 @@
   "scripts": {
     "build": "turbo build",
     "clean": "turbo run clean && rm -rf node_modules",
-    "dev": "turbo dev",
-    "dev:frontend": "turbo dev --filter=@publish-studio/frontend",
+    "dev": "turbo dev --filter=@publish-studio/frontend --filter=@publish-studio/core",
+    "frontend": "turbo dev --filter=@publish-studio/frontend",
+    "core": "turbo dev --filter=@publish-studio/core",
     "format": "prettier --write .",
     "preinstall": "npx only-allow pnpm",
     "lint": "turbo lint",

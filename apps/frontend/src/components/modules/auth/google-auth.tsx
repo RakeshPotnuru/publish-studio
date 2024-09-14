@@ -113,6 +113,8 @@ export function GoogleAuth() {
       }
 
       try {
+        console.log(window.google?.accounts.id);
+
         window.google?.accounts.id.initialize({
           client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
           use_fedcm_for_prompt: true,
@@ -127,9 +129,8 @@ export function GoogleAuth() {
           shape: "rectangular",
         });
         window.google?.accounts.id.prompt();
-      } catch (error) {
+      } catch {
         // Ignore
-        console.log(error);
       }
     }
   }, [theme, handleConnectGoogle]);

@@ -118,15 +118,15 @@ export const siteConfig = {
       },
     },
     planner: {
-      title: "Content Planner",
+      title: "Planner",
       description:
         "Quickly jot down your content ideas, track your work and plan your content calendar.",
       link: "/planner",
     },
-    paymentSuccess: {
-      title: "Payment Success",
-      description: "Your payment was successfully processed.",
-      link: "/payment-success",
+    snippets: {
+      title: "Snippets",
+      description: "Save any piece of content.",
+      link: "/snippets",
     },
   },
 };

@@ -51,7 +51,7 @@ export function GenerateOutline({
         size="sm"
         className="w-full"
         disabled={isLoading}
-        featureText="generate an outline of your topic"
+        featuretext="generate an outline of your topic"
       >
         <ButtonLoader isLoading={isLoading}>
           <Icons.Magic className="mr-2 size-4" /> Generate Outline

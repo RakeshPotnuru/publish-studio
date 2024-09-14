@@ -9,6 +9,7 @@ import mongoose from "mongoose";
 import { Icons } from "@/assets/icons";
 import { ErrorBox } from "@/components/ui/error-box";
 import { Heading } from "@/components/ui/heading";
+import { DashboardShell } from "@/components/ui/shell";
 import { useDocumentTitle } from "@/hooks/use-document-title";
 import { trpc } from "@/utils/trpc";
 
@@ -35,7 +36,7 @@ export function Folder({ folderId }: Readonly<{ folderId: string }>) {
   useDocumentTitle(`Folders | ${data?.data.folder_name ?? "Not Found"}`);
 
   return (
-    <div className="space-y-8">
+    <DashboardShell>
       <div className="flex items-center justify-between">
         <Heading className="flex flex-row items-center">
           Folders <Icons.RightChevron />{" "}
@@ -67,6 +68,6 @@ export function Folder({ folderId }: Readonly<{ folderId: string }>) {
           isLoading={isFetching}
         />
       )}
-    </div>
+    </DashboardShell>
   );
 }

@@ -7,7 +7,7 @@ import useUserStore from "@/lib/stores/user";
 import { ButtonLoader } from "./loaders/button-loader";
 
 interface ProButtonProps extends React.ComponentProps<typeof Button> {
-  featureText?: string;
+  featuretext?: string; // do not rename to featureText
 }
 
 /**
@@ -16,7 +16,7 @@ interface ProButtonProps extends React.ComponentProps<typeof Button> {
  * @param className - Additional CSS class names for the button.
  * @param children - The content of the button.
  * @param onClick - The click event handler for the button.
- * @param featureText - The text to display when the button is clicked by non-Pro users.
+ * @param featuretext - The text to display when the button is clicked by non-Pro users.
  * @param ref - The ref to attach to the button element.
  * @param props - Additional props to pass to the button component.
  * @returns The rendered ProButton component.

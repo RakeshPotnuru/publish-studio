@@ -53,7 +53,7 @@ export default class ProjectController extends ProjectService {
     }
 
     return {
-      success: true,
+      status: "success",
       data: {
         project: newProject,
       },
@@ -153,18 +153,9 @@ export default class ProjectController extends ProjectService {
       }
     }
 
-    const updatedProject = await super.updateProjectById(
-      input.id,
-      input.project,
-      ctx.user._id,
-    );
+    await super.updateProjectById(input.id, input.project, ctx.user._id);
 
-    return {
-      status: "success",
-      data: {
-        project: updatedProject,
-      },
-    };
+    return true;
   }
 
   async deleteProjectsHandler(input: Types.ObjectId[], ctx: Context) {

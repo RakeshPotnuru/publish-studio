@@ -74,7 +74,7 @@ export function Description({
                 onClick={handleGenerateDescription}
                 size="icon"
                 disabled={isDescriptionGenerating || isLoading}
-                featureText="generate SEO optimized description"
+                featuretext="generate SEO optimized description"
               >
                 <ButtonLoader isLoading={isDescriptionGenerating} isIcon>
                   <Icons.Magic className="size-4" />
