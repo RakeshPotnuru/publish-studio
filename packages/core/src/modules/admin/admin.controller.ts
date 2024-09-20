@@ -38,23 +38,52 @@ export default class AdminController {
     }
   }
 
+  private authHelpers: AuthHelpers;
+
+  constructor() {
+    this.authHelpers = new AuthHelpers();
+  }
+
   async startFreeTrialHandler() {
     try {
       const users = await User.find({ user_type: "free" }).exec();
 
-      const authHelpers = new AuthHelpers();
+      let successCount = 0;
+      let errorCount = 0;
 
       for (const user of users) {
-        const delay = constants.FREE_TRIAL_TIME - Date.now(); // 7 days
+        try {
+          const delay = constants.FREE_TRIAL_TIME - Date.now();
 
-        await User.updateOne({ _id: user._id }, { user_type: "trial" }).exec();
+          await this.authHelpers.startFreeTrial(user, delay);
+          await User.updateOne(
+            { _id: user._id },
+            { user_type: "trial" },
+          ).exec();
 
-        await authHelpers.startFreeTrial(user, delay);
+          successCount++;
+        } catch (userError) {
+          errorCount++;
+          await logtail.warn(
+            `Failed to start trial for user ${user._id.toString()}: ${JSON.stringify(userError)}`,
+          );
+        }
       }
 
-      return { success: true };
+      await logtail.info(
+        `Processed ${users.length} users. Success: ${successCount}, Errors: ${errorCount}`,
+      );
+
+      return {
+        success: true,
+        totalProcessed: users.length,
+        successCount,
+        errorCount,
+      };
     } catch (error) {
-      await logtail.error(JSON.stringify(error));
+      await logtail.error(
+        `Error in startFreeTrialHandler: ${JSON.stringify(error)}`,
+      );
 
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",

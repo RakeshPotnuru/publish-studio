@@ -9,74 +9,129 @@ import type { IUser } from "../user/user.types";
 import AuthService from "./auth.service";
 
 export default class AuthHelpers extends AuthService {
-  async startFreeTrial(user: IUser, customDelay?: number) {
-    try {
-      const userQueue = new Queue(constants.bullmq.queues.USER, {
-        connection: bullMQConnectionOptions,
+  private userQueue: Queue;
+  private userWorker: Worker;
+
+  constructor() {
+    super();
+    this.userQueue = this.initializeQueue();
+    this.userWorker = this.initializeWorker();
+  }
+
+  private initializeQueue(): Queue {
+    const queue = new Queue(constants.bullmq.queues.USER, {
+      connection: bullMQConnectionOptions,
+    });
+
+    queue.on("error", (error) => {
+      logtail.error(`User queue error: ${JSON.stringify(error)}`).catch(() => {
+        console.error("Error logging user queue error");
       });
+    });
 
+    return queue;
+  }
+
+  private initializeWorker(): Worker {
+    const worker = new Worker<IUser, void>(
+      constants.bullmq.queues.USER,
+      async (job: Job<IUser>): Promise<void> => {
+        const user = job.data;
+        try {
+          await this.updateUser(user._id, {
+            user_type: UserType.FREE,
+          });
+        } catch (error) {
+          logtail
+            .error(`Error updating user: ${JSON.stringify(error)}`, {
+              user_id: user._id,
+            })
+            .catch(() => {
+              console.error("Error logging user update error");
+            });
+          throw error; // Re-throw to mark job as failed
+        }
+      },
+      {
+        connection: bullMQConnectionOptions,
+        removeOnComplete: { count: 0 },
+        removeOnFail: { count: 0 },
+      },
+    );
+
+    worker.on("failed", (job, error) => {
+      logtail
+        .error(`User job failed: ${error.message}`, { job_id: job?.id })
+        .catch(() => {
+          console.error("Error logging failed user job");
+        });
+    });
+
+    worker.on("error", (error) => {
+      logtail.error(`User worker error: ${JSON.stringify(error)}`).catch(() => {
+        console.error("Error logging user worker error");
+      });
+    });
+
+    return worker;
+  }
+
+  async startFreeTrial(user: IUser, customDelay?: number): Promise<void> {
+    try {
+      const now = Date.now();
       const delay =
-        Number(new Date(user.created_at)) +
-        constants.FREE_TRIAL_TIME -
-        Date.now(); // 7 days from created_at
+        customDelay ??
+        Number(new Date(user.created_at)) + constants.FREE_TRIAL_TIME - now;
 
-      await userQueue.add(
+      if (!customDelay && delay <= 0) {
+        throw new Error("Free trial period has already ended");
+      }
+
+      await this.userQueue.add(
         `${constants.bullmq.queues.USER}-job-${user._id.toString()}`,
         user,
         {
-          delay: customDelay ?? delay,
-          removeOnComplete: { count: 0 },
-          removeOnFail: { count: 0 },
-        },
-      );
-      await userQueue.trimEvents(10);
-
-      userQueue.on("error", (error) => {
-        logtail
-          .error(JSON.stringify(error))
-          .catch(() => console.log("Error logging user queue error"));
-      });
-
-      const userWorker = new Worker<IUser, IUser>(
-        constants.bullmq.queues.USER,
-        async (job: Job): Promise<IUser> => {
-          const user = job.data as IUser;
-
-          await super.updateUser(user._id, {
-            user_type: UserType.FREE,
-          });
-
-          return user;
-        },
-        {
-          connection: bullMQConnectionOptions,
+          delay,
           removeOnComplete: { count: 0 },
           removeOnFail: { count: 0 },
         },
       );
 
-      userWorker.on("failed", (job) => {
-        logtail
-          .error(job?.failedReason ?? "User job failed due to unknown reason")
-          .catch(() => console.log("Error logging failed user job"));
-      });
-
-      userWorker.on("error", (error) => {
-        logtail
-          .error(JSON.stringify(error))
-          .catch(() => console.log("Error logging user job error"));
-      });
+      const TRIM_EVENTS_COUNT = 10; // Define as a constant
+      await this.userQueue.trimEvents(TRIM_EVENTS_COUNT);
     } catch (error) {
-      await logtail.error(JSON.stringify(error), {
-        user_id: user._id,
-      });
+      await logtail.error(
+        `Error starting free trial: ${JSON.stringify(error)}`,
+        {
+          user_id: user._id,
+        },
+      );
 
-      console.log("Error starting free trial", error);
+      console.error(error);
 
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: defaultConfig.defaultErrorMessage,
       });
     }
+  }
+
+  // New utility methods
+
+  async pauseWorker(): Promise<void> {
+    await this.userWorker.pause();
+  }
+
+  resumeWorker(): void {
+    this.userWorker.resume();
+  }
+
+  async closeQueueAndWorker(): Promise<void> {
+    await this.userQueue.close();
+    await this.userWorker.close();
+  }
+
+  getWorkerStatus(): string {
+    return this.userWorker.isPaused() ? "paused" : "active";
   }
 }
