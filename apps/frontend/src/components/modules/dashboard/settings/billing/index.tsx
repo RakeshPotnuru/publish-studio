@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Alert, AlertDescription, Badge, Skeleton } from "@itsrakesh/ui";
 import type { Paddle } from "@paddle/paddle-js";
 import { initializePaddle } from "@paddle/paddle-js";
-import { constants, UserType } from "@publish-studio/core/src/config/constants";
+import { UserType } from "@publish-studio/core/src/config/constants";
 import { format } from "date-fns";
 import { useTheme } from "next-themes";
 
@@ -75,13 +75,7 @@ export default function Billing() {
         )}
       {user?.user_type === UserType.TRIAL ? (
         <div>
-          <p>
-            Your free trial expires in{" "}
-            {format(
-              new Date(user.created_at).getTime() + constants.FREE_TRIAL_TIME,
-              "PPp",
-            )}
-          </p>
+          <p>You are on free trial.</p>
         </div>
       ) : (
         <div className="space-y-6">
