@@ -15,6 +15,10 @@ const adminAuthRouter = router({
     .mutation(({ input, ctx }) =>
       new AuthController().adminLoginHandler(input, ctx),
     ),
+
+  startFreeTrial: adminProtectedProcedure.mutation(() =>
+    new AdminController().startFreeTrialHandler(),
+  ),
 });
 
 const adminEmailRouter = router({

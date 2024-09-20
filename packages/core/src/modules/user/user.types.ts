@@ -16,6 +16,8 @@ export interface IUser {
   auth_modes: AuthMode[];
   google_sub?: string;
   customer_id?: string;
+  created_at: Date;
+  updated_at: Date;
 }
 
 export type IUserUpdate = Partial<IUser>;

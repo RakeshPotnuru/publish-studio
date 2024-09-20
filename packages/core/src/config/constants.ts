@@ -71,6 +71,7 @@ const bullmq = {
   queues: {
     POST: "post",
     EMAIL: "email",
+    USER: "user",
   },
 } as const;
 
@@ -82,6 +83,8 @@ const AUTOSAVE_INTERVAL = 3000;
 
 const GLOBAL_STALE_TIME = 1000 * 60 * 2;
 const GLOBAL_CACHE_TIME = 1000 * 60 * 5;
+
+const FREE_TRIAL_TIME = 7 * 24 * 60 * 60 * 1000;
 
 const pusher = {
   events: {
@@ -148,6 +151,7 @@ export const constants = {
   pusher,
   genAI,
   planner,
+  FREE_TRIAL_TIME,
 };
 
 /* Platform name must match model name. */
@@ -181,6 +185,7 @@ export enum Sentiment {
 export enum UserType {
   FREE = "free",
   PRO = "pro",
+  TRIAL = "trial",
 }
 
 export enum AuthMode {

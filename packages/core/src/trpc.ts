@@ -32,7 +32,10 @@ const isAuthenticated = t.middleware(({ next, ctx }) => {
 });
 
 const isPro = t.middleware(async ({ next, ctx }) => {
-  if (ctx.user.user_type !== UserType.PRO) {
+  if (
+    ctx.user.user_type !== UserType.PRO &&
+    ctx.user.user_type !== UserType.TRIAL
+  ) {
     throw new TRPCError({
       code: "UNAUTHORIZED",
       message: "You must be a pro user to access this resource",
