@@ -107,7 +107,7 @@ export default class AuthHelpers extends AuthService {
         },
       );
 
-      console.error("Error starting free trial", error);
+      console.error(error);
 
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
