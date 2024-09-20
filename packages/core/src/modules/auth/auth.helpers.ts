@@ -83,7 +83,7 @@ export default class AuthHelpers extends AuthService {
         customDelay ??
         Number(new Date(user.created_at)) + constants.FREE_TRIAL_TIME - now;
 
-      if (delay <= 0) {
+      if (!customDelay && delay <= 0) {
         throw new Error("Free trial period has already ended");
       }
 
