@@ -53,7 +53,7 @@ export default class AdminController {
 
       for (const user of users) {
         try {
-          const delay = constants.FREE_TRIAL_TIME;
+          const delay = constants.FREE_TRIAL_TIME - Date.now();
 
           await this.authHelpers.startFreeTrial(user, delay);
           await User.updateOne(
