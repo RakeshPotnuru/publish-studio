@@ -20,6 +20,7 @@ import { Icons } from "@/assets/icons";
 import { Tooltip } from "@/components/ui/tooltip";
 import { siteConfig } from "@/config/site";
 import useUserStore from "@/lib/stores/user";
+import { isOnFreeTrial } from "@/utils/is-on-free-trial";
 import { trpc } from "@/utils/trpc";
 
 const handleLogout = () => {
@@ -51,7 +52,8 @@ export default function AccountMenu() {
   });
 
   return (
-    user?.user_type !== UserType.FREE && (
+    user &&
+    (isOnFreeTrial(user) || user?.user_type === UserType.PRO) && (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-8 w-8 rounded-full">

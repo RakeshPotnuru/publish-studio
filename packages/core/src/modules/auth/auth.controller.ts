@@ -19,7 +19,6 @@ import type {
   IResetPasswordInput,
 } from "../auth/auth.types";
 import PlannerController from "../planner/planner.controller";
-import AuthHelpers from "./auth.helpers";
 import AuthService from "./auth.service";
 
 const cookieOptions: SetOption = {
@@ -110,10 +109,7 @@ export default class AuthController extends AuthService {
 
     await super.updateUser(user._id, {
       is_verified: true,
-      user_type: UserType.TRIAL,
     });
-
-    await new AuthHelpers().startFreeTrial(user);
 
     await new PlannerController().initPlanner(user._id);
 
@@ -203,13 +199,11 @@ export default class AuthController extends AuthService {
         last_name: payload.family_name,
         email: payload.email,
         profile_pic: payload.picture,
-        user_type: UserType.TRIAL,
+        user_type: UserType.FREE,
         auth_modes: [AuthMode.GOOGLE],
         google_sub: payload.sub,
         is_verified: true,
       });
-
-      await new AuthHelpers().startFreeTrial(newUser);
 
       const tokens = await super.signTokens(newUser);
 
