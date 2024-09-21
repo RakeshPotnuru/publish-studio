@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import defaultConfig from "../../config/app";
-import { EmailTemplate, UserType } from "../../config/constants";
+import { EmailTemplate } from "../../config/constants";
 import { logtail } from "../../utils/logtail";
 import { sgMail } from "../../utils/sendgrid";
 import User from "../user/user.model";
@@ -25,28 +25,6 @@ export default class AdminController {
           sendAt: sendAt + i * 60, // 1 minute after the previous email
         })),
       });
-
-      return { success: true };
-    } catch (error) {
-      await logtail.error(JSON.stringify(error));
-
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: defaultConfig.defaultErrorMessage,
-      });
-    }
-  }
-
-  async changeTrialToFree() {
-    try {
-      await User.updateMany(
-        {
-          user_type: UserType.TRIAL,
-        },
-        {
-          user_type: UserType.FREE,
-        },
-      ).exec();
 
       return { success: true };
     } catch (error) {

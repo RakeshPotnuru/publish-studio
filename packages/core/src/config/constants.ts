@@ -71,7 +71,6 @@ const bullmq = {
   queues: {
     POST: "post",
     EMAIL: "email",
-    USER: "user",
   },
 } as const;
 
@@ -185,7 +184,6 @@ export enum Sentiment {
 export enum UserType {
   FREE = "free",
   PRO = "pro",
-  TRIAL = "trial",
 }
 
 export enum AuthMode {
