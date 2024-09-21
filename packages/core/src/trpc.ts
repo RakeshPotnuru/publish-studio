@@ -4,9 +4,10 @@ import type { CreateExpressContextOptions } from "@trpc/server/adapters/express"
 import superjson from "superjson";
 import type { OpenApiMeta } from "trpc-openapi";
 
-import { UserType } from "./config/constants";
+import { constants, UserType } from "./config/constants";
 import { deserializeUser } from "./middlewares/deserialize-user";
 import AuthService from "./modules/auth/auth.service";
+import type { IUser } from "./types";
 
 export const createContext = async ({
   req,
@@ -31,11 +32,15 @@ const isAuthenticated = t.middleware(({ next, ctx }) => {
   return next();
 });
 
+const isOnFreeTrial = (user: IUser) => {
+  return (
+    user.user_type === UserType.FREE &&
+    user.created_at.getTime() + constants.FREE_TRIAL_TIME > Date.now()
+  );
+};
+
 const isPro = t.middleware(async ({ next, ctx }) => {
-  if (
-    ctx.user.user_type !== UserType.PRO &&
-    ctx.user.user_type !== UserType.TRIAL
-  ) {
+  if (!isOnFreeTrial(ctx.user) && ctx.user.user_type !== UserType.PRO) {
     throw new TRPCError({
       code: "UNAUTHORIZED",
       message: "You must be a pro user to access this resource",

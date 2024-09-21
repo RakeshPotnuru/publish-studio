@@ -5,12 +5,13 @@ import { useEffect, useState } from "react";
 import { Alert, AlertDescription, Badge, Skeleton } from "@itsrakesh/ui";
 import type { Paddle } from "@paddle/paddle-js";
 import { initializePaddle } from "@paddle/paddle-js";
-import { UserType } from "@publish-studio/core/src/config/constants";
+import { constants } from "@publish-studio/core/src/config/constants";
 import { format } from "date-fns";
 import { useTheme } from "next-themes";
 
 import { siteConfig } from "@/config/site";
 import useUserStore from "@/lib/stores/user";
+import { isOnFreeTrial } from "@/utils/is-on-free-trial";
 import { trpc } from "@/utils/trpc";
 
 import Header from "../common/header";
@@ -73,9 +74,22 @@ export default function Billing() {
             </AlertDescription>
           </Alert>
         )}
-      {user?.user_type === UserType.TRIAL ? (
+      {user && isOnFreeTrial(user) ? (
         <div>
-          <p>You are on free trial.</p>
+          <p>
+            Your free trial will end on{" "}
+            <time
+              dateTime={new Date(
+                user.created_at.getTime() + constants.FREE_TRIAL_TIME,
+              ).toString()}
+            >
+              {format(
+                user.created_at.getTime() + constants.FREE_TRIAL_TIME,
+                "PP",
+              )}
+            </time>
+            .
+          </p>
         </div>
       ) : (
         <div className="space-y-6">

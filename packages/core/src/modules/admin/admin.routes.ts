@@ -17,7 +17,7 @@ const adminAuthRouter = router({
     ),
 
   startFreeTrial: adminProtectedProcedure.mutation(() =>
-    new AdminController().startFreeTrialHandler(),
+    new AdminController().changeTrialToFree(),
   ),
 });
 

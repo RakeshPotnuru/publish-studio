@@ -1,10 +1,9 @@
 import { TRPCError } from "@trpc/server";
 
 import defaultConfig from "../../config/app";
-import { constants, EmailTemplate } from "../../config/constants";
+import { EmailTemplate, UserType } from "../../config/constants";
 import { logtail } from "../../utils/logtail";
 import { sgMail } from "../../utils/sendgrid";
-import AuthHelpers from "../auth/auth.helpers";
 import User from "../user/user.model";
 
 export default class AdminController {
@@ -38,52 +37,20 @@ export default class AdminController {
     }
   }
 
-  private authHelpers: AuthHelpers;
-
-  constructor() {
-    this.authHelpers = new AuthHelpers();
-  }
-
-  async startFreeTrialHandler() {
+  async changeTrialToFree() {
     try {
-      const users = await User.find({ user_type: "free" }).exec();
+      await User.updateMany(
+        {
+          user_type: UserType.TRIAL,
+        },
+        {
+          user_type: UserType.FREE,
+        },
+      ).exec();
 
-      let successCount = 0;
-      let errorCount = 0;
-
-      for (const user of users) {
-        try {
-          const delay = constants.FREE_TRIAL_TIME - Date.now();
-
-          await this.authHelpers.startFreeTrial(user, delay);
-          await User.updateOne(
-            { _id: user._id },
-            { user_type: "trial" },
-          ).exec();
-
-          successCount++;
-        } catch (userError) {
-          errorCount++;
-          await logtail.warn(
-            `Failed to start trial for user ${user._id.toString()}: ${JSON.stringify(userError)}`,
-          );
-        }
-      }
-
-      await logtail.info(
-        `Processed ${users.length} users. Success: ${successCount}, Errors: ${errorCount}`,
-      );
-
-      return {
-        success: true,
-        totalProcessed: users.length,
-        successCount,
-        errorCount,
-      };
+      return { success: true };
     } catch (error) {
-      await logtail.error(
-        `Error in startFreeTrialHandler: ${JSON.stringify(error)}`,
-      );
+      await logtail.error(JSON.stringify(error));
 
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
