@@ -1,8 +1,6 @@
 {
   "cSpell.words": [
-    "bullmq",
     "bycrypt",
-    "chartjs",
     "cloudinary",
     "configcat",
     "delisted",
@@ -42,8 +40,7 @@
     "TRPC",
     "unmarshal",
     "unoptimized",
-    "upstash",
-    "waitlist",
     "zustand"
-  ]
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

@@ -1,5 +1,9 @@
 ## Publish Studio
 
+Start writing - [publishstudio.one](https://www.publishstudio.one)
+
+Try interactive demo - [demo](https://story.screenspace.io/rakesh-potnuru/65496589)
+
 This project has a monorepo structure, with the following packages:
 
 - [![Better Stack Badge](https://uptime.betterstack.com/status-badges/v1/monitor/11ryc.svg)](https://status.publishstudio.one/) `@publish-studio/core`: Core package, containing the main logic of the project aka the tRPC server. Check it at [packages/core](packages/core).
@@ -12,7 +16,7 @@ This project has a monorepo structure, with the following packages:
 
 ### Prerequisites
 
-- Node.js 16+
+- Node.js 20
 - PNPM
 
 ### Setup
