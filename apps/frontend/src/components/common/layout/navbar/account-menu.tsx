@@ -15,6 +15,7 @@ import {
 } from "@itsrakesh/ui";
 import { UserType } from "@publish-studio/core/src/config/constants";
 import { deleteCookie } from "cookies-next";
+import { usePostHog } from "posthog-js/react";
 
 import { Icons } from "@/assets/icons";
 import { Tooltip } from "@/components/ui/tooltip";
@@ -37,11 +38,15 @@ const handleLogout = () => {
 
 export default function AccountMenu() {
   const { user, setUser, setIsLoading } = useUserStore();
+  const posthog = usePostHog();
 
   const { isFetching } = trpc.auth.getMe.useQuery(undefined, {
     onSuccess: ({ data }) => {
       setUser(data.user);
       setIsLoading(false);
+      posthog.identify(user?._id.toString(), {
+        email: user?.email,
+      });
     },
     onError: (error) => {
       if (error.data?.code === "UNAUTHORIZED") {
