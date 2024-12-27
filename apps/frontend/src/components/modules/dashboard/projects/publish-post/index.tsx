@@ -92,7 +92,7 @@ export function PublishPost({
 
   const { mutateAsync: publishPost, isLoading: isPostPublishing } =
     trpc.post.publish.useMutation({
-      onSuccess: async ({ data }) => {
+      onSuccess: ({ data }) => {
         toast(data.message, {
           action: {
             label: "Refresh",
@@ -103,7 +103,7 @@ export function PublishPost({
             },
           },
         });
-        await handleRefresh();
+        window.location.reload();
       },
       onError: (error) => {
         toast.error(error.message);

@@ -130,7 +130,7 @@ export default class DevToController extends DevToService {
         description: post.description,
         published: platform.status,
         canonical_url: post.canonical_url,
-        tags: post.tags?.devto_tags,
+        tags: post.tags?.devto_tags?.map((tag) => tag.replaceAll(/\W/g, "")), // remove non-alphanumeric characters from tags
         main_image: post.cover_image,
       },
       user_id,
@@ -174,7 +174,7 @@ export default class DevToController extends DevToService {
         description: post.description,
         published: platform.status,
         canonical_url: post.canonical_url,
-        tags: post.tags?.devto_tags,
+        tags: post.tags?.devto_tags?.map((tag) => tag.replaceAll(/\W/g, "")), // remove non-alphanumeric characters from tags
         main_image: post.cover_image,
       },
       Number.parseInt(post_id),
