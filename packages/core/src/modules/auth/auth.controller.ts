@@ -218,6 +218,8 @@ export default class AuthController extends AuthService {
       cookies.set("refresh_token", refresh_token, refreshTokenCookieOptions);
       cookies.set("logged_in", "true", accessTokenCookieOptions);
 
+      await new PlannerController().initPlanner(newUser._id);
+
       await super.sendWelcomeEmail(newUser, {
         ...ctx,
         user: { ...ctx.user, _id: newUser._id },
