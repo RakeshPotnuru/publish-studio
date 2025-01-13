@@ -18,7 +18,7 @@ export function Footer({ className, ...props }: Readonly<FooterProps>) {
       )}
       {...props}
     >
-      <p>&copy; Publish Studio, 2024</p>
+      <p>&copy; Publish Studio, {new Date().getFullYear()}</p>
       <Button variant="link" className="h-max p-0 text-xs" asChild>
         <Link href={siteConfig.links.privacyPolicy} target="_blank">
           Privacy Policy
