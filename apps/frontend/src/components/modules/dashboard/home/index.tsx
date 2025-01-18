@@ -11,7 +11,7 @@ export function Home() {
   return (
     <div className="space-y-8">
       <Heading className="text-center font-extrabold">
-        <ProText>What would you like to write today?</ProText>
+        <ProText>What will you write today?</ProText>
       </Heading>
       <Stats />
       <Heading level={2}>Recent</Heading>

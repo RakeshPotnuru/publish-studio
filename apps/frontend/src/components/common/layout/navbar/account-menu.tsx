@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Link from "next/link";
 
 import {
@@ -44,9 +45,6 @@ export default function AccountMenu() {
     onSuccess: ({ data }) => {
       setUser(data.user);
       setIsLoading(false);
-      posthog.identify(user?._id.toString(), {
-        email: user?.email,
-      });
     },
     onError: (error) => {
       if (error.data?.code === "UNAUTHORIZED") {
@@ -55,6 +53,14 @@ export default function AccountMenu() {
       setIsLoading(false);
     },
   });
+
+  useEffect(() => {
+    if (user) {
+      posthog.identify(user?._id.toString(), {
+        email: user?.email,
+      });
+    }
+  }, [user, posthog]);
 
   return (
     user &&
