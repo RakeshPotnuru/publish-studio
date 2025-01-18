@@ -23,6 +23,7 @@ import { siteConfig } from "@/config/site";
 import useUserStore from "@/lib/stores/user";
 import { isOnFreeTrial } from "@/utils/is-on-free-trial";
 import { trpc } from "@/utils/trpc";
+import { useEffect } from "react";
 
 const handleLogout = () => {
   try {
@@ -44,9 +45,6 @@ export default function AccountMenu() {
     onSuccess: ({ data }) => {
       setUser(data.user);
       setIsLoading(false);
-      posthog.identify(user?._id.toString(), {
-        email: user?.email,
-      });
     },
     onError: (error) => {
       if (error.data?.code === "UNAUTHORIZED") {
@@ -55,6 +53,14 @@ export default function AccountMenu() {
       setIsLoading(false);
     },
   });
+
+  useEffect(() => {
+    if (user) {
+      posthog.identify(user?._id.toString(), {
+        email: user?.email,
+      });
+    }
+  }, [user, posthog]);
 
   return (
     user &&
