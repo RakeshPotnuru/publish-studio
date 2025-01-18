@@ -24,6 +24,7 @@ import { siteConfig } from "@/config/site";
 import useUserStore from "@/lib/stores/user";
 import { isOnFreeTrial } from "@/utils/is-on-free-trial";
 import { trpc } from "@/utils/trpc";
+import { useEffect } from "react";
 
 const handleLogout = () => {
   try {
