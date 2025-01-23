@@ -10,18 +10,14 @@ export function FoldersLoader({
   size,
   count = 10,
 }: Readonly<FoldersLoaderProps>) {
-  return (
-    <div className="flex flex-row space-x-2">
-      {Array.from({ length: count }).map((_, index) => {
-        return (
-          <Skeleton
-            key={`skeleton-${index.toString()}`}
-            className={cn("h-12 w-64", {
-              "h-8": size === "sm",
-            })}
-          />
-        );
-      })}
-    </div>
-  );
+  return Array.from({ length: count }).map((_, index) => {
+    return (
+      <Skeleton
+        key={`skeleton-${index.toString()}`}
+        className={cn("h-12 w-64", {
+          "h-8": size === "sm",
+        })}
+      />
+    );
+  });
 }

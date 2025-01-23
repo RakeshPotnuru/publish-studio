@@ -90,7 +90,9 @@ export function FoldersTable<TData, TValue>({
     <div className="space-y-4">
       <Toolbar table={table} />
       {isLoading ? (
-        <FoldersLoader />
+        <div className="flex flex-wrap gap-4">
+          <FoldersLoader />
+        </div>
       ) : (
         <div className="grid grid-cols-4 gap-4">
           {table.getRowModel().rows.length > 0 ? (
