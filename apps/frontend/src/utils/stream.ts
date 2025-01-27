@@ -1,5 +1,3 @@
-import { getCookie } from "cookies-next";
-
 export async function* getIterableStream(
   body: ReadableStream<Uint8Array>,
 ): AsyncIterable<string> {
@@ -21,13 +19,12 @@ export const generateStream = async (
   method: "GET" | "POST",
   body: string,
 ): Promise<AsyncIterable<string>> => {
-  const token = getCookie("ps_access_token");
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${path}`, {
     method,
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
     },
+    credentials: "include",
     body,
   });
 

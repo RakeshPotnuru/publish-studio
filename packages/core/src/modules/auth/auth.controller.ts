@@ -195,8 +195,8 @@ export default class AuthController extends AuthService {
     // If user does not exist, create a new user and login the user.
     if (!user) {
       const newUser = await super.createUser({
-        first_name: payload.given_name,
-        last_name: payload.family_name,
+        first_name: payload.given_name ?? payload.email.split("@")[0],
+        last_name: payload.family_name ?? "PB",
         email: payload.email,
         profile_pic: payload.picture,
         user_type: UserType.FREE,
@@ -228,8 +228,6 @@ export default class AuthController extends AuthService {
       return {
         status: "success",
         data: {
-          access_token,
-          refresh_token,
           user: newUser,
         },
       };
@@ -263,8 +261,6 @@ export default class AuthController extends AuthService {
     return {
       status: "success",
       data: {
-        access_token,
-        refresh_token,
         user,
       },
     };
@@ -318,8 +314,6 @@ export default class AuthController extends AuthService {
     return {
       status: "success",
       data: {
-        access_token,
-        refresh_token,
         user,
       },
     };

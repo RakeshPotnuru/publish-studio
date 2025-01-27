@@ -8,8 +8,8 @@ import { createTRPCServerClient } from "./utils/trpc";
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
-  const accessToken = request.cookies.get("ps_access_token");
-  const refreshToken = request.cookies.get("ps_refresh_token");
+  const isLoggedIn = request.cookies.get("logged_in")?.value === "true";
+  const refreshToken = request.cookies.get("refresh_token");
 
   const authUrls = new Set([
     siteConfig.pages.login.link,
@@ -18,7 +18,7 @@ export async function middleware(request: NextRequest) {
     siteConfig.pages.verifyEmail.link,
   ]);
 
-  if (accessToken && authUrls.has(request.nextUrl.pathname)) {
+  if (isLoggedIn && authUrls.has(request.nextUrl.pathname)) {
     return NextResponse.redirect(
       new URL(siteConfig.pages.dashboard.link, request.url),
     );
@@ -33,7 +33,7 @@ export async function middleware(request: NextRequest) {
     );
   }
 
-  if (!accessToken && refreshToken && !authUrls.has(request.nextUrl.pathname)) {
+  if (!isLoggedIn && refreshToken && !authUrls.has(request.nextUrl.pathname)) {
     try {
       const client = createTRPCServerClient({
         Cookie: `refresh_token=${refreshToken.value}`,
@@ -52,7 +52,7 @@ export async function middleware(request: NextRequest) {
 
       const accessTokenDecoded = jwtDecode<{ exp: number }>(data.access_token);
 
-      response.cookies.set("ps_access_token", data.access_token, {
+      response.cookies.set("access_token", data.access_token, {
         path: "/",
         sameSite: "lax",
         expires: new Date(accessTokenDecoded.exp * 1000),

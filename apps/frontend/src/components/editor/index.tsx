@@ -2,12 +2,16 @@
 
 import { memo, useRef } from "react";
 
+import { Button } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 import type { IProject } from "@publish-studio/core";
 
+import { Icons } from "@/assets/icons";
 import { useEditor } from "@/hooks/use-editor";
 import { useFullscreenStatus } from "@/hooks/use-fullscreen-status";
+import { shortenText } from "@/utils/text-shortener";
 
+import { RenameProject } from "../modules/dashboard/projects/rename-project";
 import { Heading } from "../ui/heading";
 import { Shell } from "../ui/shell";
 import { EditorBody } from "./editor-body";
@@ -59,6 +63,21 @@ export function Editor({
       <div className="w-1/4">
         <div className="sticky top-0 z-10 flex flex-col">
           <ProjectToolbar editor={editor} project={project} />
+          <div className="flex flex-row items-center border-t bg-background px-2 py-0">
+            <p title={project.name} className="text-sm">
+              {shortenText(project.name, 40)}
+            </p>
+            <RenameProject project={project}>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="hover:bg-transparent hover:opacity-80"
+                aria-label="Rename project"
+              >
+                <Icons.Edit />
+              </Button>
+            </RenameProject>
+          </div>
           <Shell className="h-[95dvh] space-y-2 overflow-auto border-t pb-16">
             <Heading level={4} className="text-muted-foreground">
               TABLE OF CONTENTS

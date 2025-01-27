@@ -1,8 +1,8 @@
 "use client";
 
 import { Button, toast } from "@itsrakesh/ui";
-import { deleteCookie } from "cookies-next";
 
+import { logout } from "@/components/common/layout/navbar/actions";
 import { Heading } from "@/components/ui/heading";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { siteConfig } from "@/config/site";
@@ -11,7 +11,7 @@ import { trpc } from "@/utils/trpc";
 import Header from "./common/header";
 
 export function Security() {
-  const { mutateAsync: logout, isLoading } = trpc.auth.logout.useMutation({
+  const { mutateAsync: logoutAll, isLoading } = trpc.auth.logout.useMutation({
     onError: (error) => {
       toast.error(error.message);
     },
@@ -19,10 +19,8 @@ export function Security() {
 
   const handleLogout = async () => {
     try {
+      await logoutAll();
       await logout();
-
-      deleteCookie("ps_access_token", { path: "/" });
-      deleteCookie("ps_refresh_token", { path: "/" });
 
       window.google?.accounts.id.disableAutoSelect();
       window.location.href = siteConfig.pages.login.link;

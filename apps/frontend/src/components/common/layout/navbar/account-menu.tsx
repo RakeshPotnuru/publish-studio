@@ -15,7 +15,6 @@ import {
   Skeleton,
 } from "@itsrakesh/ui";
 import { UserType } from "@publish-studio/core/src/config/constants";
-import { deleteCookie } from "cookies-next";
 import { usePostHog } from "posthog-js/react";
 
 import { Icons } from "@/assets/icons";
@@ -25,10 +24,11 @@ import useUserStore from "@/lib/stores/user";
 import { isOnFreeTrial } from "@/utils/is-on-free-trial";
 import { trpc } from "@/utils/trpc";
 
-const handleLogout = () => {
+import { logout } from "./actions";
+
+const handleLogout = async () => {
   try {
-    deleteCookie("ps_access_token", { path: "/" });
-    deleteCookie("ps_refresh_token", { path: "/" });
+    await logout();
 
     window.google?.accounts.id.disableAutoSelect();
     window.location.href = siteConfig.pages.login.link;
@@ -48,7 +48,9 @@ export default function AccountMenu() {
     },
     onError: (error) => {
       if (error.data?.code === "UNAUTHORIZED") {
-        handleLogout();
+        handleLogout().catch(() => {
+          // ignore
+        });
       }
       setIsLoading(false);
     },

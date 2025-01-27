@@ -16,10 +16,10 @@ export const verifyGoogleToken = async (token: string) => {
 
     return ticket.getPayload() as {
       sub: string;
-      given_name: string;
-      family_name: string;
+      given_name?: string;
+      family_name?: string;
       email: string;
-      picture: string;
+      picture?: string;
     };
   } catch (error) {
     await logtail.error(JSON.stringify(error));

@@ -30,10 +30,7 @@ export const createTRPCServerClient = (headers: HTTPHeaders) => {
           const fetch = getFetch();
           return fetch(input, {
             ...init,
-            credentials:
-              process.env.NEXT_PUBLIC_TRPC_API_URL === "production"
-                ? "include"
-                : "omit",
+            credentials: "include",
           });
         },
       }),

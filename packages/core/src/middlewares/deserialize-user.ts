@@ -1,5 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import type { CreateExpressContextOptions } from "@trpc/server/adapters/express";
+import Cookies from "cookies";
 import type { NextFunction, Request, Response } from "express";
 
 import defaultConfig from "../config/app";
@@ -14,10 +15,8 @@ export const deserializeUser = async ({
   res,
 }: CreateExpressContextOptions) => {
   try {
-    let access_token = "";
-    if (req.headers.authorization?.startsWith("Bearer")) {
-      access_token = req.headers.authorization.split(" ")[1];
-    }
+    const cookies = new Cookies(req, res);
+    const accessToken = cookies.get("access_token");
 
     const notAuthenticated = {
       req,
@@ -25,13 +24,13 @@ export const deserializeUser = async ({
       user: {} as unknown as IUser,
     };
 
-    if (!access_token) {
+    if (!accessToken) {
       return notAuthenticated;
     }
 
     // Validate Access Token
     const decoded = await verifyJwt<{ sub: string }>(
-      access_token,
+      accessToken,
       "accessTokenPublicKey",
     );
 
@@ -82,12 +81,10 @@ export const authMiddleware = async (
   next: NextFunction,
 ) => {
   try {
-    let access_token = "";
-    if (req.headers.authorization?.startsWith("Bearer")) {
-      access_token = req.headers.authorization.split(" ")[1];
-    }
+    const cookies = new Cookies(req, res);
+    const accessToken = cookies.get("access_token");
 
-    if (!access_token) {
+    if (!accessToken) {
       return res.status(401).json({
         message: "Unauthorized",
       });
@@ -95,7 +92,7 @@ export const authMiddleware = async (
 
     // Validate Access Token
     const decoded = await verifyJwt<{ sub: string }>(
-      access_token,
+      accessToken,
       "accessTokenPublicKey",
     );
 

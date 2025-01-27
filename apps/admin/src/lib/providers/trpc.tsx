@@ -4,7 +4,6 @@ import { constants } from "@publish-studio/core/src/config/constants";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { getFetch, httpBatchLink, loggerLink } from "@trpc/client";
-import { getCookie } from "cookies-next";
 import superjson from "superjson";
 
 import { trpc } from "../../utils/trpc";
@@ -27,8 +26,6 @@ export function TRPCProvider({
     throw new Error("NEXT_PUBLIC_TRPC_API_URL is not set");
   }
 
-  const token = getCookie("ps_access_token");
-
   const trpcClient = trpc.createClient({
     transformer: superjson,
     links: [
@@ -37,21 +34,11 @@ export function TRPCProvider({
       }),
       httpBatchLink({
         url: process.env.NEXT_PUBLIC_TRPC_API_URL,
-        headers() {
-          if (!token) {
-            return {};
-          }
-
-          return {
-            Authorization: `Bearer ${token}`,
-          };
-        },
         fetch: async (input, init?) => {
           const fetch = getFetch();
           return fetch(input, {
             ...init,
-            credentials:
-              process.env.NODE_ENV === "production" ? "include" : "omit",
+            credentials: "include",
           });
         },
       }),

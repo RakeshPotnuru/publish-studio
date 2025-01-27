@@ -17,19 +17,19 @@ import {
   Skeleton,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
-import { deleteCookie } from "cookies-next";
 
 import { Icons } from "@/assets/icons";
 import { Images } from "@/assets/images";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
 
+import { logout } from "./actions";
+
 type NavbarProps = React.HTMLAttributes<HTMLElement>;
 
-const handleLogout = () => {
+const handleLogout = async () => {
   try {
-    deleteCookie("ps_access_token", { path: "/" });
-    deleteCookie("ps_refresh_token", { path: "/" });
+    await logout();
 
     window.location.href = siteConfig.pages.login.link;
   } catch {
@@ -41,7 +41,9 @@ export function Navbar({ className, ...props }: Readonly<NavbarProps>) {
   const { isFetching, data } = trpc.auth.getMe.useQuery(undefined, {
     onError: (error) => {
       if (error.data?.code === "UNAUTHORIZED") {
-        handleLogout();
+        handleLogout().catch(() => {
+          // ignore
+        });
       }
     },
   });
@@ -52,7 +54,7 @@ export function Navbar({ className, ...props }: Readonly<NavbarProps>) {
     <nav
       className={cn(
         "mx-12 mt-4 flex items-center justify-between rounded-2xl bg-background px-8 py-4 shadow-lg",
-        className
+        className,
       )}
       {...props}
     >

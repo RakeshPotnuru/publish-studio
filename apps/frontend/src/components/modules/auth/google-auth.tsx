@@ -2,8 +2,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 import { toast } from "@itsrakesh/ui";
-import { setCookie } from "cookies-next";
-import { jwtDecode } from "jwt-decode";
 import { useTheme } from "next-themes";
 
 import { Center } from "@/components/ui/center";
@@ -53,31 +51,6 @@ export function GoogleAuth() {
   const { mutateAsync: connectGoogle, isLoading } =
     trpc.auth.connectGoogle.useMutation({
       onSuccess({ data }) {
-        if (!data.access_token || !data.refresh_token) {
-          setError("Something went wrong. Please try again.");
-          return;
-        }
-
-        const accessTokenDecoded = jwtDecode<{ exp: number }>(
-          data.access_token,
-        );
-        setCookie("ps_access_token", data.access_token, {
-          path: "/",
-          expires: new Date(accessTokenDecoded.exp * 1000),
-          sameSite: "lax",
-          secure: process.env.NODE_ENV === "production",
-        });
-
-        const refreshTokenDecoded = jwtDecode<{ exp: number }>(
-          data.refresh_token,
-        );
-        setCookie("ps_refresh_token", data.refresh_token, {
-          path: "/",
-          expires: new Date(refreshTokenDecoded.exp * 1000),
-          sameSite: "lax",
-          secure: process.env.NODE_ENV === "production",
-        });
-
         toast.success(`Authenticated as ${data.user.email}`);
 
         setTimeout(() => {

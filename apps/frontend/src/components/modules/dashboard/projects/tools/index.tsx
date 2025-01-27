@@ -11,7 +11,6 @@ import type { IProject } from "@publish-studio/core";
 import type { MenuProps } from "@/components/editor/menu/fixed-menu";
 import { Tooltip } from "@/components/ui/tooltip";
 
-import { ExportProject } from "./export-project";
 import { GenerateOutline } from "./generate-outline";
 import { ImportMarkdown } from "./import-content";
 import { ToneAnalysis } from "./tone-analysis";
@@ -40,7 +39,6 @@ export function ProjectTools({
         </SheetHeader>
         <div className="my-4 space-y-6">
           <ImportMarkdown editor={editor} />
-          <ExportProject editor={editor} project={project} />
           <GenerateOutline editor={editor} project_id={project._id} />
           <ToneAnalysis editor={editor} project={project} />
         </div>

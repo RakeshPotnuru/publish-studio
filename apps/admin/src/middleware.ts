@@ -8,20 +8,20 @@ import { createTRPCServerClient } from "./utils/trpc";
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
-  const accessToken = request.cookies.get("ps_access_token");
-  const refreshToken = request.cookies.get("ps_refresh_token");
+  const accessToken = request.cookies.get("access_token");
+  const refreshToken = request.cookies.get("refresh_token");
 
   const authUrls = new Set([siteConfig.pages.login.link]);
 
   if (accessToken && authUrls.has(request.nextUrl.pathname)) {
     return NextResponse.redirect(
-      new URL(siteConfig.pages.dashboard.link, request.url)
+      new URL(siteConfig.pages.dashboard.link, request.url),
     );
   }
 
   if (!refreshToken && !authUrls.has(request.nextUrl.pathname)) {
     return NextResponse.redirect(
-      new URL(siteConfig.pages.login.link, request.url)
+      new URL(siteConfig.pages.login.link, request.url),
     );
   }
 
@@ -35,13 +35,13 @@ export async function middleware(request: NextRequest) {
 
       if (!data.access_token) {
         return NextResponse.redirect(
-          new URL(siteConfig.pages.login.link, request.url)
+          new URL(siteConfig.pages.login.link, request.url),
         );
       }
 
       const accessTokenDecoded = jwtDecode<{ exp: number }>(data.access_token);
 
-      response.cookies.set("ps_access_token", data.access_token, {
+      response.cookies.set("access_token", data.access_token, {
         path: "/",
         sameSite: "lax",
         expires: new Date(accessTokenDecoded.exp * 1000),
@@ -51,7 +51,7 @@ export async function middleware(request: NextRequest) {
       return response;
     } catch {
       return NextResponse.redirect(
-        new URL(siteConfig.pages.login.link, request.url)
+        new URL(siteConfig.pages.login.link, request.url),
       );
     }
   }

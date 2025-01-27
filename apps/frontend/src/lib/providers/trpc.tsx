@@ -4,7 +4,6 @@ import { constants } from "@publish-studio/core/src/config/constants";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { getFetch, httpBatchLink, loggerLink } from "@trpc/client";
-import { getCookie } from "cookies-next";
 import Pusher from "pusher-js";
 import superjson from "superjson";
 
@@ -27,8 +26,6 @@ const queryClient = new QueryClient({
   },
 });
 
-const token = getCookie("ps_access_token");
-
 const trpcClient = trpc.createClient({
   transformer: superjson,
   links: [
@@ -37,21 +34,11 @@ const trpcClient = trpc.createClient({
     }),
     httpBatchLink({
       url: process.env.NEXT_PUBLIC_TRPC_API_URL,
-      headers() {
-        if (!token) {
-          return {};
-        }
-
-        return {
-          Authorization: `Bearer ${token}`,
-        };
-      },
       fetch: async (input, init?) => {
         const fetch = getFetch();
         return fetch(input, {
           ...init,
-          credentials:
-            process.env.NODE_ENV === "production" ? "include" : "omit",
+          credentials: "include",
         });
       },
     }),
@@ -71,9 +58,7 @@ export const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
   cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
   userAuthentication: {
     async customHandler({ socketId }, callback) {
-      const client = createTRPCServerClient({
-        Authorization: `Bearer ${token}`,
-      });
+      const client = createTRPCServerClient();
 
       const data = await client.auth.pusherAuth.mutate({
         socket_id: socketId,
@@ -84,9 +69,7 @@ export const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
   },
 });
 
-if (token) {
-  pusher.signin();
-}
+pusher.signin();
 
 export function TRPCProvider({
   children,

@@ -17,8 +17,6 @@ import {
   toast,
 } from "@itsrakesh/ui";
 import { ErrorCause } from "@publish-studio/core/src/config/constants";
-import { setCookie } from "cookies-next";
-import { jwtDecode } from "jwt-decode";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -55,31 +53,6 @@ export function LoginForm() {
   const { mutateAsync: login, isLoading: isLoggingIn } =
     trpc.auth.login.useMutation({
       onSuccess: ({ data }) => {
-        if (!data.access_token || !data.refresh_token) {
-          setError("Something went wrong. Please try again.");
-          return;
-        }
-
-        const accessTokenDecoded = jwtDecode<{ exp: number }>(
-          data.access_token,
-        );
-        setCookie("ps_access_token", data.access_token, {
-          path: "/",
-          expires: new Date(accessTokenDecoded.exp * 1000),
-          sameSite: "lax",
-          secure: process.env.NODE_ENV === "production",
-        });
-
-        const refreshTokenDecoded = jwtDecode<{ exp: number }>(
-          data.refresh_token,
-        );
-        setCookie("ps_refresh_token", data.refresh_token, {
-          path: "/",
-          expires: new Date(refreshTokenDecoded.exp * 1000),
-          sameSite: "lax",
-          secure: process.env.NODE_ENV === "production",
-        });
-
         toast.success("Logged in successfully", {
           description: `Welcome back, ${data.user.first_name} ${data.user.last_name}!`,
         });

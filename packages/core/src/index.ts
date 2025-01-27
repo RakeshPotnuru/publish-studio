@@ -38,29 +38,23 @@ app.use((req, res, next) => {
 });
 
 const corsOptions: CorsOptions = {
-  origin:
-    process.env.NODE_ENV === "production"
-      ? (
-          origin: string | undefined,
-          callback: (error: Error | null, allow?: boolean) => void,
-        ) => {
-          if (
-            !origin ||
-            process.env.WHITELIST_ORIGINS.split(",")?.includes(origin)
-          ) {
-            callback(null, true);
-          } else {
-            callback(
-              new TRPCError({
-                code: "UNAUTHORIZED",
-                message: "Not allowed by CORS",
-              }),
-            );
-          }
-        }
-      : "*",
+  origin: (
+    origin: string | undefined,
+    callback: (error: Error | null, allow?: boolean) => void,
+  ) => {
+    if (!origin || process.env.WHITELIST_ORIGINS.split(",")?.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(
+        new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Not allowed by CORS",
+        }),
+      );
+    }
+  },
   optionsSuccessStatus: 200,
-  credentials: process.env.NODE_ENV === "production",
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
