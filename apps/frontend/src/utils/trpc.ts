@@ -10,7 +10,7 @@ import {
 import superjson from "superjson";
 
 export const trpc = createTRPCReact<AppRouter>();
-export const createTRPCServerClient = (headers: HTTPHeaders) => {
+export const createTRPCServerClient = (headers?: HTTPHeaders) => {
   if (!process.env.NEXT_PUBLIC_TRPC_API_URL) {
     throw new Error("NEXT_PUBLIC_TRPC_API_URL is not set");
   }
@@ -24,7 +24,7 @@ export const createTRPCServerClient = (headers: HTTPHeaders) => {
       httpBatchLink({
         url: process.env.NEXT_PUBLIC_TRPC_API_URL,
         headers() {
-          return headers;
+          return headers ?? {};
         },
         fetch: async (input, init?) => {
           const fetch = getFetch();
