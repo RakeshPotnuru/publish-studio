@@ -26,6 +26,7 @@ const cookieOptions: SetOption = {
   httpOnly: true,
   secure: process.env.NODE_ENV === "production",
   sameSite: "lax",
+  domain: defaultConfig.cookieDomain,
 };
 
 const accessTokenCookieOptions: SetOption = {

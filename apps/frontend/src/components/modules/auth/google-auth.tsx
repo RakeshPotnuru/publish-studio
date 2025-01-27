@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { toast } from "@itsrakesh/ui";
 import { useTheme } from "next-themes";
@@ -47,15 +47,14 @@ export function GoogleAuth() {
 
   const { theme } = useTheme();
   const authButtonRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   const { mutateAsync: connectGoogle, isLoading } =
     trpc.auth.connectGoogle.useMutation({
       onSuccess({ data }) {
         toast.success(`Authenticated as ${data.user.email}`);
 
-        setTimeout(() => {
-          window.location.href = redirectTo ?? siteConfig.pages.dashboard.link;
-        }, 1000);
+        router.replace(redirectTo ?? siteConfig.pages.dashboard.link);
       },
       onError(error) {
         setError(error.message);

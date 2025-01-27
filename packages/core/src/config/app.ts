@@ -1,37 +1,7 @@
 import type { ConnectionOptions } from "bullmq";
 import { Redis } from "ioredis";
 
-interface ICustomConfig {
-  accessTokenExpiresIn: number;
-  refreshTokenExpiresIn: number;
-  verificationTokenExpiresIn: number;
-  resetPasswordTokenExpiresIn: number;
-  accessTokenPrivateKey: string;
-  refreshTokenPrivateKey: string;
-  accessTokenPublicKey: string;
-  refreshTokenPublicKey: string;
-  verificationTokenPrivateKey: string;
-  verificationTokenPublicKey: string;
-  redisCacheExpiresIn: number;
-  defaultErrorMessage: string;
-  hashnodeApiUrl: string;
-  devToApiUrl: string;
-  mediumApiUrl: string;
-  wordPressApiUrl: string;
-  wordPressRedirectUri: string;
-  bloggerRedirectUri: string;
-  disposableEmailChecker: string;
-  appName: string;
-  resetPasswordTokenPrivateKey: string;
-  resetPasswordTokenPublicKey: string;
-  turnstileVerifyEndpoint: string;
-  paddleWebhookPath: string;
-  r2Endpoint: string;
-  assetsUrl: string;
-  paddleIpAddresses: string[];
-}
-
-const defaultConfig: ICustomConfig = {
+const defaultConfig = {
   accessTokenExpiresIn: 1440, // 24 hours
   refreshTokenExpiresIn: 10_080, // 7 days
   verificationTokenExpiresIn: 60, // 1 hour
@@ -81,6 +51,8 @@ const defaultConfig: ICustomConfig = {
           "44.241.183.62",
           "100.20.172.113",
         ],
+  cookieDomain:
+    process.env.NODE_ENV === "production" ? ".publishstudio.one" : "localhost",
 };
 
 export const bullMQConnectionOptions: ConnectionOptions = new Redis(

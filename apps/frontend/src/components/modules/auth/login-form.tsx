@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -49,6 +49,7 @@ export function LoginForm() {
 
   const { coolDown, setCoolDown } = useCoolDown();
   const redirectTo = useSearchParams().get("redirect_to");
+  const router = useRouter();
 
   const { mutateAsync: login, isLoading: isLoggingIn } =
     trpc.auth.login.useMutation({
@@ -57,9 +58,7 @@ export function LoginForm() {
           description: `Welcome back, ${data.user.first_name} ${data.user.last_name}!`,
         });
 
-        setTimeout(() => {
-          window.location.href = redirectTo ?? siteConfig.pages.dashboard.link;
-        }, 1000);
+        router.replace(redirectTo ?? siteConfig.pages.dashboard.link);
       },
       onError: (error) => {
         if (error.message === ErrorCause.VERIFICATION_PENDING.toString()) {

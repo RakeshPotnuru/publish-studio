@@ -9,7 +9,7 @@ import { createTRPCServerClient } from "./utils/trpc";
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
   const isLoggedIn = request.cookies.get("logged_in")?.value === "true";
-  const refreshToken = request.cookies.get("refresh_token");
+  const refreshToken = request.cookies.get("refresh_token")?.value;
 
   const authUrls = new Set([
     siteConfig.pages.login.link,
@@ -36,7 +36,7 @@ export async function middleware(request: NextRequest) {
   if (!isLoggedIn && refreshToken && !authUrls.has(request.nextUrl.pathname)) {
     try {
       const client = createTRPCServerClient({
-        Cookie: `refresh_token=${refreshToken.value}`,
+        Cookie: `refresh_token=${refreshToken}`,
       });
 
       const { data } = await client.auth.refresh.query();
