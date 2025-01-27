@@ -66,8 +66,6 @@ const authRouter = router({
         status: z.string(),
         data: z.object({
           user: z.custom<Omit<IUser, "google_sub">>(),
-          access_token: z.string().nullable(),
-          refresh_token: z.string().nullable(),
         }),
       }),
     )
