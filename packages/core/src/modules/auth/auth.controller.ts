@@ -239,7 +239,6 @@ export default class AuthController extends AuthService {
       await super.updateUser(user._id, {
         auth_modes: [...user.auth_modes, AuthMode.GOOGLE],
         google_sub: payload.sub,
-        last_login: new Date(),
       });
 
       if (!user.profile_pic && payload.picture) {
@@ -259,6 +258,8 @@ export default class AuthController extends AuthService {
     cookies.set("access_token", access_token, accessTokenCookieOptions);
     cookies.set("refresh_token", refresh_token, refreshTokenCookieOptions);
     cookies.set("logged_in", "true", accessTokenCookieOptions);
+
+    await super.updateUser(user._id, { last_login: new Date() });
 
     return {
       status: "success",

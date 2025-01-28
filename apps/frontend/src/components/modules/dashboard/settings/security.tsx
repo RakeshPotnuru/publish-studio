@@ -2,7 +2,6 @@
 
 import { Button, toast } from "@itsrakesh/ui";
 
-import { logout } from "@/components/common/layout/navbar/actions";
 import { Heading } from "@/components/ui/heading";
 import { ButtonLoader } from "@/components/ui/loaders/button-loader";
 import { siteConfig } from "@/config/site";
@@ -11,7 +10,7 @@ import { trpc } from "@/utils/trpc";
 import Header from "./common/header";
 
 export function Security() {
-  const { mutateAsync: logoutAll, isLoading } = trpc.auth.logout.useMutation({
+  const { mutateAsync: logout, isLoading } = trpc.auth.logout.useMutation({
     onError: (error) => {
       toast.error(error.message);
     },
@@ -19,7 +18,6 @@ export function Security() {
 
   const handleLogout = async () => {
     try {
-      await logoutAll();
       await logout();
 
       window.google?.accounts.id.disableAutoSelect();

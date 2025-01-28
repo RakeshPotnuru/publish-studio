@@ -13,6 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   Skeleton,
+  toast,
 } from "@itsrakesh/ui";
 import { UserType } from "@publish-studio/core/src/config/constants";
 import { usePostHog } from "posthog-js/react";
@@ -23,19 +24,6 @@ import { siteConfig } from "@/config/site";
 import useUserStore from "@/lib/stores/user";
 import { isOnFreeTrial } from "@/utils/is-on-free-trial";
 import { trpc } from "@/utils/trpc";
-
-import { logout } from "./actions";
-
-const handleLogout = async () => {
-  try {
-    await logout();
-
-    window.google?.accounts.id.disableAutoSelect();
-    window.location.href = siteConfig.pages.login.link;
-  } catch {
-    // Ignore
-  }
-};
 
 export default function AccountMenu() {
   const { user, setUser, setIsLoading } = useUserStore();
@@ -63,6 +51,23 @@ export default function AccountMenu() {
       });
     }
   }, [user, posthog]);
+
+  const { mutateAsync: logout, isLoading } = trpc.auth.logout.useMutation({
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+
+      window.google?.accounts.id.disableAutoSelect();
+      window.location.href = siteConfig.pages.login.link;
+    } catch {
+      // Ignore
+    }
+  };
 
   return (
     user &&
@@ -115,7 +120,7 @@ export default function AccountMenu() {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={handleLogout}>
+          <DropdownMenuItem onClick={handleLogout} disabled={isLoading}>
             <Icons.Logout className="mr-2 size-4" />
             <span>Logout</span>
           </DropdownMenuItem>
