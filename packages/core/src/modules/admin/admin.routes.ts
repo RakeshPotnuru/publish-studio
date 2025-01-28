@@ -23,4 +23,13 @@ const adminEmailRouter = router({
   ),
 });
 
-export { adminAuthRouter, adminEmailRouter };
+const adminUserRouter = router({
+  getInactiveUsers: adminProtectedProcedure.mutation(() =>
+    new AdminController().getInactiveUsersHandler(),
+  ),
+  deleteInactiveUsers: adminProtectedProcedure.mutation(() =>
+    new AdminController().deleteInactiveUsersHandler(),
+  ),
+});
+
+export { adminAuthRouter, adminEmailRouter, adminUserRouter };

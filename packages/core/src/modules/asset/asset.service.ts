@@ -156,4 +156,27 @@ export default class AssetService extends ProjectService {
       });
     }
   }
+
+  // only used in the admin controller
+  async deleteAssetsByUserId(user_id: Types.ObjectId) {
+    try {
+      const assets = await Asset.find({ user_id }).exec();
+
+      const keys = assets.map((asset) => asset.key);
+
+      await this.deleteImages(keys);
+
+      return await Asset.deleteMany({ user_id }).exec();
+    } catch (error) {
+      await logtail.error(JSON.stringify(error), {
+        user_id,
+      });
+
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message:
+          "An error occurred while deleting the assets. Please try again later.",
+      });
+    }
+  }
 }

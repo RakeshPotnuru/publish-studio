@@ -124,7 +124,7 @@ export function ToneAnalysis({ editor, project }: Readonly<ToneAnalysisProps>) {
         size="sm"
         className="w-full"
         disabled={isLoading || !level}
-        featureText="analyze your content"
+        featuretext="analyze your content"
       >
         <ButtonLoader isLoading={isLoading}>
           <Icons.Magic className="mr-2 size-4" />

@@ -3,6 +3,7 @@ import { Router } from "express";
 import {
   adminAuthRouter,
   adminEmailRouter,
+  adminUserRouter,
 } from "./modules/admin/admin.routes";
 import assetRouter from "./modules/asset/asset.routes";
 import authRouter from "./modules/auth/auth.routes";
@@ -29,6 +30,7 @@ import { router, t } from "./trpc";
 const adminRouter = router({
   auth: adminAuthRouter,
   email: adminEmailRouter,
+  user: adminUserRouter,
 });
 
 const appRouter = router({

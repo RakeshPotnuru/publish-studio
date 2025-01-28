@@ -106,7 +106,7 @@ export function UpdateCategories({ project }: Readonly<UpdateCategoriesProps>) {
                     onClick={handleGenerateCategories}
                     size="icon"
                     disabled={isLoading}
-                    featureText="assign categories"
+                    featuretext="assign categories"
                   >
                     <ButtonLoader isLoading={isGenerating} isIcon>
                       <Icons.Magic className="size-4" />

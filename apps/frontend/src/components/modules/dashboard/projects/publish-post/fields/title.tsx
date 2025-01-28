@@ -72,7 +72,7 @@ export function Title({
                 onClick={handleGenerateTitle}
                 size="icon"
                 disabled={isTitleGenerating || isLoading}
-                featureText="generate SEO optimized title"
+                featuretext="generate SEO optimized title"
               >
                 <ButtonLoader isLoading={isTitleGenerating} isIcon>
                   <Icons.Magic className="size-4" />
