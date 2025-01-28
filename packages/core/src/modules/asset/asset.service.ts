@@ -164,6 +164,10 @@ export default class AssetService extends ProjectService {
 
       const keys = assets.map((asset) => asset.key);
 
+      if (keys.length === 0) {
+        return { deletedCount: 0 };
+      }
+
       await this.deleteImages(keys);
 
       return await Asset.deleteMany({ user_id }).exec();

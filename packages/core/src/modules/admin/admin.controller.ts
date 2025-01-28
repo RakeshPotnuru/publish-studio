@@ -129,6 +129,7 @@ export default class AdminController {
       await logtail.error("Delete inactive users failed", {
         error: JSON.stringify(error),
       });
+      console.log(error);
 
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",

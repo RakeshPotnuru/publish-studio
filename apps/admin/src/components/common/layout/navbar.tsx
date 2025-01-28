@@ -15,6 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   Skeleton,
+  toast,
 } from "@itsrakesh/ui";
 import { cn } from "@itsrakesh/utils";
 
@@ -23,19 +24,7 @@ import { Images } from "@/assets/images";
 import { siteConfig } from "@/config/site";
 import { trpc } from "@/utils/trpc";
 
-import { logout } from "./actions";
-
 type NavbarProps = React.HTMLAttributes<HTMLElement>;
-
-const handleLogout = async () => {
-  try {
-    await logout();
-
-    window.location.href = siteConfig.pages.login.link;
-  } catch {
-    // Ignore
-  }
-};
 
 export function Navbar({ className, ...props }: Readonly<NavbarProps>) {
   const { isFetching, data } = trpc.auth.getMe.useQuery(undefined, {
@@ -49,6 +38,22 @@ export function Navbar({ className, ...props }: Readonly<NavbarProps>) {
   });
 
   const user = data?.data.user;
+
+  const { mutateAsync: logout, isLoading } = trpc.auth.logout.useMutation({
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+
+      window.location.href = siteConfig.pages.login.link;
+    } catch {
+      // Ignore
+    }
+  };
 
   return (
     <nav
@@ -99,7 +104,7 @@ export function Navbar({ className, ...props }: Readonly<NavbarProps>) {
               My Account
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout}>
+            <DropdownMenuItem onClick={handleLogout} disabled={isLoading}>
               <Icons.Logout className="mr-2 size-4" />
               <span>Logout</span>
             </DropdownMenuItem>
