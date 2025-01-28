@@ -239,6 +239,7 @@ export default class AuthController extends AuthService {
       await super.updateUser(user._id, {
         auth_modes: [...user.auth_modes, AuthMode.GOOGLE],
         google_sub: payload.sub,
+        last_login: new Date(),
       });
 
       if (!user.profile_pic && payload.picture) {
