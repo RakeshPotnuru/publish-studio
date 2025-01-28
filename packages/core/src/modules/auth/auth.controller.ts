@@ -495,9 +495,9 @@ export default class AuthController extends AuthService {
       const cookies = new Cookies(req, res, {
         secure: process.env.NODE_ENV === "production",
       });
-      cookies.set("access_token", "", { maxAge: -1 });
-      cookies.set("refresh_token", "", { maxAge: -1 });
-      cookies.set("logged_in", "", { maxAge: -1 });
+      cookies.set("access_token", "", { maxAge: -1, ...cookieOptions });
+      cookies.set("refresh_token", "", { maxAge: -1, ...cookieOptions });
+      cookies.set("logged_in", "", { maxAge: -1, ...cookieOptions });
 
       return {
         status: "success",
