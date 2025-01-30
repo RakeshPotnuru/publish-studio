@@ -215,9 +215,13 @@ export default class AuthController extends AuthService {
       const cookies = new Cookies(req, res, {
         secure: process.env.NODE_ENV === "production",
       });
-      cookies.set("access_token", access_token, accessTokenCookieOptions);
-      cookies.set("refresh_token", refresh_token, refreshTokenCookieOptions);
-      cookies.set("logged_in", "true", accessTokenCookieOptions);
+      cookies.set("access_token", access_token, {
+        ...accessTokenCookieOptions,
+      });
+      cookies.set("refresh_token", refresh_token, {
+        ...refreshTokenCookieOptions,
+      });
+      cookies.set("logged_in", "true", { ...accessTokenCookieOptions });
 
       await new PlannerController().initPlanner(newUser._id);
 
@@ -255,9 +259,11 @@ export default class AuthController extends AuthService {
     const cookies = new Cookies(req, res, {
       secure: process.env.NODE_ENV === "production",
     });
-    cookies.set("access_token", access_token, accessTokenCookieOptions);
-    cookies.set("refresh_token", refresh_token, refreshTokenCookieOptions);
-    cookies.set("logged_in", "true", accessTokenCookieOptions);
+    cookies.set("access_token", access_token, { ...accessTokenCookieOptions });
+    cookies.set("refresh_token", refresh_token, {
+      ...refreshTokenCookieOptions,
+    });
+    cookies.set("logged_in", "true", { ...accessTokenCookieOptions });
 
     await super.updateUser(user._id, { last_login: new Date() });
 

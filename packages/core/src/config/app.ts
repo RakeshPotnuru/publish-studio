@@ -52,7 +52,7 @@ const defaultConfig = {
           "100.20.172.113",
         ],
   cookieDomain:
-    process.env.NODE_ENV === "production" ? ".publishstudio.one" : "localhost",
+    process.env.SITE_ENV === "production" ? ".publishstudio.one" : "localhost",
 };
 
 export const bullMQConnectionOptions: ConnectionOptions = new Redis(
