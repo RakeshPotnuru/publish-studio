@@ -36,7 +36,7 @@ const authRouter = router({
         user_type: z.nativeEnum(UserType).optional().default(UserType.FREE),
       }),
     )
-    .mutation(({ input }) => new AuthController().registerHandler(input)),
+    .mutation(() => new AuthController().registerHandler()),
 
   connectGoogle: t.procedure
     .input(
