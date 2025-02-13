@@ -57,6 +57,20 @@ export async function middleware(request: NextRequest) {
         sameSite: "lax",
         expires: new Date(accessTokenDecoded.exp * 1000),
         secure: process.env.NODE_ENV === "production",
+        domain:
+          process.env.NODE_ENV === "production"
+            ? ".publishstudio.one"
+            : "localhost",
+      });
+      response.cookies.set("logged_in", "true", {
+        path: "/",
+        sameSite: "lax",
+        expires: new Date(accessTokenDecoded.exp * 1000),
+        secure: process.env.NODE_ENV === "production",
+        domain:
+          process.env.NODE_ENV === "production"
+            ? ".publishstudio.one"
+            : "localhost",
       });
 
       return response;

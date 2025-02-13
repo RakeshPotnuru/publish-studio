@@ -36,9 +36,8 @@ export default function AccountMenu() {
     },
     onError: (error) => {
       if (error.data?.code === "UNAUTHORIZED") {
-        handleLogout().catch(() => {
-          // ignore
-        });
+        window.google?.accounts.id.disableAutoSelect();
+        window.location.href = siteConfig.pages.login.link;
       }
       setIsLoading(false);
     },
