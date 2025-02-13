@@ -129,7 +129,7 @@ export function LoginForm() {
     isResendLoading ||
     isCaptchaVerificationLoading;
 
-  // const redirectLink = redirectTo ? `?redirect_to=${redirectTo}` : "";
+  const redirectLink = redirectTo ? `?redirect_to=${redirectTo}` : "";
 
   return (
     <Shake isShaking={error}>
@@ -226,14 +226,14 @@ export function LoginForm() {
         </Form>
         <p className="text-center">Or</p>
         <GoogleAuth />
-        {/* <p className="text-center text-sm">
+        <p className="text-center text-sm">
           Don&apos;t have an account?{" "}
           <Button variant="link" className="h-max p-0" asChild>
             <Link href={`${siteConfig.pages.register.link}${redirectLink}`}>
               Register
             </Link>
           </Button>
-        </p> */}
+        </p>
       </div>
     </Shake>
   );
