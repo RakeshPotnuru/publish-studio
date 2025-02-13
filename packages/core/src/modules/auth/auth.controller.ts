@@ -6,18 +6,14 @@ import Cookies from "cookies";
 import type { Types } from "mongoose";
 
 import defaultConfig from "../../config/app";
-import { AuthMode, ErrorCause, UserType } from "../../config/constants";
+import { AuthMode, ErrorCause } from "../../config/constants";
 import type { Context } from "../../trpc";
 import { verifyGoogleToken } from "../../utils/google/auth";
 import { signJwt, verifyJwt } from "../../utils/jwt";
 import { logtail } from "../../utils/logtail";
 import { pusher } from "../../utils/pusher";
 import redisClient from "../../utils/redis";
-import type {
-  ILoginInput,
-  IRegisterInput,
-  IResetPasswordInput,
-} from "../auth/auth.types";
+import type { ILoginInput, IResetPasswordInput } from "../auth/auth.types";
 import PlannerController from "../planner/planner.controller";
 import AuthService from "./auth.service";
 
@@ -127,65 +123,71 @@ export default class AuthController extends AuthService {
     };
   }
 
-  async registerHandler(input: IRegisterInput) {
-    if (!input.password) {
-      throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: "Password is required",
-      });
-    }
-
-    if (await super.isDisposableEmail(input.email)) {
-      throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: "Disposable email is not allowed",
-      });
-    }
-
-    const user = await super.getUserByEmail(input.email);
-
-    if (user) {
-      throw new TRPCError({
-        code: "CONFLICT",
-        message:
-          "This email is associated with an existing account. Please login instead.",
-      });
-    }
-
-    const verification_token = await signJwt(
-      { email: input.email },
-      "verificationTokenPrivateKey",
-      {
-        expiresIn: `${defaultConfig.verificationTokenExpiresIn}m`,
-      },
-    );
-
-    if (!verification_token) {
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: defaultConfig.defaultErrorMessage,
-      });
-    }
-
-    await super.sendVerificationEmail(input.email, verification_token);
-
-    const salt = await bcrypt.genSalt(12);
-    const hashedPassword = await bcrypt.hash(input.password, salt);
-    const newUser = await super.createUser({
-      first_name: input.first_name,
-      last_name: input.last_name,
-      email: input.email,
-      password: hashedPassword,
-      profile_pic: input.profile_pic,
-      user_type: input.user_type,
+  registerHandler() {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message:
+        "Sign up is disabled. A new Publish Studio experience is coming soon.",
     });
 
-    return {
-      status: "success",
-      data: {
-        user: newUser,
-      },
-    };
+    // if (!input.password) {
+    //   throw new TRPCError({
+    //     code: "BAD_REQUEST",
+    //     message: "Password is required",
+    //   });
+    // }
+
+    // if (await super.isDisposableEmail(input.email)) {
+    //   throw new TRPCError({
+    //     code: "BAD_REQUEST",
+    //     message: "Disposable email is not allowed",
+    //   });
+    // }
+
+    // const user = await super.getUserByEmail(input.email);
+
+    // if (user) {
+    //   throw new TRPCError({
+    //     code: "CONFLICT",
+    //     message:
+    //       "This email is associated with an existing account. Please login instead.",
+    //   });
+    // }
+
+    // const verification_token = await signJwt(
+    //   { email: input.email },
+    //   "verificationTokenPrivateKey",
+    //   {
+    //     expiresIn: `${defaultConfig.verificationTokenExpiresIn}m`,
+    //   },
+    // );
+
+    // if (!verification_token) {
+    //   throw new TRPCError({
+    //     code: "INTERNAL_SERVER_ERROR",
+    //     message: defaultConfig.defaultErrorMessage,
+    //   });
+    // }
+
+    // await super.sendVerificationEmail(input.email, verification_token);
+
+    // const salt = await bcrypt.genSalt(12);
+    // const hashedPassword = await bcrypt.hash(input.password, salt);
+    // const newUser = await super.createUser({
+    //   first_name: input.first_name,
+    //   last_name: input.last_name,
+    //   email: input.email,
+    //   password: hashedPassword,
+    //   profile_pic: input.profile_pic,
+    //   user_type: input.user_type,
+    // });
+
+    // return {
+    //   status: "success",
+    //   data: {
+    //     user: newUser,
+    //   },
+    // };
   }
 
   async connectGoogleHandler(input: { id_token: string }, ctx: Context) {
@@ -195,47 +197,52 @@ export default class AuthController extends AuthService {
 
     // If user does not exist, create a new user and login the user.
     if (!user) {
-      const newUser = await super.createUser({
-        first_name: payload.given_name ?? payload.email.split("@")[0],
-        last_name: payload.family_name ?? "PB",
-        email: payload.email,
-        profile_pic: payload.picture,
-        user_type: UserType.FREE,
-        auth_modes: [AuthMode.GOOGLE],
-        google_sub: payload.sub,
-        is_verified: true,
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message:
+          "Sign up is disabled. A new Publish Studio experience is coming soon.",
       });
+      // const newUser = await super.createUser({
+      //   first_name: payload.given_name ?? payload.email.split("@")[0],
+      //   last_name: payload.family_name ?? "PB",
+      //   email: payload.email,
+      //   profile_pic: payload.picture,
+      //   user_type: UserType.FREE,
+      //   auth_modes: [AuthMode.GOOGLE],
+      //   google_sub: payload.sub,
+      //   is_verified: true,
+      // });
 
-      const tokens = await super.signTokens(newUser);
+      // const tokens = await super.signTokens(newUser);
 
-      const access_token = await tokens.access_token;
-      const refresh_token = await tokens.refresh_token;
+      // const access_token = await tokens.access_token;
+      // const refresh_token = await tokens.refresh_token;
 
-      const { req, res } = ctx;
-      const cookies = new Cookies(req, res, {
-        secure: process.env.NODE_ENV === "production",
-      });
-      cookies.set("access_token", access_token, {
-        ...accessTokenCookieOptions,
-      });
-      cookies.set("refresh_token", refresh_token, {
-        ...refreshTokenCookieOptions,
-      });
-      cookies.set("logged_in", "true", { ...accessTokenCookieOptions });
+      // const { req, res } = ctx;
+      // const cookies = new Cookies(req, res, {
+      //   secure: process.env.NODE_ENV === "production",
+      // });
+      // cookies.set("access_token", access_token, {
+      //   ...accessTokenCookieOptions,
+      // });
+      // cookies.set("refresh_token", refresh_token, {
+      //   ...refreshTokenCookieOptions,
+      // });
+      // cookies.set("logged_in", "true", { ...accessTokenCookieOptions });
 
-      await new PlannerController().initPlanner(newUser._id);
+      // await new PlannerController().initPlanner(newUser._id);
 
-      await super.sendWelcomeEmail(newUser, {
-        ...ctx,
-        user: { ...ctx.user, _id: newUser._id },
-      });
+      // await super.sendWelcomeEmail(newUser, {
+      //   ...ctx,
+      //   user: { ...ctx.user, _id: newUser._id },
+      // });
 
-      return {
-        status: "success",
-        data: {
-          user: newUser,
-        },
-      };
+      // return {
+      //   status: "success",
+      //   data: {
+      //     user: newUser,
+      //   },
+      // };
     }
 
     // If user exists, just login the user. If user does not have google auth mode, add it.
