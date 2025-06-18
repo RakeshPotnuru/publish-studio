@@ -8,7 +8,7 @@ if (process.env.NEXT_PUBLIC_SITE_ENV === "production") {
 }
 
 export const siteConfig = {
-  title: "Publish Studio",
+  title: "Blog Studio",
   description:
     "The Ultimate Platform for Seamless Content Curation and Distribution. All in One Place.",
   url: defaultUrl,
@@ -44,17 +44,17 @@ export const siteConfig = {
   pages: {
     login: {
       title: "Login",
-      description: "Login to Publish Studio",
+      description: "Login to Blog Studio",
       link: "/login",
     },
     register: {
       title: "Register",
-      description: "Register on Publish Studio",
+      description: "Register on Blog Studio",
       link: "/register",
     },
     pay: {
       title: "Pay",
-      description: "Pay for Publish Studio",
+      description: "Pay for Blog Studio",
       link: "/pay",
     },
     resetPassword: {

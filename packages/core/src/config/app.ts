@@ -23,7 +23,7 @@ const defaultConfig = {
   wordPressRedirectUri: `${process.env.CLIENT_URL}/settings/connections/connect-wp`,
   bloggerRedirectUri: `${process.env.CLIENT_URL}/settings/connections/connect-blogger`,
   disposableEmailChecker: "https://disposable.debounce.io/?email=",
-  appName: "Publish Studio",
+  appName: "Blog Studio by Publish Studio",
   turnstileVerifyEndpoint:
     "https://challenges.cloudflare.com/turnstile/v0/siteverify",
   paddleWebhookPath: "/trpc/sub.paddleWebhook",

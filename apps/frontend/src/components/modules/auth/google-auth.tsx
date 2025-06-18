@@ -113,18 +113,7 @@ export function GoogleAuth() {
           <ErrorBox title="Error" description={error} />
         </Center>
       )}
-      {isLoading ? (
-        <DotsLoader />
-      ) : (
-        <div
-          ref={authButtonRef}
-          style={{
-            colorScheme: "auto",
-            boxShadow: "0 2px 4px 0 rgba(0,0,0,0.25)",
-            borderRadius: "4px",
-          }}
-        />
-      )}
+      {isLoading ? <DotsLoader /> : <div ref={authButtonRef} />}
     </Shake>
   );
 }

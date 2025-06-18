@@ -141,8 +141,8 @@ export default function Pay() {
         </Heading>
         <p>
           {user?.customer_id
-            ? "Your subscription has been paused. Restart your subscription to unlock all the features and get access to the full power of Publish Studio."
-            : "Your free trial has been expired. Start your subscription to unlock all the features and get access to the full power of Publish Studio."}
+            ? "Your subscription has been paused. Restart your subscription to unlock all the features and get access to the full power of Blog Studio."
+            : "Your free trial has been expired. Start your subscription to unlock all the features and get access to the full power of Blog Studio."}
         </p>
         {user?.customer_id ? (
           <Button onClick={restartSubscription} disabled={!user}>

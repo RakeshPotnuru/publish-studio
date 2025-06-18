@@ -1,4 +1,4 @@
-## Publish Studio
+## Blog Studio
 
 Start writing - [publishstudio.one](https://www.publishstudio.one)
 

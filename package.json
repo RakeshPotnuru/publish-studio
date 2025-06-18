@@ -2,7 +2,7 @@
   "private": true,
   "name": "publish-studio",
   "version": "0.0.0",
-  "description": "Publish Studio",
+  "description": "Blog Studio",
   "license": "MIT",
   "author": "Rakesh Potnuru",
   "scripts": {

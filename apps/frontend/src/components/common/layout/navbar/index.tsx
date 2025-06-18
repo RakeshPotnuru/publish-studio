@@ -57,7 +57,7 @@ export function Navbar() {
       <Link href="/">
         <Image
           src={Images.logo}
-          alt="Publish Studio"
+          alt="Blog Studio"
           width={25}
           height={25}
           className="rounded-md drop-shadow-md"
