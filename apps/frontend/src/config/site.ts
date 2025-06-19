@@ -10,7 +10,7 @@ if (process.env.NEXT_PUBLIC_SITE_ENV === "production") {
 export const siteConfig = {
   title: "Blog Studio",
   description:
-    "The Ultimate Platform for Seamless Content Curation and Distribution. All in One Place.",
+    "From idea to published post, Blog Studio gives you the tools to write better and share blogs faster.",
   url: defaultUrl,
   theme: {
     color: "#EB5757",
