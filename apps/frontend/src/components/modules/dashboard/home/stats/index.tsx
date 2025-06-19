@@ -1,4 +1,3 @@
-import EmotionScores from "./emotion-scores";
 import { ProjectStats } from "./project-stats";
 import ReadingTimeAndWordCount from "./reading-time-word-count";
 import { TopicStats } from "./topic-stats";
@@ -9,7 +8,7 @@ export function Stats() {
       <TopicStats />
       <ProjectStats />
       <ReadingTimeAndWordCount />
-      <EmotionScores />
+      {/* <EmotionScores /> */}
     </div>
   );
 }
